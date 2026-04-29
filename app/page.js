@@ -10,7 +10,7 @@ export default function Home() {
           <a href="/" style={{ color: 'var(--color-text)', fontWeight: 500 }}>Yazılar</a>
           <a href="#">Demolar</a>
           <a href="#">Araçlar</a>
-          <a href="#">Hakkımda</a>
+          <a href="/hakkimda">Hakkımda</a>
         </div>
       </nav>
 
@@ -44,9 +44,10 @@ export default function Home() {
       <footer className="max-w-3xl mx-auto px-6 py-8 flex justify-between text-xs" style={{ borderTop: '0.5px solid var(--color-border)', color: 'var(--color-text-mute)' }}>
         <span>Ali Apaydın · {new Date().getFullYear()}</span>
         <span className="flex gap-3">
-          <a href="#">Twitter</a>
-          <a href="#">GitHub</a>
-          <a href="#">LinkedIn</a>
+          <a href="https://x.com/sifirgecikme" target="_blank" rel="noopener noreferrer">X</a>
+          <a href="https://github.com/aliapaydin" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://linkedin.com/in/aliapaydin35" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://instagram.com/sifirgecikme" target="_blank" rel="noopener noreferrer">Instagram</a>
         </span>
       </footer>
     </main>
