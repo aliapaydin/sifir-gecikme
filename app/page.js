@@ -33,12 +33,12 @@ export default function Home() {
           <p className="text-xs" style={{ color: 'var(--color-text-faint)' }}>29 Nisan 2026 · 8 dakika</p>
         </a>
 
-        <div className="card mb-3" style={{ opacity: 0.55 }}>
+        <a href="/yazilar/izmir-kira-analizi" className="block card mb-3" style={{ color: 'inherit' }}>
           <span className="badge badge-case mb-2.5 inline-block">vaka çalışması</span>
-          <h3 className="font-serif text-xl font-medium mt-2 mb-1.5" style={{ color: 'var(--color-text)' }}>İstanbul kira fiyatları analizi</h3>
-          <p className="text-sm leading-relaxed mb-2" style={{ color: 'var(--color-text-mute)' }}>İlçe bazında m² fiyatlarına neler etki ediyor?</p>
-          <p className="text-xs" style={{ color: 'var(--color-text-faint)' }}>yakında</p>
-        </div>
+          <h3 className="font-serif text-xl font-medium mt-2 mb-1.5" style={{ color: 'var(--color-text)' }}>İzmir kira piyasası: 5.841 ilan, bir analist gözüyle</h3>
+          <p className="text-sm leading-relaxed mb-2" style={{ color: 'var(--color-text-mute)' }}>Hangi ilçe gerçekten pahalı? m² fiyatı hikayeyi nasıl değiştiriyor?</p>
+          <p className="text-xs" style={{ color: 'var(--color-text-faint)' }}>2024 verisi · 12 dakika</p>
+        </a>
       </section>
 
       <footer className="max-w-3xl mx-auto px-6 py-8 flex justify-between text-xs" style={{ borderTop: '0.5px solid var(--color-border)', color: 'var(--color-text-mute)' }}>
