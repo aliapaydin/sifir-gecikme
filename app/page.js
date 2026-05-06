@@ -1,3 +1,5 @@
+'use client';
+
 function Icon({ type }) {
   const icons = {
     'linear-regression': (
@@ -107,6 +109,42 @@ function Icon({ type }) {
   return icons[type] || null;
 }
 
+function ThemeToggle() {
+  const toggle = () => {
+    const isDark = document.documentElement.classList.contains('dark');
+    if (isDark) {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    } else {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    }
+  };
+
+  return (
+    <button
+      onClick={toggle}
+      aria-label="Tema değiştir"
+      style={{
+        width: '36px',
+        height: '36px',
+        borderRadius: '50%',
+        border: '0.5px solid var(--color-border)',
+        background: 'var(--color-cream-card)',
+        cursor: 'pointer',
+        flexShrink: 0,
+        padding: 0,
+        fontSize: '16px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      ◐
+    </button>
+  );
+}
+
 export default function Home() {
   const yazilar = [
     {
@@ -213,7 +251,7 @@ export default function Home() {
 
   const interaktif = yazilar.filter(y => y.badge === 'interaktif').length;
   const arac = yazilar.filter(y => y.badge === 'araç').length;
-  const rehber = yazilar.filter(y => ['rehber','kariyer','vaka çalışması'].includes(y.badge)).length;
+  const rehber = yazilar.filter(y => ['rehber', 'kariyer', 'vaka çalışması'].includes(y.badge)).length;
 
   return (
     <main className="min-h-screen">
@@ -222,11 +260,14 @@ export default function Home() {
           <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: 'var(--color-accent)' }}></div>
           <span className="font-serif text-lg font-medium">Sıfır Gecikme</span>
         </div>
-        <div className="flex gap-6 text-sm" style={{ color: 'var(--color-text-soft)' }}>
-          <a href="/" style={{ color: 'var(--color-text)', fontWeight: 500 }}>Yazılar</a>
-          <a href="#">Demolar</a>
-          <a href="#">Araçlar</a>
-          <a href="/hakkimda">Hakkımda</a>
+        <div className="flex items-center gap-4">
+          <div className="flex gap-6 text-sm" style={{ color: 'var(--color-text-soft)' }}>
+            <a href="/" style={{ color: 'var(--color-text)', fontWeight: 500 }}>Yazılar</a>
+            <a href="#">Demolar</a>
+            <a href="#">Araçlar</a>
+            <a href="/hakkimda">Hakkımda</a>
+          </div>
+          <ThemeToggle />
         </div>
       </nav>
 
@@ -264,7 +305,6 @@ export default function Home() {
 
       <section className="max-w-5xl mx-auto px-6 py-10 pb-20">
         <div className="text-xs uppercase tracking-widest mb-5" style={{ color: 'var(--color-text-mute)' }}>Tüm içerikler</div>
-
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '12px' }}>
           {yazilar.map((y) => (
             <a key={y.href} href={y.href} style={{ color: 'inherit', textDecoration: 'none', display: 'block' }}>
