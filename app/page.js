@@ -1,4 +1,5 @@
 'use client';
+import HeroCanvas from '../components/HeroCanvas';
 
 function Icon({ type }) {
   const icons = {
@@ -304,6 +305,7 @@ export default function Home() {
       </section>
 
       <section className="max-w-5xl mx-auto px-6 py-10 pb-20">
+        <HeroCanvas />
         <div className="text-xs uppercase tracking-widest mb-5" style={{ color: 'var(--color-text-mute)' }}>Tüm içerikler</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '12px' }}>
           {yazilar.map((y) => (
@@ -320,6 +322,9 @@ export default function Home() {
             </a>
           ))}
         </div>
+
+        <div className="mt-10">
+</div>
       </section>
 
       <footer className="max-w-5xl mx-auto px-6 py-8 flex justify-between text-xs" style={{ borderTop: '0.5px solid var(--color-border)', color: 'var(--color-text-mute)' }}>
