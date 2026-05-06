@@ -106,6 +106,16 @@ function Icon({ type }) {
         <circle cx="23.5" cy="9" r="1.5" fill="#534AB7"/>
       </svg>
     ),
+    'sql-temelleri': (
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="8" fill="#EEEDFE"/>
+        <ellipse cx="16" cy="10" rx="8" ry="3" fill="#7F77DD"/>
+        <path d="M8 10 C8 10 8 14 16 14 C24 14 24 10 24 10" stroke="#534AB7" strokeWidth="1.2" fill="none"/>
+        <path d="M8 14 C8 14 8 18 16 18 C24 18 24 14 24 14" stroke="#534AB7" strokeWidth="1.2" fill="none"/>
+        <path d="M8 18 C8 18 8 22 16 22 C24 22 24 18 24 18" stroke="#534AB7" strokeWidth="1.2" fill="none"/>
+        <ellipse cx="16" cy="22" rx="8" ry="3" fill="none" stroke="#534AB7" strokeWidth="1.2"/>
+      </svg>
+),
   };
   return icons[type] || null;
 }
@@ -247,6 +257,16 @@ export default function Home() {
       baslik: 'Feature engineering: modelden önce gelen sanat',
       ozet: 'Encoding, ölçekleme, zaman özellikleri, etkileşim ve seçim.',
       meta: '15 dakika',
+    },
+    {
+      href: '/yazilar/sql-temelleri',
+      icon: 'sql-temelleri',
+      badge: 'rehber',
+      badgeClass: 'badge-guide',
+      borderColor: '#7F77DD',
+      baslik: 'SQL temelleri: veri analistinin en önemli becerisi',
+      ozet: 'SELECT, JOIN, GROUP BY, window fonksiyonlar — sıfırdan ileri seviyeye.',
+      meta: 'rehber · 20 dakika',
     },
   ];
 
