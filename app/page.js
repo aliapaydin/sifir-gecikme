@@ -1,7 +1,117 @@
+function Icon({ type }) {
+  const icons = {
+    'linear-regression': (
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="8" fill="#E1F5EE"/>
+        <circle cx="10" cy="22" r="2" fill="#1D9E75"/>
+        <circle cx="15" cy="16" r="2" fill="#1D9E75"/>
+        <circle cx="20" cy="12" r="2" fill="#1D9E75"/>
+        <circle cx="24" cy="9" r="2" fill="#1D9E75"/>
+        <line x1="8" y1="24" x2="26" y2="24" stroke="#0F6E56" strokeWidth="1.2"/>
+        <line x1="8" y1="8" x2="8" y2="24" stroke="#0F6E56" strokeWidth="1.2"/>
+        <line x1="9" y1="23" x2="25" y2="8" stroke="#1D9E75" strokeWidth="1.5"/>
+      </svg>
+    ),
+    'izmir-kira': (
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="8" fill="#FAEEDA"/>
+        <rect x="7" y="18" width="4" height="8" rx="1" fill="#e8a04a"/>
+        <rect x="13" y="13" width="4" height="13" rx="1" fill="#e8a04a"/>
+        <rect x="19" y="9" width="4" height="17" rx="1" fill="#BA7517"/>
+        <line x1="7" y1="26.5" x2="24" y2="26.5" stroke="#854F0B" strokeWidth="1"/>
+      </svg>
+    ),
+    'gradient-descent': (
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="8" fill="#E1F5EE"/>
+        <path d="M7 9 Q16 26 25 9" stroke="#1D9E75" strokeWidth="2" fill="none"/>
+        <circle cx="16" cy="23" r="3" fill="#7F77DD" stroke="#26215C" strokeWidth="1"/>
+        <line x1="16" y1="8" x2="16" y2="20" stroke="#0F6E56" strokeWidth="1" strokeDasharray="2 2"/>
+      </svg>
+    ),
+    'ab-test': (
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="8" fill="#EEEDFE"/>
+        <rect x="7" y="11" width="8" height="14" rx="2" fill="#AFA9EC"/>
+        <rect x="17" y="11" width="8" height="14" rx="2" fill="#7F77DD"/>
+        <text x="11" y="21" fontSize="7" fill="#fff" textAnchor="middle" fontWeight="600">A</text>
+        <text x="21" y="21" fontSize="7" fill="#fff" textAnchor="middle" fontWeight="600">B</text>
+      </svg>
+    ),
+    'kmeans': (
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="8" fill="#E1F5EE"/>
+        <circle cx="11" cy="13" r="3.5" fill="#1D9E75" opacity=".35"/>
+        <circle cx="21" cy="11" r="3.5" fill="#1D9E75" opacity=".35"/>
+        <circle cx="16" cy="21" r="3.5" fill="#1D9E75" opacity=".35"/>
+        <circle cx="11" cy="13" r="1.5" fill="#0F6E56"/>
+        <circle cx="21" cy="11" r="1.5" fill="#0F6E56"/>
+        <circle cx="16" cy="21" r="1.5" fill="#0F6E56"/>
+        <line x1="11" y1="13" x2="21" y2="11" stroke="#1D9E75" strokeWidth="1" strokeDasharray="2 1"/>
+        <line x1="21" y1="11" x2="16" y2="21" stroke="#1D9E75" strokeWidth="1" strokeDasharray="2 1"/>
+        <line x1="16" y1="21" x2="11" y2="13" stroke="#1D9E75" strokeWidth="1" strokeDasharray="2 1"/>
+      </svg>
+    ),
+    'ilk-90-gun': (
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="8" fill="#FAEEDA"/>
+        <circle cx="16" cy="12" r="4.5" fill="#e8a04a" opacity=".6"/>
+        <circle cx="16" cy="12" r="2.5" fill="#BA7517"/>
+        <path d="M9 26 C9 21 23 21 23 26" stroke="#e8a04a" strokeWidth="2" fill="none" strokeLinecap="round"/>
+      </svg>
+    ),
+    'confusion-matrix': (
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="8" fill="#E1F5EE"/>
+        <rect x="8" y="9" width="7" height="7" rx="1" fill="#1D9E75" opacity=".9"/>
+        <rect x="17" y="9" width="7" height="7" rx="1" fill="#9FE1CB"/>
+        <rect x="8" y="18" width="7" height="7" rx="1" fill="#9FE1CB"/>
+        <rect x="17" y="18" width="7" height="7" rx="1" fill="#1D9E75" opacity=".9"/>
+        <text x="11.5" y="15" fontSize="5.5" fill="#fff" textAnchor="middle" fontWeight="600">TP</text>
+        <text x="20.5" y="15" fontSize="5.5" fill="#0F6E56" textAnchor="middle" fontWeight="600">FP</text>
+        <text x="11.5" y="24" fontSize="5.5" fill="#0F6E56" textAnchor="middle" fontWeight="600">FN</text>
+        <text x="20.5" y="24" fontSize="5.5" fill="#fff" textAnchor="middle" fontWeight="600">TN</text>
+      </svg>
+    ),
+    'pandas-7-sey': (
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="8" fill="#EEEDFE"/>
+        <rect x="8" y="9" width="14" height="2" rx="1" fill="#AFA9EC"/>
+        <rect x="8" y="14" width="10" height="2" rx="1" fill="#7F77DD"/>
+        <rect x="8" y="19" width="12" height="2" rx="1" fill="#AFA9EC"/>
+        <rect x="8" y="24" width="8" height="2" rx="1" fill="#7F77DD"/>
+        <circle cx="24" cy="21" r="4" fill="none" stroke="#E24B4A" strokeWidth="1.5"/>
+        <line x1="27" y1="24" x2="29" y2="26" stroke="#E24B4A" strokeWidth="1.5" strokeLinecap="round"/>
+      </svg>
+    ),
+    'bias-variance': (
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="8" fill="#E1F5EE"/>
+        <path d="M7 22 Q11 8 16 16 Q21 24 25 10" stroke="#1D9E75" strokeWidth="2" fill="none"/>
+        <line x1="7" y1="24" x2="26" y2="24" stroke="#0F6E56" strokeWidth="1"/>
+        <line x1="7" y1="7" x2="7" y2="24" stroke="#0F6E56" strokeWidth="1"/>
+        <circle cx="16" cy="16" r="2.5" fill="#7F77DD"/>
+      </svg>
+    ),
+    'feature-engineering': (
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="8" fill="#EEEDFE"/>
+        <rect x="7" y="20" width="5" height="7" rx="1" fill="#AFA9EC"/>
+        <rect x="14" y="15" width="5" height="12" rx="1" fill="#7F77DD"/>
+        <rect x="21" y="10" width="5" height="17" rx="1" fill="#534AB7"/>
+        <path d="M9.5 20 L9.5 16 L16.5 16 L16.5 12 L23.5 12 L23.5 9" stroke="#534AB7" strokeWidth="1.2" fill="none" strokeLinejoin="round"/>
+        <circle cx="23.5" cy="9" r="1.5" fill="#534AB7"/>
+      </svg>
+    ),
+  };
+  return icons[type] || null;
+}
+
 export default function Home() {
   const yazilar = [
     {
       href: '/yazilar/linear-regression',
+      icon: 'linear-regression',
       badge: 'interaktif',
       badgeClass: 'badge-interactive',
       borderColor: '#1D9E75',
@@ -11,6 +121,7 @@ export default function Home() {
     },
     {
       href: '/yazilar/izmir-kira-analizi',
+      icon: 'izmir-kira',
       badge: 'vaka çalışması',
       badgeClass: 'badge-case',
       borderColor: '#e8a04a',
@@ -20,6 +131,7 @@ export default function Home() {
     },
     {
       href: '/yazilar/gradient-descent',
+      icon: 'gradient-descent',
       badge: 'interaktif',
       badgeClass: 'badge-interactive',
       borderColor: '#1D9E75',
@@ -29,6 +141,7 @@ export default function Home() {
     },
     {
       href: '/yazilar/ab-test',
+      icon: 'ab-test',
       badge: 'araç',
       badgeClass: 'badge-guide',
       borderColor: '#7F77DD',
@@ -38,6 +151,7 @@ export default function Home() {
     },
     {
       href: '/yazilar/kmeans',
+      icon: 'kmeans',
       badge: 'interaktif',
       badgeClass: 'badge-interactive',
       borderColor: '#1D9E75',
@@ -47,6 +161,7 @@ export default function Home() {
     },
     {
       href: '/yazilar/ilk-90-gun',
+      icon: 'ilk-90-gun',
       badge: 'kariyer',
       badgeClass: 'badge-case',
       borderColor: '#e8a04a',
@@ -56,6 +171,7 @@ export default function Home() {
     },
     {
       href: '/yazilar/confusion-matrix',
+      icon: 'confusion-matrix',
       badge: 'interaktif',
       badgeClass: 'badge-interactive',
       borderColor: '#1D9E75',
@@ -65,6 +181,7 @@ export default function Home() {
     },
     {
       href: '/yazilar/pandas-7-sey',
+      icon: 'pandas-7-sey',
       badge: 'rehber',
       badgeClass: 'badge-guide',
       borderColor: '#7F77DD',
@@ -74,6 +191,7 @@ export default function Home() {
     },
     {
       href: '/yazilar/bias-variance',
+      icon: 'bias-variance',
       badge: 'interaktif',
       badgeClass: 'badge-interactive',
       borderColor: '#1D9E75',
@@ -83,6 +201,7 @@ export default function Home() {
     },
     {
       href: '/yazilar/feature-engineering',
+      icon: 'feature-engineering',
       badge: 'rehber',
       badgeClass: 'badge-guide',
       borderColor: '#7F77DD',
@@ -94,7 +213,7 @@ export default function Home() {
 
   const interaktif = yazilar.filter(y => y.badge === 'interaktif').length;
   const arac = yazilar.filter(y => y.badge === 'araç').length;
-  const rehber = yazilar.filter(y => y.badge === 'rehber' || y.badge === 'kariyer' || y.badge === 'vaka çalışması').length;
+  const rehber = yazilar.filter(y => ['rehber','kariyer','vaka çalışması'].includes(y.badge)).length;
 
   return (
     <main className="min-h-screen">
@@ -113,11 +232,11 @@ export default function Home() {
 
       <section className="max-w-5xl mx-auto px-6 py-14" style={{ borderBottom: '0.5px solid var(--color-border)' }}>
         <div className="flex items-start justify-between gap-8 flex-wrap">
-          <div style={{ flex: '1', minWidth: '280px' }}>
+          <div style={{ flex: 1, minWidth: '280px' }}>
             <div className="flex gap-2 flex-wrap mb-5">
               <span className="badge badge-interactive">{yazilar.length} içerik</span>
               <span className="badge badge-interactive">{interaktif} interaktif demo</span>
-              <span className="badge badge-case">Türkçe & ücretsiz</span>
+              <span className="badge badge-case">Türkçe &amp; ücretsiz</span>
             </div>
             <h1 className="font-serif font-medium leading-tight mb-4" style={{ fontSize: '2.6rem', color: 'var(--color-text)', letterSpacing: '-0.01em' }}>
               Birlikte öğreniyoruz,<br />birlikte deniyoruz.
@@ -146,12 +265,15 @@ export default function Home() {
       <section className="max-w-5xl mx-auto px-6 py-10 pb-20">
         <div className="text-xs uppercase tracking-widest mb-5" style={{ color: 'var(--color-text-mute)' }}>Tüm içerikler</div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '12px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '12px' }}>
           {yazilar.map((y) => (
             <a key={y.href} href={y.href} style={{ color: 'inherit', textDecoration: 'none', display: 'block' }}>
-              <div className="card h-full" style={{ borderTop: `3px solid ${y.borderColor}`, padding: '18px 20px', height: '100%', boxSizing: 'border-box', display: 'flex', flexDirection: 'column' }}>
+              <div className="card" style={{ borderTop: `3px solid ${y.borderColor}`, padding: '18px 20px', height: '100%', boxSizing: 'border-box', display: 'flex', flexDirection: 'column' }}>
+                <div style={{ marginBottom: '12px' }}>
+                  <Icon type={y.icon} />
+                </div>
                 <span className={`badge ${y.badgeClass} inline-block mb-3`}>{y.badge}</span>
-                <h3 className="font-serif font-medium mb-2" style={{ fontSize: '17px', color: 'var(--color-text)', lineHeight: '1.4', flex: 1 }}>{y.baslik}</h3>
+                <h3 className="font-serif font-medium mb-2" style={{ fontSize: '16px', color: 'var(--color-text)', lineHeight: '1.4', flex: 1 }}>{y.baslik}</h3>
                 <p className="text-sm leading-relaxed mb-3" style={{ color: 'var(--color-text-mute)' }}>{y.ozet}</p>
                 <p className="text-xs" style={{ color: 'var(--color-text-faint)' }}>{y.meta}</p>
               </div>
