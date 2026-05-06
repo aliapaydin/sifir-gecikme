@@ -77,6 +77,13 @@ export default function Home() {
           <p className="text-xs" style={{ color: 'var(--color-text-faint)' }}>rehber · 15 dakika</p>
         </a>
 
+        <a href="/yazilar/bias-variance" className="block card mb-3" style={{ color: 'inherit' }}>
+          <span className="badge badge-interactive mb-2.5 inline-block">interaktif</span>
+          <h3 className="font-serif text-xl font-medium mt-2 mb-1.5" style={{ color: 'var(--color-text)' }}>Bias-variance trade-off: ezber mi, genelleme mi?</h3>
+          <p className="text-sm leading-relaxed mb-2" style={{ color: 'var(--color-text-mute)' }}>Polinom derecesini artır, underfitting&apos;ten overfitting&apos;e geçişi izle.</p>
+          <p className="text-xs" style={{ color: 'var(--color-text-faint)' }}>2026 · 10 dakika</p>
+        </a>
+
       </section>
       <footer className="max-w-3xl mx-auto px-6 py-8 flex justify-between text-xs" style={{ borderTop: '0.5px solid var(--color-border)', color: 'var(--color-text-mute)' }}>
         <span>Ali Apaydın · {new Date().getFullYear()}</span>
