@@ -115,6 +115,18 @@ function Icon({ type }) {
         <path d="M8 18 C8 18 8 22 16 22 C24 22 24 18 24 18" stroke="#534AB7" strokeWidth="1.2" fill="none"/>
         <ellipse cx="16" cy="22" rx="8" ry="3" fill="none" stroke="#534AB7" strokeWidth="1.2"/>
       </svg>
+    ),
+    'sample-size': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#EEEDFE"/>
+    <rect x="7" y="22" width="4" height="5" rx="1" fill="#AFA9EC"/>
+    <rect x="13" y="17" width="4" height="10" rx="1" fill="#7F77DD"/>
+    <rect x="19" y="12" width="4" height="15" rx="1" fill="#534AB7"/>
+    <line x1="7" y1="10" x2="25" y2="10" stroke="#534AB7" strokeWidth="1" strokeDasharray="2 2"/>
+    <circle cx="9" cy="10" r="2" fill="#E24B4A"/>
+    <circle cx="15" cy="10" r="2" fill="#E24B4A"/>
+    <circle cx="21" cy="10" r="2" fill="#1D9E75"/>
+  </svg>
 ),
   };
   return icons[type] || null;
@@ -267,6 +279,16 @@ export default function Home() {
       baslik: 'SQL temelleri: veri analistinin en önemli becerisi',
       ozet: 'SELECT, JOIN, GROUP BY, window fonksiyonlar — sıfırdan ileri seviyeye.',
       meta: 'rehber · 20 dakika',
+    },
+    {
+      href: '/yazilar/sample-size',
+      icon: 'sample-size',
+      badge: 'araç',
+      badgeClass: 'badge-guide',
+      borderColor: '#7F77DD',
+      baslik: 'Sample size hesaplayıcı',
+      ozet: 'A/B testi başlatmadan önce kaç kullanıcıya ihtiyacın var?',
+      meta: 'interaktif araç',
     },
   ];
 
