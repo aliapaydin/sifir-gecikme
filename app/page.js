@@ -141,6 +141,18 @@ function Icon({ type }) {
     <line x1="18" y1="21" x2="22" y2="17" stroke="#7F77DD" strokeWidth="1.2"/>
   </svg>
 ),
+'bezier': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#E1F5EE"/>
+    <circle cx="6" cy="24" r="2.5" fill="#1D9E75"/>
+    <circle cx="12" cy="8" r="2.5" fill="#7F77DD"/>
+    <circle cx="22" cy="8" r="2.5" fill="#7F77DD"/>
+    <circle cx="27" cy="24" r="2.5" fill="#1D9E75"/>
+    <path d="M6 24 C6 24 12 8 16 16 C20 24 27 24 27 24" stroke="#1D9E75" strokeWidth="2" fill="none"/>
+    <line x1="6" y1="24" x2="12" y2="8" stroke="#e8e2d5" strokeWidth="1" strokeDasharray="2 2"/>
+    <line x1="27" y1="24" x2="22" y2="8" stroke="#e8e2d5" strokeWidth="1" strokeDasharray="2 2"/>
+  </svg>
+),
   };
   return icons[type] || null;
 }
@@ -312,6 +324,16 @@ export default function Home() {
       baslik: 'Sinir ağı visualizer: veri nasıl akar?',
       ozet: 'Katmanları ayarla, sinyal gönder, nöronların nasıl ateşlendiğini izle.',
       meta: '12 dakika',
+    },
+    {
+      href: '/yazilar/bezier',
+      icon: 'bezier',
+      badge: 'interaktif',
+      badgeClass: 'badge-interactive',
+      borderColor: '#1D9E75',
+      baslik: 'Bezier eğrisi: kontrol noktalarının dansı',
+      ozet: 'Noktaları sürükle, De Casteljau adımlarını izle, CSS animasyonlarının matematiğini keşfet.',
+      meta: 'geometri · 10 dakika',
     },
   ];
 
