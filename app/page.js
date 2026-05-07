@@ -128,6 +128,19 @@ function Icon({ type }) {
     <circle cx="21" cy="10" r="2" fill="#1D9E75"/>
   </svg>
 ),
+'sinir-agi': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#E1F5EE"/>
+    <circle cx="8" cy="16" r="2.5" fill="#5DCAA5"/>
+    <circle cx="16" cy="10" r="2.5" fill="#7F77DD"/>
+    <circle cx="16" cy="22" r="2.5" fill="#7F77DD"/>
+    <circle cx="24" cy="16" r="2.5" fill="#e8a04a"/>
+    <line x1="10" y1="15" x2="14" y2="11" stroke="#1D9E75" strokeWidth="1.2"/>
+    <line x1="10" y1="17" x2="14" y2="21" stroke="#1D9E75" strokeWidth="1.2"/>
+    <line x1="18" y1="11" x2="22" y2="15" stroke="#7F77DD" strokeWidth="1.2"/>
+    <line x1="18" y1="21" x2="22" y2="17" stroke="#7F77DD" strokeWidth="1.2"/>
+  </svg>
+),
   };
   return icons[type] || null;
 }
@@ -289,6 +302,16 @@ export default function Home() {
       baslik: 'Sample size hesaplayıcı',
       ozet: 'A/B testi başlatmadan önce kaç kullanıcıya ihtiyacın var?',
       meta: 'interaktif araç',
+    },
+    {
+      href: '/yazilar/sinir-agi',
+      icon: 'sinir-agi',
+      badge: 'interaktif',
+      badgeClass: 'badge-interactive',
+      borderColor: '#1D9E75',
+      baslik: 'Sinir ağı visualizer: veri nasıl akar?',
+      ozet: 'Katmanları ayarla, sinyal gönder, nöronların nasıl ateşlendiğini izle.',
+      meta: '12 dakika',
     },
   ];
 
