@@ -71,15 +71,6 @@ print(f"Tahmin: {model.predict([[28]])[0]:.0f}")`}</pre>
 
         <p style={{ color: 'var(--color-text-soft)', marginTop: '2.5rem' }}>Sıradaki yazıda <strong>multiple regression</strong>: bir değil, birden fazla bağımsız değişkenle tahmin yapma.</p>
       </article>
-
-      <footer className="max-w-3xl mx-auto px-6 py-8 flex justify-between text-xs" style={{ borderTop: '0.5px solid var(--color-border)', color: 'var(--color-text-mute)' }}>
-        <span>Ali Apaydın · {new Date().getFullYear()}</span>
-        <span className="flex gap-3">
-          <a href="#">Twitter</a>
-          <a href="#">GitHub</a>
-          <a href="#">LinkedIn</a>
-        </span>
-      </footer>
     </main>
   );
 }

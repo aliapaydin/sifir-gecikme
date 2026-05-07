@@ -79,16 +79,6 @@ export default function Hakkimda() {
         </div>
 
       </article>
-
-      <footer className="max-w-3xl mx-auto px-6 py-8 flex justify-between text-xs" style={{ borderTop: '0.5px solid var(--color-border)', color: 'var(--color-text-mute)' }}>
-        <span>Ali Apaydın · {new Date().getFullYear()}</span>
-        <span className="flex gap-3">
-          <a href="https://x.com/sifirgecikme" target="_blank" rel="noopener noreferrer">X</a>
-          <a href="https://github.com/aliapaydin" target="_blank" rel="noopener noreferrer">GitHub</a>
-          <a href="https://linkedin.com/in/aliapaydin35" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          <a href="https://instagram.com/sifirgecikme" target="_blank" rel="noopener noreferrer">Instagram</a>
-        </span>
-      </footer>
     </main>
   );
 }
