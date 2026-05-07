@@ -131,19 +131,6 @@ function BiasVarianceDemo() {
 export default function BiasVariancePost() {
   return (
     <main className="min-h-screen">
-      <nav className="max-w-3xl mx-auto px-6 py-5 flex justify-between items-center" style={{ borderBottom: '0.5px solid var(--color-border)' }}>
-        <div className="flex items-center gap-2.5">
-          <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: 'var(--color-accent)' }}></div>
-          <a href="/" className="font-serif text-lg font-medium" style={{ color: 'var(--color-text)' }}>Sıfır Gecikme</a>
-        </div>
-        <div className="flex gap-6 text-sm" style={{ color: 'var(--color-text-soft)' }}>
-          <a href="/" style={{ color: 'var(--color-text)', fontWeight: 500 }}>Yazılar</a>
-          <a href="#">Demolar</a>
-          <a href="#">Araçlar</a>
-          <a href="/hakkimda">Hakkımda</a>
-        </div>
-      </nav>
-
       <article className="max-w-3xl mx-auto px-6 py-12 prose-article">
         <a href="/" className="text-xs mb-6 inline-block" style={{ color: 'var(--color-text-mute)' }}>Ana sayfa</a>
         <span className="badge badge-interactive inline-block mb-3">interaktif</span>

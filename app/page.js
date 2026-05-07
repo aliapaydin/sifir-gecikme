@@ -153,6 +153,15 @@ function Icon({ type }) {
     <line x1="27" y1="24" x2="22" y2="8" stroke="#e8e2d5" strokeWidth="1" strokeDasharray="2 2"/>
   </svg>
 ),
+'superlig': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#FAEEDA"/>
+    <circle cx="16" cy="16" r="8" fill="none" stroke="#e8a04a" strokeWidth="1.5"/>
+    <path d="M16 8 L16 24 M8 16 L24 16" stroke="#e8a04a" strokeWidth="1" strokeDasharray="2 2"/>
+    <circle cx="16" cy="16" r="3" fill="#BA7517"/>
+    <path d="M12 10 Q16 8 20 10 Q22 14 20 18 Q16 22 12 18 Q10 14 12 10Z" fill="none" stroke="#BA7517" strokeWidth="1" opacity="0.5"/>
+  </svg>
+),
   };
   return icons[type] || null;
 }
@@ -334,6 +343,16 @@ export default function Home() {
       baslik: 'Bezier eğrisi: kontrol noktalarının dansı',
       ozet: 'Noktaları sürükle, De Casteljau adımlarını izle, CSS animasyonlarının matematiğini keşfet.',
       meta: 'geometri · 10 dakika',
+    },
+    {
+      href: '/yazilar/superlig-xg',
+      icon: 'superlig',
+      badge: 'vaka çalışması',
+      badgeClass: 'badge-case',
+      borderColor: '#e8a04a',
+      baslik: "Süper Lig'de xG analizi: gol mü şans mı?",
+      ozet: 'Icardi 25 gol attı ama beklentisi ne kadardı? Expected Goals ile futbol verisini keşfet.',
+      meta: 'vaka · 12 dakika',
     },
   ];
 

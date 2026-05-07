@@ -3,9 +3,12 @@
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
-const navLinks = [
-  { href: '/', label: 'Yazılar', emoji: '📝' },
-  { href: '/hakkimda', label: 'Hakkımda', emoji: '👤' },
+const kategoriler = [
+  { href: '/kategori/interaktif', label: 'İnteraktif', emoji: '⚡' },
+  { href: '/kategori/rehber',     label: 'Rehber',     emoji: '📖' },
+  { href: '/kategori/arac',       label: 'Araç',       emoji: '🛠' },
+  { href: '/kategori/vaka',       label: 'Vaka',       emoji: '📊' },
+  { href: '/kategori/kariyer',    label: 'Kariyer',    emoji: '💼' },
 ];
 
 function ThemeToggleBtn() {
@@ -17,17 +20,19 @@ function ThemeToggleBtn() {
     setDark(document.documentElement.classList.contains('dark'));
   }, []);
 
-  const toggle = () => {
-    const next = !dark;
-    setDark(next);
-    if (next) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  };
+const toggle = () => {
+  const scrollY = window.scrollY;  // ← scroll pozisyonunu kaydet
+  const next = !dark;
+  setDark(next);
+  if (next) {
+    document.documentElement.classList.add('dark');
+    localStorage.setItem('theme', 'dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
+  }
+  window.scrollTo(0, scrollY);  // ← scroll pozisyonunu geri yükle
+};
 
   if (!mounted) return <div style={{ width: '32px', height: '32px' }} />;
 
@@ -52,10 +57,10 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 640);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
   }, []);
 
   useEffect(() => {
@@ -71,14 +76,25 @@ export default function Navbar() {
     return pathname.startsWith(href);
   };
 
+const [isDark, setIsDark] = useState(false);
+
+useEffect(() => {
+  setIsDark(document.documentElement.classList.contains('dark'));
+  const observer = new MutationObserver(() => {
+    setIsDark(document.documentElement.classList.contains('dark'));
+  });
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  return () => observer.disconnect();
+}, []);
+
+  const navBg = scrolled
+    ? isDark ? 'rgba(26,24,21,0.92)' : 'rgba(250,248,243,0.92)'
+    : 'var(--color-cream)';
+
   return (
     <header style={{
       position: 'sticky', top: 0, zIndex: 50,
-      background: scrolled
-  ? document.documentElement.classList.contains('dark')
-    ? 'rgba(26,24,21,0.92)'
-    : 'rgba(250,248,243,0.92)'
-  : 'var(--color-cream)',
+      background: navBg,
       backdropFilter: scrolled ? 'blur(12px)' : 'none',
       WebkitBackdropFilter: scrolled ? 'blur(12px)' : 'none',
       borderBottom: '0.5px solid var(--color-border)',
@@ -90,13 +106,13 @@ export default function Navbar() {
       }}>
 
         {/* Logo */}
-        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: '9px', textDecoration: 'none' }}>
+        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: '9px', textDecoration: 'none', flexShrink: 0 }}>
           <div style={{
             width: '28px', height: '28px', borderRadius: '8px',
             background: 'var(--color-accent)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: '#fff', fontSize: '13px', fontWeight: 700, flexShrink: 0,
-            fontFamily: 'var(--font-serif)',
+            color: '#fff', fontSize: '13px', fontWeight: 700,
+            fontFamily: 'var(--font-serif)', flexShrink: 0,
           }}>Sz</div>
           <div>
             <div style={{ fontSize: '15px', fontWeight: 500, color: 'var(--color-text)', lineHeight: 1.15, fontFamily: 'var(--font-serif)' }}>
@@ -110,39 +126,55 @@ export default function Navbar() {
 
         {/* Desktop nav */}
         {!isMobile && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-            {navLinks.map(({ href, label }) => (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1px' }}>
+            <a href="/" style={{
+              padding: '7px 11px', borderRadius: '8px', fontSize: '13px', textDecoration: 'none',
+              background: pathname === '/' ? 'var(--color-accent-soft)' : 'transparent',
+              color: pathname === '/' ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
+              fontWeight: pathname === '/' ? 500 : 400,
+            }}>Tümü</a>
+
+            {kategoriler.map(({ href, label, emoji }) => (
               <a key={href} href={href} style={{
-                padding: '7px 13px', borderRadius: '8px', fontSize: '13px',
-                textDecoration: 'none', transition: 'background 0.15s',
+                padding: '7px 11px', borderRadius: '8px', fontSize: '13px', textDecoration: 'none',
                 background: isActive(href) ? 'var(--color-accent-soft)' : 'transparent',
                 color: isActive(href) ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
                 fontWeight: isActive(href) ? 500 : 400,
-              }}>{label}</a>
+                display: 'flex', alignItems: 'center', gap: '4px',
+              }}>
+                <span style={{ fontSize: '12px' }}>{emoji}</span>
+                {label}
+              </a>
             ))}
-            <div style={{ width: '1px', height: '18px', background: 'var(--color-border)', margin: '0 6px' }} />
+
+            <div style={{ width: '1px', height: '18px', background: 'var(--color-border)', margin: '0 4px' }} />
+
+            <a href="/hakkimda" style={{
+              padding: '7px 11px', borderRadius: '8px', fontSize: '13px', textDecoration: 'none',
+              background: isActive('/hakkimda') ? 'var(--color-accent-soft)' : 'transparent',
+              color: isActive('/hakkimda') ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
+              fontWeight: isActive('/hakkimda') ? 500 : 400,
+            }}>Hakkımda</a>
+
+            <div style={{ width: '1px', height: '18px', background: 'var(--color-border)', margin: '0 4px' }} />
             <ThemeToggleBtn />
           </div>
         )}
 
-        {/* Mobile sağ taraf */}
+        {/* Mobile */}
         {isMobile && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <ThemeToggleBtn />
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              aria-label="Menü"
-              style={{
-                width: '36px', height: '36px', borderRadius: '8px',
-                border: '0.5px solid var(--color-border)',
-                background: 'var(--color-cream-card)',
-                cursor: 'pointer', display: 'flex', flexDirection: 'column',
-                alignItems: 'center', justifyContent: 'center', gap: '4px', padding: '8px',
-              }}
-            >
-              <span style={{ width: '18px', height: '1.5px', background: 'var(--color-text)', borderRadius: '999px', display: 'block', transition: 'all 0.2s', transform: menuOpen ? 'rotate(45deg) translate(0px, 5.5px)' : 'none' }} />
-              <span style={{ width: '18px', height: '1.5px', background: 'var(--color-text)', borderRadius: '999px', display: 'block', transition: 'all 0.2s', opacity: menuOpen ? 0 : 1 }} />
-              <span style={{ width: '18px', height: '1.5px', background: 'var(--color-text)', borderRadius: '999px', display: 'block', transition: 'all 0.2s', transform: menuOpen ? 'rotate(-45deg) translate(0px, -5.5px)' : 'none' }} />
+            <button onClick={() => setMenuOpen(!menuOpen)} aria-label="Menü" style={{
+              width: '36px', height: '36px', borderRadius: '8px',
+              border: '0.5px solid var(--color-border)',
+              background: 'var(--color-cream-card)',
+              cursor: 'pointer', display: 'flex', flexDirection: 'column',
+              alignItems: 'center', justifyContent: 'center', gap: '4px', padding: '8px',
+            }}>
+              <span style={{ width: '18px', height: '1.5px', background: 'var(--color-text)', borderRadius: '999px', display: 'block', transition: 'all 0.2s', transform: menuOpen ? 'rotate(45deg) translate(0,5.5px)' : 'none' }} />
+              <span style={{ width: '18px', height: '1.5px', background: 'var(--color-text)', borderRadius: '999px', display: 'block', opacity: menuOpen ? 0 : 1, transition: 'opacity 0.2s' }} />
+              <span style={{ width: '18px', height: '1.5px', background: 'var(--color-text)', borderRadius: '999px', display: 'block', transition: 'all 0.2s', transform: menuOpen ? 'rotate(-45deg) translate(0,-5.5px)' : 'none' }} />
             </button>
           </div>
         )}
@@ -150,15 +182,26 @@ export default function Navbar() {
 
       {/* Mobile dropdown */}
       {isMobile && menuOpen && (
-        <div style={{
-          borderTop: '0.5px solid var(--color-border)',
-          background: 'var(--color-cream)',
-          padding: '8px 16px 16px',
-        }}>
-          {navLinks.map(({ href, label, emoji }) => (
+        <div style={{ borderTop: '0.5px solid var(--color-border)', background: 'var(--color-cream)', padding: '8px 16px 16px' }}>
+          <a href="/" style={{
+            display: 'flex', alignItems: 'center', gap: '10px',
+            padding: '10px 14px', borderRadius: '8px', fontSize: '14px',
+            textDecoration: 'none', marginBottom: '2px',
+            background: pathname === '/' ? 'var(--color-accent-soft)' : 'transparent',
+            color: pathname === '/' ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
+            fontWeight: pathname === '/' ? 500 : 400,
+          }}>
+            <span>🏠</span> Tüm İçerikler
+          </a>
+
+          <div style={{ fontSize: '11px', color: 'var(--color-text-mute)', padding: '10px 14px 4px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            Kategoriler
+          </div>
+
+          {kategoriler.map(({ href, label, emoji }) => (
             <a key={href} href={href} style={{
               display: 'flex', alignItems: 'center', gap: '10px',
-              padding: '11px 14px', borderRadius: '8px', fontSize: '14px',
+              padding: '10px 14px', borderRadius: '8px', fontSize: '14px',
               textDecoration: 'none', marginBottom: '2px',
               background: isActive(href) ? 'var(--color-accent-soft)' : 'transparent',
               color: isActive(href) ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
@@ -167,6 +210,18 @@ export default function Navbar() {
               <span>{emoji}</span> {label}
             </a>
           ))}
+
+          <div style={{ height: '0.5px', background: 'var(--color-border)', margin: '8px 0' }} />
+
+          <a href="/hakkimda" style={{
+            display: 'flex', alignItems: 'center', gap: '10px',
+            padding: '10px 14px', borderRadius: '8px', fontSize: '14px',
+            textDecoration: 'none',
+            background: isActive('/hakkimda') ? 'var(--color-accent-soft)' : 'transparent',
+            color: isActive('/hakkimda') ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
+          }}>
+            <span>👤</span> Hakkımda
+          </a>
         </div>
       )}
     </header>
