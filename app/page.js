@@ -415,6 +415,57 @@ export default function Home() {
         </div>
       </section>
 
+{/* Öğrenme Modülü Kartı */}
+<section className="max-w-5xl mx-auto px-6 py-8">
+  <a href="/ogren" style={{ textDecoration: 'none', display: 'block' }}>
+    <div style={{
+      position: 'relative', borderRadius: '16px', overflow: 'hidden',
+      background: 'linear-gradient(135deg, #0d3d2e 0%, #1a1815 60%, #26215C 100%)',
+      padding: '32px 36px', cursor: 'pointer',
+      border: '0.5px solid #3a3530',
+    }}>
+      <div style={{ position: 'absolute', top: '-40px', right: '-40px', width: '200px', height: '200px', borderRadius: '50%', background: 'rgba(29,158,117,0.08)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', bottom: '-60px', left: '20px', width: '150px', height: '150px', borderRadius: '50%', background: 'rgba(127,119,221,0.07)', pointerEvents: 'none' }} />
+
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '20px', position: 'relative', flexWrap: 'wrap' }}>
+        <div style={{ flex: 1, minWidth: '260px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
+            <span style={{ fontSize: '11px', background: 'rgba(29,158,117,0.25)', color: '#5DCAA5', padding: '3px 10px', borderRadius: '999px', fontWeight: 500, letterSpacing: '.04em' }}>YENİ</span>
+            <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)' }}>Duolingo tarzı öğrenme</span>
+          </div>
+          <h2 className="font-serif" style={{ fontSize: '26px', fontWeight: 500, color: '#fff', lineHeight: 1.2, marginBottom: '10px', letterSpacing: '-0.01em' }}>
+            Python ile Veri Bilimi<br />Öğrenme Modülü
+          </h2>
+          <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, marginBottom: '20px', maxWidth: '340px' }}>
+            Önce öğren, sonra sına. 5 ders, 150 XP, tamamen Türkçe.
+          </p>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '24px' }}>
+            {['🐍 Python', '🔢 NumPy', '🐼 Pandas', '📊 İstatistik', '🤖 ML'].map(l => (
+              <span key={l} style={{ fontSize: '12px', background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.7)', padding: '4px 10px', borderRadius: '6px', border: '0.5px solid rgba(255,255,255,0.1)' }}>{l}</span>
+            ))}
+          </div>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#1D9E75', color: '#fff', padding: '11px 22px', borderRadius: '10px', fontSize: '14px', fontWeight: 500 }}>
+            Derse başla →
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', flexShrink: 0 }}>
+          {[
+            { sayi: '5', etiket: 'ders', renk: '#5DCAA5' },
+            { sayi: '150', etiket: 'XP', renk: '#e8a04a' },
+            { sayi: '🆓', etiket: 'ücretsiz', renk: '#AFA9EC' },
+          ].map(({ sayi, etiket, renk }) => (
+            <div key={etiket} style={{ background: 'rgba(255,255,255,0.06)', border: '0.5px solid rgba(255,255,255,0.1)', borderRadius: '10px', padding: '12px 16px', textAlign: 'center', minWidth: '80px' }}>
+              <div style={{ fontSize: '22px', fontWeight: 500, color: renk }}>{sayi}</div>
+              <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', marginTop: '2px' }}>{etiket}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </a>
+</section>
+
       <section className="max-w-5xl mx-auto px-6 py-10 pb-20">
         <HeroCanvas />
         <div className="text-xs uppercase tracking-widest mb-5" style={{ color: 'var(--color-text-mute)' }}>Tüm içerikler</div>
