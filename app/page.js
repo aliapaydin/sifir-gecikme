@@ -321,21 +321,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
-      <nav className="max-w-5xl mx-auto px-6 py-5 flex justify-between items-center" style={{ borderBottom: '0.5px solid var(--color-border)' }}>
-        <div className="flex items-center gap-2.5">
-          <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: 'var(--color-accent)' }}></div>
-          <span className="font-serif text-lg font-medium">Sıfır Gecikme</span>
-        </div>
-        <div className="flex items-center gap-4">
-          <div className="flex gap-6 text-sm" style={{ color: 'var(--color-text-soft)' }}>
-            <a href="/" style={{ color: 'var(--color-text)', fontWeight: 500 }}>Yazılar</a>
-            <a href="#">Demolar</a>
-            <a href="#">Araçlar</a>
-            <a href="/hakkimda">Hakkımda</a>
-          </div>
-          <ThemeToggle />
-        </div>
-      </nav>
 
       <section className="max-w-5xl mx-auto px-6 py-14" style={{ borderBottom: '0.5px solid var(--color-border)' }}>
         <div className="flex items-start justify-between gap-8 flex-wrap">

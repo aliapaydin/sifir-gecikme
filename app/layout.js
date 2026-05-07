@@ -2,6 +2,7 @@ import { Inter, Lora, JetBrains_Mono } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
 import Footer from '../components/Footer';
+import Navbar from '../components/Navbar';
 
 const inter = Inter({ subsets: ['latin', 'latin-ext'], variable: '--font-sans', display: 'swap' });
 const lora = Lora({ subsets: ['latin', 'latin-ext'], variable: '--font-serif', display: 'swap' });
@@ -24,6 +25,7 @@ export default function RootLayout({ children }) {
             } catch(e) {}
           })();
         `}</Script>
+        <Navbar />
         {children}
         <Footer />
       </body>
