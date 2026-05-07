@@ -162,6 +162,16 @@ function Icon({ type }) {
     <path d="M12 10 Q16 8 20 10 Q22 14 20 18 Q16 22 12 18 Q10 14 12 10Z" fill="none" stroke="#BA7517" strokeWidth="1" opacity="0.5"/>
   </svg>
 ),
+'kariyer': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#FAEEDA"/>
+    <rect x="10" y="8" width="12" height="8" rx="2" fill="none" stroke="#e8a04a" strokeWidth="1.5"/>
+    <line x1="16" y1="16" x2="16" y2="20" stroke="#e8a04a" strokeWidth="1.5"/>
+    <rect x="6" y="20" width="8" height="6" rx="1.5" fill="#e8a04a" opacity=".7"/>
+    <rect x="18" y="20" width="8" height="6" rx="1.5" fill="#e8a04a" opacity=".7"/>
+    <line x1="10" y1="23" x2="22" y2="23" stroke="#BA7517" strokeWidth="1"/>
+  </svg>
+),
   };
   return icons[type] || null;
 }
@@ -353,6 +363,16 @@ export default function Home() {
       baslik: "Süper Lig'de xG analizi: gol mü şans mı?",
       ozet: 'Icardi 25 gol attı ama beklentisi ne kadardı? Expected Goals ile futbol verisini keşfet.',
       meta: 'vaka · 12 dakika',
+    },
+    {
+      href: '/yazilar/rol-farklari',
+      icon: 'kariyer',
+      badge: 'kariyer',
+      badgeClass: 'badge-case',
+      borderColor: '#e8a04a',
+      baslik: 'Veri analisti mi, data scientist mi, ML engineer mı?',
+      ozet: 'Rollerin farkları, maaş aralıkları ve geçiş yolları.',
+      meta: 'kariyer · 12 dakika',
     },
   ];
 
