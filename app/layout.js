@@ -8,9 +8,49 @@ const inter = Inter({ subsets: ['latin', 'latin-ext'], variable: '--font-sans', 
 const lora = Lora({ subsets: ['latin', 'latin-ext'], variable: '--font-serif', display: 'swap' });
 const jetbrains = JetBrains_Mono({ subsets: ['latin', 'latin-ext'], variable: '--font-mono', display: 'swap' });
 
+const baseUrl = 'https://sifir-gecikme.vercel.app';
+
 export const metadata = {
-  title: 'Sıfır Gecikme — Türkçe veri bilimi',
-  description: 'İnteraktif simülasyonlar, Türkçe vaka çalışmaları ve veri kariyeri üzerine yazılar.',
+  metadataBase: new URL(baseUrl),
+  title: {
+    default: 'Sıfır Gecikme — Türkçe Veri Bilimi',
+    template: '%s — Sıfır Gecikme',
+  },
+  description: 'Veri bilimi, makine öğrenmesi ve istatistik üzerine interaktif Türkçe içerikler. Linear regression, K-Means, sinir ağı, SQL, pandas ve daha fazlası.',
+  keywords: [
+    'veri bilimi türkçe', 'data science türkçe', 'python öğren türkçe',
+    'makine öğrenmesi türkçe', 'istatistik türkçe', 'sql türkçe',
+    'pandas türkçe', 'numpy türkçe', 'linear regression', 'gradient descent',
+    'veri analizi', 'data analyst', 'data scientist', 'ml engineer',
+  ],
+  authors: [{ name: 'Ali Apaydın', url: baseUrl }],
+  creator: 'Ali Apaydın',
+  publisher: 'Sıfır Gecikme',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'tr_TR',
+    url: baseUrl,
+    siteName: 'Sıfır Gecikme',
+    title: 'Sıfır Gecikme — Türkçe Veri Bilimi',
+    description: 'Veri bilimi, makine öğrenmesi ve istatistik üzerine interaktif Türkçe içerikler. Her kavramı önce dener, sonra konuşuruz.',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Sıfır Gecikme' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@sifirgecikme',
+    creator: '@sifirgecikme',
+    title: 'Sıfır Gecikme — Türkçe Veri Bilimi',
+    description: 'İnteraktif Türkçe veri bilimi içerikleri. Ücretsiz.',
+    images: ['/og-image.png'],
+  },
+  alternates: {
+    canonical: baseUrl,
+  },
 };
 
 export default function RootLayout({ children }) {

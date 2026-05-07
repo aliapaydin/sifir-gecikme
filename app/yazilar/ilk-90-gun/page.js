@@ -1,3 +1,13 @@
+export const metadata = {
+  title: 'Veri Analisti Olarak İlk 90 Günüm',
+  description: '15 yıl sonra geriye bakınca keşke bilseydim dediklerim. Veri kariyerine yeni başlayanlar için Türkçe rehber.',
+  keywords: ['veri analisti nasıl olunur', 'data analyst kariyer', 'veri bilimi başlangıç türkçe'],
+  openGraph: {
+    title: 'Veri Analistinin İlk 90 Günü — Sıfır Gecikme',
+    description: '15 yıl sonra keşke bilseydim dediklerim.',
+  },
+};
+
 export default function Ilk90Gun() {
   return (
     <main className="min-h-screen">

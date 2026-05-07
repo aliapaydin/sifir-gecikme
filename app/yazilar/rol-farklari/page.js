@@ -1,3 +1,13 @@
+export const metadata = {
+  title: 'Veri Analisti mi, Data Scientist mi, ML Engineer mı?',
+  description: '15 yıllık deneyimle veri kariyerindeki rollerin farkları, maaş aralıkları ve geçiş yolları. Türkçe kariyer rehberi.',
+  keywords: ['data scientist nedir', 'veri analisti nedir', 'ml engineer nedir', 'veri kariyeri türkçe', 'data science kariyer'],
+  openGraph: {
+    title: 'Veri Rollerinin Farkları — Sıfır Gecikme',
+    description: 'Hangi rol sana uygun? Maaşlar ve geçiş yolları.',
+  },
+};
+
 export default function RolFarklari() {
   return (
     <main className="min-h-screen">

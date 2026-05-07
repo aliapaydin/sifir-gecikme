@@ -1,3 +1,14 @@
+
+export const metadata = {
+  title: 'Python ile Veri Bilimi Öğrenme Modülü',
+  description: 'Duolingo tarzı Türkçe Python öğrenme modülü. 5 ders, 150 XP. Veri bilimi, NumPy, Pandas, ML. Ücretsiz.',
+  keywords: ['python öğren türkçe', 'python kursu ücretsiz', 'veri bilimi kursu türkçe', 'pandas öğren türkçe'],
+  openGraph: {
+    title: 'Python Öğrenme Modülü — Sıfır Gecikme',
+    description: '5 ders, 150 XP, tamamen Türkçe ve ücretsiz.',
+  },
+};
+
 import { dersler } from '../../lib/dersler';
 
 export default function OgrenSayfasi() {

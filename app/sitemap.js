@@ -1,0 +1,43 @@
+export default function sitemap() {
+  const baseUrl = 'https://sifir-gecikme.vercel.app';
+
+  const sayfalar = [
+    { url: '/', priority: 1.0, changeFrequency: 'weekly' },
+    { url: '/ogren', priority: 0.9, changeFrequency: 'weekly' },
+    { url: '/python', priority: 0.8, changeFrequency: 'monthly' },
+    { url: '/hakkimda', priority: 0.6, changeFrequency: 'monthly' },
+    { url: '/kategori/interaktif', priority: 0.8, changeFrequency: 'weekly' },
+    { url: '/kategori/rehber', priority: 0.8, changeFrequency: 'weekly' },
+    { url: '/kategori/arac', priority: 0.8, changeFrequency: 'weekly' },
+    { url: '/kategori/vaka', priority: 0.8, changeFrequency: 'weekly' },
+    { url: '/kategori/kariyer', priority: 0.8, changeFrequency: 'weekly' },
+    { url: '/yazilar/linear-regression', priority: 0.9, changeFrequency: 'monthly' },
+    { url: '/yazilar/gradient-descent', priority: 0.9, changeFrequency: 'monthly' },
+    { url: '/yazilar/kmeans', priority: 0.9, changeFrequency: 'monthly' },
+    { url: '/yazilar/confusion-matrix', priority: 0.9, changeFrequency: 'monthly' },
+    { url: '/yazilar/bias-variance', priority: 0.9, changeFrequency: 'monthly' },
+    { url: '/yazilar/sinir-agi', priority: 0.9, changeFrequency: 'monthly' },
+    { url: '/yazilar/bezier', priority: 0.9, changeFrequency: 'monthly' },
+    { url: '/yazilar/ab-test', priority: 0.9, changeFrequency: 'monthly' },
+    { url: '/yazilar/sample-size', priority: 0.9, changeFrequency: 'monthly' },
+    { url: '/yazilar/izmir-kira-analizi', priority: 0.8, changeFrequency: 'monthly' },
+    { url: '/yazilar/superlig-xg', priority: 0.8, changeFrequency: 'monthly' },
+    { url: '/yazilar/sql-temelleri', priority: 0.9, changeFrequency: 'monthly' },
+    { url: '/yazilar/pandas-7-sey', priority: 0.9, changeFrequency: 'monthly' },
+    { url: '/yazilar/feature-engineering', priority: 0.8, changeFrequency: 'monthly' },
+    { url: '/yazilar/ilk-90-gun', priority: 0.8, changeFrequency: 'monthly' },
+    { url: '/yazilar/rol-farklari', priority: 0.8, changeFrequency: 'monthly' },
+    { url: '/ogren/python-temelleri', priority: 0.8, changeFrequency: 'monthly' },
+    { url: '/ogren/donguler-fonksiyonlar', priority: 0.8, changeFrequency: 'monthly' },
+    { url: '/ogren/numpy', priority: 0.8, changeFrequency: 'monthly' },
+    { url: '/ogren/pandas', priority: 0.8, changeFrequency: 'monthly' },
+    { url: '/ogren/istatistik-ml', priority: 0.8, changeFrequency: 'monthly' },
+  ];
+
+  return sayfalar.map(({ url, priority, changeFrequency }) => ({
+    url: `${baseUrl}${url}`,
+    lastModified: new Date(),
+    changeFrequency,
+    priority,
+  }));
+}

@@ -1,3 +1,13 @@
+export const metadata = {
+  title: 'Linear Regression: Çizgiyi Sen Çiz',
+  description: 'Noktaları sürükle, regresyon çizgisi ve R² anlık değişsin. İnteraktif linear regression demo. Türkçe.',
+  keywords: ['linear regression türkçe', 'doğrusal regresyon', 'r kare', 'makine öğrenmesi türkçe'],
+  openGraph: {
+    title: 'Linear Regression İnteraktif Demo — Sıfır Gecikme',
+    description: 'Noktaları sürükle, regresyon çizgisi anlık değişsin.',
+  },
+};
+
 import LinearRegressionDemo from '../../../components/LinearRegressionDemo';
 
 export default function LinearRegressionPost() {

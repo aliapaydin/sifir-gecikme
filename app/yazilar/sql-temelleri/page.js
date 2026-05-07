@@ -1,3 +1,13 @@
+export const metadata = {
+  title: 'SQL Temelleri: Veri Analistinin En Önemli Becerisi',
+  description: 'SELECT, JOIN, GROUP BY, window fonksiyonlar — sıfırdan ileri seviyeye SQL rehberi. Türkçe, ücretsiz.',
+  keywords: ['sql türkçe', 'sql öğren', 'sql temelleri', 'veri analizi sql'],
+  openGraph: {
+    title: 'SQL Temelleri — Sıfır Gecikme',
+    description: 'SELECT, JOIN, GROUP BY, window fonksiyonlar. Türkçe SQL rehberi.',
+  },
+};
+
 export default function SQLTemelleri() {
   return (
     <main className="min-h-screen">

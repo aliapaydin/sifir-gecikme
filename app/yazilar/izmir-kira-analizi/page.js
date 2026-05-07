@@ -1,3 +1,13 @@
+export const metadata = {
+  title: 'İzmir Kira Piyasası: 5.841 İlan Analizi',
+  description: 'İzmir\'de hangi ilçe gerçekten pahalı? 5.841 ilan verisiyle m² fiyatı analizi. Python pandas vaka çalışması.',
+  keywords: ['izmir kira analizi', 'izmir emlak fiyatları', 'veri analizi vaka çalışması', 'pandas vaka türkçe'],
+  openGraph: {
+    title: 'İzmir Kira Analizi — Sıfır Gecikme',
+    description: '5.841 ilan verisiyle m² fiyatı analizi.',
+  },
+};
+
 export default function IzmirKira() {
   return (
     <main className="min-h-screen">

@@ -1,3 +1,13 @@
+export const metadata = {
+  title: "Pandas'ta En Çok Yanlış Bilinen 7 Şey",
+  description: 'inplace, apply, merge, category dtype — Python pandas kullanırken yapılan yaygın hatalar ve doğruları. Türkçe.',
+  keywords: ['pandas türkçe', 'pandas hatalar', 'python veri analizi', 'dataframe türkçe'],
+  openGraph: {
+    title: "Pandas'ta Yanlış Bilinen 7 Şey — Sıfır Gecikme",
+    description: 'inplace, apply, merge ve daha fazlası.',
+  },
+};
+
 export default function Pandas7Sey() {
   return (
     <main className="min-h-screen">
