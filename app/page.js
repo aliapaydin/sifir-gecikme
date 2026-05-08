@@ -1,6 +1,7 @@
 'use client';
 import HeroCanvas from '../components/HeroCanvas';
 import OgrenKarti from '../components/OgrenKarti';
+import AboneOl from '../components/AboneOl';
 
 function Icon({ type }) {
   const icons = {
@@ -440,6 +441,7 @@ export default function Home() {
         <div className="mt-10">
 </div>
       </section>
+      <AboneOl />
     </main>
   );
 }

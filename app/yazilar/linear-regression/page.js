@@ -1,3 +1,5 @@
+import Yorumlar from '../../../components/Yorumlar';
+
 export const metadata = {
   title: 'Linear Regression: Çizgiyi Sen Çiz',
   description: 'Noktaları sürükle, regresyon çizgisi ve R² anlık değişsin. İnteraktif linear regression demo. Türkçe.',

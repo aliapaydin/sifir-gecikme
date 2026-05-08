@@ -11,8 +11,8 @@ export default function Hakkimda() {
   const deneyimler = [
     {
       sirket: 'Concentrix',
-      rol: 'Veri Bilimi Mühendisi',
-      sure: '2022 — Günümüz',
+      rol: 'Data Engineer',
+      sure: '2021 — Günümüz',
       renk: '#1D9E75',
     },
     {
@@ -78,7 +78,7 @@ export default function Hakkimda() {
               Ali Apaydın
             </h1>
             <div style={{ fontSize: '16px', color: 'var(--color-accent-text)', fontWeight: 500, marginBottom: '12px' }}>
-              Veri Bilimi Mühendisi
+              Data Engineer
             </div>
             <p style={{ fontSize: '15px', lineHeight: '1.7', color: 'var(--color-text-soft)', marginBottom: '16px' }}>
               Veri bilimi, görselleştirme, analiz ve migrasyon alanlarında 15 yıldır

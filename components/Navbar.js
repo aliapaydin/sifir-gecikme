@@ -1,5 +1,6 @@
 'use client';
 
+import Arama from './Arama';
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
@@ -157,7 +158,7 @@ useEffect(() => {
               color: isActive('/hakkimda') ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
               fontWeight: isActive('/hakkimda') ? 500 : 400,
             }}>Hakkımda</a>
-
+            <Arama />
             <div style={{ width: '1px', height: '18px', background: 'var(--color-border)', margin: '0 4px' }} />
             <ThemeToggleBtn />
           </div>
@@ -166,6 +167,7 @@ useEffect(() => {
         {/* Mobile */}
         {isMobile && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Arama />
             <ThemeToggleBtn />
             <button onClick={() => setMenuOpen(!menuOpen)} aria-label="Menü" style={{
               width: '36px', height: '36px', borderRadius: '8px',
