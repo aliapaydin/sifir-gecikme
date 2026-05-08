@@ -203,10 +203,15 @@ export default function HeroCanvas() {
 
   return (
     <div style={{ marginBottom: '0' }}>
-      <div ref={wrapRef} style={{ position: 'relative', width: '100%', height: '260px', overflow: 'hidden', borderBottom: '0.5px solid var(--color-border)' }}>
+    <div ref={wrapRef} style={{
+      position: 'relative', width: '100%', height: '260px',
+      overflow: 'hidden',
+      borderRadius: '12px',
+      border: '0.5px solid var(--color-border)',
+    }}> 
         <canvas ref={canvasRef} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
 
-        <div style={{ position: 'absolute', top: '14px', right: '14px', background: 'rgba(0,0,0,0.5)', borderRadius: '8px', padding: '8px 14px' }}>
+        <div style={{ position: 'absolute', top: '14px', right: '14px', background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(8px)', borderRadius: '10px', padding: '8px 14px', border: '0.5px solid rgba(255,255,255,0.1)' }}>
           <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.55)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '3px' }}>
             {isAuto ? '▶ otomatik' : '◎ manuel'}
           </div>
@@ -215,7 +220,7 @@ export default function HeroCanvas() {
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 16px 0', background: 'var(--color-cream)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 4px 0' }}>
         <span style={{ fontSize: '12px', color: 'var(--color-text-mute)' }}>🌙</span>
         <input
           type="range" min="0" max="100"

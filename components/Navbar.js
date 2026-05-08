@@ -10,6 +10,7 @@ const kategoriler = [
   { href: '/kategori/vaka',       label: 'Vaka',       emoji: '📊' },
   { href: '/kategori/kariyer',    label: 'Kariyer',    emoji: '💼' },
   { href: '/python',              label: 'Playground', emoji: '🐍' },
+  { href: '/ogren',               label: 'Öğren',      emoji: '📚' },
 ];
 
 function ThemeToggleBtn() {

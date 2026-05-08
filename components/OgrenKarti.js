@@ -58,6 +58,17 @@ export default function OgrenKarti() {
               }}>
                 {hicYok ? 'Derse başla' : devamEden ? 'Devam et' : 'Sonraki ders'} →
               </a>
+              <a href="/ogren" style={{
+              display: 'inline-flex', alignItems: 'center', gap: '6px',
+              marginLeft: '10px',
+              padding: '9px 16px', borderRadius: '8px',
+              border: '0.5px solid var(--color-border)',
+              background: 'var(--color-cream-card)',
+              color: 'var(--color-text-soft)',
+              fontSize: '13px', fontWeight: 500, textDecoration: 'none',
+            }}>
+              Tüm dersler
+            </a>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flexShrink: 0 }}>
