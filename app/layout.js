@@ -57,7 +57,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="tr" suppressHydrationWarning className={`${inter.variable} ${lora.variable} ${jetbrains.variable}`}>
       <body suppressHydrationWarning>
-        <Script id="theme-init" strategy="beforeInteractive">{`
+        <Script id="theme-init" strategy="afterInteractive">{`
           (function(){
             try {
               var t = localStorage.getItem('theme');
