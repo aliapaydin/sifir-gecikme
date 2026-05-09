@@ -376,6 +376,16 @@ export default function Home() {
       ozet: 'Rollerin farkları, maaş aralıkları ve geçiş yolları.',
       meta: 'kariyer · 12 dakika',
     },
+    {
+      href: '/yazilar/veri-temizleme',
+      icon: 'pandas-7-sey',
+      badge: 'rehber',
+      badgeClass: 'badge-guide',
+      borderColor: '#7F77DD',
+      baslik: 'Veri temizleme: kirli veriden temiz veriye',
+      ozet: 'Eksik değerler, aykırı değerler, tip dönüşümleri — pandas ile tam rehber.',
+      meta: 'rehber · 20 dakika',
+    },
   ];
 
   const interaktif = yazilar.filter(y => y.badge === 'interaktif').length;
