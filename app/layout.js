@@ -60,6 +60,12 @@ export default function RootLayout({ children }) {
     <html lang="tr" suppressHydrationWarning className={`${inter.variable} ${lora.variable} ${jetbrains.variable}`}>
       <head>
         <script src="/muzik-player.js" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#1D9E75" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Sıfır Gecikme" />
+        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
       </head>
         <body suppressHydrationWarning>
           <Script id="theme-init" strategy="afterInteractive">{`
@@ -70,6 +76,9 @@ export default function RootLayout({ children }) {
                 else document.documentElement.classList.remove('dark');
               } catch(e) {}
             })();
+            if ('serviceWorker' in navigator) {
+              navigator.serviceWorker.register('/sw.js');
+            }
           `}</Script>
           <Navbar />
           {children}

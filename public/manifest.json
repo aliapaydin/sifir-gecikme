@@ -1,0 +1,39 @@
+{
+  "name": "Sıfır Gecikme",
+  "short_name": "Sıfır Gecikme",
+  "description": "Türkçe veri bilimi, makine öğrenmesi ve istatistik üzerine interaktif içerikler.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf8f3",
+  "theme_color": "#1D9E75",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "categories": ["education", "productivity"],
+  "lang": "tr",
+  "dir": "ltr",
+  "shortcuts": [
+    {
+      "name": "Öğrenme Modülü",
+      "url": "/ogren",
+      "description": "Python ile Veri Bilimi"
+    },
+    {
+      "name": "Python Playground",
+      "url": "/python",
+      "description": "Tarayıcıda Python çalıştır"
+    }
+  ]
+}
