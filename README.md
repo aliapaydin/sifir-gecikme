@@ -7,7 +7,7 @@
 ### Türkçe veri bilimi, makine öğrenmesi ve istatistik üzerine interaktif içerikler.
 ### Her kavramı önce dener, sonra konuşuruz.
 
-[![Site](https://img.shields.io/badge/🌐_Siteyi_Ziyaret_Et-sifir--gecikme.vercel.app-1D9E75?style=flat-square)](https://sifir-gecikme.vercel.app)
+[![Site](https://img.shields.io/badge/🌐_Siteyi_Ziyaret_Et-sifirgecikme.com-1D9E75?style=flat-square)](https://www.sifirgecikme.com)
 [![X](https://img.shields.io/badge/𝕏_Twitter-@sifirgecikme-000000?style=flat-square&logo=x)](https://x.com/sifirgecikme)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Ali_Apaydın-0077B5?style=flat-square&logo=linkedin)](https://linkedin.com/in/aliapaydin35)
 [![Instagram](https://img.shields.io/badge/Instagram-@sifirgecikme-E4405F?style=flat-square&logo=instagram)](https://instagram.com/sifirgecikme)
@@ -22,13 +22,13 @@
 
 | Demo | Açıklama | Link |
 |------|----------|------|
-| 📈 Linear Regression | Noktaları sürükle, R² anlık değişsin | [→](https://sifir-gecikme.vercel.app/yazilar/linear-regression) |
-| ⛰️ Gradient Descent | Top yuvarlama oyunu, öğrenme hızını ayarla | [→](https://sifir-gecikme.vercel.app/yazilar/gradient-descent) |
-| 🔵 K-Means | Centroid'lerin adım adım hareketi | [→](https://sifir-gecikme.vercel.app/yazilar/kmeans) |
-| 🎯 Confusion Matrix | Eşiği kaydır, TP/FP/TN/FN canlı değişsin | [→](https://sifir-gecikme.vercel.app/yazilar/confusion-matrix) |
-| 📉 Bias-Variance | Polinom derecesiyle underfitting/overfitting | [→](https://sifir-gecikme.vercel.app/yazilar/bias-variance) |
-| 🧠 Sinir Ağı | Katmanları ayarla, sinyalin akışını izle | [→](https://sifir-gecikme.vercel.app/yazilar/sinir-agi) |
-| 🎨 Bezier Eğrisi | Kontrol noktalarını sürükle, De Casteljau adımlarını gör | [→](https://sifir-gecikme.vercel.app/yazilar/bezier) |
+| 📈 Linear Regression | Noktaları sürükle, R² anlık değişsin | [→](https://www.sifirgecikme.com/yazilar/linear-regression) |
+| ⛰️ Gradient Descent | Top yuvarlama oyunu, öğrenme hızını ayarla | [→](https://www.sifirgecikme.com/yazilar/gradient-descent) |
+| 🔵 K-Means | Centroid'lerin adım adım hareketi | [→](https://www.sifirgecikme.com/yazilar/kmeans) |
+| 🎯 Confusion Matrix | Eşiği kaydır, TP/FP/TN/FN canlı değişsin | [→](https://www.sifirgecikme.com/yazilar/confusion-matrix) |
+| 📉 Bias-Variance | Polinom derecesiyle underfitting/overfitting | [→](https://www.sifirgecikme.com/yazilar/bias-variance) |
+| 🧠 Sinir Ağı | Katmanları ayarla, sinyalin akışını izle | [→](https://www.sifirgecikme.com/yazilar/sinir-agi) |
+| 🎨 Bezier Eğrisi | Kontrol noktalarını sürükle, De Casteljau adımlarını gör | [→](https://www.sifirgecikme.com/yazilar/bezier) |
 
 ---
 
@@ -36,9 +36,9 @@
 
 | Araç | Açıklama | Link |
 |------|----------|------|
-| 🧪 A/B Test Hesaplayıcı | p-değeri, güven aralığı, etki büyüklüğü | [→](https://sifir-gecikme.vercel.app/yazilar/ab-test) |
-| 📐 Sample Size Aracı | Test başlatmadan önce kaç kullanıcı lazım? | [→](https://sifir-gecikme.vercel.app/yazilar/sample-size) |
-| 🐍 Python Playground | Tarayıcıda gerçek Python — kurulum yok! | [→](https://sifir-gecikme.vercel.app/python) |
+| 🧪 A/B Test Hesaplayıcı | p-değeri, güven aralığı, etki büyüklüğü | [→](https://www.sifirgecikme.com/yazilar/ab-test) |
+| 📐 Sample Size Aracı | Test başlatmadan önce kaç kullanıcı lazım? | [→](https://www.sifirgecikme.com/yazilar/sample-size) |
+| 🐍 Python Playground | Tarayıcıda gerçek Python — kurulum yok! | [→](https://www.sifirgecikme.com/python) |
 
 ---
 
@@ -46,9 +46,9 @@
 
 | Rehber | Açıklama | Link |
 |--------|----------|------|
-| 🗄️ SQL Temelleri | SELECT → JOIN → GROUP BY → Window fonksiyonlar | [→](https://sifir-gecikme.vercel.app/yazilar/sql-temelleri) |
-| 🐼 Pandas'ta 7 Hata | inplace, apply, merge ve daha fazlası | [→](https://sifir-gecikme.vercel.app/yazilar/pandas-7-sey) |
-| 🔧 Feature Engineering | Encoding, ölçekleme, etkileşim özellikleri | [→](https://sifir-gecikme.vercel.app/yazilar/feature-engineering) |
+| 🗄️ SQL Temelleri | SELECT → JOIN → GROUP BY → Window fonksiyonlar | [→](https://www.sifirgecikme.com/yazilar/sql-temelleri) |
+| 🐼 Pandas'ta 7 Hata | inplace, apply, merge ve daha fazlası | [→](https://www.sifirgecikme.com/yazilar/pandas-7-sey) |
+| 🔧 Feature Engineering | Encoding, ölçekleme, etkileşim özellikleri | [→](https://www.sifirgecikme.com/yazilar/feature-engineering) |
 
 ---
 
@@ -56,8 +56,8 @@
 
 | Vaka | Açıklama | Link |
 |------|----------|------|
-| 🏠 İzmir Kira Analizi | 5.841 ilan, ilçe bazında m² fiyatı | [→](https://sifir-gecikme.vercel.app/yazilar/izmir-kira-analizi) |
-| ⚽ Süper Lig xG | Gol mu şans mı? Expected Goals analizi | [→](https://sifir-gecikme.vercel.app/yazilar/superlig-xg) |
+| 🏠 İzmir Kira Analizi | 5.841 ilan, ilçe bazında m² fiyatı | [→](https://www.sifirgecikme.com/yazilar/izmir-kira-analizi) |
+| ⚽ Süper Lig xG | Gol mu şans mı? Expected Goals analizi | [→](https://www.sifirgecikme.com/yazilar/superlig-xg) |
 
 ---
 
@@ -65,8 +65,8 @@
 
 | Yazı | Açıklama | Link |
 |------|----------|------|
-| 🗓️ İlk 90 Gün | 15 yıl sonra keşke bilseydim dediklerim | [→](https://sifir-gecikme.vercel.app/yazilar/ilk-90-gun) |
-| 🤔 Roller Arası Fark | Veri analisti vs data scientist vs ML engineer | [→](https://sifir-gecikme.vercel.app/yazilar/rol-farklari) |
+| 🗓️ İlk 90 Gün | 15 yıl sonra keşke bilseydim dediklerim | [→](https://www.sifirgecikme.com/yazilar/ilk-90-gun) |
+| 🤔 Roller Arası Fark | Veri analisti vs data scientist vs ML engineer | [→](https://www.sifirgecikme.com/yazilar/rol-farklari) |
 
 ---
 
@@ -82,7 +82,7 @@
 
 **5 ders · 150 XP · Tamamen ücretsiz**
 
-[📚 Öğrenmeye Başla →](https://sifir-gecikme.vercel.app/ogren)
+[📚 Öğrenmeye Başla →](https://www.sifirgecikme.com/ogren)
 
 ---
 
@@ -143,6 +143,6 @@ npm run dev
 
 *Tüm içerikler Türkçe ve ücretsiz.*
 
-[![Site](https://img.shields.io/badge/sifir--gecikme.vercel.app-1D9E75?style=for-the-badge)](https://sifir-gecikme.vercel.app)
+[![Site](https://img.shields.io/badge/www.sifirgecikme.com-1D9E75?style=for-the-badge)](https://www.sifirgecikme.com)
 
 </div>
