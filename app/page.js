@@ -386,6 +386,16 @@ export default function Home() {
       ozet: 'Eksik değerler, aykırı değerler, tip dönüşümleri — pandas ile tam rehber.',
       meta: 'rehber · 20 dakika',
     },
+    {
+      href: '/yazilar/bi-karsilastirma',
+      icon: 'pandas-7-sey',
+      badge: 'rehber',
+      badgeClass: 'badge-guide',
+      borderColor: '#7F77DD',
+      baslik: 'Power BI vs Tableau vs Looker: hangisi sana uygun?',
+      ozet: 'Fiyat, öğrenme eğrisi, güçlü/zayıf yanlar ve Türkiye iş piyasasında durum.',
+      meta: 'rehber · 15 dakika',
+    },
   ];
 
   const interaktif = yazilar.filter(y => y.badge === 'interaktif').length;
