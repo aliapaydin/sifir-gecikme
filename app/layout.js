@@ -1,5 +1,6 @@
 import { Inter, Lora, JetBrains_Mono } from 'next/font/google';
 import Script from 'next/script';
+import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
@@ -68,6 +69,7 @@ export default function RootLayout({ children }) {
         <Navbar />
         {children}
         <Footer />
+        <Analytics />
       </body>
     </html>
   );
