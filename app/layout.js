@@ -3,6 +3,7 @@ import Script from 'next/script';
 import './globals.css';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
+import { Analytics } from "@vercel/analytics/next"
 
 const inter = Inter({ subsets: ['latin', 'latin-ext'], variable: '--font-sans', display: 'swap' });
 const lora = Lora({ subsets: ['latin', 'latin-ext'], variable: '--font-serif', display: 'swap' });
