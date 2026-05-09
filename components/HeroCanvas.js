@@ -224,6 +224,7 @@ export default function HeroCanvas() {
         <span style={{ fontSize: '12px', color: 'var(--color-text-mute)' }}>🌙</span>
         <input
           type="range" min="0" max="100"
+          aria-label="Günün saatini ayarla"
           value={val}
           onChange={handleChange}
           style={{ flex: 1 }}

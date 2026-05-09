@@ -56,6 +56,7 @@ export default function AboneOl({ compact = false }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-start' }}>
             <iframe
               src="https://sifirgecikme.substack.com/embed"
+              title="Sıfır Gecikme bültenine abone ol"
               width="360"
               height="120"
               style={{
