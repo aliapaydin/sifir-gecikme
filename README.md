@@ -80,7 +80,7 @@
 🐼 Pandas ile Veri Analizi  →  🤖 İstatistik & ML Giriş
 ```
 
-**5 ders · 150 XP · Tamamen ücretsiz**
+**Şimdilik 10 ders · 315 XP · Tamamen ücretsiz**
 
 [📚 Öğrenmeye Başla →](https://www.sifirgecikme.com/ogren)
 

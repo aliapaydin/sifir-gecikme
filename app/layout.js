@@ -5,6 +5,7 @@ import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import MuzikPlayer from '../components/MuzikPlayer';
 
 const inter = Inter({ subsets: ['latin', 'latin-ext'], variable: '--font-sans', display: 'swap' });
 const lora = Lora({ subsets: ['latin', 'latin-ext'], variable: '--font-serif', display: 'swap' });
@@ -69,6 +70,7 @@ export default function RootLayout({ children }) {
         `}</Script>
         <Navbar />
         {children}
+        <MuzikPlayer key="muzik-player-sabit" />
         <Footer />
       </body>
     </html>
