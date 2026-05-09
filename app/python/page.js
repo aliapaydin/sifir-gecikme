@@ -5,184 +5,319 @@ import { useEffect, useRef, useState } from 'react';
 const SNIPPETS = {
   baslangic: {
     label: '🐍 Başlangıç',
-    kod: `# Merhaba Python!
-# Bu alanda gerçek Python kodu çalışıyor.
-# Cmd+Enter veya ▶ Çalıştır ile dene.
+    kod: `import numpy as np
 
-isim = "Sıfır Gecikme"
-print(f"Hoş geldin, {isim}!")
-
-# Basit hesaplamalar
 sayilar = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 print(f"Sayılar: {sayilar}")
-print(f"Toplam: {sum(sayilar)}")
-print(f"Ortalama: {sum(sayilar)/len(sayilar)}")
-print(f"Maksimum: {max(sayilar)}")`,
+print(f"Ortalama: {np.mean(sayilar):.2f}")
+print(f"Std: {np.std(sayilar):.2f}")
+print(f"Medyan: {np.median(sayilar):.2f}")`,
+  },
+  cubuk: {
+    label: '📊 Çubuk grafik',
+    kod: `import matplotlib.pyplot as plt
+import numpy as np
+
+kategoriler = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran']
+degerler = [42, 58, 35, 71, 63, 80]
+
+fig, ax = plt.subplots(figsize=(8, 4))
+bars = ax.bar(kategoriler, degerler,
+              color='#1D9E75', edgecolor='none', alpha=0.85)
+
+for bar, val in zip(bars, degerler):
+    ax.text(bar.get_x() + bar.get_width()/2,
+            bar.get_height() + 1.5, str(val),
+            ha='center', fontsize=10, color='#2a2620')
+
+ax.set_title('Aylık Satış Verisi', fontsize=14, pad=12)
+ax.set_ylabel('Satış Adedi')
+ax.spines[['top','right']].set_visible(False)
+ax.set_ylim(0, 95)
+plt.tight_layout()
+plt.savefig('grafik.png', dpi=120, bbox_inches='tight', facecolor='white')
+print("✓ Grafik hazır!")`,
+  },
+  cizgi: {
+    label: '📈 Çizgi grafik',
+    kod: `import matplotlib.pyplot as plt
+import numpy as np
+
+np.random.seed(42)
+x = np.arange(1, 13)
+satis_2024 = [45, 52, 38, 65, 70, 85, 90, 78, 62, 74, 88, 95]
+satis_2023 = [38, 45, 30, 55, 60, 72, 80, 65, 50, 62, 75, 82]
+
+fig, ax = plt.subplots(figsize=(9, 4))
+ay = ['Oca','Şub','Mar','Nis','May','Haz',
+      'Tem','Ağu','Eyl','Eki','Kas','Ara']
+
+ax.plot(ay, satis_2024, color='#1D9E75', linewidth=2.5,
+        marker='o', markersize=6, label='2024')
+ax.plot(ay, satis_2023, color='#7F77DD', linewidth=2,
+        marker='o', markersize=5, linestyle='--', label='2023', alpha=0.7)
+
+ax.fill_between(ay, satis_2023, satis_2024,
+                alpha=0.08, color='#1D9E75')
+
+ax.set_title('Yıllık Satış Karşılaştırması', fontsize=14, pad=12)
+ax.set_ylabel('Satış Adedi')
+ax.legend(frameon=False)
+ax.spines[['top','right']].set_visible(False)
+plt.tight_layout()
+plt.savefig('grafik.png', dpi=120, bbox_inches='tight', facecolor='white')
+print("✓ Grafik hazır!")`,
+  },
+  scatter: {
+    label: '🔵 Scatter plot',
+    kod: `import matplotlib.pyplot as plt
+import numpy as np
+
+np.random.seed(42)
+n = 100
+yas = np.random.normal(32, 8, n).clip(20, 55)
+maas = 3000 + yas * 250 + np.random.normal(0, 1500, n)
+departman = np.random.choice(['IT', 'Pazarlama', 'Satış'], n)
+
+renkler = {'IT': '#1D9E75', 'Pazarlama': '#7F77DD', 'Satış': '#e8a04a'}
+
+fig, ax = plt.subplots(figsize=(8, 5))
+for dep in ['IT', 'Pazarlama', 'Satış']:
+    mask = departman == dep
+    ax.scatter(yas[mask], maas[mask],
+               c=renkler[dep], label=dep,
+               alpha=0.7, s=60, edgecolors='none')
+
+# Trend çizgisi
+z = np.polyfit(yas, maas, 1)
+p = np.poly1d(z)
+x_line = np.linspace(yas.min(), yas.max(), 100)
+ax.plot(x_line, p(x_line), 'k--', alpha=0.3, linewidth=1)
+
+ax.set_title('Yaş vs Maaş Dağılımı', fontsize=14, pad=12)
+ax.set_xlabel('Yaş')
+ax.set_ylabel('Maaş (TL)')
+ax.legend(frameon=False)
+ax.spines[['top','right']].set_visible(False)
+plt.tight_layout()
+plt.savefig('grafik.png', dpi=120, bbox_inches='tight', facecolor='white')
+print("✓ Grafik hazır!")`,
+  },
+  histogram: {
+    label: '📉 Histogram',
+    kod: `import matplotlib.pyplot as plt
+import numpy as np
+from scipy import stats
+
+np.random.seed(42)
+veri = np.concatenate([
+    np.random.normal(65, 8, 300),
+    np.random.normal(85, 6, 150)
+])
+
+fig, ax = plt.subplots(figsize=(8, 4))
+n, bins, patches = ax.hist(veri, bins=30,
+                            color='#1D9E75', alpha=0.7,
+                            edgecolor='white', linewidth=0.5)
+
+# KDE eğrisi
+x = np.linspace(veri.min(), veri.max(), 200)
+kde = stats.gaussian_kde(veri)
+ax2 = ax.twinx()
+ax2.plot(x, kde(x), color='#E24B4A', linewidth=2, label='KDE')
+ax2.set_ylabel('Yoğunluk', color='#E24B4A')
+ax2.tick_params(colors='#E24B4A')
+ax2.spines[['top']].set_visible(False)
+
+ax.axvline(np.mean(veri), color='#7F77DD',
+           linestyle='--', linewidth=1.5, label=f'Ort: {np.mean(veri):.1f}')
+ax.axvline(np.median(veri), color='#e8a04a',
+           linestyle=':', linewidth=1.5, label=f'Med: {np.median(veri):.1f}')
+
+ax.set_title('Sınav Notu Dağılımı', fontsize=14, pad=12)
+ax.set_xlabel('Not')
+ax.set_ylabel('Frekans')
+ax.legend(frameon=False, loc='upper left')
+ax.spines[['top','right']].set_visible(False)
+plt.tight_layout()
+plt.savefig('grafik.png', dpi=120, bbox_inches='tight', facecolor='white')
+print("✓ Grafik hazır!")`,
+  },
+  heatmap: {
+    label: '🗺️ Korelasyon heatmap',
+    kod: `import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+np.random.seed(42)
+n = 200
+df = pd.DataFrame({
+    'Satış': np.random.normal(100, 20, n),
+    'Reklam': np.random.normal(50, 10, n),
+    'Müşteri': np.random.normal(500, 100, n),
+    'Memnuniyet': np.random.normal(4, 0.5, n).clip(1, 5),
+    'İade': np.random.normal(5, 2, n).clip(0, 20),
+})
+df['Satış'] = df['Satış'] + df['Reklam'] * 0.8
+df['Müşteri'] = df['Müşteri'] + df['Satış'] * 2
+
+corr = df.corr()
+
+fig, ax = plt.subplots(figsize=(7, 6))
+im = ax.imshow(corr, cmap='RdYlGn', vmin=-1, vmax=1, aspect='auto')
+plt.colorbar(im, ax=ax, shrink=0.8)
+
+ax.set_xticks(range(len(corr.columns)))
+ax.set_yticks(range(len(corr.columns)))
+ax.set_xticklabels(corr.columns, rotation=30, ha='right', fontsize=10)
+ax.set_yticklabels(corr.columns, fontsize=10)
+
+for i in range(len(corr)):
+    for j in range(len(corr)):
+        val = corr.iloc[i, j]
+        color = 'white' if abs(val) > 0.5 else '#2a2620'
+        ax.text(j, i, f'{val:.2f}', ha='center', va='center',
+                fontsize=9, color=color, fontweight='500')
+
+ax.set_title('Korelasyon Matrisi', fontsize=14, pad=12)
+plt.tight_layout()
+plt.savefig('grafik.png', dpi=120, bbox_inches='tight', facecolor='white')
+print("✓ Grafik hazır!")`,
+  },
+  boxplot: {
+    label: '📦 Boxplot',
+    kod: `import matplotlib.pyplot as plt
+import numpy as np
+
+np.random.seed(42)
+veri = {
+    'IT': np.random.normal(12000, 2500, 80).clip(6000, 22000),
+    'Pazarlama': np.random.normal(9000, 1800, 60).clip(5000, 16000),
+    'Satış': np.random.normal(10000, 3000, 70).clip(4000, 20000),
+    'İK': np.random.normal(8000, 1500, 50).clip(5000, 14000),
+    'Finans': np.random.normal(13000, 2000, 65).clip(7000, 20000),
+}
+
+fig, ax = plt.subplots(figsize=(9, 5))
+renkler = ['#1D9E75','#7F77DD','#e8a04a','#E24B4A','#5DCAA5']
+
+bp = ax.boxplot(veri.values(), labels=veri.keys(),
+                patch_artist=True, notch=False,
+                medianprops=dict(color='white', linewidth=2))
+
+for patch, renk in zip(bp['boxes'], renkler):
+    patch.set_facecolor(renk)
+    patch.set_alpha(0.75)
+for whisker in bp['whiskers']:
+    whisker.set(color='#8a7e6d', linewidth=1.2)
+for cap in bp['caps']:
+    cap.set(color='#8a7e6d', linewidth=1.2)
+for flier in bp['fliers']:
+    flier.set(marker='o', color='#8a7e6d', alpha=0.4, markersize=4)
+
+ax.set_title('Departman Bazında Maaş Dağılımı', fontsize=14, pad=12)
+ax.set_ylabel('Maaş (TL)')
+ax.spines[['top','right']].set_visible(False)
+ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{x:,.0f}'))
+plt.tight_layout()
+plt.savefig('grafik.png', dpi=120, bbox_inches='tight', facecolor='white')
+print("✓ Grafik hazır!")`,
+  },
+  subplots: {
+    label: '🔢 Dashboard (subplots)',
+    kod: `import matplotlib.pyplot as plt
+import numpy as np
+
+np.random.seed(42)
+aylar = ['Oca','Şub','Mar','Nis','May','Haz']
+satis = [42, 58, 35, 71, 63, 80]
+musteri = [320, 410, 280, 520, 480, 590]
+memnuniyet = [4.2, 4.5, 3.8, 4.7, 4.4, 4.8]
+kategori = ['A','B','C','D']
+pazar = [35, 28, 22, 15]
+
+fig, axes = plt.subplots(2, 2, figsize=(10, 7))
+fig.suptitle('Satış Dashboard', fontsize=15, fontweight='500', y=1.01)
+
+# Sol üst — Çubuk
+axes[0,0].bar(aylar, satis, color='#1D9E75', alpha=0.85, edgecolor='none')
+axes[0,0].set_title('Aylık Satış', fontsize=11)
+axes[0,0].spines[['top','right']].set_visible(False)
+
+# Sağ üst — Çizgi
+axes[0,1].plot(aylar, musteri, color='#7F77DD',
+               linewidth=2.5, marker='o', markersize=6)
+axes[0,1].fill_between(aylar, musteri, alpha=0.1, color='#7F77DD')
+axes[0,1].set_title('Müşteri Sayısı', fontsize=11)
+axes[0,1].spines[['top','right']].set_visible(False)
+
+# Sol alt — Çizgi
+axes[1,0].plot(aylar, memnuniyet, color='#e8a04a',
+               linewidth=2.5, marker='s', markersize=6)
+axes[1,0].set_ylim(3, 5)
+axes[1,0].set_title('Memnuniyet Puanı', fontsize=11)
+axes[1,0].spines[['top','right']].set_visible(False)
+
+# Sağ alt — Pasta
+renkler = ['#1D9E75','#7F77DD','#e8a04a','#E24B4A']
+axes[1,1].pie(pazar, labels=kategori, colors=renkler,
+              autopct='%1.0f%%', startangle=90,
+              wedgeprops=dict(edgecolor='white', linewidth=2))
+axes[1,1].set_title('Pazar Payı', fontsize=11)
+
+plt.tight_layout()
+plt.savefig('grafik.png', dpi=120, bbox_inches='tight', facecolor='white')
+print("✓ Dashboard hazır!")`,
   },
   pandas: {
     label: '🐼 Pandas',
     kod: `import pandas as pd
 import numpy as np
 
-# DataFrame oluştur
-veri = {
-    'isim': ['Ali', 'Ayşe', 'Mehmet', 'Zeynep', 'Can'],
-    'yas': [28, 34, 25, 31, 29],
-    'sehir': ['İzmir', 'İstanbul', 'Ankara', 'İzmir', 'İstanbul'],
-    'maas': [8500, 12000, 7200, 9800, 11000]
-}
+np.random.seed(42)
+df = pd.DataFrame({
+    'isim': ['Ali','Ayşe','Mehmet','Zeynep','Can','Fatma'],
+    'yas': [28, 34, 25, 31, 29, 27],
+    'sehir': ['İzmir','İstanbul','Ankara','İzmir','İstanbul','Ankara'],
+    'maas': [8500, 12000, 7200, 9800, 11000, 8200]
+})
 
-df = pd.DataFrame(veri)
 print("=== DataFrame ===")
-print(df.to_string())
+print(df.to_string(index=False))
 print(f"\\nŞekil: {df.shape}")
 print(f"\\nŞehre göre ortalama maaş:")
 print(df.groupby('sehir')['maas'].mean().round(0).to_string())
 print(f"\\nİstatistiksel özet:")
 print(df[['yas','maas']].describe().round(1).to_string())`,
   },
-  numpy: {
-    label: '🔢 NumPy',
-    kod: `import numpy as np
-
-# Vektör işlemleri
-a = np.array([1, 2, 3, 4, 5])
-b = np.array([10, 20, 30, 40, 50])
-
-print(f"a = {a}")
-print(f"b = {b}")
-print(f"a + b = {a + b}")
-print(f"a * b = {a * b}")
-print(f"a . b (dot) = {np.dot(a, b)}")
-
-# Matris
-M = np.random.randint(1, 10, size=(3, 3))
-print(f"\\nRastgele matris:\\n{M}")
-print(f"Transpoz:\\n{M.T}")
-print(f"Satır toplamları: {M.sum(axis=1)}")
-print(f"Sütun ortalamaları: {M.mean(axis=0).round(2)}")`,
-  },
   istatistik: {
     label: '📊 İstatistik',
     kod: `import numpy as np
 from scipy import stats
 
-# İki grup karşılaştırma — bağımsız t-testi
 np.random.seed(42)
-kontrol = np.random.normal(loc=5.0, scale=0.5, size=30)
-deney   = np.random.normal(loc=5.5, scale=0.5, size=30)
+kontrol = np.random.normal(5.0, 0.5, 30)
+deney   = np.random.normal(5.5, 0.5, 30)
 
 t, p = stats.ttest_ind(kontrol, deney)
 
-print("=== Bağımsız Örneklem t-Testi ===")
-print(f"Kontrol grubu: ort={kontrol.mean():.3f}, std={kontrol.std():.3f}")
-print(f"Deney grubu:   ort={deney.mean():.3f}, std={deney.std():.3f}")
+print("=== Bağımsız t-Testi ===")
+print(f"Kontrol: ort={kontrol.mean():.3f}, std={kontrol.std():.3f}")
+print(f"Deney:   ort={deney.mean():.3f}, std={deney.std():.3f}")
 print(f"\\nt istatistiği: {t:.4f}")
 print(f"p değeri:       {p:.4f}")
 print()
 if p < 0.05:
     print("✓ Fark istatistiksel olarak anlamlı (p < 0.05)")
 else:
-    print("✗ Fark istatistiksel olarak anlamlı değil")
-
-# Normallik testi
-_, p_norm = stats.shapiro(kontrol)
-print(f"\\nNormallik testi (Shapiro-Wilk): p={p_norm:.4f}")`,
-  },
-  regresyon: {
-    label: '📈 Regresyon',
-    kod: `import numpy as np
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import r2_score, mean_absolute_error
-
-# Veri oluştur
-np.random.seed(42)
-X = np.random.uniform(10, 40, 50).reshape(-1, 1)
-y = 15 * X.ravel() - 200 + np.random.normal(0, 50, 50)
-
-# Eğit / test böl
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
-)
-
-# Model
-model = LinearRegression()
-model.fit(X_train, y_train)
-y_pred = model.predict(X_test)
-
-print("=== Linear Regression ===")
-print(f"Eğim (coef):    {model.coef_[0]:.4f}")
-print(f"Kesişim:        {model.intercept_:.4f}")
-print(f"R² (test):      {r2_score(y_test, y_pred):.4f}")
-print(f"MAE (test):     {mean_absolute_error(y_test, y_pred):.2f}")
-print()
-print("Örnek tahminler:")
-for x_val in [15, 25, 35]:
-    pred = model.predict([[x_val]])[0]
-    print(f"  x={x_val} → y={pred:.1f}")`,
-  },
-  kmeans: {
-    label: '🔵 K-Means',
-    kod: `import numpy as np
-from sklearn.cluster import KMeans
-from sklearn.preprocessing import StandardScaler
-
-# Yapay müşteri verisi (RFM benzeri)
-np.random.seed(42)
-n = 100
-recency  = np.concatenate([np.random.normal(5,1,34), np.random.normal(15,2,33), np.random.normal(30,3,33)])
-monetary = np.concatenate([np.random.normal(1000,100,34), np.random.normal(400,80,33), np.random.normal(150,30,33)])
-
-X = np.column_stack([recency, monetary])
-
-# Ölçekle
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
-
-# K-Means
-kmeans = KMeans(n_clusters=3, random_state=42, n_init=10)
-labels = kmeans.fit_predict(X_scaled)
-
-print("=== Müşteri Segmentasyonu (K-Means) ===")
-print(f"İnertia: {kmeans.inertia_:.2f}")
-print()
-for k in range(3):
-    mask = labels == k
-    print(f"Segment {k+1}: {mask.sum()} müşteri")
-    print(f"  Ort. son alışveriş: {recency[mask].mean():.1f} gün önce")
-    print(f"  Ort. harcama: {monetary[mask].mean():.0f} TL")`,
-  },
-  liste: {
-    label: '📋 Temel Python',
-    kod: `# Python temel yapıları
-
-# Liste işlemleri
-notlar = [85, 92, 78, 95, 88, 76, 91, 83]
-print(f"Notlar: {notlar}")
-print(f"Ortalama: {sum(notlar)/len(notlar):.1f}")
-print(f"En yüksek: {max(notlar)}")
-print(f"En düşük: {min(notlar)}")
-
-# List comprehension
-gecenler = [n for n in notlar if n >= 85]
-print(f"\\n85 ve üzeri: {gecenler}")
-
-kareler = [n**2 for n in range(1, 6)]
-print(f"Kareler: {kareler}")
-
-# Sözlük
-ogrenciler = {'Ali': 85, 'Ayşe': 92, 'Mehmet': 78, 'Zeynep': 95}
-print(f"\\nÖğrenci notları:")
-for isim, not_ in sorted(ogrenciler.items(), key=lambda x: x[1], reverse=True):
-    durum = "✓" if not_ >= 85 else "✗"
-    print(f"  {durum} {isim}: {not_}")`,
+    print("✗ Fark anlamlı değil")`,
   },
 };
 
 export default function PythonPlayground() {
   const [code, setCode] = useState(SNIPPETS.baslangic.kod);
   const [output, setOutput] = useState('▶ Çalıştır butonuna bas veya Cmd+Enter kullan.');
+  const [imgSrc, setImgSrc] = useState(null);
   const [status, setStatus] = useState('Bekliyor');
   const [time, setTime] = useState('—');
   const [runs, setRuns] = useState(0);
@@ -190,7 +325,6 @@ export default function PythonPlayground() {
   const [pyStatus, setPyStatus] = useState('yükleniyor');
   const [activeSnippet, setActiveSnippet] = useState('baslangic');
   const pyodideRef = useRef(null);
-  const editorRef = useRef(null);
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -199,7 +333,13 @@ export default function PythonPlayground() {
       try {
         setPyStatus('hazırlanıyor');
         const py = await window.loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.2/full/' });
-        await py.loadPackagesFromImports('import numpy, pandas; from scipy import stats; from sklearn.cluster import KMeans; from sklearn.linear_model import LinearRegression');
+        await py.loadPackage(['matplotlib', 'numpy', 'pandas', 'scipy']);
+        // matplotlib backend ayarla
+        await py.runPythonAsync(`
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+`);
         pyodideRef.current = py;
         setPyStatus('hazır');
       } catch (e) {
@@ -211,21 +351,76 @@ export default function PythonPlayground() {
 
   const runCode = async () => {
     if (!pyodideRef.current) {
-      setOutput('⏳ Pyodide henüz yüklenmedi, lütfen bekle...');
+      setOutput('⏳ Pyodide henüz yüklenmedi...');
       return;
     }
     setIsRunning(true);
     setStatus('Çalışıyor');
     setOutput('');
+    setImgSrc(null);
     const t0 = performance.now();
+
     try {
+      const py = pyodideRef.current;
       let out = '';
-      pyodideRef.current.globals.set('print', (...args) => {
+
+      py.globals.set('print', (...args) => {
         out += args.map(a => String(a)).join(' ') + '\n';
       });
-      await pyodideRef.current.runPythonAsync(code);
+
+      // Grafik kaydetme hook'u
+      await py.runPythonAsync(`
+import matplotlib.pyplot as plt
+import io, base64, sys
+
+_original_savefig = plt.savefig
+_img_b64 = None
+
+def _custom_savefig(fname, **kwargs):
+    if isinstance(fname, str) and fname.endswith('.png'):
+        buf = io.BytesIO()
+        fig = plt.gcf()
+        fig.savefig(buf, **{**kwargs, 'format': 'png'})
+        buf.seek(0)
+        import base64
+        globals()['_img_b64'] = base64.b64encode(buf.read()).decode()
+        buf.close()
+    else:
+        _original_savefig(fname, **kwargs)
+
+plt.savefig = _custom_savefig
+_img_b64 = None
+`);
+
+      await py.runPythonAsync(code);
+
+      // Grafik var mı kontrol et
+      const imgB64 = py.globals.get('_img_b64');
+      if (imgB64) {
+        setImgSrc(`data:image/png;base64,${imgB64}`);
+      }
+
+      // plt.show() çağrıldıysa da yakala
+      try {
+        await py.runPythonAsync(`
+import io, base64
+_figs = [plt.figure(n) for n in plt.get_fignums()]
+if _figs and _img_b64 is None:
+    buf = io.BytesIO()
+    _figs[-1].savefig(buf, format='png', dpi=120, bbox_inches='tight', facecolor='white')
+    buf.seek(0)
+    _img_b64 = base64.b64encode(buf.read()).decode()
+    buf.close()
+plt.close('all')
+`);
+        const imgB64After = py.globals.get('_img_b64');
+        if (imgB64After && !imgB64) {
+          setImgSrc(`data:image/png;base64,${imgB64After}`);
+        }
+      } catch (e) {}
+
       const elapsed = ((performance.now() - t0) / 1000).toFixed(2);
-      setOutput(out || '(çıktı yok)');
+      setOutput(out || (imgSrc ? '' : '(çıktı yok)'));
       setStatus('✓ Başarılı');
       setTime(`${elapsed}s`);
       setRuns(r => r + 1);
@@ -252,6 +447,19 @@ export default function PythonPlayground() {
 
   const statusColor = pyStatus === 'hazır' ? '#1D9E75' : pyStatus === 'hata' ? '#E24B4A' : '#e8a04a';
 
+  const SNIPPET_GROUPS = [
+    { key: 'baslangic', label: '🐍 Başlangıç' },
+    { key: 'cubuk',     label: '📊 Çubuk' },
+    { key: 'cizgi',     label: '📈 Çizgi' },
+    { key: 'scatter',   label: '🔵 Scatter' },
+    { key: 'histogram', label: '📉 Histogram' },
+    { key: 'heatmap',   label: '🗺️ Heatmap' },
+    { key: 'boxplot',   label: '📦 Boxplot' },
+    { key: 'subplots',  label: '🔢 Dashboard' },
+    { key: 'pandas',    label: '🐼 Pandas' },
+    { key: 'istatistik',label: '📊 İstatistik' },
+  ];
+
   return (
     <main className="min-h-screen">
       <article className="max-w-4xl mx-auto px-6 py-12">
@@ -262,36 +470,40 @@ export default function PythonPlayground() {
           Python Playground
         </h1>
         <p className="text-sm mb-2" style={{ color: 'var(--color-text-mute)' }}>
-          Tarayıcında gerçek Python çalıştır — kurulum yok, hesap yok
+          Tarayıcında gerçek Python + matplotlib çalıştır — kurulum yok, hesap yok
         </p>
-        <div className="flex items-center gap-2 mb-8">
+        <div className="flex items-center gap-2 mb-6">
           <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: statusColor }} />
           <span className="text-xs" style={{ color: 'var(--color-text-mute)' }}>
-            Pyodide {pyStatus} · numpy, pandas, scipy, sklearn mevcut
+            Pyodide {pyStatus} · matplotlib, numpy, pandas, scipy mevcut
           </span>
         </div>
 
         {/* Snippet bar */}
         <div className="flex gap-2 flex-wrap mb-4">
-          {Object.entries(SNIPPETS).map(([key, { label }]) => (
-            <button key={key} onClick={() => { setActiveSnippet(key); setCode(SNIPPETS[key].kod); setOutput(''); }}
-              style={{
-                fontSize: '12px', padding: '5px 12px', borderRadius: '999px',
-                border: '0.5px solid var(--color-border)',
-                background: activeSnippet === key ? 'var(--color-accent-soft)' : 'var(--color-cream-card)',
-                color: activeSnippet === key ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
-                cursor: 'pointer', fontWeight: activeSnippet === key ? 500 : 400,
-              }}
-            >{label}</button>
+          {SNIPPET_GROUPS.map(({ key, label }) => (
+            <button key={key} onClick={() => {
+              setActiveSnippet(key);
+              setCode(SNIPPETS[key].kod);
+              setOutput('');
+              setImgSrc(null);
+            }} style={{
+              fontSize: '12px', padding: '5px 12px', borderRadius: '999px',
+              border: '0.5px solid var(--color-border)',
+              background: activeSnippet === key ? 'var(--color-accent-soft)' : 'var(--color-cream-card)',
+              color: activeSnippet === key ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
+              cursor: 'pointer', fontWeight: activeSnippet === key ? 500 : 400,
+              transition: 'all .15s',
+            }}>{label}</button>
           ))}
         </div>
 
         {/* Editor */}
-        <div className="card" style={{ padding: 0, marginBottom: '12px', overflow: 'hidden' }}>
+        <div className="card mb-3" style={{ padding: 0, overflow: 'hidden' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 14px', borderBottom: '0.5px solid var(--color-border)', background: 'var(--color-cream)' }}>
             <span className="font-mono text-xs" style={{ color: 'var(--color-text-mute)' }}>main.py</span>
             <div className="flex gap-2 items-center">
-              <button onClick={() => { setCode(''); setOutput(''); }}
+              <button onClick={() => { setCode(''); setOutput(''); setImgSrc(null); }}
                 style={{ fontSize: '11px', padding: '3px 10px', borderRadius: '6px', border: '0.5px solid var(--color-border)', background: 'transparent', cursor: 'pointer', color: 'var(--color-text-mute)' }}>
                 Temizle
               </button>
@@ -302,7 +514,6 @@ export default function PythonPlayground() {
             </div>
           </div>
           <textarea
-            ref={editorRef}
             value={code}
             onChange={e => setCode(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -317,31 +528,47 @@ export default function PythonPlayground() {
           />
           <div style={{ padding: '6px 14px', background: 'var(--color-cream)', borderTop: '0.5px solid var(--color-border)' }}>
             <span className="text-xs" style={{ color: 'var(--color-text-mute)' }}>
-              Cmd+Enter ile çalıştır · Tab ile girinti · numpy, pandas, scipy, sklearn kullanabilirsin
+              Cmd+Enter ile çalıştır · Tab ile girinti · plt.savefig() ile grafik görüntüle
             </span>
           </div>
         </div>
 
         {/* Output */}
-        <div className="card" style={{ padding: 0, marginBottom: '16px', overflow: 'hidden' }}>
+        <div className="card mb-4" style={{ padding: 0, overflow: 'hidden' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 14px', borderBottom: '0.5px solid var(--color-border)', background: 'var(--color-cream)' }}>
             <span className="font-mono text-xs" style={{ color: 'var(--color-text-mute)' }}>çıktı</span>
             <span className="text-xs" style={{ color: status.includes('Hata') ? '#E24B4A' : status.includes('Başarılı') ? '#1D9E75' : 'var(--color-text-mute)' }}>{status}</span>
           </div>
-          <pre style={{
-            margin: 0, padding: '14px', fontFamily: 'var(--font-mono)', fontSize: '13px',
-            lineHeight: '1.65', minHeight: '100px', whiteSpace: 'pre-wrap', wordBreak: 'break-word',
-            color: status.includes('Hata') ? '#E24B4A' : 'var(--color-text)',
-            background: 'var(--color-cream-card)',
-          }}>{output}</pre>
+
+          {/* Grafik görüntüsü */}
+          {imgSrc && (
+            <div style={{ padding: '16px', background: 'var(--color-cream-card)', borderBottom: output ? '0.5px solid var(--color-border)' : 'none', textAlign: 'center' }}>
+              <img src={imgSrc} alt="Matplotlib grafik" style={{ maxWidth: '100%', borderRadius: '8px', boxShadow: '0 2px 12px rgba(0,0,0,0.08)' }} />
+              <div style={{ marginTop: '8px' }}>
+                <a href={imgSrc} download="grafik.png" style={{ fontSize: '12px', color: 'var(--color-accent-text)', textDecoration: 'none' }}>
+                  ⬇ Grafiği indir
+                </a>
+              </div>
+            </div>
+          )}
+
+          {/* Text output */}
+          {(output || !imgSrc) && (
+            <pre style={{
+              margin: 0, padding: '14px', fontFamily: 'var(--font-mono)', fontSize: '13px',
+              lineHeight: '1.65', minHeight: imgSrc ? 'auto' : '80px', whiteSpace: 'pre-wrap', wordBreak: 'break-word',
+              color: status.includes('Hata') ? '#E24B4A' : 'var(--color-text)',
+              background: 'var(--color-cream-card)',
+            }}>{output}</pre>
+          )}
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-3 mb-12">
+        <div className="grid grid-cols-3 gap-3 mb-8">
           {[
             { label: 'Durum', val: status },
             { label: 'Son çalışma', val: time },
-            { label: 'Toplam çalıştırma', val: String(runs) },
+            { label: 'Toplam', val: `${runs} kez` },
           ].map(({ label, val }) => (
             <div key={label} className="bg-gray-50 rounded-lg p-3 text-center">
               <div className="text-xs mb-1" style={{ color: 'var(--color-text-mute)' }}>{label}</div>
@@ -350,21 +577,15 @@ export default function PythonPlayground() {
           ))}
         </div>
 
-        {/* Açıklama */}
         <div style={{ borderTop: '0.5px solid var(--color-border)', paddingTop: '2rem' }}>
           <h2 className="font-serif text-2xl font-medium mb-4" style={{ color: 'var(--color-text)' }}>Nasıl çalışıyor?</h2>
           <p style={{ fontFamily: 'var(--font-serif)', fontSize: '17px', lineHeight: '1.75', color: 'var(--color-text)', marginBottom: '1rem' }}>
-            Bu playground <strong>Pyodide</strong> kullanıyor — Python&apos;un WebAssembly&apos;e derlenmiş versiyonu.
-            Sunucu yok, API yok. Kod tamamen tarayıcında çalışıyor.
-          </p>
-          <p style={{ fontFamily: 'var(--font-serif)', fontSize: '17px', lineHeight: '1.75', color: 'var(--color-text)', marginBottom: '1rem' }}>
-            Kullanılabilir kütüphaneler: <strong>numpy</strong>, <strong>pandas</strong>,
-            <strong> scipy</strong>, <strong>scikit-learn</strong> ve Python standart kütüphanesi.
-            matplotlib grafik çıktısı şu an desteklenmiyor (yakında gelecek).
+            Bu playground <strong>Pyodide</strong> kullanıyor — Python&apos;un WebAssembly versiyonu.
+            <strong> matplotlib</strong> grafikleri tarayıcıda render eder, PNG olarak gösterir ve indirebilirsin.
           </p>
           <p style={{ fontFamily: 'var(--font-serif)', fontSize: '17px', lineHeight: '1.75', color: 'var(--color-text)' }}>
-            İlk yüklenme 10-20 saniye sürebilir (Pyodide + kütüphaneler indiriliyor).
-            Sonraki çalıştırmalar çok hızlı.
+            Mevcut kütüphaneler: <strong>matplotlib</strong>, <strong>numpy</strong>,{' '}
+            <strong>pandas</strong>, <strong>scipy</strong> ve Python standart kütüphanesi.
           </p>
         </div>
       </article>
