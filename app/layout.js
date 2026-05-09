@@ -62,6 +62,7 @@ export default function RootLayout({ children }) {
         <script src="/muzik-player.js" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#1D9E75" />
+        <meta name="google-site-verification" content="oEjUXEcwRAvCofIP79PEy5vtWO8OafOLnZ5bjOAyFJo" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Sıfır Gecikme" />
