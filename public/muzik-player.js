@@ -249,17 +249,6 @@
         }
       }
     }).observe(document.querySelector('head') || document.documentElement, { childList: true, subtree: true });
-
-    // Ilk etkilesimde otomatik basla
-    function autoStart() {
-      audio.play().catch(function () {});
-      ['click', 'scroll', 'keydown', 'touchstart'].forEach(function (ev) {
-        window.removeEventListener(ev, autoStart);
-      });
-    }
-    ['click', 'scroll', 'keydown', 'touchstart'].forEach(function (ev) {
-      window.addEventListener(ev, autoStart, { passive: true });
-    });
   }
 
   if (document.readyState === 'loading') {
