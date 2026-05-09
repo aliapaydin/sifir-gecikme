@@ -5,7 +5,6 @@ import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import MuzikPlayer from '../components/MuzikPlayer';
 
 const inter = Inter({ subsets: ['latin', 'latin-ext'], variable: '--font-sans', display: 'swap' });
 const lora = Lora({ subsets: ['latin', 'latin-ext'], variable: '--font-serif', display: 'swap' });
@@ -59,20 +58,25 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="tr" suppressHydrationWarning className={`${inter.variable} ${lora.variable} ${jetbrains.variable}`}>
-      <body suppressHydrationWarning>
-        <Script id="theme-init" strategy="afterInteractive">{`
-          (function(){
-            try {
-              var t = localStorage.getItem('theme');
-              if (t === 'dark') document.documentElement.classList.add('dark');
-            } catch(e) {}
-          })();
-        `}</Script>
-        <Navbar />
-        {children}
-        <MuzikPlayer key="muzik-player-sabit" />
-        <Footer />
-      </body>
+      <head>
+        <script src="/muzik-player.js" />
+      </head>
+        <body suppressHydrationWarning>
+          <Script id="theme-init" strategy="afterInteractive">{`
+            (function(){
+              try {
+                var t = localStorage.getItem('theme');
+                if (t === 'dark') document.documentElement.classList.add('dark');
+                else document.documentElement.classList.remove('dark');
+              } catch(e) {}
+            })();
+          `}</Script>
+          <Navbar />
+          {children}
+          <Footer />
+          <Analytics />
+          <SpeedInsights />
+        </body>
     </html>
   );
 }
