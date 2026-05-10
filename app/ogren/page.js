@@ -157,6 +157,44 @@ export default function OgrenSayfasi() {
           })}
         </div>
 
+{(() => {
+  const tumTamamlandi = dersler.every(d => tamamlananlar[d.id]);
+  return (
+    <div style={{ marginTop: '16px' }}>
+      {tumTamamlandi ? (
+        <a href="/sinav" style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
+          padding: '16px', borderRadius: '12px',
+          background: 'linear-gradient(135deg, #1D9E75, #0d3d2e)',
+          color: '#fff', textDecoration: 'none', fontSize: '16px', fontWeight: 500,
+        }}>
+          🎓 Sertifika sınavına gir →
+        </a>
+      ) : (
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
+          padding: '16px', borderRadius: '12px',
+          background: 'var(--color-cream)', border: '0.5px solid var(--color-border)',
+          color: 'var(--color-text-mute)', fontSize: '14px',
+        }}>
+          🔒 Tüm dersleri tamamlayınca sınava girebilirsin
+          ({Object.keys(tamamlananlar).length}/{dersler.length} ders tamamlandı)
+        </div>
+      )}
+    </div>
+  );
+})()}
+
+        <a href="/sinav" style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
+          padding: '16px', borderRadius: '12px', border: 'none',
+          background: 'linear-gradient(135deg, #1D9E75, #0d3d2e)',
+          color: '#fff', textDecoration: 'none', fontSize: '16px', fontWeight: 500,
+          marginTop: '16px',
+        }}>
+          🎓 Sertifika sınavına gir →
+        </a>
+
         <div className="card mt-8 text-center" style={{ padding: '24px' }}>
           <div style={{ fontSize: '32px', marginBottom: '8px' }}>🎯</div>
           <div className="font-serif font-medium mb-2" style={{ fontSize: '18px', color: 'var(--color-text)' }}>

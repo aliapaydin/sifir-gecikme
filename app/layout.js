@@ -59,7 +59,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="tr" suppressHydrationWarning className={`${inter.variable} ${lora.variable} ${jetbrains.variable}`}>
       <head>
-        <script src="/muzik-player.js" />
+        <Script src="/muzik-player.js" strategy="afterInteractive" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#1D9E75" />
         <meta name="google-site-verification" content="oEjUXEcwRAvCofIP79PEy5vtWO8OafOLnZ5bjOAyFJo" />
