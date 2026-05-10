@@ -2,6 +2,7 @@
 import HeroCanvas from '../components/HeroCanvas';
 import OgrenKarti from '../components/OgrenKarti';
 import AboneOl from '../components/AboneOl';
+import YolHaritasiKarti from '../components/YolHaritasiKarti';
 
 function Icon({ type }) {
   const icons = {
@@ -396,6 +397,15 @@ export default function Home() {
       ozet: 'Fiyat, öğrenme eğrisi, güçlü/zayıf yanlar ve Türkiye iş piyasasında durum.',
       meta: 'rehber · 15 dakika',
     },
+      {
+      href: '/yazilar/yol-haritasi',
+      baslik: 'Veri analisti olma yol haritası',
+      ozet: 'Sıfırdan veri analistine giden 10 adım. Her adımda ne öğreneceksin, ne kadar sürer, hangi kaynakları kullanacaksın.',
+      meta: '10 adım · interaktif',
+      kategori: 'kariyer',
+      borderColor: '#1D9E75',
+      icon: 'rol-farklari',
+    },
   ];
 
   const interaktif = yazilar.filter(y => y.badge === 'interaktif').length;
@@ -438,6 +448,7 @@ export default function Home() {
       </section>
 
 <OgrenKarti />
+<YolHaritasiKarti />
 
       <section className="max-w-5xl mx-auto px-6 py-10 pb-20">
         <HeroCanvas />
