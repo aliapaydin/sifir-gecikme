@@ -19,9 +19,11 @@ export default function OgrenKarti() {
   const seri = ilerleme?.gunlukSeri || 0;
   const hicYok = toplamXP === 0;
   const toplamXPHavuzu = dersler.reduce((s, d) => s + d.xp, 0);
+  const tumTamamlandi = tamamlananSayi === dersler.length;
 
   const ilkBitmeyenDers = dersler.find(d => !tamamlananlar[d.id]);
   const hedefDers = devamEden ? dersler.find(d => d.id === devamEden.dersId) : ilkBitmeyenDers;
+  const sinavaIlerleme = Math.round((tamamlananSayi / dersler.length) * 100);
 
   return (
     <section className="max-w-5xl mx-auto px-6 py-6">
@@ -50,25 +52,63 @@ export default function OgrenKarti() {
                   <span key={l} style={{ fontSize: '12px', padding: '3px 10px', borderRadius: '6px', border: '0.5px solid var(--color-border)', background: 'var(--color-cream-card)', color: 'var(--color-text-soft)' }}>{l}</span>
                 ))}
               </div>
-              <a href={hedefDers ? `/ogren/${hedefDers.id}` : '/ogren'} style={{
-                display: 'inline-flex', alignItems: 'center', gap: '6px',
-                background: 'var(--color-accent)', color: '#fff',
-                padding: '9px 18px', borderRadius: '8px',
-                fontSize: '13px', fontWeight: 500, textDecoration: 'none',
-              }}>
-                {hicYok ? 'Derse başla' : devamEden ? 'Devam et' : 'Sonraki ders'} →
-              </a>
-              <a href="/ogren" style={{
-              display: 'inline-flex', alignItems: 'center', gap: '6px',
-              marginLeft: '10px',
-              padding: '9px 16px', borderRadius: '8px',
-              border: '0.5px solid var(--color-border)',
-              background: 'var(--color-cream-card)',
-              color: 'var(--color-text-soft)',
-              fontSize: '13px', fontWeight: 500, textDecoration: 'none',
-            }}>
-              Tüm dersler
-            </a>
+
+              {/* Butonlar */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                <a href={hedefDers ? `/ogren/${hedefDers.id}` : '/ogren'} style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '6px',
+                  background: 'var(--color-accent)', color: '#fff',
+                  padding: '9px 18px', borderRadius: '8px',
+                  fontSize: '13px', fontWeight: 500, textDecoration: 'none',
+                }}>
+                  {hicYok ? 'Derse başla' : devamEden ? 'Devam et' : 'Sonraki ders'} →
+                </a>
+                <a href="/ogren" style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '6px',
+                  padding: '9px 16px', borderRadius: '8px',
+                  border: '0.5px solid var(--color-border)',
+                  background: 'var(--color-cream-card)',
+                  color: 'var(--color-text-soft)',
+                  fontSize: '13px', fontWeight: 500, textDecoration: 'none',
+                }}>
+                  Tüm dersler
+                </a>
+              </div>
+
+              {/* Sınav ilerleme göstergesi */}
+              {!hicYok && (
+                <div style={{ marginTop: '14px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
+                    <span style={{ fontSize: '11px', color: 'var(--color-text-mute)' }}>
+                      🎓 Sertifika sınavına ilerleme
+                    </span>
+                    <span style={{ fontSize: '11px', color: 'var(--color-text-mute)' }}>
+                      {tamamlananSayi}/{dersler.length} ders
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <div style={{ flex: 1, height: '6px', background: 'var(--color-border)', borderRadius: '999px', overflow: 'hidden' }}>
+                      <div style={{
+                        height: '100%',
+                        width: `${sinavaIlerleme}%`,
+                        background: tumTamamlandi ? '#1D9E75' : '#e8a04a',
+                        borderRadius: '999px', transition: 'width .4s',
+                      }} />
+                    </div>
+                    {tumTamamlandi ? (
+                      <a href="/sinav" style={{
+                        fontSize: '11px', fontWeight: 500, padding: '4px 12px',
+                        borderRadius: '8px', background: '#1D9E75',
+                        color: '#fff', textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0,
+                      }}>Sınava gir →</a>
+                    ) : (
+                      <span style={{ fontSize: '11px', color: 'var(--color-text-mute)', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                        %{sinavaIlerleme}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flexShrink: 0 }}>
@@ -120,7 +160,7 @@ export default function OgrenKarti() {
                   const progYuzde = tamam ? 100 : devamMi ? Math.round((devamEden.adimIdx / ders.adimlar.length) * 100) : 0;
 
                   return (
-                    <div key={ders.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '7px 0', borderBottom: idx < 4 ? '0.5px solid var(--color-border)' : 'none', opacity: !tamam && !devamMi && idx > 0 && !tamamlananlar[dersler[idx-1]?.id] ? 0.4 : 1 }}>
+                    <div key={ders.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '7px 0', borderBottom: idx < 4 ? '0.5px solid var(--color-border)' : 'none', opacity: !tamam && !devamMi && idx > 0 && !tamamlananlar[dersler[idx - 1]?.id] ? 0.4 : 1 }}>
                       <span style={{ fontSize: '18px', flexShrink: 0 }}>{ders.emoji}</span>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontSize: '13px', color: 'var(--color-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ders.baslik}</div>

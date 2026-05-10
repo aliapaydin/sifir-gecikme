@@ -16,6 +16,8 @@ export default function SinavSayfasi() {
   const [tumTamamlandi, setTumTamamlandi] = useState(false);
   const [tamamlananSayi, setTamamlananSayi] = useState(0);
   const [yuklendi, setYuklendi] = useState(false);
+  const [unvan, setUnvan] = useState('');
+  const [sirket, setSirket] = useState('');
 
   useEffect(() => {
     try {
@@ -49,7 +51,7 @@ export default function SinavSayfasi() {
       const puan = Math.round((dogru / toplam) * 100);
       let xp = 0;
       try { xp = JSON.parse(localStorage.getItem('sz_ilerleme_v1') || '{}').toplamXP || 0; } catch(e) {}
-      router.push(`/sinav/sonuc?puan=${puan}&isim=${encodeURIComponent(isim)}&xp=${xp}`);
+      router.push(`/sinav/sonuc?puan=${puan}&isim=${encodeURIComponent(isim)}&unvan=${encodeURIComponent(unvan)}&sirket=${encodeURIComponent(sirket)}&xp=${xp}`);
     } else {
       setSoruIdx(soruIdx + 1);
       setSecilen(null);
@@ -146,6 +148,38 @@ export default function SinavSayfasi() {
                 fontSize: '15px', outline: 'none', boxSizing: 'border-box',
               }}
             />
+
+            <label style={{ fontSize: '13px', color: 'var(--color-text-soft)', display: 'block', marginBottom: '6px', marginTop: '12px' }}>
+            Unvan / Meslek (isteğe bağlı):
+          </label>
+          <input
+            type="text"
+            value={unvan}
+            onChange={e => setUnvan(e.target.value)}
+            placeholder="Veri Bilimi Mühendisi"
+            style={{
+              width: '100%', padding: '10px 14px', borderRadius: '10px',
+              border: '0.5px solid var(--color-border)',
+              background: 'var(--color-cream-card)', color: 'var(--color-text)',
+              fontSize: '15px', outline: 'none', boxSizing: 'border-box',
+            }}
+          />
+
+          <label style={{ fontSize: '13px', color: 'var(--color-text-soft)', display: 'block', marginBottom: '6px', marginTop: '12px' }}>
+            Şirket / Kurum (isteğe bağlı):
+          </label>
+          <input
+            type="text"
+            value={sirket}
+            onChange={e => setSirket(e.target.value)}
+            placeholder="Concentrix"
+            style={{
+              width: '100%', padding: '10px 14px', borderRadius: '10px',
+              border: '0.5px solid var(--color-border)',
+              background: 'var(--color-cream-card)', color: 'var(--color-text)',
+              fontSize: '15px', outline: 'none', boxSizing: 'border-box',
+            }}
+          />
           </div>
 
           <button onClick={() => { if (isim.trim()) setBasladi(true); }} disabled={!isim.trim()} style={{
