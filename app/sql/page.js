@@ -141,7 +141,12 @@ export default function SQLPlayground() {
           )}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '16px', alignItems: 'start' }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: '16px',
+          alignItems: 'start',
+        }}>
 
           {/* Sol panel — şema explorer */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
