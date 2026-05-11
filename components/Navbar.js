@@ -13,6 +13,7 @@ const kategoriler = [
   { href: '/python',              label: 'PY Playground', emoji: '🐍' },
   { href: '/sql',                 label: 'SQL Playground',        emoji: '🗄️' },
   { href: '/ogren',               label: 'Öğren',      emoji: '📚' },
+  { href: '/proje',               label: 'Proje',      emoji: '🚀' },
 ];
 
 function ThemeToggleBtn() {
