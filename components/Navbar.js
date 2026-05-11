@@ -1,7 +1,7 @@
 'use client';
 
 import Arama from './Arama';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 
 const kategoriler = [
@@ -81,6 +81,24 @@ export default function Navbar() {
     return pathname.startsWith(href);
   };
 
+  const pillRef = useRef(null);
+  const [pillScroll, setPillScroll] = useState({ left: false, right: true });
+
+  useEffect(() => {
+    const el = pillRef.current;
+    if (!el) return;
+    const update = () => {
+      setPillScroll({
+        left: el.scrollLeft > 8,
+        right: el.scrollLeft + el.clientWidth < el.scrollWidth - 8,
+      });
+    };
+    update();
+    el.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    return () => { el.removeEventListener('scroll', update); window.removeEventListener('resize', update); };
+  }, []);
+
 const [isDark, setIsDark] = useState(false);
 
 useEffect(() => {
@@ -132,28 +150,6 @@ useEffect(() => {
         {/* Desktop nav */}
         {!isMobile && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '1px' }}>
-            <a href="/" style={{
-              padding: '7px 11px', borderRadius: '8px', fontSize: '13px', textDecoration: 'none',
-              background: pathname === '/' ? 'var(--color-accent-soft)' : 'transparent',
-              color: pathname === '/' ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
-              fontWeight: pathname === '/' ? 500 : 400,
-            }}>Tümü</a>
-
-            {kategoriler.map(({ href, label, emoji }) => (
-              <a key={href} href={href} style={{
-                padding: '7px 11px', borderRadius: '8px', fontSize: '13px', textDecoration: 'none',
-                background: isActive(href) ? 'var(--color-accent-soft)' : 'transparent',
-                color: isActive(href) ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
-                fontWeight: isActive(href) ? 500 : 400,
-                display: 'flex', alignItems: 'center', gap: '4px',
-              }}>
-                <span style={{ fontSize: '12px' }}>{emoji}</span>
-                {label}
-              </a>
-            ))}
-
-            <div style={{ width: '1px', height: '18px', background: 'var(--color-border)', margin: '0 4px' }} />
-
             <a href="/hakkimda" style={{
               padding: '7px 11px', borderRadius: '8px', fontSize: '13px', textDecoration: 'none',
               background: isActive('/hakkimda') ? 'var(--color-accent-soft)' : 'transparent',
@@ -186,6 +182,69 @@ useEffect(() => {
         )}
       </div>
 
+      {/* Pill bar — her ekranda görünür */}
+      <div style={{ position: 'relative', borderTop: '0.5px solid var(--color-border)' }}>
+        {/* Sol fade */}
+        {pillScroll.left && (
+          <div style={{
+            position: 'absolute', left: 0, top: 0, bottom: 0, width: '48px', zIndex: 2,
+            pointerEvents: 'none',
+            background: `linear-gradient(to right, ${isDark ? 'rgba(26,24,21,0.95)' : 'rgba(243,240,233,0.95)'}, transparent)`,
+          }} />
+        )}
+        {/* Sağ fade */}
+        {pillScroll.right && (
+          <div style={{
+            position: 'absolute', right: 0, top: 0, bottom: 0, width: '48px', zIndex: 2,
+            pointerEvents: 'none',
+            background: `linear-gradient(to left, ${isDark ? 'rgba(26,24,21,0.95)' : 'rgba(243,240,233,0.95)'}, transparent)`,
+          }} />
+        )}
+        <div ref={pillRef} style={{
+          overflowX: 'auto',
+          scrollbarWidth: 'none',
+          WebkitOverflowScrolling: 'touch',
+          background: isDark ? 'rgba(0,0,0,0.18)' : 'rgba(0,0,0,0.035)',
+        }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '4px',
+          padding: '6px 1.5rem',
+          width: 'max-content',
+          minWidth: '100%',
+        }}>
+          <a href="/" style={{
+            padding: '4px 12px', borderRadius: '999px', fontSize: '12.5px',
+            textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0,
+            border: '0.5px solid',
+            borderColor: pathname === '/' ? 'var(--color-accent)' : 'var(--color-border)',
+            background: pathname === '/' ? 'var(--color-accent-soft)' : 'transparent',
+            color: pathname === '/' ? 'var(--color-accent-text)' : 'var(--color-text-mute)',
+            fontWeight: pathname === '/' ? 500 : 400,
+          }}>Tümü</a>
+
+          <div style={{ width: '0.5px', height: '14px', background: 'var(--color-border)', flexShrink: 0, margin: '0 2px' }} />
+
+          {kategoriler.map(({ href, label, emoji }) => (
+            <a key={href} href={href} style={{
+              padding: '4px 12px', borderRadius: '999px', fontSize: '12.5px',
+              textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0,
+              display: 'flex', alignItems: 'center', gap: '5px',
+              border: '0.5px solid',
+              borderColor: isActive(href) ? 'var(--color-accent)' : 'var(--color-border)',
+              background: isActive(href) ? 'var(--color-accent-soft)' : 'transparent',
+              color: isActive(href) ? 'var(--color-accent-text)' : 'var(--color-text-mute)',
+              fontWeight: isActive(href) ? 500 : 400,
+            }}>
+              <span style={{ fontSize: '11px' }}>{emoji}</span>
+              {label}
+            </a>
+          ))}
+        </div>
+        </div>
+      </div>
+
       {/* Mobile dropdown */}
       {isMobile && menuOpen && (
         <div style={{ borderTop: '0.5px solid var(--color-border)', background: 'var(--color-cream)', padding: '8px 16px 16px' }}>
@@ -199,23 +258,6 @@ useEffect(() => {
           }}>
             <span>🏠</span> Tüm İçerikler
           </a>
-
-          <div style={{ fontSize: '11px', color: 'var(--color-text-mute)', padding: '10px 14px 4px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-            Kategoriler
-          </div>
-
-          {kategoriler.map(({ href, label, emoji }) => (
-            <a key={href} href={href} style={{
-              display: 'flex', alignItems: 'center', gap: '10px',
-              padding: '10px 14px', borderRadius: '8px', fontSize: '14px',
-              textDecoration: 'none', marginBottom: '2px',
-              background: isActive(href) ? 'var(--color-accent-soft)' : 'transparent',
-              color: isActive(href) ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
-              fontWeight: isActive(href) ? 500 : 400,
-            }}>
-              <span>{emoji}</span> {label}
-            </a>
-          ))}
 
           <div style={{ height: '0.5px', background: 'var(--color-border)', margin: '8px 0' }} />
 
