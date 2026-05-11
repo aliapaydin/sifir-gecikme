@@ -67,6 +67,7 @@ export default function SQLPlayground() {
     setCalistiriliyor(true);
     setSonuc(null);
     setHata(null);
+    try { const p = Number(localStorage.getItem('sz_sql_sorgu')||0); localStorage.setItem('sz_sql_sorgu', p+1); } catch {}
     const t0 = performance.now();
     try {
       const results = db.exec(sql);

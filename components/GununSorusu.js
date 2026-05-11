@@ -57,6 +57,12 @@ export default function GununSorusu() {
     setSecilen(idx);
     setGosterAciklama(true);
     localStorage.setItem(bugunKey(), String(idx));
+    if (idx === soru.dogru) {
+      try {
+        const prev = Number(localStorage.getItem('sz_gsq_dogru') || 0);
+        localStorage.setItem('sz_gsq_dogru', String(prev + 1));
+      } catch {}
+    }
   };
 
   if (!soru) return null;

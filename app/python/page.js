@@ -808,6 +808,7 @@ export default function PythonPlayground() {
 
   const runCode = async () => {
     if (!pyodideRef.current) { setOutput('⏳ Pyodide henüz yüklenmedi...'); return; }
+    try { const p = Number(localStorage.getItem('sz_python_sorgu')||0); localStorage.setItem('sz_python_sorgu', p+1); } catch {}
     setIsRunning(true);
     setStatus('Çalışıyor');
     setOutput('');

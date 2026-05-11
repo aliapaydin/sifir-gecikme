@@ -156,6 +156,13 @@ useEffect(() => {
               color: isActive('/hakkimda') ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
               fontWeight: isActive('/hakkimda') ? 500 : 400,
             }}>Hakkımda</a>
+            <a href="/harita" style={{
+              padding: '7px 11px', borderRadius: '8px', fontSize: '13px', textDecoration: 'none',
+              display: 'flex', alignItems: 'center', gap: '4px',
+              background: isActive('/harita') ? 'var(--color-accent-soft)' : 'transparent',
+              color: isActive('/harita') ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
+              fontWeight: isActive('/harita') ? 500 : 400,
+            }}><span style={{ fontSize: '12px' }}>🗺️</span> Haritam</a>
             <Arama />
             <div style={{ width: '1px', height: '18px', background: 'var(--color-border)', margin: '0 4px' }} />
             <ThemeToggleBtn />
@@ -269,6 +276,15 @@ useEffect(() => {
             color: isActive('/hakkimda') ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
           }}>
             <span>👤</span> Hakkımda
+          </a>
+          <a href="/harita" style={{
+            display: 'flex', alignItems: 'center', gap: '10px',
+            padding: '10px 14px', borderRadius: '8px', fontSize: '14px',
+            textDecoration: 'none',
+            background: isActive('/harita') ? 'var(--color-accent-soft)' : 'transparent',
+            color: isActive('/harita') ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
+          }}>
+            <span>🗺️</span> Haritam
           </a>
         </div>
       )}
