@@ -1,6 +1,7 @@
 'use client';
 import HeroCanvas from '../components/HeroCanvas';
 import OgrenKarti from '../components/OgrenKarti';
+import GununSorusu from '../components/GununSorusu';
 import AboneOl from '../components/AboneOl';
 import YolHaritasiKarti from '../components/YolHaritasiKarti';
 
@@ -531,6 +532,11 @@ export default function Home() {
 
       <section className="max-w-5xl mx-auto px-6 py-10 pb-20">
         <HeroCanvas />
+
+        <div style={{ marginBottom: '2.5rem' }}>
+          <GununSorusu />
+        </div>
+
         <div className="text-xs uppercase tracking-widest mb-5" style={{ color: 'var(--color-text-mute)' }}>Tüm içerikler</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '12px' }}>
           {yazilar.map((y) => (
