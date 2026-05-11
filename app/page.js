@@ -175,6 +175,37 @@ function Icon({ type }) {
     <line x1="10" y1="23" x2="22" y2="23" stroke="#BA7517" strokeWidth="1"/>
   </svg>
 ),
+'portfolyo': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#FAEEDA"/>
+    <rect x="7" y="10" width="18" height="14" rx="2" fill="none" stroke="#e8a04a" strokeWidth="1.5"/>
+    <line x1="7" y1="15" x2="25" y2="15" stroke="#e8a04a" strokeWidth="1"/>
+    <rect x="10" y="18" width="5" height="3" rx="0.5" fill="#e8a04a" opacity=".6"/>
+    <rect x="17" y="18" width="5" height="3" rx="0.5" fill="#BA7517" opacity=".8"/>
+    <line x1="12" y1="10" x2="12" y2="7" stroke="#BA7517" strokeWidth="1.2" strokeLinecap="round"/>
+    <line x1="20" y1="10" x2="20" y2="7" stroke="#BA7517" strokeWidth="1.2" strokeLinecap="round"/>
+  </svg>
+),
+'mulakat-sql': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#FAEEDA"/>
+    <rect x="7" y="8" width="18" height="16" rx="2" fill="none" stroke="#e8a04a" strokeWidth="1.5"/>
+    <text x="10" y="17" fontSize="6" fill="#BA7517" fontFamily="monospace" fontWeight="700">SQL</text>
+    <line x1="10" y1="20" x2="22" y2="20" stroke="#e8a04a" strokeWidth="1" opacity=".7"/>
+    <circle cx="23" cy="22" r="4" fill="#BA7517" opacity=".15"/>
+    <text x="21.5" y="24.5" fontSize="6" fill="#BA7517" fontWeight="700">?</text>
+  </svg>
+),
+'linkedin': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#FAEEDA"/>
+    <circle cx="12" cy="11" r="3" fill="#e8a04a" opacity=".7"/>
+    <rect x="9" y="16" width="6" height="9" rx="1" fill="#e8a04a" opacity=".7"/>
+    <rect x="17" y="14" width="6" height="11" rx="1" fill="#BA7517" opacity=".8"/>
+    <circle cx="20" cy="14" r="2" fill="#BA7517" opacity=".5"/>
+    <line x1="17" y1="17" x2="23" y2="17" stroke="#BA7517" strokeWidth="0.8" opacity=".5"/>
+  </svg>
+),
   };
   return icons[type] || null;
 }
@@ -423,6 +454,36 @@ export default function Home() {
       kategori: 'rehber',
       borderColor: '#7F77DD',
       icon: 'etl-nedir',
+    },
+    {
+      href: '/yazilar/portfolyo',
+      icon: 'portfolyo',
+      badge: 'kariyer',
+      badgeClass: 'badge-case',
+      borderColor: '#e8a04a',
+      baslik: 'Veri analisti portföyü nasıl hazırlanır?',
+      ozet: 'GitHub, Kaggle, proje seçimi ve işe alımcıların gerçekten baktığı şeyler.',
+      meta: 'kariyer · 15 dakika',
+    },
+    {
+      href: '/yazilar/mulakat-sql',
+      icon: 'mulakat-sql',
+      badge: 'kariyer',
+      badgeClass: 'badge-case',
+      borderColor: '#e8a04a',
+      baslik: 'Mülakatta sorulan 10 SQL sorusu',
+      ozet: 'Senaryo, çözüm ve sık yapılan hatalarla gerçek mülakat soruları.',
+      meta: 'kariyer · 20 dakika',
+    },
+    {
+      href: '/yazilar/linkedin-profili',
+      icon: 'linkedin',
+      badge: 'kariyer',
+      badgeClass: 'badge-case',
+      borderColor: '#e8a04a',
+      baslik: 'Veri analisti LinkedIn profili nasıl olmalı?',
+      ozet: 'Headline, about bölümü, deneyim yazımı ve işe alımcıların dikkat ettiği şeyler.',
+      meta: 'kariyer · 12 dakika',
     },
   ];
 
