@@ -406,6 +406,24 @@ export default function Home() {
       borderColor: '#1D9E75',
       icon: 'rol-farklari',
     },
+    {
+      href: '/yazilar/etl-nedir',
+      baslik: 'ETL nedir? Veriyi taşımanın sistematik yolu',
+      ozet: 'Extract, Transform, Load — ETL pipeline nedir, nasıl kurulur? Python ile gerçek ETL örnekleri.',
+      meta: 'rehber · 18 dakika',
+      kategori: 'rehber',
+      borderColor: '#1D9E75',
+      icon: 'veri-temizleme',
+    },
+    {
+      href: '/yazilar/dbt-nedir',
+      baslik: 'dbt nedir? Analytics engineering rehberi',
+      ozet: 'dbt ile SQL tabanlı veri modelleme, staging-mart hiyerarşisi, testler ve CI/CD. Türkçe dbt rehberi.',
+      meta: 'rehber · 20 dakika',
+      kategori: 'rehber',
+      borderColor: '#7F77DD',
+      icon: 'etl-nedir',
+    },
   ];
 
   const interaktif = yazilar.filter(y => y.badge === 'interaktif').length;
