@@ -176,6 +176,24 @@ function Icon({ type }) {
     <line x1="10" y1="23" x2="22" y2="23" stroke="#BA7517" strokeWidth="1"/>
   </svg>
 ),
+'decision-tree': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#E1F5EE"/>
+    <circle cx="16" cy="7" r="3" fill="#1D9E75"/>
+    <circle cx="9"  cy="18" r="2.5" fill="#1D9E75" opacity=".8"/>
+    <circle cx="23" cy="18" r="2.5" fill="#1D9E75" opacity=".8"/>
+    <circle cx="6"  cy="27" r="2" fill="#9FE1CB"/>
+    <circle cx="12" cy="27" r="2" fill="#9FE1CB"/>
+    <circle cx="20" cy="27" r="2" fill="#9FE1CB"/>
+    <circle cx="26" cy="27" r="2" fill="#9FE1CB"/>
+    <line x1="16" y1="10" x2="9"  y2="16" stroke="#1D9E75" strokeWidth="1.2"/>
+    <line x1="16" y1="10" x2="23" y2="16" stroke="#1D9E75" strokeWidth="1.2"/>
+    <line x1="9"  y1="20" x2="6"  y2="25" stroke="#0F6E56" strokeWidth="1"/>
+    <line x1="9"  y1="20" x2="12" y2="25" stroke="#0F6E56" strokeWidth="1"/>
+    <line x1="23" y1="20" x2="20" y2="25" stroke="#0F6E56" strokeWidth="1"/>
+    <line x1="23" y1="20" x2="26" y2="25" stroke="#0F6E56" strokeWidth="1"/>
+  </svg>
+),
 'portfolyo': (
   <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
     <rect width="32" height="32" rx="8" fill="#FAEEDA"/>
@@ -475,6 +493,16 @@ export default function Home() {
       baslik: 'Mülakatta sorulan 10 SQL sorusu',
       ozet: 'Senaryo, çözüm ve sık yapılan hatalarla gerçek mülakat soruları.',
       meta: 'kariyer · 20 dakika',
+    },
+    {
+      href: '/yazilar/decision-tree',
+      icon: 'decision-tree',
+      badge: 'interaktif',
+      badgeClass: 'badge-interactive',
+      borderColor: '#1D9E75',
+      baslik: 'Decision tree: ağacı sen büyüt',
+      ozet: 'Bölme eşiklerini sürükle, Gini impurity\'nin nasıl düştüğünü izle.',
+      meta: '10 dakika',
     },
     {
       href: '/yazilar/linkedin-profili',
