@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { icerikler } from '../../lib/icerikler';
+import { dersler } from '../../lib/dersler';
+
+const TOPLAM_DERS = dersler.length;
 
 // ─── KATEGORİ UZMANLIKLARI ──────────────────────────────────────────────────
 const UZMANLIK = [
@@ -60,7 +63,6 @@ const KARIYER_HREFS = [
   '/yazilar/portfolyo','/yazilar/mulakat-sql','/yazilar/linkedin-profili',
 ];
 
-const SINAV_ESIGI = 15; // Bu kadar içerik ziyaret edince sınav açılır
 
 // ─── YARDIMCI BİLEŞENLER ───────────────────────────────────────────────────
 function ProgresBari({ yuzde, renk, bg, height = 8 }) {
@@ -130,6 +132,9 @@ export default function HaritaSayfasi() {
       const sqlSorgu     = Number(localStorage.getItem('sz_sql_sorgu') || 0);
       const pythonSorgu  = Number(localStorage.getItem('sz_python_sorgu') || 0);
       const sinavPuani   = localStorage.getItem('sz_sinav_puani') ? Number(localStorage.getItem('sz_sinav_puani')) : null;
+      const ilerlemeRaw  = localStorage.getItem('sz_ilerleme_v1');
+      const ilerleme     = ilerlemeRaw ? JSON.parse(ilerlemeRaw) : {};
+      const tamamlananDersSayisi = Object.keys(ilerleme.tamamlananDersler || {}).length;
 
       let gunlukSoru = 0, dogru = 0;
       for (let i = 0; i < localStorage.length; i++) {
@@ -159,7 +164,7 @@ export default function HaritaSayfasi() {
       const stats = { ziyaret: ziyaretler.length, sqlSorgu, pythonSorgu, gunlukSoru, dogru, interaktif, kariyerZ, genelYuzde, sinavPuani };
       const basarimDurum = BASARIMLAR.map(b => ({ ...b, kazanildi: b.kosul(stats) }));
 
-      setVeri({ ziyaretler, sqlSorgu, pythonSorgu, sinavPuani, gunlukSoru, dogru, uzmanlikYuzde, genelYuzde, basarimDurum, stats });
+      setVeri({ ziyaretler, sqlSorgu, pythonSorgu, sinavPuani, gunlukSoru, dogru, uzmanlikYuzde, genelYuzde, basarimDurum, stats, tamamlananDersSayisi });
     } catch {}
   }, []);
 
@@ -169,9 +174,9 @@ export default function HaritaSayfasi() {
     </main>
   );
 
-  const { ziyaretler, sqlSorgu, pythonSorgu, gunlukSoru, dogru, uzmanlikYuzde, genelYuzde, basarimDurum, sinavPuani } = veri;
-  const sinavAcik = ziyaretler.length >= SINAV_ESIGI;
-  const sinavaKalan = Math.max(0, SINAV_ESIGI - ziyaretler.length);
+  const { ziyaretler, sqlSorgu, pythonSorgu, gunlukSoru, dogru, uzmanlikYuzde, genelYuzde, basarimDurum, sinavPuani, tamamlananDersSayisi } = veri;
+  const sinavAcik = tamamlananDersSayisi >= TOPLAM_DERS;
+  const sinavaKalan = Math.max(0, TOPLAM_DERS - tamamlananDersSayisi);
   const kazanilanBasarim = basarimDurum.filter(b => b.kazanildi).length;
 
   const filtrelenmisIcerikler = aktifFiltre === 'tumu'
@@ -218,7 +223,7 @@ export default function HaritaSayfasi() {
             <div style={{ flex: 1, minWidth: '240px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                 <span style={{ fontSize: '20px' }}>🎓</span>
-                <span style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-text)' }}>Sertifika Sınavı</span>
+                <span style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-text)' }}>Site İçerik Uzmanlığı</span>
                 {sinavAcik
                   ? <span style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '999px', background: '#F0FDF4', color: '#16a34a', fontWeight: 700 }}>AÇIK</span>
                   : <span style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '999px', background: 'var(--color-cream)', color: 'var(--color-text-mute)', fontWeight: 600 }}>KİLİTLİ</span>
@@ -226,18 +231,18 @@ export default function HaritaSayfasi() {
               </div>
               <p style={{ fontSize: '13px', color: 'var(--color-text-mute)', margin: '0 0 14px' }}>
                 {sinavAcik
-                  ? 'Sınava girebilirsin! 50 soruluk test, başarılı olursan sertifikan hazır.'
-                  : `Sınavı açmak için ${sinavaKalan} içerik daha ziyaret et.`}
+                  ? 'Sınava girebilirsin! 10 soruluk test, başarılı olursan sertifikan hazır.'
+                  : `Sınavı açmak için Öğren sayfasındaki ${sinavaKalan} dersi daha tamamla.`}
               </p>
               <ProgresBari
-                yuzde={Math.round((ziyaretler.length / SINAV_ESIGI) * 100)}
+                yuzde={Math.round((tamamlananDersSayisi / TOPLAM_DERS) * 100)}
                 renk={sinavAcik ? '#16a34a' : 'var(--color-accent)'}
                 bg="var(--color-cream)"
                 height={10}
               />
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '6px', fontSize: '11px', color: 'var(--color-text-mute)' }}>
-                <span>{ziyaretler.length} ziyaret</span>
-                <span>Hedef: {SINAV_ESIGI}</span>
+                <span>{tamamlananDersSayisi}/{TOPLAM_DERS} ders tamamlandı</span>
+                <span><a href="/ogren" style={{ color: 'var(--color-accent)', textDecoration: 'none' }}>Öğren →</a></span>
               </div>
               {sinavPuani && (
                 <div style={{ marginTop: '12px', fontSize: '13px', color: 'var(--color-text-soft)' }}>
