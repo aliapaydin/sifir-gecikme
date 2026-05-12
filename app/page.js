@@ -235,6 +235,15 @@ function Icon({ type }) {
     <text x="12.5" y="17.5" fontSize="7" fill="#fff" fontWeight="700">☁</text>
   </svg>
 ),
+'bayes': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#E1F5EE"/>
+    <circle cx="16" cy="16" r="9" stroke="#1D9E75" strokeWidth="1.2" fill="none" opacity=".4"/>
+    <circle cx="13" cy="14" r="5" fill="#1D9E75" opacity=".35"/>
+    <circle cx="19" cy="14" r="5" fill="#0d3d2e" opacity=".35"/>
+    <text x="9" y="27" fontSize="6.5" fill="#0F6E56" fontWeight="700">P(A|B)</text>
+  </svg>
+),
   };
   return icons[type] || null;
 }
@@ -533,6 +542,16 @@ export default function Home() {
       baslik: 'Veri bilimcisi için cloud: GCP mi AWS mi?',
       ozet: 'BigQuery vs Redshift, Vertex AI vs SageMaker. Hangi servisi ne zaman kullanırsın?',
       meta: 'rehber · 18 dakika',
+    },
+    {
+      href: '/yazilar/naive-bayes',
+      icon: 'bayes',
+      badge: 'interaktif',
+      badgeClass: 'badge-interactive',
+      borderColor: '#1D9E75',
+      baslik: 'Naive Bayes: spam filtresi nasıl öğrenir?',
+      ozet: 'Kelimeleri seç, spam olasılığını canlı gör. Bayes teoremi adım adım.',
+      meta: 'interaktif · 12 dakika',
     },
   ];
 
