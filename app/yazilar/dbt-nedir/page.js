@@ -357,12 +357,12 @@ dbt build`}</pre>
           {[
             {
               baslik: 'dbt Core',
-              renk: '#1D9E75', bg: '#E1F5EE',
+              renk: '#1D9E75', bg: 'rgba(29,158,117,0.12)',
               maddeler: ['Açık kaynak, ücretsiz', 'Terminal ile çalışır', 'Kendi ortamını kur', 'CI/CD kendin kur'],
             },
             {
               baslik: 'dbt Cloud',
-              renk: '#7F77DD', bg: '#EEEDFE',
+              renk: '#7F77DD', bg: 'rgba(127,119,221,0.12)',
               maddeler: ['Yönetilen platform', 'Web arayüzü var', 'Zamanlanmış çalıştırma', 'IDE + loglama dahil', 'Ücretsiz plan mevcut'],
             },
           ].map(({ baslik, renk, bg, maddeler }) => (

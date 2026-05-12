@@ -116,7 +116,7 @@ function SampleSizeCalculator() {
       </div>
 
       {warn && (
-        <div className="rounded-lg p-3 mb-4 text-sm" style={{ background: '#FAEEDA', color: '#854F0B' }}>
+        <div className="rounded-lg p-3 mb-4 text-sm" style={{ background: 'rgba(232,160,74,0.15)', border: '0.5px solid rgba(232,160,74,0.4)', color: 'var(--color-text-soft)' }}>
           ⚠ {warn}
         </div>
       )}

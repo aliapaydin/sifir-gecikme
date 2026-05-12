@@ -60,7 +60,7 @@ function ConfusionMatrixDemo() {
         <div>
           <div className="text-xs uppercase tracking-wider text-center mb-2" style={{ color: 'var(--color-text-mute)' }}>Tahmin: Pozitif</div>
           <div className="grid grid-cols-2 gap-1">
-            <div className="rounded-lg p-3 text-center" style={{ background: '#E1F5EE' }}>
+            <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(29,158,117,0.12)' }}>
               <div className="text-xs mb-1" style={{ color: '#0F6E56' }}>TP</div>
               <div className="text-3xl font-semibold" style={{ color: '#0F6E56' }}>{m.tp}</div>
               <div className="text-xs mt-1" style={{ color: '#0F6E56' }}>Gerçek Pozitif</div>
@@ -80,7 +80,7 @@ function ConfusionMatrixDemo() {
               <div className="text-3xl font-semibold" style={{ color: '#c0392b' }}>{m.fn}</div>
               <div className="text-xs mt-1" style={{ color: '#c0392b' }}>Yanlış Negatif</div>
             </div>
-            <div className="rounded-lg p-3 text-center" style={{ background: '#E1F5EE' }}>
+            <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(29,158,117,0.12)' }}>
               <div className="text-xs mb-1" style={{ color: '#0F6E56' }}>TN</div>
               <div className="text-3xl font-semibold" style={{ color: '#0F6E56' }}>{m.tn}</div>
               <div className="text-xs mt-1" style={{ color: '#0F6E56' }}>Gerçek Negatif</div>

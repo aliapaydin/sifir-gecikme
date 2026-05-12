@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 const ADIMLAR = [
   {
-    no: 1, seviye: 'baslangic', renk: '#1D9E75', bg: '#E1F5EE', renk_text: '#0F6E56',
+    no: 1, seviye: 'baslangic', renk: '#1D9E75', bg: 'rgba(29,158,117,0.12)', renk_text: '#0F6E56',
     baslik: 'Python temelleri',
     sure: '1-2 ay',
     aciklama: 'Her şeyin başlangıcı. Veri tiplerini, döngüleri ve fonksiyonları öğrenmek yeterli. Mükemmel olmana gerek yok.',
@@ -18,7 +18,7 @@ const ADIMLAR = [
     site_link: '/ogren/python-temelleri',
   },
   {
-    no: 2, seviye: 'baslangic', renk: '#1D9E75', bg: '#E1F5EE', renk_text: '#0F6E56',
+    no: 2, seviye: 'baslangic', renk: '#1D9E75', bg: 'rgba(29,158,117,0.12)', renk_text: '#0F6E56',
     baslik: 'NumPy & Pandas',
     sure: '2-3 hafta',
     aciklama: 'Veri analizinin iki temel kütüphanesi. Tablo okumak, filtrelemek, gruplamak — günlük işlerin %80\'i bunlar.',
@@ -32,7 +32,7 @@ const ADIMLAR = [
     site_link: '/ogren/pandas',
   },
   {
-    no: 3, seviye: 'baslangic', renk: '#7F77DD', bg: '#EEEDFE', renk_text: '#534AB7',
+    no: 3, seviye: 'baslangic', renk: '#7F77DD', bg: 'rgba(127,119,221,0.12)', renk_text: '#534AB7',
     baslik: 'SQL öğren',
     sure: '3-4 hafta',
     aciklama: 'İş ilanlarında en çok aranan beceri. SELECT, JOIN, GROUP BY, window fonksiyonlar — bunları bilmek seni çok öne geçirir.',
@@ -47,7 +47,7 @@ const ADIMLAR = [
     site_link: '/yazilar/sql-temelleri',
   },
   {
-    no: 4, seviye: 'baslangic', renk: '#e8a04a', bg: '#FAEEDA', renk_text: '#854F0B',
+    no: 4, seviye: 'baslangic', renk: '#e8a04a', bg: 'rgba(232,160,74,0.12)', renk_text: '#854F0B',
     baslik: 'Görselleştirme',
     sure: '2-3 hafta',
     aciklama: 'Veriyi görmek anlamakla eşdeğerdir. Matplotlib ve Seaborn ile başla, sonra BI araçlarına geç.',
@@ -61,7 +61,7 @@ const ADIMLAR = [
     site_link: '/ogren/matplotlib-temelleri',
   },
   {
-    no: 5, seviye: 'orta', renk: '#1D9E75', bg: '#E1F5EE', renk_text: '#0F6E56',
+    no: 5, seviye: 'orta', renk: '#1D9E75', bg: 'rgba(29,158,117,0.12)', renk_text: '#0F6E56',
     baslik: 'İstatistik temelleri',
     sure: '3-4 hafta',
     aciklama: 'Veri analistinin istatistik olmadan işi yarım kalır. Hipotez testleri, güven aralıkları ve A/B testler.',
@@ -75,7 +75,7 @@ const ADIMLAR = [
     site_link: '/yazilar/ab-test',
   },
   {
-    no: 6, seviye: 'orta', renk: '#7F77DD', bg: '#EEEDFE', renk_text: '#534AB7',
+    no: 6, seviye: 'orta', renk: '#7F77DD', bg: 'rgba(127,119,221,0.12)', renk_text: '#534AB7',
     baslik: 'BI araçları',
     sure: '1-2 ay',
     aciklama: 'Power BI veya Tableau\'yu iyice öğren. Türkiye\'deki iş ilanlarının %70\'i Power BI istiyor.',
@@ -89,7 +89,7 @@ const ADIMLAR = [
     site_link: '/yazilar/bi-karsilastirma',
   },
   {
-    no: 7, seviye: 'orta', renk: '#e8a04a', bg: '#FAEEDA', renk_text: '#854F0B',
+    no: 7, seviye: 'orta', renk: '#e8a04a', bg: 'rgba(232,160,74,0.12)', renk_text: '#854F0B',
     baslik: 'İlk proje & portföy',
     sure: '1-2 ay',
     aciklama: 'Öğrendiklerini gerçek veriye uygula. Kaggle, açık veri kaynakları veya kendi şehrinle ilgili bir analiz yap.',
@@ -104,7 +104,7 @@ const ADIMLAR = [
     site_link: '/yazilar/veri-temizleme',
   },
   {
-    no: 8, seviye: 'ileri', renk: '#E24B4A', bg: '#FCEBEB', renk_text: '#A32D2D',
+    no: 8, seviye: 'ileri', renk: '#E24B4A', bg: 'rgba(226,75,74,0.12)', renk_text: '#A32D2D',
     baslik: 'ML temelleri',
     sure: '2-3 ay',
     aciklama: 'Makine öğrenmesi artık her analistten bekleniyor. Regression, classification ve clustering başlangıç için yeterli.',
@@ -119,7 +119,7 @@ const ADIMLAR = [
     site_link: '/yazilar/linear-regression',
   },
   {
-    no: 9, seviye: 'ileri', renk: '#7F77DD', bg: '#EEEDFE', renk_text: '#534AB7',
+    no: 9, seviye: 'ileri', renk: '#7F77DD', bg: 'rgba(127,119,221,0.12)', renk_text: '#534AB7',
     baslik: 'Veri mühendisliği giriş',
     sure: '1-2 ay',
     aciklama: 'Veri nereye gidiyor? ETL pipeline\'lar, veri ambarları ve dbt. Büyük şirketlerde çok aranan beceri.',
@@ -133,7 +133,7 @@ const ADIMLAR = [
     site_link: '/yazilar/veri-temizleme',
   },
   {
-    no: 10, seviye: 'ileri', renk: '#1D9E75', bg: '#E1F5EE', renk_text: '#0F6E56',
+    no: 10, seviye: 'ileri', renk: '#1D9E75', bg: 'rgba(29,158,117,0.12)', renk_text: '#0F6E56',
     baslik: 'İş başvurusu & kariyer',
     sure: 'Süregelen',
     aciklama: 'Portföyünü hazırla, LinkedIn\'ini güçlendir, networkini oluştur. İlk iş en zoruyken sonrası gelir.',
@@ -235,12 +235,12 @@ export default function YolHaritasi() {
                 transition: 'all .15s',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: adim.bg, color: adim.renk_text, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 500, flexShrink: 0 }}>
+                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: adim.bg, color: adim.renk, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 500, flexShrink: 0 }}>
                     {adim.no}
                   </div>
                   <div style={{ flex: 1, fontWeight: 500, fontSize: '15px', color: 'var(--color-text)' }}>{adim.baslik}</div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '999px', background: adim.bg, color: adim.renk_text }}>
+                    <span style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '999px', background: adim.bg, color: adim.renk }}>
                       {SEVIYE_LABELS[adim.seviye]}
                     </span>
                     <span style={{ fontSize: '12px', color: 'var(--color-text-mute)' }}>{adim.sure}</span>
@@ -266,7 +266,7 @@ export default function YolHaritasi() {
                     {/* İpucu */}
                     <div style={{ padding: '10px 14px', borderRadius: '8px', background: adim.bg, marginBottom: '12px', display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
                       <span style={{ fontSize: '14px', flexShrink: 0 }}>💡</span>
-                      <span style={{ fontSize: '13px', color: adim.renk_text, lineHeight: 1.55 }}>{adim.ipucu}</span>
+                      <span style={{ fontSize: '13px', color: adim.renk, lineHeight: 1.55 }}>{adim.ipucu}</span>
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
@@ -276,7 +276,7 @@ export default function YolHaritasi() {
                           <span key={k} style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '6px', background: 'var(--color-cream)', border: '0.5px solid var(--color-border)', color: 'var(--color-text-mute)' }}>{k}</span>
                         ))}
                       </div>
-                      <a href={adim.site_link} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '13px', fontWeight: 500, color: adim.renk_text, textDecoration: 'none' }}>
+                      <a href={adim.site_link} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '13px', fontWeight: 500, color: adim.renk, textDecoration: 'none' }}>
                         Sıfır Gecikme&apos;de öğren →
                       </a>
                     </div>

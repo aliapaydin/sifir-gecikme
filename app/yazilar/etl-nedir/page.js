@@ -32,9 +32,9 @@ export default function ETLRehberi() {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', margin: '1.5rem 0' }}>
           {[
-            { harf: 'E', baslik: 'Extract', renk: '#1D9E75', bg: '#E1F5EE', aciklama: 'Kaynak sistemden veriyi çek. Veritabanı, API, CSV, Excel, log dosyası...' },
-            { harf: 'T', baslik: 'Transform', renk: '#7F77DD', bg: '#EEEDFE', aciklama: 'Veriyi temizle, birleştir, hesapla. İş kurallarını uygula.' },
-            { harf: 'L', baslik: 'Load', renk: '#e8a04a', bg: '#FAEEDA', aciklama: 'Hazır veriyi hedefe yükle. Veri ambarı, BI aracı, dashboard.' },
+            { harf: 'E', baslik: 'Extract', renk: '#1D9E75', bg: 'rgba(29,158,117,0.12)', aciklama: 'Kaynak sistemden veriyi çek. Veritabanı, API, CSV, Excel, log dosyası...' },
+            { harf: 'T', baslik: 'Transform', renk: '#7F77DD', bg: 'rgba(127,119,221,0.12)', aciklama: 'Veriyi temizle, birleştir, hesapla. İş kurallarını uygula.' },
+            { harf: 'L', baslik: 'Load', renk: '#e8a04a', bg: 'rgba(232,160,74,0.12)', aciklama: 'Hazır veriyi hedefe yükle. Veri ambarı, BI aracı, dashboard.' },
           ].map(({ harf, baslik, renk, bg, aciklama }) => (
             <div key={harf} style={{ background: bg, borderRadius: '12px', padding: '16px', textAlign: 'center' }}>
               <div style={{ fontSize: '32px', fontWeight: 700, color: renk, marginBottom: '6px' }}>{harf}</div>
@@ -280,12 +280,12 @@ if __name__ == '__main__':
           {[
             {
               baslik: 'ETL',
-              renk: '#1D9E75', bg: '#E1F5EE',
+              renk: '#1D9E75', bg: 'rgba(29,158,117,0.12)',
               maddeler: ['Dönüşüm pipeline dışında yapılır', 'On-premise sistemlerde yaygın', 'Hassas veri için güvenli', 'Python / Spark ile'],
             },
             {
               baslik: 'ELT',
-              renk: '#7F77DD', bg: '#EEEDFE',
+              renk: '#7F77DD', bg: 'rgba(127,119,221,0.12)',
               maddeler: ['Dönüşüm ambar içinde yapılır', 'Cloud sistemlerde yaygın', 'dbt ile transform yazılır', 'BigQuery / Snowflake ile'],
             },
           ].map(({ baslik, renk, bg, maddeler }) => (

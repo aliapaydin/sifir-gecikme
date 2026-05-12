@@ -66,7 +66,7 @@ const bestThreshold = (pts, feat) => {
 
 // ─── AĞAÇ SVG DÜĞÜMÜ ───────────────────────────────────────────────────────
 function SvgDugum({ x, y, w, h, baslik, g, pts, yaprak, tahmin, titleColor = '#555' }) {
-  const bg     = yaprak ? (tahmin === 1 ? '#F0FDF4' : '#FFF5F5') : '#FAF8F3';
+  const bg     = yaprak ? (tahmin === 1 ? 'rgba(22,163,74,0.12)' : 'rgba(220,38,38,0.12)') : '#FAF8F3';
   const border = yaprak ? (tahmin === 1 ? '#86EFAC' : '#FCA5A5') : '#D5CCBA';
   const n = pts.length;
   const pr = prem(pts), st = std(pts);
@@ -282,7 +282,7 @@ export default function DecisionTreePage() {
             </strong>
             <span style={{
               fontSize: '11px', fontWeight: 700, padding: '1px 6px', borderRadius: '999px',
-              background: dogru === 40 ? '#F0FDF4' : dogru >= 35 ? '#FFF3E0' : '#FFF5F5',
+              background: dogru === 40 ? 'rgba(22,163,74,0.12)' : dogru >= 35 ? 'rgba(245,158,11,0.12)' : 'rgba(220,38,38,0.12)',
               color:      dogru === 40 ? '#16a34a' : dogru >= 35 ? '#e65100' : '#dc2626',
             }}>
               %{Math.round(dogru / 40 * 100)}

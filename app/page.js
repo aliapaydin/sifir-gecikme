@@ -225,6 +225,16 @@ function Icon({ type }) {
     <line x1="17" y1="17" x2="23" y2="17" stroke="#BA7517" strokeWidth="0.8" opacity=".5"/>
   </svg>
 ),
+'cloud': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#EEEDFE"/>
+    <ellipse cx="16" cy="19" rx="9" ry="5" fill="#7F77DD" opacity=".25"/>
+    <ellipse cx="13" cy="17" rx="5" ry="4" fill="#7F77DD" opacity=".6"/>
+    <ellipse cx="19" cy="18" rx="6" ry="4.5" fill="#7F77DD" opacity=".5"/>
+    <ellipse cx="16" cy="15" rx="7" ry="5" fill="#534AB7" opacity=".7"/>
+    <text x="12.5" y="17.5" fontSize="7" fill="#fff" fontWeight="700">☁</text>
+  </svg>
+),
   };
   return icons[type] || null;
 }
@@ -513,6 +523,16 @@ export default function Home() {
       baslik: 'Veri analisti LinkedIn profili nasıl olmalı?',
       ozet: 'Headline, about bölümü, deneyim yazımı ve işe alımcıların dikkat ettiği şeyler.',
       meta: 'kariyer · 12 dakika',
+    },
+    {
+      href: '/yazilar/cloud-rehberi',
+      icon: 'cloud',
+      badge: 'rehber',
+      badgeClass: 'badge-guide',
+      borderColor: '#7F77DD',
+      baslik: 'Veri bilimcisi için cloud: GCP mi AWS mi?',
+      ozet: 'BigQuery vs Redshift, Vertex AI vs SageMaker. Hangi servisi ne zaman kullanırsın?',
+      meta: 'rehber · 18 dakika',
     },
   ];
 

@@ -12,8 +12,8 @@ function Karsilastirma({ yanlis, dogru }) {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', margin: '1.25rem 0 1.75rem' }}>
       <div style={{
-        background: '#fff5f5',
-        border: '0.5px solid #fca5a5',
+        background: 'rgba(220,38,38,0.08)',
+        border: '0.5px solid rgba(220,38,38,0.3)',
         borderRadius: '8px',
         padding: '0.9rem 1rem',
         fontSize: '0.88rem',
@@ -23,8 +23,8 @@ function Karsilastirma({ yanlis, dogru }) {
         {yanlis}
       </div>
       <div style={{
-        background: '#f0fdf4',
-        border: '0.5px solid #86efac',
+        background: 'rgba(22,163,74,0.08)',
+        border: '0.5px solid rgba(22,163,74,0.3)',
         borderRadius: '8px',
         padding: '0.9rem 1rem',
         fontSize: '0.88rem',
