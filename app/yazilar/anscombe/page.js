@@ -489,8 +489,8 @@ export default function AnscombeQuartet() {
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             {[
               { href: '/yazilar/linear-regression', label: '📉 Lineer Regresyon' },
-              { href: '/yazilar/seaborn', label: '🎨 Seaborn ile Görselleştirme', internal: true },
-              { href: '/yazilar/gercek-veri-gorsellestirme', label: '🎯 EDA: Gerçek Veriyle' },
+              { href: '/yazilar/pandas-7-sey', label: '🐼 Pandas ile Veri Analizi' },
+              { href: '/yazilar/bias-variance', label: '⚖️ Bias-Variance Trade-off' },
             ].map(({ href, label }) => (
               <a key={href} href={href} style={{
                 padding: '8px 14px', borderRadius: '8px', fontSize: '13px',
