@@ -45,10 +45,10 @@ export default function OgrenKarti() {
                 <span style={{ fontSize: '12px', color: 'var(--color-text-mute)' }}>Duolingo tarzı öğrenme</span>
               </div>
               <div className="font-serif" style={{ fontSize: '19px', fontWeight: 500, color: 'var(--color-text)', lineHeight: 1.25, marginBottom: '10px' }}>
-                Python ile Veri Bilimi<br />Öğrenme Modülü
+                Veri Bilimi<br />Öğrenme Modülü
               </div>
               <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '14px' }}>
-                {['🐍 Python', '🔢 NumPy', '🐼 Pandas', '📊 Görsel', '🤖 ML'].map(l => (
+                {['🐍 Python', '🗄️ SQL', '🐼 Pandas', '📊 Görsel', '🤖 ML', '📏 İstatistik'].map(l => (
                   <span key={l} style={{ fontSize: '12px', padding: '3px 10px', borderRadius: '6px', border: '0.5px solid var(--color-border)', background: 'var(--color-cream-card)', color: 'var(--color-text-soft)' }}>{l}</span>
                 ))}
               </div>

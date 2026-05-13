@@ -77,11 +77,21 @@ export default function OgrenSayfasi() {
         <a href="/" className="text-xs mb-6 inline-block" style={{ color: 'var(--color-text-mute)' }}>Ana sayfa</a>
 
         <h1 className="font-serif text-4xl font-medium mb-2" style={{ color: 'var(--color-text)', letterSpacing: '-0.01em' }}>
-          Python ile Veri Bilimi
+          Veri Bilimi Öğren
         </h1>
-        <p className="text-lg mb-8" style={{ color: 'var(--color-text-soft)' }}>
-          Her ders önce öğretir, sonra sınar. Adım adım, Türkçe.
+        <p className="text-lg mb-2" style={{ color: 'var(--color-text-soft)' }}>
+          Python · SQL · İstatistik · ML · Görselleştirme — 20 ders, adım adım Türkçe.
         </p>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '2rem' }}>
+          {[
+            { label: '20 ders', renk: '#1D9E75', bg: '#E1F5EE' },
+            { label: 'SQL & Python', renk: '#7F77DD', bg: '#EEEDFE' },
+            { label: 'İstatistik & ML', renk: '#e8a04a', bg: '#FAEEDA' },
+            { label: 'Sertifika sınavı', renk: '#E24B4A', bg: '#FCEBEB' },
+          ].map(({ label, renk, bg }) => (
+            <span key={label} style={{ fontSize: '12px', padding: '3px 10px', borderRadius: '999px', background: bg, color: renk, fontWeight: 500, border: `0.5px solid ${renk}40` }}>{label}</span>
+          ))}
+        </div>
 
         {ilerleme && (
           <IlerlemeKarti
