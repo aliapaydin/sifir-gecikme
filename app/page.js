@@ -307,6 +307,26 @@ function Icon({ type }) {
     <circle cx="16" cy="10" r="2" fill="#BA7517" opacity=".8"/>
   </svg>
 ),
+'csv': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#EEEDFE"/>
+    <rect x="7" y="8" width="18" height="16" rx="2" fill="none" stroke="#7F77DD" strokeWidth="1.5"/>
+    <line x1="7" y1="13" x2="25" y2="13" stroke="#7F77DD" strokeWidth="1"/>
+    <line x1="7" y1="18" x2="25" y2="18" stroke="#7F77DD" strokeWidth="1"/>
+    <line x1="13" y1="8" x2="13" y2="24" stroke="#7F77DD" strokeWidth="1"/>
+    <rect x="8" y="9" width="4" height="3" rx="0.5" fill="#7F77DD" opacity=".35"/>
+    <rect x="14" y="14" width="5" height="3" rx="0.5" fill="#AFA9EC"/>
+    <rect x="14" y="19" width="8" height="3" rx="0.5" fill="#AFA9EC"/>
+  </svg>
+),
+'renk': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#F5F0FF"/>
+    <circle cx="12" cy="14" r="5" fill="#E15759" opacity=".85"/>
+    <circle cx="20" cy="14" r="5" fill="#4E79A7" opacity=".85"/>
+    <circle cx="16" cy="20" r="5" fill="#59A14F" opacity=".85"/>
+  </svg>
+),
   };
   return icons[type] || null;
 }
@@ -675,6 +695,26 @@ export default function Home() {
       baslik: 'Türkiye deprem verisi: 1900-2024 ne anlatıyor?',
       ozet: 'Bölgesel dağılım, Gutenberg-Richter yasası, derinlik-büyüklük ilişkisi ve 125 yılın büyük depremleri.',
       meta: 'vaka · 14 dakika',
+    },
+    {
+      href: '/csv',
+      icon: 'csv',
+      badge: 'araç',
+      badgeClass: 'badge-guide',
+      borderColor: '#7F77DD',
+      baslik: 'CSV Analiz Aracı',
+      ozet: 'CSV yapıştır ya da yükle. Veri tipleri, eksik değerler, istatistikler ve dağılımlar anında.',
+      meta: 'araç · tarayıcıda çalışır',
+    },
+    {
+      href: '/renk',
+      icon: 'renk',
+      badge: 'araç',
+      badgeClass: 'badge-guide',
+      borderColor: '#7F77DD',
+      baslik: 'Renk Paleti Seçici',
+      ozet: 'Kategorik, sıralı, ayrışık ve renk körü dostu paletler. Tıkla, önizle, hex kodu kopyala.',
+      meta: 'araç · görselleştirme',
     },
   ];
 
