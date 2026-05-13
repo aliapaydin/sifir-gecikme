@@ -276,6 +276,15 @@ function Icon({ type }) {
     <line x1="14" y1="11" x2="14" y2="17" stroke="#1D9E75" strokeWidth="1.2" strokeLinecap="round"/>
   </svg>
 ),
+'spotify': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#FAEEDA"/>
+    <circle cx="16" cy="16" r="9" fill="none" stroke="#e8a04a" strokeWidth="1.5" opacity=".4"/>
+    <path d="M10 13.5 C13 12 19 12.5 22 11" stroke="#e8a04a" strokeWidth="2" strokeLinecap="round"/>
+    <path d="M10 16.5 C13 15 18 15.5 21 14.5" stroke="#e8a04a" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M10 19.5 C12.5 18.5 17 19 20 18" stroke="#BA7517" strokeWidth="1" strokeLinecap="round"/>
+  </svg>
+),
 'anscombe': (
   <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
     <rect width="32" height="32" rx="8" fill="#E1F5EE"/>
@@ -289,6 +298,13 @@ function Icon({ type }) {
     <circle cx="22" cy="18" r="2" fill="#7F77DD"/>
     <circle cx="25" cy="10" r="2" fill="#e8a04a"/>
     <line x1="6" y1="26" x2="26" y2="8" stroke="#1D9E75" strokeWidth="1" strokeDasharray="3 2" opacity=".5"/>
+  </svg>
+),
+'deprem': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#FAEEDA"/>
+    <polyline points="4,18 8,18 10,12 13,22 16,10 19,20 22,16 25,16 28,16" stroke="#e8a04a" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+    <circle cx="16" cy="10" r="2" fill="#BA7517" opacity=".8"/>
   </svg>
 ),
   };
@@ -621,6 +637,16 @@ export default function Home() {
       meta: 'interaktif · 12 dakika',
     },
     {
+      href: '/yazilar/spotify-turkiye',
+      icon: 'spotify',
+      badge: 'vaka çalışması',
+      badgeClass: 'badge-case',
+      borderColor: '#e8a04a',
+      baslik: 'Spotify Türkiye: 82 milyon kulak, ne dinliyor?',
+      ozet: 'Tür dağılımı, ses özellikleri, gece yarısı arabesk zirvelemesi ve yaz pop patlaması.',
+      meta: '12 dakika',
+    },
+    {
       href: '/yazilar/anscombe',
       icon: 'anscombe',
       badge: 'interaktif',
@@ -639,6 +665,16 @@ export default function Home() {
       baslik: 'Veri dedektifi: gelir düşüşünün sebebini bul',
       ozet: 'FikirzadeTech geliri %28 düştü. 8 panel incele, kanıtları topla, kök nedeni bul.',
       meta: 'interaktif · soruşturma oyunu',
+    },
+    {
+      href: '/yazilar/deprem-analizi',
+      icon: 'deprem',
+      badge: 'vaka çalışması',
+      badgeClass: 'badge-case',
+      borderColor: '#e8a04a',
+      baslik: 'Türkiye deprem verisi: 1900-2024 ne anlatıyor?',
+      ozet: 'Bölgesel dağılım, Gutenberg-Richter yasası, derinlik-büyüklük ilişkisi ve 125 yılın büyük depremleri.',
+      meta: 'vaka · 14 dakika',
     },
   ];
 
