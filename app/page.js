@@ -276,6 +276,21 @@ function Icon({ type }) {
     <line x1="14" y1="11" x2="14" y2="17" stroke="#1D9E75" strokeWidth="1.2" strokeLinecap="round"/>
   </svg>
 ),
+'anscombe': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#E1F5EE"/>
+    <rect x="6" y="14" width="8" height="12" rx="1" fill="#1D9E75" opacity=".25"/>
+    <rect x="18" y="8" width="8" height="18" rx="1" fill="#1D9E75" opacity=".25"/>
+    <circle cx="8" cy="20" r="2" fill="#1D9E75"/>
+    <circle cx="11" cy="17" r="2" fill="#1D9E75"/>
+    <circle cx="9" cy="23" r="2" fill="#1D9E75"/>
+    <circle cx="20" cy="11" r="2" fill="#7F77DD"/>
+    <circle cx="23" cy="14" r="2" fill="#7F77DD"/>
+    <circle cx="22" cy="18" r="2" fill="#7F77DD"/>
+    <circle cx="25" cy="10" r="2" fill="#e8a04a"/>
+    <line x1="6" y1="26" x2="26" y2="8" stroke="#1D9E75" strokeWidth="1" strokeDasharray="3 2" opacity=".5"/>
+  </svg>
+),
   };
   return icons[type] || null;
 }
@@ -604,6 +619,16 @@ export default function Home() {
       baslik: 'Naive Bayes: spam filtresi nasıl öğrenir?',
       ozet: 'Kelimeleri seç, spam olasılığını canlı gör. Bayes teoremi adım adım.',
       meta: 'interaktif · 12 dakika',
+    },
+    {
+      href: '/yazilar/anscombe',
+      icon: 'anscombe',
+      badge: 'interaktif',
+      badgeClass: 'badge-interactive',
+      borderColor: '#1D9E75',
+      baslik: "Anscombe'un Dörtlüsü: sayılar aynı, gerçek farklı",
+      ozet: '4 veri seti, birebir aynı istatistikler — ama grafikleri bambaşka. Görselleştirme neden zorunlu?',
+      meta: 'interaktif · 10 dakika',
     },
     {
       href: '/yazilar/veri-dedektifi',
