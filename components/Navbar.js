@@ -12,6 +12,7 @@ const kategoriler = [
   { href: '/kategori/kariyer',    label: 'Kariyer',    emoji: '💼' },
   { href: '/python',              label: 'PY Playground', emoji: '🐍' },
   { href: '/sql',                 label: 'SQL Playground',        emoji: '🗄️' },
+  { href: '/regex',              label: 'Regex',                 emoji: '🔍' },
   { href: '/ogren',               label: 'Öğren',      emoji: '📚' },
   { href: '/proje',               label: 'Proje',      emoji: '🚀' },
 ];

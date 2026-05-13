@@ -244,6 +244,17 @@ function Icon({ type }) {
     <text x="9" y="27" fontSize="6.5" fill="#0F6E56" fontWeight="700">P(A|B)</text>
   </svg>
 ),
+'clt': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#E1F5EE"/>
+    <rect x="5" y="22" width="4" height="5" rx="1" fill="#1D9E75" opacity=".4"/>
+    <rect x="10" y="17" width="4" height="10" rx="1" fill="#1D9E75" opacity=".6"/>
+    <rect x="15" y="11" width="4" height="16" rx="1" fill="#1D9E75" opacity=".9"/>
+    <rect x="20" y="17" width="4" height="10" rx="1" fill="#1D9E75" opacity=".6"/>
+    <rect x="25" y="22" width="3" height="5" rx="1" fill="#1D9E75" opacity=".4"/>
+    <path d="M5,21 Q10,10 16,9 Q22,10 27,21" stroke="#0d3d2e" strokeWidth="1.5" fill="none" opacity=".5"/>
+  </svg>
+),
 'forest': (
   <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
     <rect width="32" height="32" rx="8" fill="#E1F5EE"/>
@@ -254,6 +265,15 @@ function Icon({ type }) {
     <rect x="15" y="13" width="3" height="5" rx="1" fill="#0d3d2e" opacity=".7"/>
     <rect x="20" y="13" width="4" height="5" rx="1" fill="#0d3d2e" opacity=".5"/>
     <rect x="4" y="18" width="24" height="1.5" rx="0.75" fill="#0d3d2e" opacity=".2"/>
+  </svg>
+),
+'dedektif': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#E1F5EE"/>
+    <circle cx="14" cy="14" r="6" stroke="#1D9E75" strokeWidth="1.8" fill="none"/>
+    <line x1="19" y1="19" x2="25" y2="25" stroke="#0F6E56" strokeWidth="2" strokeLinecap="round"/>
+    <line x1="11" y1="14" x2="17" y2="14" stroke="#1D9E75" strokeWidth="1.2" strokeLinecap="round"/>
+    <line x1="14" y1="11" x2="14" y2="17" stroke="#1D9E75" strokeWidth="1.2" strokeLinecap="round"/>
   </svg>
 ),
   };
@@ -556,6 +576,16 @@ export default function Home() {
       meta: 'rehber · 18 dakika',
     },
     {
+      href: '/yazilar/merkezi-limit-teoremi',
+      icon: 'clt',
+      badge: 'interaktif',
+      badgeClass: 'badge-interactive',
+      borderColor: '#1D9E75',
+      baslik: 'Merkezi Limit Teoremi: her şey normal dağılıma yaklaşır',
+      ozet: 'Dağılım seç, örnekle, histogramın gözün önünde normale yaklaştığını gör.',
+      meta: 'interaktif · 10 dakika',
+    },
+    {
       href: '/yazilar/random-forest',
       icon: 'forest',
       badge: 'interaktif',
@@ -574,6 +604,16 @@ export default function Home() {
       baslik: 'Naive Bayes: spam filtresi nasıl öğrenir?',
       ozet: 'Kelimeleri seç, spam olasılığını canlı gör. Bayes teoremi adım adım.',
       meta: 'interaktif · 12 dakika',
+    },
+    {
+      href: '/yazilar/veri-dedektifi',
+      icon: 'dedektif',
+      badge: 'interaktif',
+      badgeClass: 'badge-interactive',
+      borderColor: '#1D9E75',
+      baslik: 'Veri dedektifi: gelir düşüşünün sebebini bul',
+      ozet: 'FikirzadeTech geliri %28 düştü. 8 panel incele, kanıtları topla, kök nedeni bul.',
+      meta: 'interaktif · soruşturma oyunu',
     },
   ];
 
