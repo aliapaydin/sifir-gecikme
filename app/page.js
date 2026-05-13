@@ -244,6 +244,18 @@ function Icon({ type }) {
     <text x="9" y="27" fontSize="6.5" fill="#0F6E56" fontWeight="700">P(A|B)</text>
   </svg>
 ),
+'forest': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#E1F5EE"/>
+    <polygon points="16,4 21,13 11,13" fill="#1D9E75" opacity=".9"/>
+    <polygon points="10,8 14,15 6,15" fill="#1D9E75" opacity=".6"/>
+    <polygon points="22,8 26,15 18,15" fill="#1D9E75" opacity=".6"/>
+    <rect x="9" y="13" width="4" height="5" rx="1" fill="#0d3d2e" opacity=".5"/>
+    <rect x="15" y="13" width="3" height="5" rx="1" fill="#0d3d2e" opacity=".7"/>
+    <rect x="20" y="13" width="4" height="5" rx="1" fill="#0d3d2e" opacity=".5"/>
+    <rect x="4" y="18" width="24" height="1.5" rx="0.75" fill="#0d3d2e" opacity=".2"/>
+  </svg>
+),
   };
   return icons[type] || null;
 }
@@ -542,6 +554,16 @@ export default function Home() {
       baslik: 'Veri bilimcisi için cloud: GCP mi AWS mi?',
       ozet: 'BigQuery vs Redshift, Vertex AI vs SageMaker. Hangi servisi ne zaman kullanırsın?',
       meta: 'rehber · 18 dakika',
+    },
+    {
+      href: '/yazilar/random-forest',
+      icon: 'forest',
+      badge: 'interaktif',
+      badgeClass: 'badge-interactive',
+      borderColor: '#1D9E75',
+      baslik: 'Random Forest: yüz ağaç bir orman yapar',
+      ozet: 'Slider ile ağaç ekle, karar sınırının nasıl yumuşadığını izle. Test noktasını sürükle.',
+      meta: 'interaktif · 14 dakika',
     },
     {
       href: '/yazilar/naive-bayes',
