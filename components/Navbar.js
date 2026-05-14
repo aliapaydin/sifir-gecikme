@@ -16,6 +16,7 @@ const kategoriler = [
   { href: '/ogren',               label: 'Öğren',      emoji: '📚' },
   { href: '/proje',               label: 'Proje',      emoji: '🚀' },
   { href: '/kalori',              label: 'Kalori',     emoji: '🥗' },
+  { href: '/veri-setleri',        label: 'Veri Setleri', emoji: '🗂️' },
 ];
 
 function readTemaFromDOM() {

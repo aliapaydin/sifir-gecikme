@@ -1,5 +1,5 @@
 'use client';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 const TIPLER = [
   { id: 'tumu', label: 'Tümü' },
@@ -195,6 +195,14 @@ export default function RenkPaleti() {
   const [secili, setSecili] = useState(PALETLER[0]);
   const [onizlemeTip, setOnizlemeTip] = useState('bar');
   const [tumKopyalandi, setTumKopyalandi] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   const filtreli = aktifTip === 'tumu' ? PALETLER : PALETLER.filter(p => p.tip === aktifTip);
 
@@ -209,7 +217,7 @@ export default function RenkPaleti() {
   const TIP_RENK = { kategorik: { bg: '#E1F5EE', color: '#0F6E56' }, sirali: { bg: '#EEEDFE', color: '#534AB7' }, ayrisik: { bg: '#FAEEDA', color: '#854F0B' }, 'renk-koru': { bg: '#FEE2E2', color: '#991B1B' } };
 
   return (
-    <main style={{ minHeight: '100vh', background: 'var(--color-bg)', paddingBottom: '80px' }}>
+    <main style={{ minHeight: '100vh', background: 'var(--color-bg)', paddingBottom: '80px', overflowX: 'hidden' }}>
 
       {/* Başlık */}
       <div style={{ borderBottom: '0.5px solid var(--color-border)', paddingTop: '48px', paddingBottom: '36px' }}>
@@ -227,7 +235,7 @@ export default function RenkPaleti() {
         </div>
       </div>
 
-      <div style={{ maxWidth: '1060px', margin: '0 auto', padding: '0 24px', paddingTop: '32px' }}>
+      <div style={{ maxWidth: '1060px', margin: '0 auto', padding: `0 ${isMobile ? '16px' : '24px'}`, paddingTop: '32px', width: '100%', boxSizing: 'border-box' }}>
 
         {/* Filtre sekmeleri */}
         <div style={{ display: 'flex', gap: '6px', marginBottom: '24px', flexWrap: 'wrap' }}>
@@ -243,10 +251,10 @@ export default function RenkPaleti() {
           ))}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.2fr) minmax(0,1fr)', gap: '24px', alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'minmax(0,1.2fr) minmax(0,1fr)', gap: '24px', alignItems: 'start', minWidth: 0 }}>
 
           {/* Sol: Palet listesi */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', minWidth: 0 }}>
             {filtreli.map(p => {
               const aktif = secili?.id === p.id;
               const tc = TIP_RENK[p.tip];
@@ -264,8 +272,8 @@ export default function RenkPaleti() {
                 >
                   {/* Renk şeridi */}
                   <div style={{ display: 'flex', gap: '3px', flexShrink: 0 }}>
-                    {p.renkler.slice(0, 8).map((r, i) => (
-                      <div key={i} style={{ width: '16px', height: '32px', borderRadius: '4px', background: r }} />
+                    {p.renkler.slice(0, isMobile ? 5 : 8).map((r, i) => (
+                      <div key={i} style={{ width: isMobile ? '14px' : '16px', height: '32px', borderRadius: '4px', background: r }} />
                     ))}
                   </div>
 
@@ -289,7 +297,7 @@ export default function RenkPaleti() {
 
           {/* Sağ: Detay paneli */}
           {secili && (
-            <div style={{ position: 'sticky', top: '80px' }}>
+            <div style={{ position: isMobile ? 'static' : 'sticky', top: '80px', minWidth: 0 }}>
               <div className="card" style={{ padding: '24px' }}>
 
                 {/* Başlık */}

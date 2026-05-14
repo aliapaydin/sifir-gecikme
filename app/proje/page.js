@@ -712,7 +712,7 @@ plt.close('all')`);
             {Object.values(SENARYOLAR).map(s => (
               <button key={s.id} onClick={() => senaryoSec(s)} style={{
                 padding: '24px', borderRadius: '14px', border: `1.5px solid ${s.renk}`,
-                background: s.bg, cursor: 'pointer', textAlign: 'left', transition: 'all .15s',
+                background: `${s.renk}18`, cursor: 'pointer', textAlign: 'left', transition: 'all .15s',
               }}>
                 <div style={{ fontSize: '32px', marginBottom: '10px' }}>{s.isim.split(' ')[0]}</div>
                 <div className="font-serif" style={{ fontSize: '18px', fontWeight: 500, color: 'var(--color-text)', marginBottom: '8px' }}>
@@ -762,7 +762,7 @@ plt.close('all')`);
                 display: 'flex', alignItems: 'center', gap: '6px',
                 padding: '6px 12px', borderRadius: '999px', fontSize: '12px', fontWeight: aktif ? 500 : 400,
                 border: `1.5px solid ${aktif ? senaryo.renk : tamam ? '#1D9E75' : 'var(--color-border)'}`,
-                background: aktif ? senaryo.bg : tamam ? '#E1F5EE' : 'var(--color-cream-card)',
+                background: aktif ? `${senaryo.renk}18` : tamam ? '#1D9E7518' : 'var(--color-cream-card)',
                 color: aktif ? senaryo.renk : tamam ? '#0F6E56' : 'var(--color-text-mute)',
                 cursor: 'pointer', transition: 'all .15s',
               }}>
@@ -793,7 +793,7 @@ plt.close('all')`);
               </button>
             </div>
             {ipucuIdx >= 0 && (
-              <div style={{ marginTop: '10px', padding: '10px 14px', borderRadius: '8px', background: senaryo.bg, fontSize: '13px', color: senaryo.renk }}>
+              <div style={{ marginTop: '10px', padding: '10px 14px', borderRadius: '8px', background: `${senaryo.renk}18`, fontSize: '13px', color: senaryo.renk }}>
                 {aktifAdimData.ipuclari[ipucuIdx]}
               </div>
             )}
@@ -841,7 +841,7 @@ plt.close('all')`);
                   Sonraki: {adimlar[aktifAdim + 1].emoji} {adimlar[aktifAdim + 1].baslik} →
                 </button>
               ) : (
-                <div style={{ textAlign: 'center', padding: '24px', background: senaryo.bg, borderRadius: '14px', width: '100%' }}>
+                <div style={{ textAlign: 'center', padding: '24px', background: `${senaryo.renk}18`, borderRadius: '14px', width: '100%' }}>
                   <div style={{ fontSize: '48px', marginBottom: '8px' }}>🎉</div>
                   <div className="font-serif" style={{ fontSize: '22px', fontWeight: 500, color: 'var(--color-text)', marginBottom: '8px' }}>Proje tamamlandı!</div>
                   <p style={{ fontSize: '14px', color: 'var(--color-text-soft)', marginBottom: '16px' }}>

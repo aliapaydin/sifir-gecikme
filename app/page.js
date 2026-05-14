@@ -337,6 +337,14 @@ function Icon({ type }) {
     <ellipse cx="16" cy="22" rx="9" ry="3.5" fill="#534AB7" opacity=".3"/>
   </svg>
 ),
+'zaman-serisi': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#E1F5EE"/>
+    <polyline points="5,24 9,20 13,22 17,13 21,16 27,8" fill="none" stroke="#1D9E75" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round"/>
+    <line x1="5" y1="26" x2="27" y2="26" stroke="#0F6E56" strokeWidth="1" opacity=".4"/>
+    <circle cx="27" cy="8" r="2.5" fill="#1D9E75"/>
+  </svg>
+),
   };
   return icons[type] || null;
 }
