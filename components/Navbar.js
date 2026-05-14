@@ -15,6 +15,7 @@ const kategoriler = [
   { href: '/regex',              label: 'Regex',                 emoji: '🔍' },
   { href: '/ogren',               label: 'Öğren',      emoji: '📚' },
   { href: '/proje',               label: 'Proje',      emoji: '🚀' },
+  { href: '/kalori',              label: 'Kalori',     emoji: '🥗' },
 ];
 
 function readTemaFromDOM() {
