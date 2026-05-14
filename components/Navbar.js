@@ -4,20 +4,42 @@ import Arama from './Arama';
 import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 
-const kategoriler = [
-  { href: '/kategori/interaktif', label: 'İnteraktif', emoji: '⚡' },
-  { href: '/kategori/rehber',     label: 'Rehber',     emoji: '📖' },
-  { href: '/kategori/arac',       label: 'Araç',       emoji: '🛠' },
-  { href: '/kategori/vaka',       label: 'Vaka',       emoji: '📊' },
-  { href: '/kategori/kariyer',    label: 'Kariyer',    emoji: '💼' },
-  { href: '/python',              label: 'PY Playground', emoji: '🐍' },
-  { href: '/sql',                 label: 'SQL Playground',        emoji: '🗄️' },
-  { href: '/regex',              label: 'Regex',                 emoji: '🔍' },
-  { href: '/ogren',               label: 'Öğren',      emoji: '📚' },
-  { href: '/proje',               label: 'Proje',      emoji: '🚀' },
-  { href: '/kalori',              label: 'Kalori',     emoji: '🥗' },
-  { href: '/veri-setleri',        label: 'Veri Setleri', emoji: '🗂️' },
-  { href: '/milyon',              label: 'Milyon',       emoji: '💰' },
+const GRUPLAR = [
+  {
+    key: 'kategoriler',
+    label: 'Kategoriler',
+    emoji: '📂',
+    items: [
+      { href: '/kategori/interaktif', label: 'İnteraktif', emoji: '⚡' },
+      { href: '/kategori/rehber',     label: 'Rehber',     emoji: '📖' },
+      { href: '/kategori/arac',       label: 'Araç',       emoji: '🛠' },
+      { href: '/kategori/vaka',       label: 'Vaka',       emoji: '📊' },
+      { href: '/kategori/kariyer',    label: 'Kariyer',    emoji: '💼' },
+    ],
+  },
+  {
+    key: 'playground',
+    label: 'Playground',
+    emoji: '⚙️',
+    items: [
+      { href: '/python', label: 'PY Playground', emoji: '🐍' },
+      { href: '/sql',    label: 'SQL Playground', emoji: '🗄️' },
+      { href: '/regex',  label: 'Regex',          emoji: '🔍' },
+    ],
+  },
+  {
+    key: 'moduller',
+    label: 'Modüller',
+    emoji: '🧩',
+    items: [
+      { href: '/ogren',        label: 'Öğren',       emoji: '📚' },
+      { href: '/proje',        label: 'Proje',        emoji: '🚀' },
+      { href: '/kalori',       label: 'Kalori',       emoji: '🥗' },
+      { href: '/veri-setleri', label: 'Veri Setleri', emoji: '🗂️' },
+      { href: '/milyon',       label: 'Milyon',       emoji: '💰' },
+      { href: '/mulakat',      label: 'Mülakat',      emoji: '🎤' },
+    ],
+  },
 ];
 
 function readTemaFromDOM() {
@@ -53,14 +75,16 @@ function ThemeToggleBtn() {
   const ikonlar = { light: '☀️', dark: '🌙', lacivert: '🌊' };
 
   return (
-    <button onClick={toggle} aria-label="Tema değiştir" title={{ light: 'Koyu temaya geç', dark: 'Lacivert temaya geç', lacivert: 'Açık temaya geç' }[tema]} style={{
-      width: '32px', height: '32px', borderRadius: '8px',
-      border: '0.5px solid var(--color-border)',
-      background: 'var(--color-cream-card)',
-      cursor: 'pointer', fontSize: '15px',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      color: 'var(--color-text-soft)', flexShrink: 0,
-    }}>
+    <button onClick={toggle} aria-label="Tema değiştir"
+      title={{ light: 'Koyu temaya geç', dark: 'Lacivert temaya geç', lacivert: 'Açık temaya geç' }[tema]}
+      style={{
+        width: '32px', height: '32px', borderRadius: '8px',
+        border: '0.5px solid var(--color-border)',
+        background: 'var(--color-cream-card)',
+        cursor: 'pointer', fontSize: '15px',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        color: 'var(--color-text-soft)', flexShrink: 0,
+      }}>
       {ikonlar[tema]}
     </button>
   );
@@ -68,9 +92,13 @@ function ThemeToggleBtn() {
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen,    setMenuOpen]    = useState(false);
+  const [isMobile,    setIsMobile]    = useState(false);
+  const [scrolled,    setScrolled]    = useState(false);
+  const [acikGrup,    setAcikGrup]    = useState(null);
+  const [dropdownPos, setDropdownPos] = useState({ left: 0, top: 0 });
+  // Mobil hamburger menüde hangi grup açık
+  const [acikMobGrup, setAcikMobGrup] = useState(null);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -85,22 +113,45 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  useEffect(() => { setMenuOpen(false); }, [pathname]);
+  // Dışarı tıklayınca dropdown kapat
+  useEffect(() => {
+    const close = () => setAcikGrup(null);
+    document.addEventListener('click', close);
+    return () => document.removeEventListener('click', close);
+  }, []);
+
+  // Route değişince her şeyi kapat
+  useEffect(() => {
+    setMenuOpen(false);
+    setAcikGrup(null);
+    setAcikMobGrup(null);
+  }, [pathname]);
 
   const isActive = (href) => {
     if (href === '/') return pathname === '/';
     return pathname.startsWith(href);
   };
 
+  const grupAktifMi = (grup) => grup.items.some(item => isActive(item.href));
+
+  const handleGrupClick = (e, grupKey) => {
+    e.stopPropagation();
+    if (acikGrup === grupKey) { setAcikGrup(null); return; }
+    const rect = e.currentTarget.getBoundingClientRect();
+    const left = Math.min(rect.left, window.innerWidth - 190);
+    setDropdownPos({ left, top: rect.bottom + 4 });
+    setAcikGrup(grupKey);
+  };
+
   const pillRef = useRef(null);
-  const [pillScroll, setPillScroll] = useState({ left: false, right: true });
+  const [pillScroll, setPillScroll] = useState({ left: false, right: false });
 
   useEffect(() => {
     const el = pillRef.current;
     if (!el) return;
     const update = () => {
       setPillScroll({
-        left: el.scrollLeft > 8,
+        left:  el.scrollLeft > 8,
         right: el.scrollLeft + el.clientWidth < el.scrollWidth - 8,
       });
     };
@@ -110,34 +161,40 @@ export default function Navbar() {
     return () => { el.removeEventListener('scroll', update); window.removeEventListener('resize', update); };
   }, []);
 
-const [tema, setTema] = useState('light');
+  const [tema, setTema] = useState('light');
 
-useEffect(() => {
-  setTema(readTemaFromDOM());
-  const observer = new MutationObserver(() => setTema(readTemaFromDOM()));
-  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-  return () => observer.disconnect();
-}, []);
+  useEffect(() => {
+    setTema(readTemaFromDOM());
+    const observer = new MutationObserver(() => setTema(readTemaFromDOM()));
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
 
-const isDark = tema !== 'light';
-
-const navBgMap = {
-  light: 'rgba(250,248,243,0.92)',
-  dark: 'rgba(26,24,21,0.92)',
-  lacivert: 'rgba(13,17,23,0.92)',
-};
-const fadeMap = {
-  light: 'rgba(243,240,233,0.95)',
-  dark: 'rgba(26,24,21,0.95)',
-  lacivert: 'rgba(13,17,23,0.95)',
-};
-const pillBgMap = {
-  light: 'rgba(0,0,0,0.035)',
-  dark: 'rgba(0,0,0,0.18)',
-  lacivert: 'rgba(0,0,0,0.28)',
-};
+  const navBgMap = {
+    light:    'rgba(250,248,243,0.92)',
+    dark:     'rgba(26,24,21,0.92)',
+    lacivert: 'rgba(13,17,23,0.92)',
+  };
+  const fadeMap = {
+    light:    'rgba(243,240,233,0.95)',
+    dark:     'rgba(26,24,21,0.95)',
+    lacivert: 'rgba(13,17,23,0.95)',
+  };
+  const pillBgMap = {
+    light:    'rgba(0,0,0,0.035)',
+    dark:     'rgba(0,0,0,0.18)',
+    lacivert: 'rgba(0,0,0,0.28)',
+  };
+  const dropdownBgMap = {
+    light:    'var(--color-cream-card)',
+    dark:     '#1e1c18',
+    lacivert: '#0d1117',
+  };
 
   const navBg = scrolled ? navBgMap[tema] : 'var(--color-cream)';
+
+  // Açık dropdown için veri
+  const acikGrupData = GRUPLAR.find(g => g.key === acikGrup);
 
   return (
     <header style={{
@@ -148,11 +205,11 @@ const pillBgMap = {
       borderBottom: '0.5px solid var(--color-border)',
       transition: 'background 0.2s',
     }}>
+      {/* Ana bar */}
       <div style={{
         maxWidth: '80rem', margin: '0 auto', padding: '0 1.5rem',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '56px',
       }}>
-
         {/* Logo */}
         <a href="/" style={{ display: 'flex', alignItems: 'center', gap: '9px', textDecoration: 'none', flexShrink: 0 }}>
           <div style={{
@@ -172,7 +229,7 @@ const pillBgMap = {
           </div>
         </a>
 
-        {/* Desktop nav */}
+        {/* Desktop sağ */}
         {!isMobile && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '1px' }}>
             <a href="/hakkimda" style={{
@@ -194,12 +251,12 @@ const pillBgMap = {
           </div>
         )}
 
-        {/* Mobile */}
+        {/* Mobil sağ */}
         {isMobile && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Arama />
             <ThemeToggleBtn />
-            <button onClick={() => setMenuOpen(!menuOpen)} aria-label="Menü" style={{
+            <button onClick={() => setMenuOpen(o => !o)} aria-label="Menü" style={{
               width: '36px', height: '36px', borderRadius: '8px',
               border: '0.5px solid var(--color-border)',
               background: 'var(--color-cream-card)',
@@ -214,89 +271,117 @@ const pillBgMap = {
         )}
       </div>
 
-      {/* Pill bar — her ekranda görünür */}
+      {/* Pill bar — gruplu */}
       <div style={{ position: 'relative', borderTop: '0.5px solid var(--color-border)' }}>
-        {/* Sol fade */}
         {pillScroll.left && (
-          <div style={{
-            position: 'absolute', left: 0, top: 0, bottom: 0, width: '48px', zIndex: 2,
-            pointerEvents: 'none',
-            background: `linear-gradient(to right, ${fadeMap[tema]}, transparent)`,
-          }} />
+          <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '40px', zIndex: 2, pointerEvents: 'none', background: `linear-gradient(to right, ${fadeMap[tema]}, transparent)` }} />
         )}
-        {/* Sağ fade */}
         {pillScroll.right && (
-          <div style={{
-            position: 'absolute', right: 0, top: 0, bottom: 0, width: '48px', zIndex: 2,
-            pointerEvents: 'none',
-            background: `linear-gradient(to left, ${fadeMap[tema]}, transparent)`,
-          }} />
+          <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: '40px', zIndex: 2, pointerEvents: 'none', background: `linear-gradient(to left, ${fadeMap[tema]}, transparent)` }} />
         )}
-        <div ref={pillRef} style={{
-          overflowX: 'auto',
-          scrollbarWidth: 'none',
-          WebkitOverflowScrolling: 'touch',
-          background: pillBgMap[tema],
-        }}>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '4px',
-          padding: '6px 1.5rem',
-          width: 'max-content',
-          minWidth: '100%',
-        }}>
-          <a href="/" style={{
-            padding: '4px 12px', borderRadius: '999px', fontSize: '12.5px',
-            textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0,
-            border: '0.5px solid',
-            borderColor: pathname === '/' ? 'var(--color-accent)' : 'var(--color-border)',
-            background: pathname === '/' ? 'var(--color-accent-soft)' : 'transparent',
-            color: pathname === '/' ? 'var(--color-accent-text)' : 'var(--color-text-mute)',
-            fontWeight: pathname === '/' ? 500 : 400,
-          }}>Tümü</a>
+        <div ref={pillRef} style={{ overflowX: 'auto', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch', background: pillBgMap[tema] }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '6px 1.5rem', width: 'max-content', minWidth: '100%' }}>
 
-          <div style={{ width: '0.5px', height: '14px', background: 'var(--color-border)', flexShrink: 0, margin: '0 2px' }} />
-
-          {kategoriler.map(({ href, label, emoji }) => (
-            <a key={href} href={href} style={{
+            {/* Tümü */}
+            <a href="/" style={{
               padding: '4px 12px', borderRadius: '999px', fontSize: '12.5px',
               textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0,
-              display: 'flex', alignItems: 'center', gap: '5px',
               border: '0.5px solid',
-              borderColor: isActive(href) ? 'var(--color-accent)' : 'var(--color-border)',
-              background: isActive(href) ? 'var(--color-accent-soft)' : 'transparent',
-              color: isActive(href) ? 'var(--color-accent-text)' : 'var(--color-text-mute)',
-              fontWeight: isActive(href) ? 500 : 400,
-            }}>
-              <span style={{ fontSize: '11px' }}>{emoji}</span>
-              {label}
-            </a>
-          ))}
-        </div>
+              borderColor: pathname === '/' ? 'var(--color-accent)' : 'var(--color-border)',
+              background: pathname === '/' ? 'var(--color-accent-soft)' : 'transparent',
+              color: pathname === '/' ? 'var(--color-accent-text)' : 'var(--color-text-mute)',
+              fontWeight: pathname === '/' ? 500 : 400,
+            }}>Tümü</a>
+
+            <div style={{ width: '0.5px', height: '14px', background: 'var(--color-border)', flexShrink: 0, margin: '0 4px' }} />
+
+            {/* Grup butonları */}
+            {GRUPLAR.map((grup) => {
+              const aktif = grupAktifMi(grup);
+              const acik  = acikGrup === grup.key;
+              return (
+                <button
+                  key={grup.key}
+                  onClick={(e) => handleGrupClick(e, grup.key)}
+                  style={{
+                    padding: '4px 11px', borderRadius: '999px', fontSize: '12.5px',
+                    whiteSpace: 'nowrap', flexShrink: 0, cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', gap: '5px',
+                    border: '0.5px solid',
+                    borderColor: aktif || acik ? 'var(--color-accent)' : 'var(--color-border)',
+                    background: aktif || acik ? 'var(--color-accent-soft)' : 'transparent',
+                    color: aktif || acik ? 'var(--color-accent-text)' : 'var(--color-text-mute)',
+                    fontWeight: aktif || acik ? 500 : 400,
+                    transition: 'all 0.15s',
+                  }}
+                >
+                  <span style={{ fontSize: '11px' }}>{grup.emoji}</span>
+                  {grup.label}
+                  <span style={{ fontSize: '8px', opacity: 0.55, marginLeft: '1px', lineHeight: 1 }}>
+                    {acik ? '▲' : '▼'}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      {/* Mobile dropdown */}
+      {/* Dropdown — position:fixed, tema'ya göre arka plan */}
+      {acikGrupData && (
+        <div
+          onClick={e => e.stopPropagation()}
+          style={{
+            position: 'fixed',
+            left: dropdownPos.left,
+            top: dropdownPos.top,
+            zIndex: 200,
+            background: dropdownBgMap[tema],
+            border: '0.5px solid var(--color-border)',
+            borderRadius: '12px',
+            boxShadow: tema === 'light'
+              ? '0 8px 32px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06)'
+              : '0 8px 32px rgba(0,0,0,0.4)',
+            padding: '5px',
+            minWidth: '176px',
+          }}
+        >
+          {acikGrupData.items.map(item => {
+            const aktif = isActive(item.href);
+            return (
+              <a key={item.href} href={item.href} style={{
+                display: 'flex', alignItems: 'center', gap: '9px',
+                padding: '8px 12px', borderRadius: '8px', textDecoration: 'none',
+                fontSize: '13px', whiteSpace: 'nowrap',
+                background: aktif ? 'var(--color-accent-soft)' : 'transparent',
+                color: aktif ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
+                fontWeight: aktif ? 500 : 400,
+                transition: 'background 0.1s',
+              }}>
+                <span style={{ fontSize: '13px', width: '18px', textAlign: 'center' }}>{item.emoji}</span>
+                {item.label}
+              </a>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Mobil hamburger menü — gruplu */}
       {isMobile && menuOpen && (
-        <div style={{ borderTop: '0.5px solid var(--color-border)', background: 'var(--color-cream)', padding: '8px 16px 16px' }}>
+        <div style={{ borderTop: '0.5px solid var(--color-border)', background: 'var(--color-cream)', padding: '8px 12px 16px' }}>
+          {/* Sabit linkler */}
           <a href="/" style={{
             display: 'flex', alignItems: 'center', gap: '10px',
-            padding: '10px 14px', borderRadius: '8px', fontSize: '14px',
-            textDecoration: 'none', marginBottom: '2px',
+            padding: '9px 12px', borderRadius: '8px', fontSize: '14px', textDecoration: 'none',
             background: pathname === '/' ? 'var(--color-accent-soft)' : 'transparent',
             color: pathname === '/' ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
             fontWeight: pathname === '/' ? 500 : 400,
           }}>
             <span>🏠</span> Tüm İçerikler
           </a>
-
-          <div style={{ height: '0.5px', background: 'var(--color-border)', margin: '8px 0' }} />
-
           <a href="/hakkimda" style={{
             display: 'flex', alignItems: 'center', gap: '10px',
-            padding: '10px 14px', borderRadius: '8px', fontSize: '14px',
-            textDecoration: 'none',
+            padding: '9px 12px', borderRadius: '8px', fontSize: '14px', textDecoration: 'none',
             background: isActive('/hakkimda') ? 'var(--color-accent-soft)' : 'transparent',
             color: isActive('/hakkimda') ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
           }}>
@@ -304,13 +389,56 @@ const pillBgMap = {
           </a>
           <a href="/harita" style={{
             display: 'flex', alignItems: 'center', gap: '10px',
-            padding: '10px 14px', borderRadius: '8px', fontSize: '14px',
-            textDecoration: 'none',
+            padding: '9px 12px', borderRadius: '8px', fontSize: '14px', textDecoration: 'none',
             background: isActive('/harita') ? 'var(--color-accent-soft)' : 'transparent',
             color: isActive('/harita') ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
           }}>
             <span>🗺️</span> Haritam
           </a>
+
+          {/* Gruplar */}
+          {GRUPLAR.map(grup => {
+            const acik = acikMobGrup === grup.key;
+            const aktif = grupAktifMi(grup);
+            return (
+              <div key={grup.key}>
+                <div style={{ height: '0.5px', background: 'var(--color-border)', margin: '6px 0' }} />
+                {/* Grup başlığı — tıklanabilir */}
+                <button
+                  onClick={() => setAcikMobGrup(acik ? null : grup.key)}
+                  style={{
+                    width: '100%', display: 'flex', alignItems: 'center', gap: '10px',
+                    padding: '9px 12px', borderRadius: '8px', fontSize: '13px',
+                    background: aktif ? 'var(--color-accent-soft)' : 'transparent',
+                    color: aktif ? 'var(--color-accent-text)' : 'var(--color-text-mute)',
+                    fontWeight: 600, border: 'none', cursor: 'pointer', textAlign: 'left',
+                    letterSpacing: '0.04em',
+                  }}
+                >
+                  <span>{grup.emoji}</span>
+                  <span style={{ flex: 1 }}>{grup.label.toUpperCase()}</span>
+                  <span style={{ fontSize: '10px', opacity: 0.5 }}>{acik ? '▲' : '▼'}</span>
+                </button>
+
+                {acik && grup.items.map(item => {
+                  const akt = isActive(item.href);
+                  return (
+                    <a key={item.href} href={item.href} style={{
+                      display: 'flex', alignItems: 'center', gap: '10px',
+                      padding: '8px 12px 8px 32px', borderRadius: '8px', fontSize: '14px',
+                      textDecoration: 'none',
+                      background: akt ? 'var(--color-accent-soft)' : 'transparent',
+                      color: akt ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
+                      fontWeight: akt ? 500 : 400,
+                    }}>
+                      <span style={{ fontSize: '13px' }}>{item.emoji}</span>
+                      {item.label}
+                    </a>
+                  );
+                })}
+              </div>
+            );
+          })}
         </div>
       )}
     </header>

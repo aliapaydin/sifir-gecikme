@@ -345,6 +345,35 @@ function Icon({ type }) {
     <circle cx="27" cy="8" r="2.5" fill="#1D9E75"/>
   </svg>
 ),
+'mulakat': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#EEEDFE"/>
+    <rect x="12" y="6" width="8" height="12" rx="4" fill="#7F77DD" opacity=".85"/>
+    <path d="M7 17 Q7 24 16 24 Q25 24 25 17" fill="none" stroke="#7F77DD" strokeWidth="1.8" strokeLinecap="round"/>
+    <line x1="16" y1="24" x2="16" y2="28" stroke="#7F77DD" strokeWidth="1.8" strokeLinecap="round"/>
+    <line x1="12" y1="28" x2="20" y2="28" stroke="#7F77DD" strokeWidth="1.8" strokeLinecap="round"/>
+  </svg>
+),
+'churn': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#FAEEDA"/>
+    <circle cx="12" cy="13" r="4" fill="#e8a04a" opacity=".8"/>
+    <circle cx="22" cy="11" r="3" fill="#e8a04a" opacity=".5"/>
+    <path d="M6 22 Q12 18 18 22 Q22 19 28 22" fill="none" stroke="#BA7517" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M22 15 L25 12 M25 12 L22 12 M25 12 L25 15" stroke="#EF4444" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+),
+'kredi-shap': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#FAEEDA"/>
+    <rect x="6" y="20" width="4" height="6" rx="1" fill="#e8a04a" opacity=".5"/>
+    <rect x="12" y="15" width="4" height="11" rx="1" fill="#e8a04a" opacity=".7"/>
+    <rect x="18" y="10" width="4" height="16" rx="1" fill="#e8a04a"/>
+    <rect x="24" y="14" width="4" height="12" rx="1" fill="#BA7517" opacity=".6"/>
+    <polyline points="8,19 14,14 20,9 26,13" fill="none" stroke="#854F0B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    <circle cx="26" cy="13" r="2" fill="#854F0B"/>
+  </svg>
+),
   };
   return icons[type] || null;
 }
