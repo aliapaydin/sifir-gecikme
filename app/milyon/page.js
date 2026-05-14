@@ -359,6 +359,14 @@ export default function Milyon() {
   const [telefonAcik,    setTelefonAcik]    = useState(false);
   const [ciftDurum,      setCiftDurum]      = useState('yok'); // yok | aktif | ikinci
   const [ilkYanlisIdx,   setIlkYanlisIdx]   = useState(null);
+  const [isMobile,       setIsMobile]       = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   const { playTick, playDogru, playYanlis, playTelefonZili, startAmbi, stopAmbi } = useSes();
 
@@ -555,7 +563,8 @@ export default function Milyon() {
 
   const jokerBtn = (used, renk, icon, title, fn) => (
     <button onClick={fn} disabled={used} title={title} style={{
-      width: '52px', height: '52px', borderRadius: '50%', fontSize: '20px', cursor: used ? 'not-allowed' : 'pointer',
+      width: isMobile ? '44px' : '52px', height: isMobile ? '44px' : '52px',
+      borderRadius: '50%', fontSize: isMobile ? '17px' : '20px', cursor: used ? 'not-allowed' : 'pointer',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       background: used ? 'rgba(255,255,255,0.04)' : `${renk}20`,
       border: `2px solid ${used ? 'rgba(255,255,255,0.1)' : renk + '60'}`,
@@ -579,22 +588,56 @@ export default function Milyon() {
       {telefonAcik && <TelefonModal soru={soru} onKapat={telefonKapat} />}
 
       {/* Ana layout */}
-      <div style={{ flex: 1, display: 'grid', gridTemplateColumns: 'auto 1fr auto', maxWidth: '1200px', width: '100%', margin: '0 auto', padding: '20px 16px', alignItems: 'start', gap: '0' }}>
+      <div style={{
+        flex: 1,
+        display: isMobile ? 'flex' : 'grid',
+        flexDirection: isMobile ? 'column' : undefined,
+        gridTemplateColumns: isMobile ? undefined : 'auto 1fr auto',
+        maxWidth: '1200px', width: '100%', margin: '0 auto',
+        padding: isMobile ? '8px 10px' : '20px 16px',
+        alignItems: 'start', gap: '0',
+      }}>
 
-        {/* Sol: Host */}
-        <div style={{ width: '90px', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', paddingBottom: '40px', minHeight: '300px' }}>
-          <SunucuSiluet />
-        </div>
+        {/* Sol: Host — masaüstünde */}
+        {!isMobile && (
+          <div style={{ width: '90px', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', paddingBottom: '40px', minHeight: '300px' }}>
+            <SunucuSiluet />
+          </div>
+        )}
 
         {/* Orta: Oyun */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 12px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: isMobile ? '0' : '0 12px', width: isMobile ? '100%' : undefined }}>
           <div style={{ width: '100%', maxWidth: '640px' }}>
+
+            {/* Mobil: Yatay para şeridi */}
+            {isMobile && (
+              <div style={{ overflowX: 'auto', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch', marginBottom: '8px' }}>
+                <div style={{ display: 'flex', gap: '4px', padding: '2px 0', width: 'max-content' }}>
+                  {ODULLER.map((para, i) => {
+                    const aktif = i === soruIdx;
+                    const gecildi = i < soruIdx;
+                    const guvence = GUVENCELER.includes(i + 1);
+                    return (
+                      <div key={i} style={{
+                        padding: '3px 7px', borderRadius: '5px', fontSize: '10px', fontWeight: aktif ? 700 : 400,
+                        whiteSpace: 'nowrap', flexShrink: 0,
+                        background: aktif ? 'rgba(251,191,36,0.2)' : gecildi ? 'rgba(29,158,117,0.15)' : 'rgba(255,255,255,0.04)',
+                        border: `1px solid ${aktif ? 'rgba(251,191,36,0.6)' : guvence ? 'rgba(29,158,117,0.4)' : 'rgba(255,255,255,0.06)'}`,
+                        color: aktif ? '#FCD34D' : gecildi ? '#6EE7B7' : guvence ? '#86EFAC' : 'rgba(255,255,255,0.35)',
+                      }}>
+                        {i + 1}. {formatPara(para)}{guvence ? ' ★' : ''}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* Monitör gövdesi */}
             <div style={{ background: 'linear-gradient(160deg,#0f0f23 0%,#0a0a1a 100%)', border: '2px solid rgba(100,80,220,0.4)', borderRadius: '16px', boxShadow: '0 0 40px rgba(100,60,220,0.2),inset 0 0 20px rgba(0,0,0,0.5)', overflow: 'hidden' }}>
 
               {/* Başlık barı */}
-              <div style={{ background: 'rgba(100,60,220,0.15)', padding: '10px 16px', borderBottom: '1px solid rgba(100,80,220,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ background: 'rgba(100,60,220,0.15)', padding: isMobile ? '8px 12px' : '10px 16px', borderBottom: '1px solid rgba(100,80,220,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', gap: '6px' }}>
                   {['#EF4444','#F59E0B','#10B981'].map((c, i) => <div key={i} style={{ width: '10px', height: '10px', borderRadius: '50%', background: c, opacity: 0.7 }} />)}
                 </div>
@@ -603,39 +646,39 @@ export default function Milyon() {
               </div>
 
               {/* Soru içeriği */}
-              <div style={{ padding: '24px 24px 20px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+              <div style={{ padding: isMobile ? '14px 12px 12px' : '24px 24px 20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: isMobile ? '12px' : '20px' }}>
                   <div style={{ color: 'rgba(252,211,77,0.7)', fontSize: '12px', fontWeight: 700, letterSpacing: '0.1em' }}>SORU {soruIdx + 1} / 10</div>
                   <div style={{ animation: sure <= 4 ? 'timerBeat 0.5s ease infinite' : 'none' }}>
                     <TimerHalka sure={sure} />
                   </div>
                 </div>
 
-                <div style={{ color: 'white', fontSize: 'clamp(14px,2.5vw,17px)', lineHeight: '1.65', fontWeight: 500, marginBottom: '24px', minHeight: '52px' }}>
+                <div style={{ color: 'white', fontSize: isMobile ? '14px' : 'clamp(14px,2.5vw,17px)', lineHeight: '1.65', fontWeight: 500, marginBottom: isMobile ? '14px' : '24px', minHeight: isMobile ? '40px' : '52px' }}>
                   {soru.soru}
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: isMobile ? '8px' : '10px' }}>
                   {soru.secenekler.map((opt, i) => {
                     const s = secenekRengi(i);
                     const gizli   = gizliSecenekler.includes(i);
                     const ilkY    = i === ilkYanlisIdx;
                     return (
                       <button key={i} onClick={() => cevapla(i)} disabled={gizli || ilkY || secilen !== null}
-                        style={{ padding: '12px 14px', borderRadius: '10px', textAlign: 'left', border: `1.5px solid ${s.border}`, background: s.bg, color: s.color, fontSize: '13px', cursor: (gizli || ilkY || secilen !== null) ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '10px', transition: 'all 0.2s', lineHeight: '1.4', animation: s.anim }}>
-                        <span style={{ fontWeight: 800, fontSize: '12px', opacity: 0.8, flexShrink: 0 }}>{ETIKET[i]}</span>
+                        style={{ padding: isMobile ? '10px 10px' : '12px 14px', borderRadius: '10px', textAlign: 'left', border: `1.5px solid ${s.border}`, background: s.bg, color: s.color, fontSize: isMobile ? '12px' : '13px', cursor: (gizli || ilkY || secilen !== null) ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.2s', lineHeight: '1.4', animation: s.anim }}>
+                        <span style={{ fontWeight: 800, fontSize: '11px', opacity: 0.8, flexShrink: 0 }}>{ETIKET[i]}</span>
                         <span style={{ visibility: gizli ? 'hidden' : 'visible' }}>{opt}</span>
                       </button>
                     );
                   })}
                 </div>
 
-                {ciftDurum === 'aktif' && <div style={{ marginTop: '12px', textAlign: 'center', fontSize: '12px', color: '#F59E0B', animation: 'pulse 2s ease infinite' }}>⚡ Çift cevap aktif — yanlış olsa bile bir kez daha hakkın var</div>}
-                {ciftDurum === 'ikinci' && <div style={{ marginTop: '12px', textAlign: 'center', fontSize: '12px', color: '#EF4444', animation: 'pulse 0.8s ease infinite' }}>⚠️ İlk cevap yanlıştı! Son şansın — dikkatli seç</div>}
+                {ciftDurum === 'aktif' && <div style={{ marginTop: '10px', textAlign: 'center', fontSize: '11px', color: '#F59E0B', animation: 'pulse 2s ease infinite' }}>⚡ Çift cevap aktif — yanlış olsa bile bir kez daha hakkın var</div>}
+                {ciftDurum === 'ikinci' && <div style={{ marginTop: '10px', textAlign: 'center', fontSize: '11px', color: '#EF4444', animation: 'pulse 0.8s ease infinite' }}>⚠️ İlk cevap yanlıştı! Son şansın — dikkatli seç</div>}
               </div>
 
               {/* Joker barı */}
-              <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '24px', background: 'rgba(0,0,0,0.2)' }}>
+              <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '10px 12px' : '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: isMobile ? '16px' : '24px', background: 'rgba(0,0,0,0.2)' }}>
                 <span style={{ color: 'rgba(255,255,255,0.25)', fontSize: '11px', letterSpacing: '0.08em' }}>JOKERLER</span>
                 {jokerBtn(jokerler.telefon, '#9F7AEA', '📞', 'Telefon Jokeri', jokerTelefon)}
                 {jokerBtn(jokerler.elim,    '#F59E0B', '50/50', '%50 Jokeri', jokerElim)}
@@ -643,18 +686,24 @@ export default function Milyon() {
               </div>
             </div>
 
-            {/* Laptop alt kenarı */}
-            <div style={{ height: '10px', background: 'linear-gradient(to bottom,#1a1a2e,#0f0f1a)', borderRadius: '0 0 6px 6px', margin: '0 8px', opacity: 0.8 }} />
-            <div style={{ height: '6px', background: '#0a0a14', borderRadius: '0 0 10px 10px', margin: '0 20px' }} />
+            {/* Laptop alt kenarı — masaüstünde */}
+            {!isMobile && (
+              <>
+                <div style={{ height: '10px', background: 'linear-gradient(to bottom,#1a1a2e,#0f0f1a)', borderRadius: '0 0 6px 6px', margin: '0 8px', opacity: 0.8 }} />
+                <div style={{ height: '6px', background: '#0a0a14', borderRadius: '0 0 10px 10px', margin: '0 20px' }} />
+              </>
+            )}
           </div>
-          <div style={{ marginTop: '14px', color: 'rgba(255,255,255,0.18)', fontSize: '11px', letterSpacing: '0.1em' }}>YARIŞMACI</div>
+          {!isMobile && <div style={{ marginTop: '14px', color: 'rgba(255,255,255,0.18)', fontSize: '11px', letterSpacing: '0.1em' }}>YARIŞMACI</div>}
         </div>
 
-        {/* Sağ: Para merdiveni */}
-        <div style={{ width: '152px', paddingTop: '8px' }}>
-          <div style={{ color: 'rgba(252,211,77,0.4)', fontSize: '10px', letterSpacing: '0.1em', marginBottom: '8px', textAlign: 'center' }}>ÖDÜL MERDİVENİ</div>
-          <ParaMerdiveni soruIdx={soruIdx} />
-        </div>
+        {/* Sağ: Para merdiveni — masaüstünde */}
+        {!isMobile && (
+          <div style={{ width: '152px', paddingTop: '8px' }}>
+            <div style={{ color: 'rgba(252,211,77,0.4)', fontSize: '10px', letterSpacing: '0.1em', marginBottom: '8px', textAlign: 'center' }}>ÖDÜL MERDİVENİ</div>
+            <ParaMerdiveni soruIdx={soruIdx} />
+          </div>
+        )}
       </div>
     </div>
   );
