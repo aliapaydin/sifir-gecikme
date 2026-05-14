@@ -113,12 +113,17 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Dışarı tıklayınca dropdown kapat
+  // Dropdown açıkken dışarı tıklayınca kapat
+  // setTimeout(0): mevcut click event'i geçtikten sonra listener kayıt et
   useEffect(() => {
+    if (!acikGrup) return;
     const close = () => setAcikGrup(null);
-    document.addEventListener('click', close);
-    return () => document.removeEventListener('click', close);
-  }, []);
+    const id = setTimeout(() => document.addEventListener('click', close), 0);
+    return () => {
+      clearTimeout(id);
+      document.removeEventListener('click', close);
+    };
+  }, [acikGrup]);
 
   // Route değişince her şeyi kapat
   useEffect(() => {
@@ -135,7 +140,6 @@ export default function Navbar() {
   const grupAktifMi = (grup) => grup.items.some(item => isActive(item.href));
 
   const handleGrupClick = (e, grupKey) => {
-    e.stopPropagation();
     if (acikGrup === grupKey) { setAcikGrup(null); return; }
     const rect = e.currentTarget.getBoundingClientRect();
     const left = Math.min(rect.left, window.innerWidth - 190);
@@ -271,8 +275,8 @@ export default function Navbar() {
         )}
       </div>
 
-      {/* Pill bar — gruplu */}
-      <div style={{ position: 'relative', borderTop: '0.5px solid var(--color-border)' }}>
+      {/* Pill bar — gruplu; mobilde hamburger açıkken gizle */}
+      {!(isMobile && menuOpen) && <div style={{ position: 'relative', borderTop: '0.5px solid var(--color-border)' }}>
         {pillScroll.left && (
           <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '40px', zIndex: 2, pointerEvents: 'none', background: `linear-gradient(to right, ${fadeMap[tema]}, transparent)` }} />
         )}
@@ -325,12 +329,11 @@ export default function Navbar() {
             })}
           </div>
         </div>
-      </div>
+      </div>}
 
       {/* Dropdown — position:fixed, tema'ya göre arka plan */}
       {acikGrupData && (
         <div
-          onClick={e => e.stopPropagation()}
           style={{
             position: 'fixed',
             left: dropdownPos.left,

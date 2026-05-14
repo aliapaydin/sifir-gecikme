@@ -464,8 +464,9 @@ export default function Mulakat() {
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--color-cream)' }}>
+      <style>{`@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}`}</style>
       {/* Üst bar */}
-      <div style={{ borderBottom: '1px solid var(--color-border)', background: 'var(--color-cream)', position: 'sticky', top: 56, zIndex: 20 }}>
+      <div style={{ borderBottom: '1px solid var(--color-border)', background: 'var(--color-cream)', position: 'sticky', top: 90, zIndex: 20 }}>
         {/* Kategori filtreleri */}
         <div style={{ overflowX: 'auto', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
           <div style={{ display: 'flex', gap: '6px', padding: '10px 20px', width: 'max-content', minWidth: '100%' }}>
@@ -533,7 +534,6 @@ export default function Mulakat() {
           </button>
         ) : (
           <div style={{ animation: 'fadeInUp 0.25s ease' }}>
-            <style>{`@keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}`}</style>
 
             {/* Model cevap */}
             <div style={{ background: 'var(--color-cream-card)', border: '1px solid var(--color-border)', borderRadius: '16px', padding: isMobile ? '18px' : '24px', marginBottom: '12px' }}>
