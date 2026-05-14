@@ -8,7 +8,12 @@ export default function Yorumlar() {
   useEffect(() => {
     if (!ref.current || ref.current.querySelector('iframe')) return;
 
-    const isDark = document.documentElement.classList.contains('dark');
+    const giscusTema = () => {
+      const el = document.documentElement;
+      if (el.classList.contains('lacivert')) return 'dark_dimmed';
+      if (el.classList.contains('dark')) return 'dark';
+      return 'light';
+    };
 
     const script = document.createElement('script');
     script.src = 'https://giscus.app/client.js';
@@ -21,7 +26,7 @@ export default function Yorumlar() {
     script.setAttribute('data-reactions-enabled', '1');
     script.setAttribute('data-emit-metadata', '0');
     script.setAttribute('data-input-position', 'top');
-    script.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    script.setAttribute('data-theme', giscusTema());
     script.setAttribute('data-lang', 'tr');
     script.setAttribute('data-loading', 'lazy');
     script.crossOrigin = 'anonymous';
@@ -29,13 +34,11 @@ export default function Yorumlar() {
 
     ref.current.appendChild(script);
 
-    // Dark mode değişince tema güncelle
     const observer = new MutationObserver(() => {
-      const dark = document.documentElement.classList.contains('dark');
       const iframe = document.querySelector('iframe.giscus-frame');
       if (iframe) {
         iframe.contentWindow?.postMessage(
-          { giscus: { setConfig: { theme: dark ? 'dark' : 'light' } } },
+          { giscus: { setConfig: { theme: giscusTema() } } },
           'https://giscus.app'
         );
       }

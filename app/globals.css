@@ -3,6 +3,7 @@
 :root,
 [data-theme="light"] {
   --color-cream: #faf8f3;
+  --color-bg: var(--color-cream);
   --color-cream-rgb: 250,248,243;
   --color-cream-card: #ffffff;
   --color-border: #e8e2d5;
@@ -23,6 +24,7 @@
 html.dark,
 [data-theme="dark"] {
   --color-cream: #1a1815;
+  --color-bg: #1a1815;
   --color-cream-rgb: 26,24,21;
   --color-cream-card: #242018;
   --color-border: #3a3530;
@@ -38,6 +40,26 @@ html.dark,
   --color-purple-bg: #1e1a3d;
   --color-purple-text: #AFA9EC;
   --color-highlight: #3d2e12;
+}
+
+html.lacivert {
+  --color-cream: #0D1117;
+  --color-bg: #0D1117;
+  --color-cream-rgb: 13,17,23;
+  --color-cream-card: #161B22;
+  --color-border: #30363D;
+  --color-text: #E6EDF3;
+  --color-text-soft: #8B949E;
+  --color-text-mute: #6E7681;
+  --color-text-faint: #484F58;
+  --color-accent: #1D9E75;
+  --color-accent-soft: #0A2418;
+  --color-accent-text: #3DD68C;
+  --color-amber-bg: #1F1400;
+  --color-amber-text: #FBBF24;
+  --color-purple-bg: #120F2A;
+  --color-purple-text: #C4B5FD;
+  --color-highlight: #1F1400;
 }
 
 html {
@@ -125,6 +147,11 @@ html.dark .prose-article pre,
   border-color: #3a3530;
   color: #f0ebe3;
 }
+html.lacivert .prose-article pre {
+  background: #090C10;
+  border-color: #30363D;
+  color: #E6EDF3;
+}
 
 .badge {
   display: inline-block;
@@ -167,3 +194,20 @@ html.dark select {
 html.dark button {
   color: var(--color-text);
 }
+
+/* Lacivert theme — Tailwind overrides */
+html.lacivert .bg-gray-50  { background: var(--color-cream-card) !important; }
+html.lacivert .bg-white    { background: var(--color-cream-card) !important; }
+html.lacivert .border-gray-200 { border-color: var(--color-border) !important; }
+html.lacivert .text-gray-500   { color: var(--color-text-mute) !important; }
+html.lacivert .text-gray-600   { color: var(--color-text-soft) !important; }
+html.lacivert .text-gray-900   { color: var(--color-text) !important; }
+html.lacivert .hover\:bg-gray-50:hover { background: var(--color-cream) !important; }
+html.lacivert input[type="range"] { accent-color: var(--color-accent); }
+html.lacivert input[type="number"],
+html.lacivert select {
+  background: var(--color-cream-card) !important;
+  color: var(--color-text) !important;
+  border-color: var(--color-border) !important;
+}
+html.lacivert button { color: var(--color-text); }

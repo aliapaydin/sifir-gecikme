@@ -17,33 +17,40 @@ const kategoriler = [
   { href: '/proje',               label: 'Proje',      emoji: '🚀' },
 ];
 
+function readTemaFromDOM() {
+  const el = document.documentElement;
+  if (el.classList.contains('lacivert')) return 'lacivert';
+  if (el.classList.contains('dark')) return 'dark';
+  return 'light';
+}
+
 function ThemeToggleBtn() {
-  const [dark, setDark] = useState(false);
+  const [tema, setTema] = useState('light');
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    setDark(document.documentElement.classList.contains('dark'));
+    setTema(readTemaFromDOM());
   }, []);
 
-const toggle = () => {
-  const scrollY = window.scrollY;  // ← scroll pozisyonunu kaydet
-  const next = !dark;
-  setDark(next);
-  if (next) {
-    document.documentElement.classList.add('dark');
-    localStorage.setItem('theme', 'dark');
-  } else {
-    document.documentElement.classList.remove('dark');
-    localStorage.setItem('theme', 'light');
-  }
-  window.scrollTo(0, scrollY);  // ← scroll pozisyonunu geri yükle
-};
+  const toggle = () => {
+    const scrollY = window.scrollY;
+    const sira = { light: 'dark', dark: 'lacivert', lacivert: 'light' };
+    const next = sira[tema];
+    const el = document.documentElement;
+    el.classList.remove('dark', 'lacivert');
+    if (next !== 'light') el.classList.add(next);
+    localStorage.setItem('theme', next);
+    setTema(next);
+    window.scrollTo(0, scrollY);
+  };
 
   if (!mounted) return <div style={{ width: '32px', height: '32px' }} />;
 
+  const ikonlar = { light: '☀️', dark: '🌙', lacivert: '🌊' };
+
   return (
-    <button onClick={toggle} aria-label="Tema değiştir" style={{
+    <button onClick={toggle} aria-label="Tema değiştir" title={{ light: 'Koyu temaya geç', dark: 'Lacivert temaya geç', lacivert: 'Açık temaya geç' }[tema]} style={{
       width: '32px', height: '32px', borderRadius: '8px',
       border: '0.5px solid var(--color-border)',
       background: 'var(--color-cream-card)',
@@ -51,7 +58,7 @@ const toggle = () => {
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       color: 'var(--color-text-soft)', flexShrink: 0,
     }}>
-      {dark ? '🌙' : '☀️'}
+      {ikonlar[tema]}
     </button>
   );
 }
@@ -100,20 +107,34 @@ export default function Navbar() {
     return () => { el.removeEventListener('scroll', update); window.removeEventListener('resize', update); };
   }, []);
 
-const [isDark, setIsDark] = useState(false);
+const [tema, setTema] = useState('light');
 
 useEffect(() => {
-  setIsDark(document.documentElement.classList.contains('dark'));
-  const observer = new MutationObserver(() => {
-    setIsDark(document.documentElement.classList.contains('dark'));
-  });
+  setTema(readTemaFromDOM());
+  const observer = new MutationObserver(() => setTema(readTemaFromDOM()));
   observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
   return () => observer.disconnect();
 }, []);
 
-  const navBg = scrolled
-    ? isDark ? 'rgba(26,24,21,0.92)' : 'rgba(250,248,243,0.92)'
-    : 'var(--color-cream)';
+const isDark = tema !== 'light';
+
+const navBgMap = {
+  light: 'rgba(250,248,243,0.92)',
+  dark: 'rgba(26,24,21,0.92)',
+  lacivert: 'rgba(13,17,23,0.92)',
+};
+const fadeMap = {
+  light: 'rgba(243,240,233,0.95)',
+  dark: 'rgba(26,24,21,0.95)',
+  lacivert: 'rgba(13,17,23,0.95)',
+};
+const pillBgMap = {
+  light: 'rgba(0,0,0,0.035)',
+  dark: 'rgba(0,0,0,0.18)',
+  lacivert: 'rgba(0,0,0,0.28)',
+};
+
+  const navBg = scrolled ? navBgMap[tema] : 'var(--color-cream)';
 
   return (
     <header style={{
@@ -197,7 +218,7 @@ useEffect(() => {
           <div style={{
             position: 'absolute', left: 0, top: 0, bottom: 0, width: '48px', zIndex: 2,
             pointerEvents: 'none',
-            background: `linear-gradient(to right, ${isDark ? 'rgba(26,24,21,0.95)' : 'rgba(243,240,233,0.95)'}, transparent)`,
+            background: `linear-gradient(to right, ${fadeMap[tema]}, transparent)`,
           }} />
         )}
         {/* Sağ fade */}
@@ -205,14 +226,14 @@ useEffect(() => {
           <div style={{
             position: 'absolute', right: 0, top: 0, bottom: 0, width: '48px', zIndex: 2,
             pointerEvents: 'none',
-            background: `linear-gradient(to left, ${isDark ? 'rgba(26,24,21,0.95)' : 'rgba(243,240,233,0.95)'}, transparent)`,
+            background: `linear-gradient(to left, ${fadeMap[tema]}, transparent)`,
           }} />
         )}
         <div ref={pillRef} style={{
           overflowX: 'auto',
           scrollbarWidth: 'none',
           WebkitOverflowScrolling: 'touch',
-          background: isDark ? 'rgba(0,0,0,0.18)' : 'rgba(0,0,0,0.035)',
+          background: pillBgMap[tema],
         }}>
         <div style={{
           display: 'flex',
