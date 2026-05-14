@@ -6,6 +6,7 @@ export default function sitemap() {
     { url: '/ogren', priority: 0.9, changeFrequency: 'weekly' },
     { url: '/python', priority: 0.8, changeFrequency: 'monthly' },
     { url: '/hakkimda', priority: 0.6, changeFrequency: 'monthly' },
+    { url: '/veri-setleri', priority: 0.8, changeFrequency: 'monthly' },
     { url: '/kategori/interaktif', priority: 0.8, changeFrequency: 'weekly' },
     { url: '/kategori/rehber', priority: 0.8, changeFrequency: 'weekly' },
     { url: '/kategori/arac', priority: 0.8, changeFrequency: 'weekly' },

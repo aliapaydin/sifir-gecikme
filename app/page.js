@@ -327,6 +327,16 @@ function Icon({ type }) {
     <circle cx="16" cy="20" r="5" fill="#59A14F" opacity=".85"/>
   </svg>
 ),
+'veri-setleri': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#EEEDFE"/>
+    <ellipse cx="16" cy="10" rx="9" ry="3.5" fill="#7F77DD" opacity=".8"/>
+    <path d="M7 10 Q7 14 16 14 Q25 14 25 10" stroke="#7F77DD" strokeWidth="1.2" fill="none"/>
+    <path d="M7 14 Q7 18 16 18 Q25 18 25 14" stroke="#7F77DD" strokeWidth="1.2" fill="none"/>
+    <path d="M7 18 Q7 22 16 22 Q25 22 25 18" stroke="#534AB7" strokeWidth="1.2" fill="none"/>
+    <ellipse cx="16" cy="22" rx="9" ry="3.5" fill="#534AB7" opacity=".3"/>
+  </svg>
+),
   };
   return icons[type] || null;
 }
