@@ -125,7 +125,9 @@ export default function OgrenSayfasi() {
                   display: 'flex', alignItems: 'center', gap: '16px',
                   borderLeft: `4px solid ${tamamlandi ? ders.renk : kilitli ? 'var(--color-border)' : ders.renk}`,
                   padding: '16px 20px',
-                  background: devamMi ? ders.bg : 'var(--color-cream-card)',
+                  background: 'var(--color-cream-card)',
+                  outline: devamMi ? `1.5px solid ${ders.renk}` : 'none',
+                  outlineOffset: '-1px',
                 }}>
                   <div style={{ width: '52px', height: '52px', borderRadius: '12px', background: kilitli ? 'var(--color-cream)' : ders.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px', flexShrink: 0 }}>
                     {kilitli ? '🔒' : ders.emoji}

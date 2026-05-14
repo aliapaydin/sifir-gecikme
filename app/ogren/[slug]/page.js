@@ -43,7 +43,7 @@ function Feedback({ dogru, aciklama, dogru_cevap }) {
       <div style={{ fontSize: '15px', fontWeight: 500, marginBottom: '4px', color: dogru ? '#0F6E56' : '#A32D2D' }}>
         {dogru ? '✅ Doğru!' : dogru_cevap ? `❌ Doğru cevap: ${dogru_cevap}` : '❌ Yanlış'}
       </div>
-      <div style={{ fontSize: '13px', color: 'var(--color-text-soft)', lineHeight: '1.55' }}>{aciklama}</div>
+      <div style={{ fontSize: '13px', color: dogru ? '#1a5c48' : '#7a2020', lineHeight: '1.55' }}>{aciklama}</div>
     </div>
   );
 }

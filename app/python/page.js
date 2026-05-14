@@ -815,15 +815,56 @@ export default function PythonPlayground() {
     setImgSrc(null);
     const t0 = performance.now();
 
+    const el = document.documentElement;
+    const tema = el.classList.contains('lacivert') ? 'lacivert'
+      : el.classList.contains('dark') ? 'dark' : 'light';
+
     try {
       const py = pyodideRef.current;
       let out = '';
       py.globals.set('print', (...args) => { out += args.map(a => String(a)).join(' ') + '\n'; });
+      py.globals.set('_TEMA_JS', tema);
 
-      // Recursion olmadan savefig hook
+      // Temaya göre matplotlib ayarla + savefig hook
       await py.runPythonAsync(`
+import matplotlib
 import matplotlib.pyplot as plt
 import io, base64
+
+if _TEMA_JS == 'lacivert':
+    plt.style.use('dark_background')
+    _BG  = '#161B22'
+    _FG  = '#E6EDF3'
+    _GRD = '#30363D'
+    matplotlib.rcParams.update({
+        'figure.facecolor': _BG, 'axes.facecolor': _BG, 'savefig.facecolor': _BG,
+        'text.color': _FG, 'axes.labelcolor': _FG,
+        'xtick.color': _FG, 'ytick.color': _FG,
+        'axes.edgecolor': _GRD, 'grid.color': _GRD,
+        'legend.facecolor': _BG, 'legend.edgecolor': _GRD,
+    })
+elif _TEMA_JS == 'dark':
+    plt.style.use('dark_background')
+    _BG  = '#1a1815'
+    _FG  = '#f0ebe3'
+    _GRD = '#3a3530'
+    matplotlib.rcParams.update({
+        'figure.facecolor': _BG, 'axes.facecolor': _BG, 'savefig.facecolor': _BG,
+        'text.color': _FG, 'axes.labelcolor': _FG,
+        'xtick.color': _FG, 'ytick.color': _FG,
+        'axes.edgecolor': _GRD, 'grid.color': _GRD,
+        'legend.facecolor': _BG, 'legend.edgecolor': _GRD,
+    })
+else:
+    plt.rcdefaults()
+    matplotlib.use('Agg')
+    _BG  = '#ffffff'
+    _FG  = '#2a2620'
+    _GRD = '#e8e2d5'
+    matplotlib.rcParams.update({
+        'figure.facecolor': _BG, 'axes.facecolor': _BG, 'savefig.facecolor': _BG,
+    })
+
 _img_b64 = None
 _hooking = False
 
@@ -834,8 +875,8 @@ def _hooked_savefig(fname, **kwargs):
     _hooking = True
     buf = io.BytesIO()
     fig = plt.gcf()
-    kw = {k: v for k, v in kwargs.items() if k != 'format'}
-    fig.savefig(buf, format='png', **kw)
+    kw = {k: v for k, v in kwargs.items() if k not in ('format', 'facecolor')}
+    fig.savefig(buf, format='png', facecolor=_BG, **kw)
     buf.seek(0)
     _img_b64 = base64.b64encode(buf.read()).decode()
     buf.close()
@@ -854,7 +895,7 @@ if _img_b64 is None:
     figs = [plt.figure(n) for n in plt.get_fignums()]
     if figs:
         buf = io.BytesIO()
-        figs[-1].savefig(buf, format='png', dpi=120, bbox_inches='tight', facecolor='white')
+        figs[-1].savefig(buf, format='png', dpi=120, bbox_inches='tight', facecolor=_BG)
         buf.seek(0)
         _img_b64 = base64.b64encode(buf.read()).decode()
         buf.close()
