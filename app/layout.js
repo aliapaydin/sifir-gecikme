@@ -3,6 +3,7 @@ import Script from 'next/script';
 import './globals.css';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
+import ThemeSync from '../components/ThemeSync';
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
@@ -71,6 +72,7 @@ export default function RootLayout({ children }) {
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
       </head>
         <body suppressHydrationWarning>
+          <ThemeSync />
           <Script id="sw-init" strategy="afterInteractive">{`
             if ('serviceWorker' in navigator) {
               navigator.serviceWorker.register('/sw.js');

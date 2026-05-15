@@ -1,6 +1,7 @@
 'use client';
 
 import Arama from './Arama';
+import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 
@@ -63,10 +64,12 @@ function ThemeToggleBtn() {
     const sira = { light: 'dark', dark: 'lacivert', lacivert: 'light' };
     const next = sira[tema];
     const el = document.documentElement;
+    el.classList.add('tema-gecis');
     el.classList.remove('dark', 'lacivert');
     if (next !== 'light') el.classList.add(next);
     localStorage.setItem('theme', next);
     setTema(next);
+    setTimeout(() => el.classList.remove('tema-gecis'), 300);
     window.scrollTo(0, scrollY);
   };
 
@@ -215,7 +218,7 @@ export default function Navbar() {
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '56px',
       }}>
         {/* Logo */}
-        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: '9px', textDecoration: 'none', flexShrink: 0 }}>
+        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '9px', textDecoration: 'none', flexShrink: 0 }}>
           <div style={{
             width: '28px', height: '28px', borderRadius: '8px',
             background: 'var(--color-accent)',
@@ -231,24 +234,24 @@ export default function Navbar() {
               veri bilimi · türkçe
             </div>
           </div>
-        </a>
+        </Link>
 
         {/* Desktop sağ */}
         {!isMobile && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '1px' }}>
-            <a href="/hakkimda" style={{
+            <Link href="/hakkimda" style={{
               padding: '7px 11px', borderRadius: '8px', fontSize: '13px', textDecoration: 'none',
               background: isActive('/hakkimda') ? 'var(--color-accent-soft)' : 'transparent',
               color: isActive('/hakkimda') ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
               fontWeight: isActive('/hakkimda') ? 500 : 400,
-            }}>Hakkımda</a>
-            <a href="/harita" style={{
+            }}>Hakkımda</Link>
+            <Link href="/harita" style={{
               padding: '7px 11px', borderRadius: '8px', fontSize: '13px', textDecoration: 'none',
               display: 'flex', alignItems: 'center', gap: '4px',
               background: isActive('/harita') ? 'var(--color-accent-soft)' : 'transparent',
               color: isActive('/harita') ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
               fontWeight: isActive('/harita') ? 500 : 400,
-            }}><span style={{ fontSize: '12px' }}>🗺️</span> Haritam</a>
+            }}><span style={{ fontSize: '12px' }}>🗺️</span> Haritam</Link>
             <Arama />
             <div style={{ width: '1px', height: '18px', background: 'var(--color-border)', margin: '0 4px' }} />
             <ThemeToggleBtn />
@@ -287,7 +290,7 @@ export default function Navbar() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '6px 1.5rem', width: 'max-content', minWidth: '100%' }}>
 
             {/* Tümü */}
-            <a href="/" style={{
+            <Link href="/" style={{
               padding: '4px 12px', borderRadius: '999px', fontSize: '12.5px',
               textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0,
               border: '0.5px solid',
@@ -295,7 +298,7 @@ export default function Navbar() {
               background: pathname === '/' ? 'var(--color-accent-soft)' : 'transparent',
               color: pathname === '/' ? 'var(--color-accent-text)' : 'var(--color-text-mute)',
               fontWeight: pathname === '/' ? 500 : 400,
-            }}>Tümü</a>
+            }}>Tümü</Link>
 
             <div style={{ width: '0.5px', height: '14px', background: 'var(--color-border)', flexShrink: 0, margin: '0 4px' }} />
 
@@ -352,7 +355,7 @@ export default function Navbar() {
           {acikGrupData.items.map(item => {
             const aktif = isActive(item.href);
             return (
-              <a key={item.href} href={item.href} style={{
+              <Link key={item.href} href={item.href} style={{
                 display: 'flex', alignItems: 'center', gap: '9px',
                 padding: '8px 12px', borderRadius: '8px', textDecoration: 'none',
                 fontSize: '13px', whiteSpace: 'nowrap',
@@ -363,7 +366,7 @@ export default function Navbar() {
               }}>
                 <span style={{ fontSize: '13px', width: '18px', textAlign: 'center' }}>{item.emoji}</span>
                 {item.label}
-              </a>
+              </Link>
             );
           })}
         </div>
@@ -373,7 +376,7 @@ export default function Navbar() {
       {isMobile && menuOpen && (
         <div style={{ borderTop: '0.5px solid var(--color-border)', background: 'var(--color-cream)', padding: '8px 12px 16px' }}>
           {/* Sabit linkler */}
-          <a href="/" style={{
+          <Link href="/" style={{
             display: 'flex', alignItems: 'center', gap: '10px',
             padding: '9px 12px', borderRadius: '8px', fontSize: '14px', textDecoration: 'none',
             background: pathname === '/' ? 'var(--color-accent-soft)' : 'transparent',
@@ -381,23 +384,23 @@ export default function Navbar() {
             fontWeight: pathname === '/' ? 500 : 400,
           }}>
             <span>🏠</span> Tüm İçerikler
-          </a>
-          <a href="/hakkimda" style={{
+          </Link>
+          <Link href="/hakkimda" style={{
             display: 'flex', alignItems: 'center', gap: '10px',
             padding: '9px 12px', borderRadius: '8px', fontSize: '14px', textDecoration: 'none',
             background: isActive('/hakkimda') ? 'var(--color-accent-soft)' : 'transparent',
             color: isActive('/hakkimda') ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
           }}>
             <span>👤</span> Hakkımda
-          </a>
-          <a href="/harita" style={{
+          </Link>
+          <Link href="/harita" style={{
             display: 'flex', alignItems: 'center', gap: '10px',
             padding: '9px 12px', borderRadius: '8px', fontSize: '14px', textDecoration: 'none',
             background: isActive('/harita') ? 'var(--color-accent-soft)' : 'transparent',
             color: isActive('/harita') ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
           }}>
             <span>🗺️</span> Haritam
-          </a>
+          </Link>
 
           {/* Gruplar */}
           {GRUPLAR.map(grup => {
@@ -426,7 +429,7 @@ export default function Navbar() {
                 {acik && grup.items.map(item => {
                   const akt = isActive(item.href);
                   return (
-                    <a key={item.href} href={item.href} style={{
+                    <Link key={item.href} href={item.href} style={{
                       display: 'flex', alignItems: 'center', gap: '10px',
                       padding: '8px 12px 8px 32px', borderRadius: '8px', fontSize: '14px',
                       textDecoration: 'none',
@@ -436,7 +439,7 @@ export default function Navbar() {
                     }}>
                       <span style={{ fontSize: '13px' }}>{item.emoji}</span>
                       {item.label}
-                    </a>
+                    </Link>
                   );
                 })}
               </div>

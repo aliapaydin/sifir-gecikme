@@ -65,6 +65,8 @@ html.lacivert {
 html {
   background: var(--color-cream);
   color: var(--color-text);
+}
+html.tema-gecis {
   transition: background 0.2s, color 0.2s;
 }
 
