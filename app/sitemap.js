@@ -22,6 +22,7 @@ export default function sitemap() {
     { url: '/yazilar/ab-test', priority: 0.9, changeFrequency: 'monthly' },
     { url: '/yazilar/sample-size', priority: 0.9, changeFrequency: 'monthly' },
     { url: '/mulakat', priority: 0.9, changeFrequency: 'monthly' },
+    { url: '/ciz',     priority: 0.8, changeFrequency: 'monthly' },
     { url: '/yazilar/churn-tahmini', priority: 0.8, changeFrequency: 'monthly' },
     { url: '/yazilar/kredi-shap', priority: 0.8, changeFrequency: 'monthly' },
     { url: '/yazilar/izmir-kira-analizi', priority: 0.8, changeFrequency: 'monthly' },

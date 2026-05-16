@@ -16,6 +16,7 @@
     "@capacitor/cli": "^8.3.4",
     "@capacitor/core": "^8.3.4",
     "@google/generative-ai": "^0.24.1",
+    "@tensorflow/tfjs": "^4.22.0",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "lucide-react": "^1.16.0",

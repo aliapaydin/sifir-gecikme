@@ -26,6 +26,7 @@ const GRUPLAR = [
       { href: '/python', label: 'PY Playground', emoji: '🐍' },
       { href: '/sql',    label: 'SQL Playground', emoji: '🗄️' },
       { href: '/regex',  label: 'Regex',          emoji: '🔍' },
+      { href: '/ciz',    label: 'Rakam Çiz',       emoji: '✏️' },
     ],
   },
   {
