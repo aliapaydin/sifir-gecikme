@@ -100,9 +100,15 @@ export default function Footer() {
         </div>
 
         <div style={{ paddingTop: '20px', borderTop: '0.5px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-          <span className="text-xs" style={{ color: 'var(--color-text-mute)' }}>
-            © {new Date().getFullYear()} Ali Apaydın · Sıfır Gecikme · İzmir
-          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+            <span className="text-xs" style={{ color: 'var(--color-text-mute)' }}>
+              © {new Date().getFullYear()} Ali Apaydın · Sıfır Gecikme · İzmir
+            </span>
+            <a href="/versiyon" style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--color-text-mute)', textDecoration: 'none', padding: '2px 7px', borderRadius: '5px', border: '1px solid var(--color-border)', background: 'var(--color-cream-card)', transition: 'color 0.15s, border-color 0.15s' }}
+              onMouseEnter={e => { e.currentTarget.style.color = 'var(--color-accent)'; e.currentTarget.style.borderColor = 'var(--color-accent)'; }}
+              onMouseLeave={e => { e.currentTarget.style.color = 'var(--color-text-mute)'; e.currentTarget.style.borderColor = 'var(--color-border)'; }}
+            >v1.5.0</a>
+          </div>
           <div className="flex gap-2">
             <span className="badge badge-interactive">14 içerik</span>
             <span className="badge badge-interactive">8 demo</span>

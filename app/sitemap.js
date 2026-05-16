@@ -37,6 +37,7 @@ export default function sitemap() {
     { url: '/ogren/numpy', priority: 0.8, changeFrequency: 'monthly' },
     { url: '/ogren/pandas', priority: 0.8, changeFrequency: 'monthly' },
     { url: '/ogren/istatistik-ml', priority: 0.8, changeFrequency: 'monthly' },
+    { url: '/versiyon', priority: 0.5, changeFrequency: 'monthly' },
   ];
 
   return sayfalar.map(({ url, priority, changeFrequency }) => ({
