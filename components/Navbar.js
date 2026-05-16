@@ -27,6 +27,7 @@ const GRUPLAR = [
       { href: '/sql',    label: 'SQL Playground', emoji: '🗄️' },
       { href: '/regex',  label: 'Regex',          emoji: '🔍' },
       { href: '/ciz',    label: 'Rakam Çiz',       emoji: '✏️' },
+      { href: '/nn',     label: 'Sinir Ağı',        emoji: '🧠' },
     ],
   },
   {
