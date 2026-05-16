@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react';
 import { bugunuSorusu, bugunKey } from '../lib/gunun-sorusu';
 
 const kategoriRenk = {
-  'SQL':        { bg: '#E8F4FF', text: '#1565C0', border: '#90CAF9' },
-  'Python':     { bg: '#E8F5E9', text: '#2E7D32', border: '#A5D6A7' },
-  'İstatistik': { bg: '#F3E5F5', text: '#6A1B9A', border: '#CE93D8' },
-  'ML':         { bg: '#FFF3E0', text: '#E65100', border: '#FFCC80' },
+  'SQL':        { bg: 'var(--color-accent-soft)', text: 'var(--color-accent-text)', border: 'var(--color-accent)' },
+  'Python':     { bg: 'var(--color-accent-soft)', text: 'var(--color-accent-text)', border: 'var(--color-accent)' },
+  'İstatistik': { bg: 'var(--color-purple-bg)',   text: 'var(--color-purple-text)', border: 'var(--color-purple-text)' },
+  'ML':         { bg: 'var(--color-amber-bg)',     text: 'var(--color-amber-text)',  border: 'var(--color-amber-text)' },
 };
 
 function SaatSayaci() {
@@ -125,10 +125,10 @@ export default function GununSorusu() {
 
           if (cevaplandi) {
             if (idx === soru.dogru) {
-              bg = '#F0FDF4'; borderColor = '#86EFAC'; textColor = '#15803D';
+              bg = 'var(--color-correct-bg)'; borderColor = 'var(--color-correct-border)'; textColor = 'var(--color-correct-text)';
               icon = '✓';
             } else if (idx === secilen) {
-              bg = '#FFF5F5'; borderColor = '#FCA5A5'; textColor = '#DC2626';
+              bg = 'var(--color-wrong-bg)'; borderColor = 'var(--color-wrong-border)'; textColor = 'var(--color-wrong-text)';
               icon = '✗';
             }
           }
@@ -155,7 +155,7 @@ export default function GununSorusu() {
                 flexShrink: 0, width: '20px', height: '20px',
                 borderRadius: '50%',
                 border: `0.5px solid ${borderColor}`,
-                background: icon ? (idx === soru.dogru ? '#86EFAC' : '#FCA5A5') : 'transparent',
+                background: icon ? (idx === soru.dogru ? 'var(--color-correct-icon)' : 'var(--color-wrong-icon)') : 'transparent',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: '11px', fontWeight: 700, color: textColor,
                 marginTop: '1px',
@@ -174,12 +174,12 @@ export default function GununSorusu() {
           margin: '16px 20px 20px',
           padding: '12px 16px',
           borderRadius: '10px',
-          background: dogru ? '#F0FDF4' : '#FFF5F5',
-          border: `0.5px solid ${dogru ? '#86EFAC' : '#FCA5A5'}`,
+          background: dogru ? 'var(--color-correct-bg)' : 'var(--color-wrong-bg)',
+          border: `0.5px solid ${dogru ? 'var(--color-correct-border)' : 'var(--color-wrong-border)'}`,
         }}>
           <div style={{
             fontSize: '12px', fontWeight: 700, marginBottom: '4px',
-            color: dogru ? '#15803D' : '#DC2626',
+            color: dogru ? 'var(--color-correct-text)' : 'var(--color-wrong-text)',
           }}>
             {dogru ? '✓ Doğru!' : `✗ Yanlış — Doğru cevap: ${String.fromCharCode(65 + soru.dogru)}`}
           </div>
