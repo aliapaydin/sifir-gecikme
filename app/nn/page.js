@@ -275,6 +275,11 @@ export default function NNPage() {
     setLossHist([]);
     setAcc('');
 
+    try {
+      const prev = Number(localStorage.getItem('sz_nn_egitim') || 0);
+      localStorage.setItem('sz_nn_egitim', String(prev + 1));
+    } catch {}
+
     runningRef.current = true;
     setPhase('training');
     runLoop();

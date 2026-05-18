@@ -37,19 +37,37 @@ const UZMANLIK = [
 
 // ─── BAŞARIMLAR ─────────────────────────────────────────────────────────────
 const BASARIMLAR = [
-  { id: 'ilk_adim',    icon: '🌱', label: 'İlk Adım',       desc: 'İlk içeriği ziyaret et',           kosul: (v) => v.ziyaret >= 1 },
-  { id: 'merakli',     icon: '🔍', label: 'Meraklı',         desc: '5 içerik ziyaret et',              kosul: (v) => v.ziyaret >= 5 },
-  { id: 'odakli',      icon: '🎯', label: 'Odaklı',          desc: '10 içerik ziyaret et',             kosul: (v) => v.ziyaret >= 10 },
-  { id: 'interaktif',  icon: '⚡', label: 'Demo Meraklısı',  desc: '4 interaktif demo dene',           kosul: (v) => v.interaktif >= 4 },
-  { id: 'sql_basla',   icon: '🗄️', label: 'SQL\'ci',         desc: 'SQL Playground\'da sorgu çalıştır', kosul: (v) => v.sqlSorgu >= 1 },
-  { id: 'sql_usta',    icon: '⚡', label: 'SQL Ustası',      desc: '10 SQL sorgusu çalıştır',          kosul: (v) => v.sqlSorgu >= 10 },
-  { id: 'python_basla',icon: '🐍', label: 'Pythoncu',        desc: 'Python\'da kod çalıştır',          kosul: (v) => v.pythonSorgu >= 1 },
-  { id: 'python_usta', icon: '🚀', label: 'Python Ustası',   desc: '10 Python kodu çalıştır',          kosul: (v) => v.pythonSorgu >= 10 },
-  { id: 'gunluk_soru', icon: '🧠', label: 'Soru Avcısı',     desc: '5 günlük soru cevapla',            kosul: (v) => v.gunlukSoru >= 5 },
-  { id: 'dogru_cevap', icon: '✅', label: 'Keskin Nişancı',  desc: '5 günlük soruyu doğru cevapla',    kosul: (v) => v.dogru >= 5 },
-  { id: 'kariyer_ok',  icon: '💼', label: 'Kariyer Odaklı',  desc: '3 kariyer içeriği oku',            kosul: (v) => v.kariyerZ >= 3 },
-  { id: 'sinav_hazir', icon: '🎓', label: 'Sınava Hazır',    desc: '%70 genel ilerleme',               kosul: (v) => v.genelYuzde >= 70 },
-  { id: 'tam_puan',    icon: '🏆', label: 'Şampiyon',        desc: 'Sınavda 90+ puan al',              kosul: (v) => v.sinavPuani >= 90 },
+  // Keşif
+  { id: 'ilk_adim',    icon: '🌱', label: 'İlk Adım',          desc: 'İlk içeriği ziyaret et',              kosul: (v) => v.ziyaret >= 1 },
+  { id: 'merakli',     icon: '🔍', label: 'Meraklı',            desc: '5 içerik ziyaret et',                 kosul: (v) => v.ziyaret >= 5 },
+  { id: 'odakli',      icon: '🎯', label: 'Odaklı',             desc: '10 içerik ziyaret et',                kosul: (v) => v.ziyaret >= 10 },
+  { id: 'gezgin',      icon: '🗺️', label: 'Gezgin',             desc: '20 içerik ziyaret et',                kosul: (v) => v.ziyaret >= 20 },
+  { id: 'interaktif',  icon: '⚡', label: 'Demo Meraklısı',     desc: '4 interaktif demo dene',              kosul: (v) => v.interaktif >= 4 },
+  // SQL & Python
+  { id: 'sql_basla',   icon: '🗄️', label: 'SQL\'ci',            desc: 'SQL Playground\'da sorgu çalıştır',   kosul: (v) => v.sqlSorgu >= 1 },
+  { id: 'sql_usta',    icon: '💡', label: 'SQL Ustası',         desc: '10 SQL sorgusu çalıştır',             kosul: (v) => v.sqlSorgu >= 10 },
+  { id: 'python_basla',icon: '🐍', label: 'Pythoncu',           desc: 'Python\'da kod çalıştır',             kosul: (v) => v.pythonSorgu >= 1 },
+  { id: 'python_usta', icon: '🚀', label: 'Python Ustası',      desc: '10 Python kodu çalıştır',             kosul: (v) => v.pythonSorgu >= 10 },
+  // Günlük Soru
+  { id: 'gunluk_soru', icon: '🧠', label: 'Soru Avcısı',        desc: '5 günlük soru cevapla',               kosul: (v) => v.gunlukSoru >= 5 },
+  { id: 'dogru_cevap', icon: '✅', label: 'Keskin Nişancı',     desc: '5 günlük soruyu doğru cevapla',       kosul: (v) => v.dogru >= 5 },
+  // Kariyer & Sınav
+  { id: 'kariyer_ok',  icon: '💼', label: 'Kariyer Odaklı',     desc: '3 kariyer içeriği oku',               kosul: (v) => v.kariyerZ >= 3 },
+  { id: 'sinav_hazir', icon: '🎓', label: 'Sınava Hazır',       desc: '%70 genel ilerleme',                  kosul: (v) => v.genelYuzde >= 70 },
+  { id: 'tam_puan',    icon: '🏆', label: 'Şampiyon',           desc: 'Sınavda 90+ puan al',                 kosul: (v) => v.sinavPuani >= 90 },
+  // Mülakat
+  { id: 'mulakat_bas', icon: '🎤', label: 'Mülakat Adayı',      desc: 'İlk mülakat sorusunu yanıtla',        kosul: (v) => v.mulakatSoru >= 1 },
+  { id: 'mulakat_pro', icon: '🤝', label: 'Mülakat Pro',        desc: 'Mülakatta 20 soru yanıtla',           kosul: (v) => v.mulakatSoru >= 20 },
+  { id: 'mulakat_ust', icon: '⭐', label: 'Mülakat Ustası',     desc: '10 soruyu "Biliyorum" işaretle',      kosul: (v) => v.mulakatBiliyorum >= 10 },
+  // Milyon Yarışması
+  { id: 'milyon_bas',  icon: '💰', label: 'Yarışmacı',          desc: 'Milyoner yarışmasını bir kez oyna',   kosul: (v) => v.milyonOyun >= 1 },
+  { id: 'milyon_ceyr', icon: '💎', label: 'Çeyrek Final',       desc: '16.000 ₺ güvencesine ulaş',          kosul: (v) => v.milyonMaxK >= 16000 },
+  { id: 'milyon_savc', icon: '👑', label: 'Milyoner!',          desc: '2.000.000 ₺ kazan',                   kosul: (v) => v.milyonMaxK >= 2000000 },
+  // Playground
+  { id: 'ciz_tahmin',  icon: '✏️', label: 'Rakam Çizici',       desc: 'Sinir ağına bir rakam çizdirt',       kosul: (v) => v.cizTahmin >= 1 },
+  { id: 'nn_egitim',   icon: '🔬', label: 'Bilim İnsanı',       desc: 'Sinir ağı playground\'ı kullan',      kosul: (v) => v.nnEgitim >= 1 },
+  { id: 'regex_test',  icon: '🔤', label: 'Regex Ustası',       desc: 'Regex playground\'da desen dene',     kosul: (v) => v.regexTest >= 1 },
+  { id: 'kalori_ziy',  icon: '🥗', label: 'Kalori Takibi',      desc: 'Kalori modülünü ziyaret et',          kosul: (v) => v.kaloriZiyaret },
 ];
 
 const INTERAKTIF_HREFS = [
@@ -121,6 +139,39 @@ const kategoriRenk = {
   vaka: '#e8a04a', kariyer: '#e8a04a',
 };
 
+function formatPara(n) {
+  if (!n) return '0 ₺';
+  return n.toLocaleString('tr-TR') + ' ₺';
+}
+
+function ModulKart({ icon, label, href, ziyaret, detaylar }) {
+  return (
+    <div style={{
+      background: 'var(--color-cream-card)', border: `0.5px solid ${ziyaret ? 'var(--color-accent)' : 'var(--color-border)'}`,
+      borderRadius: '12px', padding: '14px 16px',
+      opacity: ziyaret ? 1 : 0.6,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: detaylar?.length ? '10px' : 0 }}>
+        <span style={{ fontSize: '18px' }}>{icon}</span>
+        <a href={href} style={{ fontSize: '13px', fontWeight: 600, color: ziyaret ? 'var(--color-accent-text)' : 'var(--color-text)', textDecoration: 'none' }}>
+          {label}
+        </a>
+        {ziyaret && <span style={{ marginLeft: 'auto', fontSize: '11px', color: 'var(--color-accent)', fontWeight: 700 }}>✓</span>}
+      </div>
+      {detaylar?.length > 0 && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+          {detaylar.map((d, i) => (
+            <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
+              <span style={{ color: 'var(--color-text-mute)' }}>{d.label}</span>
+              <span style={{ color: 'var(--color-text-soft)', fontWeight: 600 }}>{d.deger}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── ANA SAYFA ──────────────────────────────────────────────────────────────
 export default function HaritaSayfasi() {
   const [veri, setVeri] = useState(null);
@@ -135,6 +186,18 @@ export default function HaritaSayfasi() {
       const ilerlemeRaw  = localStorage.getItem('sz_ilerleme_v1');
       const ilerleme     = ilerlemeRaw ? JSON.parse(ilerlemeRaw) : {};
       const tamamlananDersSayisi = Object.keys(ilerleme.tamamlananDersler || {}).length;
+
+      // Modül istatistikleri
+      const mulakatSoru     = Number(localStorage.getItem('sz_mulakat_soru') || 0);
+      const mulakatBiliyorum = Number(localStorage.getItem('sz_mulakat_biliyorum') || 0);
+      const milyonOyun      = Number(localStorage.getItem('sz_milyon_oyun') || 0);
+      const milyonMaxK      = Number(localStorage.getItem('sz_milyon_max_kazanim') || 0);
+      const milyonToplamS   = Number(localStorage.getItem('sz_milyon_toplam_soru') || 0);
+      const cizTahmin       = Number(localStorage.getItem('sz_ciz_tahmin') || 0);
+      const nnEgitim        = Number(localStorage.getItem('sz_nn_egitim') || 0);
+      const regexTest       = Number(localStorage.getItem('sz_regex_test') || 0);
+      const kaloriZiyaret   = localStorage.getItem('sz_kalori_ziyaret') === '1';
+      const veriSetiZiyaret = ziyaretler.includes('/veri-setleri');
 
       let gunlukSoru = 0, dogru = 0;
       for (let i = 0; i < localStorage.length; i++) {
@@ -161,10 +224,20 @@ export default function HaritaSayfasi() {
       const kariyerZ   = ziyaretler.filter(h => KARIYER_HREFS.includes(h)).length;
 
       // Başarım durumları
-      const stats = { ziyaret: ziyaretler.length, sqlSorgu, pythonSorgu, gunlukSoru, dogru, interaktif, kariyerZ, genelYuzde, sinavPuani };
+      const stats = {
+        ziyaret: ziyaretler.length, sqlSorgu, pythonSorgu, gunlukSoru, dogru,
+        interaktif, kariyerZ, genelYuzde, sinavPuani,
+        mulakatSoru, mulakatBiliyorum, milyonOyun, milyonMaxK,
+        cizTahmin, nnEgitim, regexTest, kaloriZiyaret,
+      };
       const basarimDurum = BASARIMLAR.map(b => ({ ...b, kazanildi: b.kosul(stats) }));
 
-      setVeri({ ziyaretler, sqlSorgu, pythonSorgu, sinavPuani, gunlukSoru, dogru, uzmanlikYuzde, genelYuzde, basarimDurum, stats, tamamlananDersSayisi });
+      setVeri({
+        ziyaretler, sqlSorgu, pythonSorgu, sinavPuani, gunlukSoru, dogru,
+        uzmanlikYuzde, genelYuzde, basarimDurum, stats, tamamlananDersSayisi,
+        mulakatSoru, mulakatBiliyorum, milyonOyun, milyonMaxK, milyonToplamS,
+        cizTahmin, nnEgitim, regexTest, kaloriZiyaret, veriSetiZiyaret,
+      });
     } catch {}
   }, []);
 
@@ -174,7 +247,12 @@ export default function HaritaSayfasi() {
     </main>
   );
 
-  const { ziyaretler, sqlSorgu, pythonSorgu, gunlukSoru, dogru, uzmanlikYuzde, genelYuzde, basarimDurum, sinavPuani, tamamlananDersSayisi } = veri;
+  const {
+    ziyaretler, sqlSorgu, pythonSorgu, gunlukSoru, dogru,
+    uzmanlikYuzde, genelYuzde, basarimDurum, sinavPuani, tamamlananDersSayisi,
+    mulakatSoru, mulakatBiliyorum, milyonOyun, milyonMaxK, milyonToplamS,
+    cizTahmin, nnEgitim, regexTest, kaloriZiyaret, veriSetiZiyaret,
+  } = veri;
   const sinavAcik = tamamlananDersSayisi >= TOPLAM_DERS;
   const sinavaKalan = Math.max(0, TOPLAM_DERS - tamamlananDersSayisi);
   const kazanilanBasarim = basarimDurum.filter(b => b.kazanildi).length;
@@ -311,6 +389,44 @@ export default function HaritaSayfasi() {
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '8px' }}>
             {basarimDurum.map(b => <BasarimKutu key={b.id} basarim={b} kazanildi={b.kazanildi} />)}
+          </div>
+        </div>
+
+        {/* ─── MODÜLLER ─── */}
+        <div style={{ marginBottom: '32px' }}>
+          <h2 className="font-serif text-2xl font-medium mb-2" style={{ color: 'var(--color-text)' }}>Modüller</h2>
+          <p style={{ fontSize: '13px', color: 'var(--color-text-mute)', marginBottom: '16px' }}>
+            İnteraktif araçlar ve oyunlardaki aktiviten
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '8px' }}>
+            <ModulKart icon="🥗" label="Kalori Takip" href="/kalori" ziyaret={kaloriZiyaret}
+              detaylar={kaloriZiyaret ? [{ label: 'Durum', deger: 'Ziyaret edildi' }] : []}
+            />
+            <ModulKart icon="🗂️" label="Veri Setleri" href="/veri-setleri" ziyaret={veriSetiZiyaret}
+              detaylar={veriSetiZiyaret ? [{ label: 'Durum', deger: 'Ziyaret edildi' }] : []}
+            />
+            <ModulKart icon="🎤" label="Mülakat" href="/mulakat" ziyaret={mulakatSoru > 0}
+              detaylar={mulakatSoru > 0 ? [
+                { label: 'Yanıtlanan soru', deger: String(mulakatSoru) },
+                { label: '"Biliyorum" denen', deger: String(mulakatBiliyorum) },
+              ] : []}
+            />
+            <ModulKart icon="💰" label="Kim Milyoner?" href="/milyon" ziyaret={milyonOyun > 0}
+              detaylar={milyonOyun > 0 ? [
+                { label: 'Oyun sayısı', deger: String(milyonOyun) },
+                { label: 'Max kazanım', deger: formatPara(milyonMaxK) },
+                { label: 'Toplam soru', deger: String(milyonToplamS) },
+              ] : []}
+            />
+            <ModulKart icon="✏️" label="Rakam Çiz" href="/ciz" ziyaret={cizTahmin > 0}
+              detaylar={cizTahmin > 0 ? [{ label: 'Tahmin sayısı', deger: String(cizTahmin) }] : []}
+            />
+            <ModulKart icon="🧠" label="Sinir Ağı" href="/nn" ziyaret={nnEgitim > 0}
+              detaylar={nnEgitim > 0 ? [{ label: 'Eğitim sayısı', deger: String(nnEgitim) }] : []}
+            />
+            <ModulKart icon="🔤" label="Regex" href="/regex" ziyaret={regexTest > 0}
+              detaylar={regexTest > 0 ? [{ label: 'Desen testi', deger: String(regexTest) }] : []}
+            />
           </div>
         </div>
 

@@ -367,6 +367,19 @@ export default function Mulakat() {
     return () => window.removeEventListener('resize', check);
   }, []);
 
+  useEffect(() => {
+    if (!bitti) return;
+    try {
+      const values = Object.values(seans);
+      const toplam = values.length;
+      const biliyorum = values.filter(v => v === 'biliyorum').length;
+      const prev = Number(localStorage.getItem('sz_mulakat_soru') || 0);
+      localStorage.setItem('sz_mulakat_soru', String(prev + toplam));
+      const prevB = Number(localStorage.getItem('sz_mulakat_biliyorum') || 0);
+      localStorage.setItem('sz_mulakat_biliyorum', String(prevB + biliyorum));
+    } catch {}
+  }, [bitti]);
+
   const filtrelenmis = kategori === 'hepsi'
     ? sorular
     : sorular.filter(s => s.kategori === kategori);

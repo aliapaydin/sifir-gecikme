@@ -1,5 +1,5 @@
 'use client';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 
 // ─── ÖRÜNTÜ KÜTÜPHANESİ ────────────────────────────────────────────────────
 const ORNEKLER = [
@@ -137,6 +137,15 @@ export default function RegexPlayground() {
   const [metin, setMetin] = useState(VARSAYILAN_METIN);
   const [cheatOpen, setCheatOpen] = useState(false);
   const [aktifGrup, setAktifGrup] = useState(null);
+  const ilkRender = useRef(true);
+
+  useEffect(() => {
+    if (ilkRender.current) { ilkRender.current = false; return; }
+    try {
+      const prev = Number(localStorage.getItem('sz_regex_test') || 0);
+      localStorage.setItem('sz_regex_test', String(prev + 1));
+    } catch {}
+  }, [pattern, flags]);
 
   const { segments, eslesmeler, hata } = useMemo(
     () => hesaplaEslesmeler(pattern, flags, metin),

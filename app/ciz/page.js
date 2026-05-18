@@ -267,6 +267,10 @@ export default function CizPage() {
     t.dispose();
     const digit = out.indexOf(Math.max(...out));
     setPred({ digit, conf: (out[digit] * 100).toFixed(1), probs: out });
+    try {
+      const prev = Number(localStorage.getItem('sz_ciz_tahmin') || 0);
+      localStorage.setItem('sz_ciz_tahmin', String(prev + 1));
+    } catch {}
   }, []);
 
   const debouncedPredict = () => {

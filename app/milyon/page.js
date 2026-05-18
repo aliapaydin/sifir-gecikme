@@ -342,6 +342,19 @@ const STYLES = `
   @keyframes correctPop{ 0%{transform:scale(1)} 40%{transform:scale(1.04)} 100%{transform:scale(1)} }
 `;
 
+// ─── localStorage takip ──────────────────────────────────────────────────────
+
+function kaydetOyunSonu(kazanim, soruSayisi) {
+  try {
+    const oyun = Number(localStorage.getItem('sz_milyon_oyun') || 0);
+    localStorage.setItem('sz_milyon_oyun', String(oyun + 1));
+    const maxK = Number(localStorage.getItem('sz_milyon_max_kazanim') || 0);
+    if (kazanim > maxK) localStorage.setItem('sz_milyon_max_kazanim', String(kazanim));
+    const toplamS = Number(localStorage.getItem('sz_milyon_toplam_soru') || 0);
+    localStorage.setItem('sz_milyon_toplam_soru', String(toplamS + soruSayisi));
+  } catch {}
+}
+
 // ─── Ana Bileşen ──────────────────────────────────────────────────────────────
 
 export default function Milyon() {
@@ -387,7 +400,9 @@ export default function Milyon() {
         if (prev <= 1) {
           clearInterval(iv);
           playYanlis();
-          setKazanilanPara(guvenliPara());
+          const gp = guvenliPara();
+          kaydetOyunSonu(gp, soruIdx + 1);
+          setKazanilanPara(gp);
           setDurum('bitti');
           stopAmbi();
           return 0;
@@ -418,6 +433,7 @@ export default function Milyon() {
       if (idx === dogru) {
         playDogru();
         if (soruIdx === 9) {
+          kaydetOyunSonu(ODULLER[9], 10);
           setKazanilanPara(ODULLER[9]);
           setDurum('kazandi');
           stopAmbi();
@@ -436,7 +452,9 @@ export default function Milyon() {
       } else {
         playYanlis();
         setTimeout(() => {
-          setKazanilanPara(guvenliPara());
+          const gp = guvenliPara();
+          kaydetOyunSonu(gp, soruIdx + 1);
+          setKazanilanPara(gp);
           setDurum('bitti');
           stopAmbi();
         }, 1600);

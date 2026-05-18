@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useKaloriState } from '../../lib/kalori-state';
 import KaloriDashboard from './KaloriDashboard';
 import KaloriYemekEkle from './KaloriYemekEkle';
@@ -19,6 +19,10 @@ const TABS = [
 export default function KaloriApp() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const state = useKaloriState();
+
+  useEffect(() => {
+    try { localStorage.setItem('sz_kalori_ziyaret', '1'); } catch {}
+  }, []);
 
   if (!state.hydrated) {
     return (
