@@ -405,7 +405,7 @@ export default function HaritaSayfasi() {
             <ModulKart icon="🗂️" label="Veri Setleri" href="/veri-setleri" ziyaret={veriSetiZiyaret}
               detaylar={veriSetiZiyaret ? [{ label: 'Durum', deger: 'Ziyaret edildi' }] : []}
             />
-            <ModulKart icon="🎤" label="Mülakat" href="/mulakat" ziyaret={mulakatSoru > 0}
+            <ModulKart icon="🎤" label="Mülakat" href="/mulakat" ziyaret={ziyaretler.includes('/mulakat') || mulakatSoru > 0}
               detaylar={mulakatSoru > 0 ? [
                 { label: 'Yanıtlanan soru', deger: String(mulakatSoru) },
                 { label: '"Biliyorum" denen', deger: String(mulakatBiliyorum) },
