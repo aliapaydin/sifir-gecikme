@@ -816,7 +816,8 @@ export default function PythonPlayground() {
     const t0 = performance.now();
 
     const el = document.documentElement;
-    const tema = el.classList.contains('lacivert') ? 'lacivert'
+    const tema = el.classList.contains('gece') ? 'gece'
+      : el.classList.contains('lacivert') ? 'lacivert'
       : el.classList.contains('dark') ? 'dark' : 'light';
 
     try {
@@ -831,7 +832,19 @@ import matplotlib
 import matplotlib.pyplot as plt
 import io, base64
 
-if _TEMA_JS == 'lacivert':
+if _TEMA_JS == 'gece':
+    plt.style.use('dark_background')
+    _BG  = '#07080E'
+    _FG  = '#EEF0F8'
+    _GRD = '#1E2130'
+    matplotlib.rcParams.update({
+        'figure.facecolor': _BG, 'axes.facecolor': _BG, 'savefig.facecolor': _BG,
+        'text.color': _FG, 'axes.labelcolor': _FG,
+        'xtick.color': _FG, 'ytick.color': _FG,
+        'axes.edgecolor': _GRD, 'grid.color': _GRD,
+        'legend.facecolor': _BG, 'legend.edgecolor': _GRD,
+    })
+elif _TEMA_JS == 'lacivert':
     plt.style.use('dark_background')
     _BG  = '#161B22'
     _FG  = '#E6EDF3'
