@@ -47,8 +47,9 @@ const GRUPLAR = [
 
 function readTemaFromDOM() {
   const el = document.documentElement;
+  if (el.classList.contains('gece'))    return 'gece';
   if (el.classList.contains('lacivert')) return 'lacivert';
-  if (el.classList.contains('dark')) return 'dark';
+  if (el.classList.contains('dark'))    return 'dark';
   return 'light';
 }
 
@@ -63,11 +64,11 @@ function ThemeToggleBtn() {
 
   const toggle = () => {
     const scrollY = window.scrollY;
-    const sira = { light: 'dark', dark: 'lacivert', lacivert: 'light' };
+    const sira = { light: 'dark', dark: 'lacivert', lacivert: 'gece', gece: 'light' };
     const next = sira[tema];
     const el = document.documentElement;
     el.classList.add('tema-gecis');
-    el.classList.remove('dark', 'lacivert');
+    el.classList.remove('dark', 'lacivert', 'gece');
     if (next !== 'light') el.classList.add(next);
     localStorage.setItem('theme', next);
     setTema(next);
@@ -77,11 +78,11 @@ function ThemeToggleBtn() {
 
   if (!mounted) return <div style={{ width: '32px', height: '32px' }} />;
 
-  const ikonlar = { light: '☀️', dark: '🌙', lacivert: '🌊' };
+  const ikonlar = { light: '☀️', dark: '🌙', lacivert: '🌊', gece: '✨' };
 
   return (
     <button onClick={toggle} aria-label="Tema değiştir"
-      title={{ light: 'Koyu temaya geç', dark: 'Lacivert temaya geç', lacivert: 'Açık temaya geç' }[tema]}
+      title={{ light: 'Koyu temaya geç', dark: 'Lacivert temaya geç', lacivert: 'Gece temaya geç', gece: 'Açık temaya geç' }[tema]}
       style={{
         width: '32px', height: '32px', borderRadius: '8px',
         border: '0.5px solid var(--color-border)',
@@ -183,21 +184,25 @@ export default function Navbar() {
     light:    'rgba(250,248,243,0.92)',
     dark:     'rgba(26,24,21,0.92)',
     lacivert: 'rgba(13,17,23,0.92)',
+    gece:     'rgba(7,8,14,0.90)',
   };
   const fadeMap = {
     light:    'rgba(243,240,233,0.95)',
     dark:     'rgba(26,24,21,0.95)',
     lacivert: 'rgba(13,17,23,0.95)',
+    gece:     'rgba(7,8,14,0.95)',
   };
   const pillBgMap = {
     light:    'rgba(0,0,0,0.035)',
     dark:     'rgba(0,0,0,0.18)',
     lacivert: 'rgba(0,0,0,0.28)',
+    gece:     'rgba(99,102,241,0.06)',
   };
   const dropdownBgMap = {
     light:    'var(--color-cream-card)',
     dark:     '#1e1c18',
     lacivert: '#0d1117',
+    gece:     '#0E1017',
   };
 
   const navBg = scrolled ? navBgMap[tema] : 'var(--color-cream)';
@@ -229,7 +234,7 @@ export default function Navbar() {
             fontFamily: 'var(--font-serif)', flexShrink: 0,
           }}>Sz</div>
           <div>
-            <div style={{ fontSize: '15px', fontWeight: 500, color: 'var(--color-text)', lineHeight: 1.15, fontFamily: 'var(--font-serif)' }}>
+            <div className="navbar-logo-title" style={{ fontSize: '15px', fontWeight: 500, lineHeight: 1.15, fontFamily: 'var(--font-serif)' }}>
               Sıfır Gecikme
             </div>
             <div style={{ fontSize: '10px', color: 'var(--color-text-mute)', letterSpacing: '0.03em' }}>

@@ -237,3 +237,88 @@ html.lacivert select {
   border-color: var(--color-border) !important;
 }
 html.lacivert button { color: var(--color-text); }
+
+/* ─── GECE TEMASI ──────────────────────────────────── */
+html.gece {
+  --color-cream: #07080E;
+  --color-bg: #07080E;
+  --color-cream-rgb: 7,8,14;
+  --color-cream-card: #0E1017;
+  --color-border: #1E2130;
+  --color-text: #EEF0F8;
+  --color-text-soft: #8890B0;
+  --color-text-mute: #555E7A;
+  --color-text-faint: #363D55;
+  --color-accent: #6366F1;
+  --color-accent-soft: #0F1035;
+  --color-accent-text: #A5B4FC;
+  --color-amber-bg: #1A1100;
+  --color-amber-text: #FCD34D;
+  --color-purple-bg: #110D25;
+  --color-purple-text: #C4B5FD;
+  --color-highlight: #1A1730;
+  --color-correct-bg: #060F12;
+  --color-correct-border: #064E3B;
+  --color-correct-text: #34D399;
+  --color-correct-icon: #064E3B;
+  --color-wrong-bg: #0F0406;
+  --color-wrong-border: #7F1D1D;
+  --color-wrong-text: #F87171;
+  --color-wrong-icon: #7F1D1D;
+}
+
+/* Gece — badge renkleri (interaktif=cyan, rehber=indigo, vaka=amber) */
+html.gece .badge-interactive {
+  background: rgba(34,211,238,0.10);
+  color: #67E8F9;
+  border: 1px solid rgba(34,211,238,0.2);
+}
+html.gece .badge-guide {
+  background: rgba(99,102,241,0.12);
+  color: #A5B4FC;
+  border: 1px solid rgba(99,102,241,0.22);
+}
+html.gece .badge-case {
+  background: rgba(251,191,36,0.10);
+  color: #FCD34D;
+  border: 1px solid rgba(251,191,36,0.2);
+}
+
+/* Gece — kart hover glow */
+html.gece .card:hover {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 1px rgba(99,102,241,0.15), 0 4px 28px rgba(99,102,241,0.10);
+}
+
+/* Gece — kod bloğu */
+html.gece .prose-article pre {
+  background: #060709;
+  border-color: #1E2130;
+  color: #CBD5E1;
+}
+
+/* Gece — logo gradyanı */
+.navbar-logo-title { color: var(--color-text); }
+html.gece .navbar-logo-title {
+  background: linear-gradient(135deg, #6366F1, #A78BFA);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Gece — Tailwind overrides */
+html.gece .bg-gray-50  { background: var(--color-cream-card) !important; }
+html.gece .bg-white    { background: var(--color-cream-card) !important; }
+html.gece .border-gray-200 { border-color: var(--color-border) !important; }
+html.gece .text-gray-500   { color: var(--color-text-mute) !important; }
+html.gece .text-gray-600   { color: var(--color-text-soft) !important; }
+html.gece .text-gray-900   { color: var(--color-text) !important; }
+html.gece .hover\:bg-gray-50:hover { background: var(--color-cream) !important; }
+html.gece input[type="range"] { accent-color: var(--color-accent); }
+html.gece input[type="number"],
+html.gece select {
+  background: var(--color-cream-card) !important;
+  color: var(--color-text) !important;
+  border-color: var(--color-border) !important;
+}
+html.gece button { color: var(--color-text); }
