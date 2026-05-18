@@ -139,6 +139,118 @@ const kategoriRenk = {
   vaka: '#e8a04a', kariyer: '#e8a04a',
 };
 
+function formatSure(dk) {
+  if (!dk || dk < 1) return '< 1 dk';
+  if (dk < 60) return `${Math.round(dk)} dk`;
+  const sa = Math.floor(dk / 60);
+  const kalan = Math.round(dk % 60);
+  return kalan > 0 ? `${sa} sa ${kalan} dk` : `${sa} sa`;
+}
+
+function HeroPill({ icon, label, sub, vurgu }) {
+  return (
+    <div style={{
+      display: 'flex', flexDirection: 'column', alignItems: 'center',
+      padding: '10px 18px', borderRadius: '14px', minWidth: '72px',
+      background: vurgu ? 'var(--color-accent-soft)' : 'var(--color-cream)',
+      border: `0.5px solid ${vurgu ? 'var(--color-accent)' : 'var(--color-border)'}`,
+    }}>
+      <span style={{ fontSize: '18px', marginBottom: '3px' }}>{icon}</span>
+      <span style={{ fontSize: '14px', fontWeight: 700, lineHeight: 1, color: vurgu ? 'var(--color-accent-text)' : 'var(--color-text)' }}>
+        {label}
+      </span>
+      <span style={{ fontSize: '10px', marginTop: '3px', color: vurgu ? 'var(--color-accent-text)' : 'var(--color-text-mute)' }}>
+        {sub}
+      </span>
+    </div>
+  );
+}
+
+function ProfilHero({ gunler, sureDk, seri, etkilesim, ilkZiyaret, kazanilanBasarim, toplamBasarim }) {
+  const ilkTarih = ilkZiyaret
+    ? new Date(ilkZiyaret).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })
+    : null;
+
+  const r = 44; const cx = 56; const cy = 56;
+  const circ = 2 * Math.PI * r;
+  const progress = Math.min(1, gunler / 365);
+  const offset = circ * (1 - progress);
+
+  const selamMetni = gunler === 1
+    ? 'Hoş geldin! Yolculuk bugün başladı.'
+    : gunler < 7
+    ? `${gunler} gündür öğreniyorsun.`
+    : gunler < 30
+    ? `${gunler} gündür burada, harika gidiyor!`
+    : `${gunler} günlük yolculuk — devam et!`;
+
+  return (
+    <div style={{
+      background: 'var(--color-cream-card)',
+      border: '0.5px solid var(--color-border)',
+      borderRadius: '20px', padding: '28px 32px',
+      marginBottom: '32px', position: 'relative', overflow: 'hidden',
+    }}>
+      {/* Dekoratif daireler */}
+      <div style={{
+        position: 'absolute', top: -70, right: -70,
+        width: 220, height: 220, borderRadius: '50%',
+        background: 'var(--color-accent)', opacity: 0.05, pointerEvents: 'none',
+      }} />
+      <div style={{
+        position: 'absolute', bottom: -50, right: 80,
+        width: 140, height: 140, borderRadius: '50%',
+        background: 'var(--color-accent)', opacity: 0.03, pointerEvents: 'none',
+      }} />
+
+      <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--color-text-mute)', marginBottom: '20px' }}>
+        Öğrenme Yolculuğu
+      </div>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: '28px', flexWrap: 'wrap' }}>
+
+        {/* SVG halka */}
+        <div style={{ position: 'relative', flexShrink: 0, width: 112, height: 112 }}>
+          <svg width={112} height={112} style={{ transform: 'rotate(-90deg)', display: 'block' }}>
+            <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--color-border)" strokeWidth={5} />
+            <circle cx={cx} cy={cy} r={r} fill="none" stroke="var(--color-accent)"
+              strokeWidth={5} strokeLinecap="round"
+              strokeDasharray={circ.toFixed(2)} strokeDashoffset={offset.toFixed(2)}
+            />
+          </svg>
+          <div style={{
+            position: 'absolute', inset: 0,
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <span style={{ fontSize: '30px', fontWeight: 800, color: 'var(--color-text)', lineHeight: 1, letterSpacing: '-0.03em' }}>
+              {gunler}
+            </span>
+            <span style={{ fontSize: '11px', color: 'var(--color-text-mute)', fontWeight: 500, marginTop: '2px' }}>gün</span>
+          </div>
+        </div>
+
+        {/* Metin + pill'ler */}
+        <div style={{ flex: 1, minWidth: 200 }}>
+          <div style={{ fontSize: '18px', fontWeight: 700, color: 'var(--color-text)', letterSpacing: '-0.02em', lineHeight: 1.25, marginBottom: '4px' }}>
+            {selamMetni}
+          </div>
+          {ilkTarih && (
+            <div style={{ fontSize: '12px', color: 'var(--color-text-mute)', marginBottom: '16px' }}>
+              İlk ziyaret: {ilkTarih}
+            </div>
+          )}
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <HeroPill icon="⏱️" label={formatSure(sureDk)} sub="süre" />
+            <HeroPill icon="🔥" label={`${seri} gün`} sub="seri" vurgu={seri >= 3} />
+            <HeroPill icon="⚡" label={String(etkilesim)} sub="etkileşim" />
+            <HeroPill icon="🏅" label={`${kazanilanBasarim}/${toplamBasarim}`} sub="başarım" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function formatPara(n) {
   if (!n) return '0 ₺';
   return n.toLocaleString('tr-TR') + ' ₺';
@@ -199,6 +311,14 @@ export default function HaritaSayfasi() {
       const kaloriZiyaret   = localStorage.getItem('sz_kalori_ziyaret') === '1';
       const veriSetiZiyaret = ziyaretler.includes('/veri-setleri');
 
+      // Profil hero verileri
+      const ilkZiyaret = localStorage.getItem('sz_ilk_ziyaret') || null;
+      const seri       = Number(localStorage.getItem('sz_seri') || 1);
+      const sureDk     = Number(localStorage.getItem('sz_sure_dk') || 0);
+      const gunler     = ilkZiyaret
+        ? Math.max(1, Math.floor((Date.now() - new Date(ilkZiyaret).getTime()) / 86400000))
+        : 1;
+
       let gunlukSoru = 0, dogru = 0;
       for (let i = 0; i < localStorage.length; i++) {
         const k = localStorage.key(i);
@@ -237,6 +357,7 @@ export default function HaritaSayfasi() {
         uzmanlikYuzde, genelYuzde, basarimDurum, stats, tamamlananDersSayisi,
         mulakatSoru, mulakatBiliyorum, milyonOyun, milyonMaxK, milyonToplamS,
         cizTahmin, nnEgitim, regexTest, kaloriZiyaret, veriSetiZiyaret,
+        ilkZiyaret, seri, sureDk, gunler,
       });
     } catch {}
   }, []);
@@ -252,10 +373,13 @@ export default function HaritaSayfasi() {
     uzmanlikYuzde, genelYuzde, basarimDurum, sinavPuani, tamamlananDersSayisi,
     mulakatSoru, mulakatBiliyorum, milyonOyun, milyonMaxK, milyonToplamS,
     cizTahmin, nnEgitim, regexTest, kaloriZiyaret, veriSetiZiyaret,
+    ilkZiyaret, seri, sureDk, gunler,
   } = veri;
   const sinavAcik = tamamlananDersSayisi >= TOPLAM_DERS;
   const sinavaKalan = Math.max(0, TOPLAM_DERS - tamamlananDersSayisi);
   const kazanilanBasarim = basarimDurum.filter(b => b.kazanildi).length;
+  const etkilesim = ziyaretler.length + sqlSorgu + pythonSorgu + mulakatSoru +
+    milyonToplamS + cizTahmin + nnEgitim + regexTest + gunlukSoru;
 
   const filtrelenmisIcerikler = aktifFiltre === 'tumu'
     ? icerikler
@@ -269,7 +393,7 @@ export default function HaritaSayfasi() {
 
         {/* Başlık */}
         <a href="/" className="text-xs mb-6 inline-block" style={{ color: 'var(--color-text-mute)' }}>Ana sayfa</a>
-        <div style={{ marginBottom: '32px' }}>
+        <div style={{ marginBottom: '24px' }}>
           <h1 className="font-serif text-4xl font-medium leading-tight mb-2" style={{ color: 'var(--color-text)', letterSpacing: '-0.01em' }}>
             İlerleme Haritam
           </h1>
@@ -277,6 +401,17 @@ export default function HaritaSayfasi() {
             Bu cihazdaki aktivitene göre hesaplanır · Hesap gerekmez
           </p>
         </div>
+
+        {/* ─── PROFİL HERO ─── */}
+        <ProfilHero
+          gunler={gunler}
+          sureDk={sureDk}
+          seri={seri}
+          etkilesim={etkilesim}
+          ilkZiyaret={ilkZiyaret}
+          kazanilanBasarim={kazanilanBasarim}
+          toplamBasarim={BASARIMLAR.length}
+        />
 
         {/* ─── GENEL BAKIŞ ─── */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '10px', marginBottom: '32px' }}>
