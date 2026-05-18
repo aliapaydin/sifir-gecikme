@@ -31,6 +31,7 @@ export default function sitemap() {
     { url: '/yazilar/sql-temelleri', priority: 0.9, changeFrequency: 'monthly' },
     { url: '/yazilar/cohort-analizi', priority: 0.9, changeFrequency: 'monthly' },
     { url: '/yazilar/sklearn-pipeline', priority: 0.9, changeFrequency: 'monthly' },
+    { url: '/yazilar/databricks-rehberi', priority: 0.9, changeFrequency: 'monthly' },
     { url: '/yazilar/pandas-7-sey', priority: 0.9, changeFrequency: 'monthly' },
     { url: '/yazilar/feature-engineering', priority: 0.8, changeFrequency: 'monthly' },
     { url: '/yazilar/ilk-90-gun', priority: 0.8, changeFrequency: 'monthly' },
