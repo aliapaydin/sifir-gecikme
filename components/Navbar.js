@@ -226,13 +226,18 @@ export default function Navbar() {
       }}>
         {/* Logo */}
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '9px', textDecoration: 'none', flexShrink: 0 }}>
-          <div style={{
-            width: '28px', height: '28px', borderRadius: '8px',
-            background: 'var(--color-accent)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: '#fff', fontSize: '13px', fontWeight: 700,
-            fontFamily: 'var(--font-serif)', flexShrink: 0,
-          }}>Sz</div>
+          <svg viewBox="0 0 32 32" width="28" height="28" style={{ flexShrink: 0, display: 'block' }}>
+            <defs>
+              <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#1D9E75" />
+                <stop offset="100%" stopColor="#0D6B50" />
+              </linearGradient>
+            </defs>
+            <rect width="32" height="32" rx="8" fill="url(#logoGrad)" />
+            <rect x="7"  y="20" width="4" height="6"  rx="1.5" fill="rgba(255,255,255,0.90)" />
+            <rect x="14" y="15" width="4" height="11" rx="1.5" fill="rgba(255,255,255,0.90)" />
+            <rect x="21" y="9"  width="4" height="17" rx="1.5" fill="rgba(255,255,255,0.90)" />
+          </svg>
           <div>
             <div className="navbar-logo-title" style={{ fontSize: '15px', fontWeight: 500, lineHeight: 1.15, fontFamily: 'var(--font-serif)' }}>
               Sıfır Gecikme
