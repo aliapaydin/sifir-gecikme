@@ -4,12 +4,12 @@ import { useState } from 'react';
 
 // ─── Renk Paleti ─────────────────────────────────────────────────────────────
 const R = {
-  delta:   { bg: '#E1F5EE', border: '#1D9E75', text: '#0F6E56', dot: '#1D9E75' },
-  spark:   { bg: '#DBEAFE', border: '#2563EB', text: '#1E3A8A', dot: '#3B82F6' },
-  ml:      { bg: '#F3E8FF', border: '#9333EA', text: '#581C87', dot: '#A855F7' },
-  sql:     { bg: '#FEF9C3', border: '#CA8A04', text: '#713F12', dot: '#EAB308' },
-  uyari:   { bg: '#FEF2F2', border: '#DC2626', text: '#7F1D1D', dot: '#EF4444' },
-  bilgi:   { bg: '#F0F9FF', border: '#0EA5E9', text: '#0C4A6E', dot: '#38BDF8' },
+  delta:   { bg: 'rgba(29,158,117,0.12)',  border: '#1D9E75', text: '#1D9E75', dot: '#1D9E75' },
+  spark:   { bg: 'rgba(37,99,235,0.12)',   border: '#2563EB', text: '#3B82F6', dot: '#3B82F6' },
+  ml:      { bg: 'rgba(147,51,234,0.12)',  border: '#9333EA', text: '#A855F7', dot: '#A855F7' },
+  sql:     { bg: 'rgba(202,138,4,0.12)',   border: '#CA8A04', text: '#EAB308', dot: '#EAB308' },
+  uyari:   { bg: 'rgba(220,38,38,0.12)',   border: '#DC2626', text: '#EF4444', dot: '#EF4444' },
+  bilgi:   { bg: 'rgba(14,165,233,0.12)',  border: '#0EA5E9', text: '#38BDF8', dot: '#38BDF8' },
 };
 
 // ─── Lakehouse Mimari Diyagramı ──────────────────────────────────────────────
@@ -29,7 +29,7 @@ const KATMANLAR = [
     label: 'Delta Lake (Depolama Katmanı)',
     icon: '△',
     renk: '#1D9E75',
-    bg: '#E1F5EE',
+    bg: 'rgba(29,158,117,0.12)',
     border: '#1D9E75',
     items: ['Bronze (Ham Veri)', 'Silver (Temiz Veri)', 'Gold (İş Katmanı)', 'ACID İşlemler', 'Time Travel'],
   },
@@ -38,7 +38,7 @@ const KATMANLAR = [
     label: 'Databricks Runtime',
     icon: '⚡',
     renk: '#2563EB',
-    bg: '#DBEAFE',
+    bg: 'rgba(37,99,235,0.12)',
     border: '#2563EB',
     items: ['Apache Spark', 'Photon Engine', 'Delta Engine', 'MLflow', 'Unity Catalog'],
   },
@@ -47,7 +47,7 @@ const KATMANLAR = [
     label: 'Kullanım Katmanı',
     icon: '🎯',
     renk: '#9333EA',
-    bg: '#F3E8FF',
+    bg: 'rgba(147,51,234,0.12)',
     border: '#9333EA',
     items: ['Notebooks', 'Databricks SQL', 'ML Experiments', 'Jobs & Workflows', 'BI Araçları'],
   },
@@ -91,7 +91,7 @@ export function LakehouseDiyagram() {
                 {k.items.map(item => (
                   <span key={item} style={{
                     padding: '4px 10px', borderRadius: '6px',
-                    background: 'rgba(255,255,255,0.7)', fontSize: '12px',
+                    background: 'var(--color-cream-card)', fontSize: '12px',
                     fontWeight: 600, color: k.renk,
                     border: `1px solid ${k.border}40`,
                   }}>
@@ -121,7 +121,7 @@ const CLUSTER_TURLERI = [
     label: 'All-Purpose Cluster',
     icon: '🔄',
     renk: '#2563EB',
-    bg: '#DBEAFE',
+    bg: 'rgba(37,99,235,0.12)',
     aciklama: 'Etkileşimli geliştirme ve analiz için. Notebook\'ta çalışırsın.',
     kullanim: ['Notebook geliştirme', 'Veri keşfi', 'Ad-hoc analiz', 'Model deneme'],
     dikkat: 'Pahalı — işin bitince durdur',
@@ -133,7 +133,7 @@ const CLUSTER_TURLERI = [
     label: 'Job Cluster',
     icon: '⚙️',
     renk: '#1D9E75',
-    bg: '#E1F5EE',
+    bg: 'rgba(29,158,117,0.12)',
     aciklama: 'Otomatik iş akışları için. Job başlarken açılır, bitince kapanır.',
     kullanim: ['ETL pipeline\'ları', 'Günlük batch job\'lar', 'ML model eğitimi', 'Scheduled işler'],
     dikkat: 'En ekonomik seçenek',
@@ -145,7 +145,7 @@ const CLUSTER_TURLERI = [
     label: 'SQL Warehouse',
     icon: '🗄️',
     renk: '#CA8A04',
-    bg: '#FEF9C3',
+    bg: 'rgba(202,138,4,0.12)',
     aciklama: 'Databricks SQL ve BI araçları için özel. Photon motoru ile optimize.',
     kullanim: ['Databricks SQL', 'Tableau / Power BI', 'Dashboard sorguları', 'Analitik işler'],
     dikkat: 'SQL için en hızlı seçenek',
@@ -229,7 +229,7 @@ const DELTA_OPS = [
     label: 'ACID İşlemler',
     icon: '🔒',
     renk: '#1D9E75',
-    bg: '#E1F5EE',
+    bg: 'rgba(29,158,117,0.12)',
     aciklama: 'Delta Lake her yazma işlemini atomik yapar. Yarıda kesen job bozuk tablo bırakmaz.',
     kod: `-- Tek bir atomik işlemde güncelle
 UPDATE musteri_tablosu
@@ -248,7 +248,7 @@ WHEN NOT MATCHED THEN INSERT *;`,
     label: 'Time Travel',
     icon: '⏰',
     renk: '#2563EB',
-    bg: '#DBEAFE',
+    bg: 'rgba(37,99,235,0.12)',
     aciklama: 'Delta Lake her değişikliği loglar. Geçmişteki herhangi bir versiyona dönebilirsin.',
     kod: `-- Version numarasıyla geçmişe git
 SELECT * FROM satislar VERSION AS OF 42;
@@ -268,7 +268,7 @@ RESTORE TABLE satislar TO VERSION AS OF 41;`,
     label: 'Schema Evolution',
     icon: '📐',
     renk: '#9333EA',
-    bg: '#F3E8FF',
+    bg: 'rgba(147,51,234,0.12)',
     aciklama: 'Yeni sütun ekleme, tip değiştirme — Delta schema\'yı otomatik veya kontrollü evrimleştirir.',
     kod: `# Yeni sütunla gelen veriyi otomatik kabul et
 df.write.format("delta") \\
@@ -289,7 +289,7 @@ ADD CONSTRAINT tutar_pozitif CHECK (tutar > 0);`,
     label: 'Optimize & Z-Order',
     icon: '⚡',
     renk: '#CA8A04',
-    bg: '#FEF9C3',
+    bg: 'rgba(202,138,4,0.12)',
     aciklama: 'Küçük dosyaları birleştir, sık sorgulanan sütunlara göre fiziksel sırala — sorgu hızı dramatik artar.',
     kod: `-- Küçük dosya sorununu çöz
 OPTIMIZE satislar;
@@ -384,8 +384,8 @@ const MEDALLION = [
     id: 'bronze',
     label: 'Bronze',
     icon: '🥉',
-    renk: '#B45309',
-    bg: '#FEF3C7',
+    renk: '#D97706',
+    bg: 'rgba(180,83,9,0.12)',
     border: '#D97706',
     aciklama: 'Ham veri — olduğu gibi',
     detay: 'Kaynak veri dokunulmadan kopyalanır. JSON, CSV, Parquet, Avro. Hata ayıklama için tam geçmiş saklanır.',
@@ -395,8 +395,8 @@ const MEDALLION = [
     id: 'silver',
     label: 'Silver',
     icon: '🥈',
-    renk: '#475569',
-    bg: '#F1F5F9',
+    renk: '#64748B',
+    bg: 'rgba(71,85,105,0.12)',
     border: '#64748B',
     aciklama: 'Temiz, doğrulanmış veri',
     detay: 'Bronze\'dan gelen veri temizlenir, birleştirilir, şema kısıtlamaları uygulanır. Teknik ekip buradan okur.',
@@ -406,8 +406,8 @@ const MEDALLION = [
     id: 'gold',
     label: 'Gold',
     icon: '🥇',
-    renk: '#B45309',
-    bg: '#FFFBEB',
+    renk: '#F59E0B',
+    bg: 'rgba(245,158,11,0.12)',
     border: '#F59E0B',
     aciklama: 'İş mantığı uygulanmış veri',
     detay: 'Silver\'dan aggregate, iş kuralları uygulanmış son tablo. BI araçları, raporlar ve ML modelleri buradan beslenir.',
@@ -464,7 +464,7 @@ export function MedallionMimari() {
               {m.items.map(item => (
                 <span key={item} style={{
                   padding: '3px 10px', borderRadius: '6px',
-                  background: 'rgba(255,255,255,0.8)', fontSize: '12px',
+                  background: 'var(--color-cream-card)', fontSize: '12px',
                   fontWeight: 600, color: m.renk, border: `1px solid ${m.border}40`,
                 }}>
                   {item}

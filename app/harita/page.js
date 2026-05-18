@@ -9,27 +9,27 @@ const TOPLAM_DERS = dersler.length;
 // ─── KATEGORİ UZMANLIKLARI ──────────────────────────────────────────────────
 const UZMANLIK = [
   {
-    id: 'ml', label: 'Makine Öğrenmesi', renk: '#1D9E75', bg: '#E1F5EE',
+    id: 'ml', label: 'Makine Öğrenmesi', renk: '#1D9E75', bg: 'rgba(29,158,117,0.12)',
     icerikler: ['/yazilar/linear-regression','/yazilar/gradient-descent','/yazilar/confusion-matrix',
       '/yazilar/bias-variance','/yazilar/kmeans','/yazilar/sinir-agi','/yazilar/decision-tree'],
   },
   {
-    id: 'sql', label: 'SQL & Veri Mühendisliği', renk: '#185FA5', bg: '#E6F1FB',
+    id: 'sql', label: 'SQL & Veri Mühendisliği', renk: '#185FA5', bg: 'rgba(24,95,165,0.12)',
     icerikler: ['/yazilar/sql-temelleri','/yazilar/etl-nedir','/yazilar/dbt-nedir','/sql','/yazilar/mulakat-sql'],
     queryBonus: 'sql',
   },
   {
-    id: 'python', label: 'Python & Pandas', renk: '#2E7D32', bg: '#E8F5E9',
+    id: 'python', label: 'Python & Pandas', renk: '#2E7D32', bg: 'rgba(46,125,50,0.12)',
     icerikler: ['/python','/yazilar/pandas-7-sey','/yazilar/veri-temizleme','/yazilar/feature-engineering'],
     queryBonus: 'python',
   },
   {
-    id: 'istatistik', label: 'İstatistik & Analiz', renk: '#6A1B9A', bg: '#F3E5F5',
+    id: 'istatistik', label: 'İstatistik & Analiz', renk: '#6A1B9A', bg: 'rgba(106,27,154,0.12)',
     icerikler: ['/yazilar/ab-test','/yazilar/sample-size','/yazilar/izmir-kira-analizi',
       '/yazilar/superlig-xg','/yazilar/bezier'],
   },
   {
-    id: 'kariyer', label: 'Kariyer', renk: '#BA7517', bg: '#FAEEDA',
+    id: 'kariyer', label: 'Kariyer', renk: '#BA7517', bg: 'rgba(186,117,23,0.12)',
     icerikler: ['/yazilar/ilk-90-gun','/yazilar/rol-farklari','/yazilar/yol-haritasi',
       '/yazilar/portfolyo','/yazilar/mulakat-sql','/yazilar/linkedin-profili'],
   },
@@ -85,7 +85,7 @@ const KARIYER_HREFS = [
 // ─── YARDIMCI BİLEŞENLER ───────────────────────────────────────────────────
 function ProgresBari({ yuzde, renk, bg, height = 8 }) {
   return (
-    <div style={{ width: '100%', height, borderRadius: 999, background: bg || '#eee', overflow: 'hidden' }}>
+    <div style={{ width: '100%', height, borderRadius: 999, background: bg || 'var(--color-border)', overflow: 'hidden' }}>
       <div style={{
         width: `${Math.min(100, yuzde)}%`, height: '100%',
         background: renk, borderRadius: 999,
@@ -303,7 +303,7 @@ export default function HaritaSayfasi() {
                 <span style={{ fontSize: '20px' }}>🎓</span>
                 <span style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-text)' }}>Site İçerik Uzmanlığı</span>
                 {sinavAcik
-                  ? <span style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '999px', background: '#F0FDF4', color: '#16a34a', fontWeight: 700 }}>AÇIK</span>
+                  ? <span style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '999px', background: 'var(--color-correct-bg)', color: 'var(--color-correct-text)', fontWeight: 700 }}>AÇIK</span>
                   : <span style={{ fontSize: '11px', padding: '2px 8px', borderRadius: '999px', background: 'var(--color-cream)', color: 'var(--color-text-mute)', fontWeight: 600 }}>KİLİTLİ</span>
                 }
               </div>

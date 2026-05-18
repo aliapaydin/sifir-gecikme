@@ -16,11 +16,11 @@ const PERIODS = ['Ay 0', 'Ay 1', 'Ay 2', 'Ay 3', 'Ay 4', 'Ay 5', 'Ay 6'];
 
 function renkHesapla(oran) {
   if (oran === null) return { bg: 'transparent', text: 'var(--color-text-faint)' };
-  if (oran === 100) return { bg: '#1D9E75', text: '#fff' };
-  if (oran >= 40)   return { bg: '#5DCAA5', text: '#fff' };
-  if (oran >= 30)   return { bg: '#86EFAC', text: '#166534' };
-  if (oran >= 20)   return { bg: '#BBF7D0', text: '#166534' };
-  return              { bg: '#DCFCE7', text: '#166534' };
+  if (oran === 100) return { bg: '#1D9E75',               text: '#fff' };
+  if (oran >= 40)   return { bg: '#5DCAA5',               text: '#fff' };
+  if (oran >= 30)   return { bg: 'rgba(93,202,165,0.35)', text: 'var(--color-text-soft)' };
+  if (oran >= 20)   return { bg: 'rgba(93,202,165,0.18)', text: 'var(--color-text-soft)' };
+  return              { bg: 'rgba(93,202,165,0.08)',       text: 'var(--color-text-mute)' };
 }
 
 export default function CohortMatrix() {

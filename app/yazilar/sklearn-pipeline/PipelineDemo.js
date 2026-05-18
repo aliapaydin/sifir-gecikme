@@ -5,12 +5,12 @@ import { useState } from 'react';
 // ─── Pipeline Diyagramı ───────────────────────────────────────────────────────
 
 const ADIM_RENK = {
-  veri:    { bg: '#E1F5EE', border: '#1D9E75', text: '#0F6E56', dot: '#1D9E75' },
-  impute:  { bg: '#FEF9C3', border: '#CA8A04', text: '#713F12', dot: '#EAB308' },
-  scale:   { bg: '#DBEAFE', border: '#2563EB', text: '#1E3A8A', dot: '#3B82F6' },
-  encode:  { bg: '#F3E8FF', border: '#9333EA', text: '#581C87', dot: '#A855F7' },
-  model:   { bg: '#FEE2E2', border: '#DC2626', text: '#7F1D1D', dot: '#EF4444' },
-  cikti:   { bg: '#F0FDF4', border: '#16A34A', text: '#14532D', dot: '#22C55E' },
+  veri:    { bg: 'rgba(29,158,117,0.12)',  border: '#1D9E75', text: '#1D9E75', dot: '#1D9E75' },
+  impute:  { bg: 'rgba(202,138,4,0.12)',   border: '#CA8A04', text: '#EAB308', dot: '#EAB308' },
+  scale:   { bg: 'rgba(37,99,235,0.12)',   border: '#2563EB', text: '#3B82F6', dot: '#3B82F6' },
+  encode:  { bg: 'rgba(147,51,234,0.12)',  border: '#9333EA', text: '#A855F7', dot: '#A855F7' },
+  model:   { bg: 'rgba(220,38,38,0.12)',   border: '#DC2626', text: '#EF4444', dot: '#EF4444' },
+  cikti:   { bg: 'rgba(22,163,74,0.12)',   border: '#16A34A', text: '#22C55E', dot: '#22C55E' },
 };
 
 function AdimKutu({ icon, label, tip, aktif, kucuk }) {
@@ -180,7 +180,7 @@ function ModelSecenegi({ item, secili, onSec }) {
         display: 'flex', alignItems: 'center', gap: '10px',
         padding: '9px 12px', borderRadius: '8px', width: '100%', textAlign: 'left',
         border: `1px solid ${secili ? '#DC2626' : 'var(--color-border)'}`,
-        background: secili ? '#FEF2F2' : 'var(--color-cream-card)',
+        background: secili ? 'rgba(220,38,38,0.10)' : 'var(--color-cream-card)',
         cursor: 'pointer', transition: 'all 0.15s',
       }}
     >
