@@ -10,8 +10,9 @@ export default function Yorumlar() {
 
     const giscusTema = () => {
       const el = document.documentElement;
+      if (el.classList.contains('gece'))    return 'dark';
       if (el.classList.contains('lacivert')) return 'dark_dimmed';
-      if (el.classList.contains('dark')) return 'dark';
+      if (el.classList.contains('dark'))    return 'dark';
       return 'light';
     };
 
