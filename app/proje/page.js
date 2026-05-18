@@ -630,9 +630,32 @@ export default function ProjeCalismasi() {
     const py = pyRef.current;
     let out = '';
     py.globals.set('print', (...args) => { out += args.map(String).join(' ') + '\n'; });
+
+    const el = document.documentElement;
+    const temaAdi = el.classList.contains('gece') ? 'gece'
+                  : el.classList.contains('lacivert') ? 'lacivert'
+                  : el.classList.contains('dark') ? 'dark' : 'light';
+    const temaRenkler = {
+      light:    { bg: '#FAF8F3', fg: '#1A1814', edge: '#C8C3BA' },
+      dark:     { bg: '#1A1814', fg: '#F0EDE6', edge: '#3A3530' },
+      lacivert: { bg: '#0D1117', fg: '#E6EDF3', edge: '#1E2430' },
+      gece:     { bg: '#07080E', fg: '#EEF0F8', edge: '#1E2130' },
+    };
+    const { bg, fg, edge } = temaRenkler[temaAdi];
+    py.globals.set('_bg_color', bg);
+    py.globals.set('_fg_color', fg);
+    py.globals.set('_edge_color', edge);
+
     try {
       await py.runPythonAsync(`
-import matplotlib.pyplot as plt, io, base64
+import matplotlib.pyplot as plt, io, base64, matplotlib as mpl
+mpl.rcParams.update({
+    'figure.facecolor': _bg_color, 'axes.facecolor': _bg_color,
+    'text.color': _fg_color, 'axes.titlecolor': _fg_color,
+    'axes.labelcolor': _fg_color, 'xtick.color': _fg_color,
+    'ytick.color': _fg_color, 'axes.edgecolor': _edge_color,
+    'grid.color': _edge_color, 'figure.edgecolor': _bg_color,
+})
 _img_b64 = None
 _hooking = False
 def _hook(fname, **kw):
@@ -640,7 +663,8 @@ def _hook(fname, **kw):
     if _hooking: return
     _hooking = True
     buf = io.BytesIO()
-    plt.gcf().savefig(buf, format='png', **{k:v for k,v in kw.items() if k!='format'})
+    kw_clean = {k:v for k,v in kw.items() if k not in ('format','facecolor')}
+    plt.gcf().savefig(buf, format='png', facecolor=_bg_color, **kw_clean)
     buf.seek(0); _img_b64 = base64.b64encode(buf.read()).decode(); buf.close(); _hooking = False
 plt.savefig = _hook; _img_b64 = None`);
       await py.runPythonAsync(kod);
@@ -649,7 +673,7 @@ import io,base64
 if _img_b64 is None:
     figs=[plt.figure(n) for n in plt.get_fignums()]
     if figs:
-        buf=io.BytesIO(); figs[-1].savefig(buf,format='png',dpi=120,bbox_inches='tight',facecolor='white')
+        buf=io.BytesIO(); figs[-1].savefig(buf,format='png',dpi=120,bbox_inches='tight',facecolor=_bg_color)
         buf.seek(0); _img_b64=base64.b64encode(buf.read()).decode(); buf.close()
 plt.close('all')`);
       const imgB64 = py.globals.get('_img_b64');
