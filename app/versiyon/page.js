@@ -5,9 +5,24 @@ export const metadata = {
   description: 'Sıfır Gecikme sitesinin tüm sürüm notları ve özellik güncellemeleri.',
 };
 
-const CURRENT_VERSION = 'v1.6.0';
+const CURRENT_VERSION = 'v1.7.0';
 
 const versiyonlar = [
+  {
+    versiyon: 'v1.7.0',
+    tarih: 'Mayıs 2025',
+    baslik: 'Gece Teması + Logo + Tema Uyumlu Grafikler',
+    tip: 'feature',
+    ozellikler: [
+      { tip: 'yeni', metin: 'Gece teması (4. tema): koyu indigo/violet palet, ✨ ikonu ile tema döngüsüne eklendi' },
+      { tip: 'yeni', metin: 'Data bars SVG logosu — "Sz" yazısı yerine yükselen üç sütun, tüm temalarda uyumlu' },
+      { tip: 'yeni', metin: 'Harita sayfasına ProfilHero kartı: sitede geçirilen süre, gün serisi, etkileşim ve başarım istatistikleri' },
+      { tip: 'yeni', metin: 'Databricks kullanım rehberi (/yazilar/databricks-rehberi): Lakehouse\'dan MLflow\'a interaktif rehber' },
+      { tip: 'düzeltme', metin: 'Proje modülü ve Python Playground: matplotlib grafikleri her çalıştırmada aktif temaya göre arka plan ve renk uyumuyla oluşturuluyor' },
+      { tip: 'düzeltme', metin: 'Gece modunda Giscus yorum bileşeni koyu temada görüntülenmiyor sorunu giderildi' },
+      { tip: 'düzeltme', metin: 'İnteraktif bileşenlerde (Databricks Demo, sklearn Pipeline, Cohort Analizi) sabit hex renkler tema değişkenlerine ve rgba\'ya taşındı' },
+    ],
+  },
   {
     versiyon: 'v1.6.0',
     tarih: 'Mayıs 2025',
@@ -131,7 +146,7 @@ export default function VersiyonPage() {
           </p>
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             {[
-              { label: '7 sürüm', color: 'var(--color-accent)' },
+              { label: '8 sürüm', color: 'var(--color-accent)' },
               { label: 'Açık kaynak', color: 'var(--color-text-mute)' },
               { label: 'Türkçe & ücretsiz', color: 'var(--color-text-mute)' },
             ].map(b => (
