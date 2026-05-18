@@ -107,7 +107,7 @@ export default function Footer() {
             <a href="/versiyon" style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--color-text-mute)', textDecoration: 'none', padding: '2px 7px', borderRadius: '5px', border: '1px solid var(--color-border)', background: 'var(--color-cream-card)', transition: 'color 0.15s, border-color 0.15s' }}
               onMouseEnter={e => { e.currentTarget.style.color = 'var(--color-accent)'; e.currentTarget.style.borderColor = 'var(--color-accent)'; }}
               onMouseLeave={e => { e.currentTarget.style.color = 'var(--color-text-mute)'; e.currentTarget.style.borderColor = 'var(--color-border)'; }}
-            >v1.5.0</a>
+            >v1.6.0</a>
           </div>
           <div className="flex gap-2">
             <span className="badge badge-interactive">14 içerik</span>

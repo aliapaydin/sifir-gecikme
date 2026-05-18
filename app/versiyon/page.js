@@ -5,18 +5,33 @@ export const metadata = {
   description: 'Sıfır Gecikme sitesinin tüm sürüm notları ve özellik güncellemeleri.',
 };
 
-const CURRENT_VERSION = 'v1.5.0';
+const CURRENT_VERSION = 'v1.6.0';
 
 const versiyonlar = [
   {
+    versiyon: 'v1.6.0',
+    tarih: 'Mayıs 2025',
+    baslik: 'Sinir Ağı Playground + İlerleme Haritası 2.0',
+    tip: 'feature',
+    ozellikler: [
+      { tip: 'yeni', metin: 'Sinir Ağı Playground (/nn): XOR/çember/spiral veri setleriyle gerçek zamanlı karar sınırı görselleştirme' },
+      { tip: 'yeni', metin: 'Harita sayfasına Modüller bölümü: 7 modülün kullanım istatistikleri (Kalori, Mülakat, Milyon, Çiz, NN, Regex, Veri Setleri)' },
+      { tip: 'yeni', metin: 'Başarımlar 13\'ten 24\'e yükseltildi — mülakat, milyon yarışması ve playground başarımları eklendi' },
+      { tip: 'yeni', metin: 'Tüm modüllere localStorage takibi: milyon kazanımı, mülakat soruları, tahmin ve eğitim sayıları' },
+      { tip: 'düzeltme', metin: 'Günün Sorusu dark/lacivert temada parlak yeşil/kırmızı arka plan sorunu — CSS değişkenlerine taşındı' },
+      { tip: 'düzeltme', metin: 'ZiyaretTakip ana layout\'a taşındı; /veri-setleri ve /mulakat artık haritaya kaydediliyor' },
+    ],
+  },
+  {
     versiyon: 'v1.5.0',
     tarih: 'Mayıs 2025',
-    baslik: 'Rakam Çiz + Dark Mode Düzeltmesi',
+    baslik: 'Rakam Çiz + Versiyon Geçmişi',
     tip: 'feature',
     ozellikler: [
       { tip: 'yeni', metin: 'Rakam Çiz (/ciz): Tarayıcıda CNN modeli sıfırdan eğiten interaktif araç — TensorFlow.js, MNIST, WebGL' },
       { tip: 'yeni', metin: '65.000 el yazısı rakamla tarayıcıda gerçek zamanlı model eğitimi, IndexedDB önbellekleme' },
       { tip: 'yeni', metin: 'Bounding box normalization: çizilen rakam MNIST formatına otomatik hizalanıyor' },
+      { tip: 'yeni', metin: 'Versiyon geçmişi sayfası (/versiyon) ve footer\'da sürüm numarası badge eklendi' },
       { tip: 'düzeltme', metin: 'Dark/lacivert tema navigasyon sırasında beyaza dönme hatası giderildi (ThemeSync bileşeni)' },
       { tip: 'düzeltme', metin: 'Mülakat sayfası sticky bar konum düzeltmesi ve stil hataları giderildi' },
     ],
@@ -116,7 +131,7 @@ export default function VersiyonPage() {
           </p>
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             {[
-              { label: '6 sürüm', color: 'var(--color-accent)' },
+              { label: '7 sürüm', color: 'var(--color-accent)' },
               { label: 'Açık kaynak', color: 'var(--color-text-mute)' },
               { label: 'Türkçe & ücretsiz', color: 'var(--color-text-mute)' },
             ].map(b => (
