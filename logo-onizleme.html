@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Logo Konseptleri — Sıfır Gecikme</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:wght@500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: #0f0f12; color: #eee; padding: 40px 24px; }
+
+h1 { font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+     color: #555; margin-bottom: 40px; text-align: center; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; max-width: 1000px; margin: 0 auto; }
+
+.card {
+  background: #16161C; border: 1px solid #2a2a35;
+  border-radius: 16px; padding: 28px 24px;
+}
+.card-num { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; color: #444; text-transform: uppercase; margin-bottom: 20px; }
+.card h2 { font-size: 12px; color: #666; margin-top: 16px; margin-bottom: 4px; letter-spacing: 0.04em; }
+.card p  { font-size: 11px; color: #444; line-height: 1.5; }
+
+/* Navbar mock */
+.navbar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; background: #0d0d12;
+  border-radius: 10px; border: 1px solid #222;
+  margin-bottom: 16px;
+}
+.nav-text { font-size: 14px; font-weight: 500; color: #c8c8d0; font-family: 'Lora', serif; }
+.nav-sub  { font-size: 10px; color: #444; letter-spacing: 0.02em; }
+
+/* ─── LOGO 1: EKG Nabız ─── */
+.logo-1 {
+  width: 30px; height: 30px; border-radius: 9px;
+  background: linear-gradient(135deg, #6366F1, #A78BFA);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 12px rgba(99,102,241,0.4);
+}
+
+/* ─── LOGO 2: Veri Noktaları ─── */
+.logo-2 {
+  width: 30px; height: 30px; border-radius: 9px;
+  background: linear-gradient(135deg, #1D9E75, #0F6E56);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 12px rgba(29,158,117,0.4);
+}
+
+/* ─── LOGO 3: Dalga ─── */
+.logo-3 {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: linear-gradient(135deg, #6366F1, #22D3EE);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 12px rgba(99,102,241,0.4);
+}
+
+/* ─── LOGO 4: Minimalist monogram ─── */
+.logo-4 {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: #0d0d12; border: 1.5px solid #6366F1;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ─── LOGO 5: Hexagon ─── */
+.logo-5-wrap {
+  width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ─── LOGO 6: Diamond ─── */
+.logo-6 {
+  width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+}
+
+/* Light variants */
+.light .navbar { background: #f8f6f1; border-color: #e2ddd5; }
+.light .nav-text { color: #2a2620; }
+.light .nav-sub  { color: #9a8f82; }
+.light { background: #f8f6f1; border: 1px solid #e2ddd5; border-radius: 10px; padding: 12px 16px; margin-bottom: 8px; }
+
+</style>
+</head>
+<body>
+
+<h1>Sıfır Gecikme — Logo Konseptleri</h1>
+
+<div class="grid">
+
+  <!-- KONSEPT A -->
+  <div class="card">
+    <div class="card-num">A — EKG Nabız</div>
+
+    <!-- Dark (Gece) -->
+    <div class="navbar">
+      <div class="logo-1">
+        <svg width="17" height="10" viewBox="0 0 17 10" fill="none">
+          <path d="M0.5,5 L3.5,5 L4.5,1.5 L6.5,8.5 L8.5,0.5 L10,8.5 L11.5,5 L16.5,5"
+            stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="nav-text">Sıfır Gecikme</div>
+        <div class="nav-sub">veri bilimi · türkçe</div>
+      </div>
+    </div>
+
+    <!-- Light (Kağıt) -->
+    <div class="light">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#1D9E75,#0a7a5a);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 10px rgba(29,158,117,0.3)">
+          <svg width="17" height="10" viewBox="0 0 17 10" fill="none">
+            <path d="M0.5,5 L3.5,5 L4.5,1.5 L6.5,8.5 L8.5,0.5 L10,8.5 L11.5,5 L16.5,5"
+              stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <div style="font-size:14px;font-weight:500;color:#2a2620;font-family:'Lora',serif;">Sıfır Gecikme</div>
+          <div style="font-size:10px;color:#9a8f82;">veri bilimi · türkçe</div>
+        </div>
+      </div>
+    </div>
+
+    <h2>Fikir</h2>
+    <p>Sinyal nabzı = sıfır gecikme. Hem "veri" hem "latency" konseptini taşıyor. EKG çizgisi distinctive ve tanıdık.</p>
+  </div>
+
+  <!-- KONSEPT B -->
+  <div class="card">
+    <div class="card-num">B — Veri Noktaları</div>
+
+    <div class="navbar">
+      <div class="logo-2">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <!-- Merkez nokta -->
+          <circle cx="8" cy="8" r="2" fill="white"/>
+          <!-- Çevre noktalar -->
+          <circle cx="8" cy="2.5" r="1.2" fill="white" opacity="0.7"/>
+          <circle cx="13" cy="5.5" r="1.2" fill="white" opacity="0.7"/>
+          <circle cx="13" cy="10.5" r="1.2" fill="white" opacity="0.7"/>
+          <circle cx="8" cy="13.5" r="1.2" fill="white" opacity="0.7"/>
+          <circle cx="3" cy="10.5" r="1.2" fill="white" opacity="0.7"/>
+          <circle cx="3" cy="5.5" r="1.2" fill="white" opacity="0.7"/>
+          <!-- Bağlantı çizgileri -->
+          <line x1="8" y1="8" x2="8" y2="2.5" stroke="white" stroke-width="0.8" opacity="0.35"/>
+          <line x1="8" y1="8" x2="13" y2="5.5" stroke="white" stroke-width="0.8" opacity="0.35"/>
+          <line x1="8" y1="8" x2="13" y2="10.5" stroke="white" stroke-width="0.8" opacity="0.35"/>
+          <line x1="8" y1="8" x2="8" y2="13.5" stroke="white" stroke-width="0.8" opacity="0.35"/>
+          <line x1="8" y1="8" x2="3" y2="10.5" stroke="white" stroke-width="0.8" opacity="0.35"/>
+          <line x1="8" y1="8" x2="3" y2="5.5" stroke="white" stroke-width="0.8" opacity="0.35"/>
+        </svg>
+      </div>
+      <div>
+        <div class="nav-text">Sıfır Gecikme</div>
+        <div class="nav-sub">veri bilimi · türkçe</div>
+      </div>
+    </div>
+
+    <div class="light">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#1D9E75,#0a7a5a);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="8" r="2" fill="white"/>
+            <circle cx="8" cy="2.5" r="1.2" fill="white" opacity="0.7"/>
+            <circle cx="13" cy="5.5" r="1.2" fill="white" opacity="0.7"/>
+            <circle cx="13" cy="10.5" r="1.2" fill="white" opacity="0.7"/>
+            <circle cx="8" cy="13.5" r="1.2" fill="white" opacity="0.7"/>
+            <circle cx="3" cy="10.5" r="1.2" fill="white" opacity="0.7"/>
+            <circle cx="3" cy="5.5" r="1.2" fill="white" opacity="0.7"/>
+            <line x1="8" y1="8" x2="8" y2="2.5" stroke="white" stroke-width="0.8" opacity="0.35"/>
+            <line x1="8" y1="8" x2="13" y2="5.5" stroke="white" stroke-width="0.8" opacity="0.35"/>
+            <line x1="8" y1="8" x2="13" y2="10.5" stroke="white" stroke-width="0.8" opacity="0.35"/>
+            <line x1="8" y1="8" x2="8" y2="13.5" stroke="white" stroke-width="0.8" opacity="0.35"/>
+            <line x1="8" y1="8" x2="3" y2="10.5" stroke="white" stroke-width="0.8" opacity="0.35"/>
+            <line x1="8" y1="8" x2="3" y2="5.5" stroke="white" stroke-width="0.8" opacity="0.35"/>
+          </svg>
+        </div>
+        <div>
+          <div style="font-size:14px;font-weight:500;color:#2a2620;font-family:'Lora',serif;">Sıfır Gecikme</div>
+          <div style="font-size:10px;color:#9a8f82;">veri bilimi · türkçe</div>
+        </div>
+      </div>
+    </div>
+
+    <h2>Fikir</h2>
+    <p>Merkezi sinir ağı / ağ topolojisi görseli. "Veri bilimi = bağlantı" metaforu güçlü.</p>
+  </div>
+
+  <!-- KONSEPT C -->
+  <div class="card">
+    <div class="card-num">C — "0" Çemberi</div>
+
+    <div class="navbar">
+      <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#6366F1,#A78BFA);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 12px rgba(99,102,241,0.35)">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <!-- Dış halka -->
+          <circle cx="9" cy="9" r="7" stroke="rgba(255,255,255,0.35)" stroke-width="1.2"/>
+          <!-- Küçük nabız -->
+          <path d="M4,9 L6,9 L7,6.5 L9,11.5 L11,6.5 L12,9 L14,9"
+            stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="nav-text">Sıfır Gecikme</div>
+        <div class="nav-sub">veri bilimi · türkçe</div>
+      </div>
+    </div>
+
+    <div class="light">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#1D9E75,#0a7a5a);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <circle cx="9" cy="9" r="7" stroke="rgba(255,255,255,0.35)" stroke-width="1.2"/>
+            <path d="M4,9 L6,9 L7,6.5 L9,11.5 L11,6.5 L12,9 L14,9"
+              stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <div style="font-size:14px;font-weight:500;color:#2a2620;font-family:'Lora',serif;">Sıfır Gecikme</div>
+          <div style="font-size:10px;color:#9a8f82;">veri bilimi · türkçe</div>
+        </div>
+      </div>
+    </div>
+
+    <h2>Fikir</h2>
+    <p>Dış halka = "sıfır" (0). İçindeki nabız = gecikme yok. İki anlam tek işarette. En doğrudan konsept.</p>
+  </div>
+
+  <!-- KONSEPT D -->
+  <div class="card">
+    <div class="card-num">D — Yıldırım Monogram</div>
+
+    <div class="navbar">
+      <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#F59E0B,#EF4444);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 12px rgba(245,158,11,0.35)">
+        <svg width="12" height="17" viewBox="0 0 12 17" fill="none">
+          <path d="M7,0.5 L0.5,9.5 L5.5,9.5 L4.5,16.5 L11.5,7 L6.5,7 Z"
+            fill="white"/>
+        </svg>
+      </div>
+      <div>
+        <div class="nav-text">Sıfır Gecikme</div>
+        <div class="nav-sub">veri bilimi · türkçe</div>
+      </div>
+    </div>
+
+    <div class="light">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#F59E0B,#EF4444);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="12" height="17" viewBox="0 0 12 17" fill="none">
+            <path d="M7,0.5 L0.5,9.5 L5.5,9.5 L4.5,16.5 L11.5,7 L6.5,7 Z" fill="white"/>
+          </svg>
+        </div>
+        <div>
+          <div style="font-size:14px;font-weight:500;color:#2a2620;font-family:'Lora',serif;">Sıfır Gecikme</div>
+          <div style="font-size:10px;color:#9a8f82;">veri bilimi · türkçe</div>
+        </div>
+      </div>
+    </div>
+
+    <h2>Fikir</h2>
+    <p>Sıfır gecikme = şimşek hızı. Enerjik, tanıdık ama farklı renk paleti istiyor. Site renkleriyle çakışabilir.</p>
+  </div>
+
+  <!-- KONSEPT E -->
+  <div class="card">
+    <div class="card-num">E — Köşeli Dalga</div>
+
+    <div class="navbar">
+      <div style="width:30px;height:30px;border-radius:9px;background:#0d0d12;border:1.5px solid #6366F1;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="17" height="10" viewBox="0 0 17 10" fill="none">
+          <path d="M0.5,5 L3.5,5 L4.5,1.5 L6.5,8.5 L8.5,0.5 L10,8.5 L11.5,5 L16.5,5"
+            stroke="#818CF8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="nav-text">Sıfır Gecikme</div>
+        <div class="nav-sub">veri bilimi · türkçe</div>
+      </div>
+    </div>
+
+    <div class="light">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:30px;height:30px;border-radius:9px;background:white;border:1.5px solid #1D9E75;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="17" height="10" viewBox="0 0 17 10" fill="none">
+            <path d="M0.5,5 L3.5,5 L4.5,1.5 L6.5,8.5 L8.5,0.5 L10,8.5 L11.5,5 L16.5,5"
+              stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <div style="font-size:14px;font-weight:500;color:#2a2620;font-family:'Lora',serif;">Sıfır Gecikme</div>
+          <div style="font-size:10px;color:#9a8f82;">veri bilimi · türkçe</div>
+        </div>
+      </div>
+    </div>
+
+    <h2>Fikir</h2>
+    <p>Outline versiyonu — dolgu yok, sadece kenarlık. İnce ve sofistike his verir. Gece temasında çok iyi durur.</p>
+  </div>
+
+  <!-- KONSEPT F -->
+  <div class="card">
+    <div class="card-num">F — Üç Sütun (Data Bars)</div>
+
+    <div class="navbar">
+      <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#6366F1,#A78BFA);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 12px rgba(99,102,241,0.35)">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <rect x="0.5" y="7"   width="3.5" height="6.5" rx="1" fill="white" opacity="0.5"/>
+          <rect x="5"   y="3.5" width="3.5" height="10" rx="1" fill="white" opacity="0.8"/>
+          <rect x="9.5" y="0.5" width="3.5" height="13" rx="1" fill="white"/>
+        </svg>
+      </div>
+      <div>
+        <div class="nav-text">Sıfır Gecikme</div>
+        <div class="nav-sub">veri bilimi · türkçe</div>
+      </div>
+    </div>
+
+    <div class="light">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#1D9E75,#0a7a5a);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <rect x="0.5" y="7"   width="3.5" height="6.5" rx="1" fill="white" opacity="0.5"/>
+            <rect x="5"   y="3.5" width="3.5" height="10" rx="1" fill="white" opacity="0.8"/>
+            <rect x="9.5" y="0.5" width="3.5" height="13" rx="1" fill="white"/>
+          </svg>
+        </div>
+        <div>
+          <div style="font-size:14px;font-weight:500;color:#2a2620;font-family:'Lora',serif;">Sıfır Gecikme</div>
+          <div style="font-size:10px;color:#9a8f82;">veri bilimi · türkçe</div>
+        </div>
+      </div>
+    </div>
+
+    <h2>Fikir</h2>
+    <p>Bar chart = veri görselleştirme. Yükselen sütunlar = büyüme / öğrenme. Klasik ama doğrudan "veri bilimi" der.</p>
+  </div>
+
+</div>
+
+<p style="text-align:center;font-size:11px;color:#333;margin-top:40px;">
+  Üst satır: Gece teması · Alt satır: Kağıt teması
+</p>
+
+</body>
+</html>

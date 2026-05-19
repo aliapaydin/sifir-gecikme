@@ -315,11 +315,17 @@ export default function HaritaSayfasi() {
       const veriSetiZiyaret = ziyaretler.includes('/veri-setleri');
 
       const durumObj = JSON.parse(localStorage.getItem('sz_durum') || '{}');
-      const anladiList = Object.entries(durumObj).filter(([,v]) => v === 'anladi').map(([k]) => k);
-      const tekrarList = Object.entries(durumObj).filter(([,v]) => v === 'tekrar').map(([k]) => k);
-      setAnladiSayi(anladiList.length);
-      setTekrarSayi(tekrarList.length);
-      setTekrarlar(tekrarList);
+      const anladiSet = new Set([
+        ...Object.entries(durumObj).filter(([,v]) => v === 'anladi').map(([k]) => k),
+        ...JSON.parse(localStorage.getItem('sz_anladi') || '[]'),
+      ]);
+      const tekrarSet = new Set([
+        ...Object.entries(durumObj).filter(([,v]) => v === 'tekrar').map(([k]) => k),
+        ...JSON.parse(localStorage.getItem('sz_tekrar') || '[]'),
+      ]);
+      setAnladiSayi(anladiSet.size);
+      setTekrarSayi(tekrarSet.size);
+      setTekrarlar([...tekrarSet]);
 
       // Profil hero verileri
       const ilkZiyaret = localStorage.getItem('sz_ilk_ziyaret') || null;

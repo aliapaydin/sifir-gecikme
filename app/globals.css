@@ -117,16 +117,18 @@ body {
 }
 
 /* Responsive 3-column content grid */
-.icerik-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-@media (max-width: 900px) {
-  .icerik-grid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 580px) {
-  .icerik-grid { grid-template-columns: 1fr; }
+@layer utilities {
+  .icerik-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 900px) {
+    .icerik-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 580px) {
+    .icerik-grid { grid-template-columns: 1fr; }
+  }
 }
 
 a {

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tasarım Önizleme — Sıfır Gecikme</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+/* ─────────────────────────────────────────────
+   MEVCUT TASARIM  "Kağıt"  (sol panel)
+───────────────────────────────────────────── */
+.panel { width: 50%; height: 100vh; overflow-y: auto; }
+.layout { display: flex; }
+
+/* Kağıt değişkenleri */
+.kagit {
+  --bg:       #faf8f3;
+  --card:     #ffffff;
+  --border:   #e8e2d5;
+  --text:     #2a2620;
+  --soft:     #6b6356;
+  --mute:     #9a8f82;
+  --accent:   #1D9E75;
+  --acc-soft: #E1F5EE;
+  --acc-text: #0F6E56;
+  --badge-g:  #EEEDFE; --badge-gt: #534AB7;
+  --badge-i:  #E1F5EE; --badge-it: #0F6E56;
+  --badge-v:  #FAEEDA; --badge-vt: #854F0B;
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ─────────────────────────────────────────────
+   YENİ TASARIM  "Gece"  (sağ panel)
+───────────────────────────────────────────── */
+.gece {
+  --bg:       #07080E;
+  --card:     #0E1017;
+  --card2:    #13151F;
+  --border:   #1E2130;
+  --text:     #EEF0F8;
+  --soft:     #8890B0;
+  --mute:     #555E7A;
+  --accent1:  #6366F1;  /* indigo */
+  --accent2:  #A78BFA;  /* violet */
+  --accent3:  #22D3EE;  /* cyan */
+  --acc-grd:  linear-gradient(135deg, #6366F1, #A78BFA);
+  --glow:     rgba(99,102,241,0.18);
+  --glow2:    rgba(167,139,250,0.12);
+  --badge-g:  rgba(99,102,241,0.15); --badge-gt: #A5B4FC;
+  --badge-i:  rgba(34,211,238,0.12); --badge-it: #67E8F9;
+  --badge-v:  rgba(251,191,36,0.12); --badge-vt: #FCD34D;
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ── ortak resetler ── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ─── NAVBAR ─────────────────────────────── */
+.navbar {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; gap: 8px;
+  padding: 0 24px; height: 52px;
+}
+.kagit .navbar {
+  border-bottom: 0.5px solid var(--border);
+  background: rgba(250,248,243,0.92);
+  backdrop-filter: blur(12px);
+}
+.gece .navbar {
+  border-bottom: 1px solid var(--border);
+  background: rgba(7,8,14,0.88);
+  backdrop-filter: blur(20px);
+}
+
+.logo { font-size: 14px; font-weight: 700; letter-spacing: -0.02em; }
+.kagit .logo { color: var(--text); }
+.gece .logo {
+  background: var(--acc-grd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.nav-pill {
+  font-size: 12px; font-weight: 500; padding: 5px 12px;
+  border-radius: 999px; border: none; cursor: pointer;
+  text-decoration: none;
+}
+.kagit .nav-pill { color: var(--soft); background: transparent; }
+.kagit .nav-pill:hover { background: rgba(0,0,0,0.05); color: var(--text); }
+.kagit .nav-pill.active { background: var(--acc-soft); color: var(--acc-text); }
+.gece .nav-pill { color: var(--soft); background: transparent; }
+.gece .nav-pill:hover { color: var(--text); }
+.gece .nav-pill.active {
+  background: rgba(99,102,241,0.14);
+  color: var(--accent2);
+}
+
+.spacer { flex: 1; }
+.theme-toggle {
+  font-size: 11px; padding: 4px 12px; border-radius: 999px;
+  cursor: pointer; font-family: inherit;
+  border: 0.5px solid; font-weight: 500;
+}
+.kagit .theme-toggle { border-color: var(--border); color: var(--soft); background: transparent; }
+.gece  .theme-toggle { border-color: var(--border); color: var(--soft); background: transparent; }
+
+/* ─── HERO ─────────────────────────────── */
+.hero { padding: 32px 24px 20px; }
+.label-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.hero-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+.kagit .hero-label { color: var(--mute); }
+.gece  .hero-label { color: var(--mute); }
+.dot { width: 4px; height: 4px; border-radius: 50%; }
+.kagit .dot { background: var(--accent); }
+.gece  .dot { background: var(--accent1); }
+
+.hero h1 { font-size: 28px; font-weight: 700; line-height: 1.2; letter-spacing: -0.03em; margin-bottom: 10px; }
+.kagit .hero h1 { font-family: 'Lora', serif; font-weight: 600; color: var(--text); }
+.gece  .hero h1 { color: var(--text); }
+.gece  .hero h1 span {
+  background: var(--acc-grd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero p { font-size: 14px; line-height: 1.6; }
+.kagit .hero p { color: var(--soft); }
+.gece  .hero p { color: var(--soft); }
+
+/* ─── SECTION TITLE ─────────────────────── */
+.section { padding: 0 24px 24px; }
+.section-title { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 14px; }
+.kagit .section-title { color: var(--mute); }
+.gece  .section-title { color: var(--mute); }
+
+/* ─── CARDS ─────────────────────────────── */
+.cards { display: flex; flex-direction: column; gap: 10px; }
+.card {
+  padding: 18px 20px; border-radius: 10px; cursor: pointer;
+  transition: all 0.18s;
+}
+.kagit .card {
+  background: var(--card);
+  border: 0.5px solid var(--border);
+}
+.kagit .card:hover { border-color: var(--accent); }
+
+.gece .card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  position: relative;
+}
+.gece .card::before {
+  content: '';
+  position: absolute; inset: 0; border-radius: 10px;
+  background: radial-gradient(ellipse at top left, var(--glow), transparent 60%);
+  opacity: 0; transition: opacity 0.2s;
+  pointer-events: none;
+}
+.gece .card:hover { border-color: var(--accent1); box-shadow: 0 0 0 1px rgba(99,102,241,0.2); }
+.gece .card:hover::before { opacity: 1; }
+
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+.card-title { font-size: 14px; font-weight: 600; line-height: 1.4; letter-spacing: -0.01em; }
+.kagit .card-title { color: var(--text); }
+.gece  .card-title { color: var(--text); }
+.card-desc { font-size: 12.5px; line-height: 1.55; }
+.kagit .card-desc { color: var(--soft); }
+.gece  .card-desc { color: var(--soft); }
+.card-foot { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.card-meta { font-size: 11px; }
+.kagit .card-meta { color: var(--mute); }
+.gece  .card-meta { color: var(--mute); }
+
+/* ─── BADGE ─────────────────────────────── */
+.badge {
+  font-size: 10.5px; font-weight: 600; padding: 2px 9px;
+  border-radius: 999px; letter-spacing: 0.02em;
+}
+.badge-g { background: var(--badge-g); color: var(--badge-gt); }
+.badge-i { background: var(--badge-i); color: var(--badge-it); }
+.badge-v { background: var(--badge-v); color: var(--badge-vt); }
+
+.gece .badge { border: 1px solid; }
+.gece .badge-g { border-color: rgba(99,102,241,0.25); }
+.gece .badge-i { border-color: rgba(34,211,238,0.25); }
+.gece .badge-v { border-color: rgba(251,191,36,0.25); }
+
+/* ─── FEATURED CARD (Gece'ye özel büyük kart) */
+.gece .card-featured {
+  background: linear-gradient(135deg, #0E1017 0%, #13111E 100%);
+  border: 1px solid rgba(99,102,241,0.3);
+  box-shadow: 0 0 30px rgba(99,102,241,0.08);
+}
+.gece .card-featured .card-title { font-size: 16px; }
+.gece .feat-accent {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 600; color: var(--accent2);
+  letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 6px;
+}
+.gece .feat-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent1); box-shadow: 0 0 6px var(--accent1); }
+
+/* ─── STAT ROW ─────────────────────────── */
+.stat-row { display: flex; gap: 8px; margin: 16px 24px; }
+.stat-box { flex: 1; padding: 14px 16px; border-radius: 10px; }
+.kagit .stat-box { background: var(--acc-soft); }
+.gece  .stat-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  position: relative; overflow: hidden;
+}
+.gece .stat-box::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--acc-grd);
+}
+.stat-num { font-size: 22px; font-weight: 800; letter-spacing: -0.04em; }
+.kagit .stat-num { color: var(--acc-text); }
+.gece  .stat-num {
+  background: var(--acc-grd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.stat-lbl { font-size: 11px; margin-top: 2px; }
+.kagit .stat-lbl { color: var(--acc-text); opacity: 0.7; }
+.gece  .stat-lbl { color: var(--mute); }
+
+/* ─── CODE BLOCK ─────────────────────────── */
+.code-block { margin: 16px 24px; padding: 18px 20px; border-radius: 10px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.65; overflow-x: auto; }
+.kagit .code-block { background: var(--card); border: 0.5px solid var(--border); color: var(--text); }
+.gece  .code-block { background: #090A10; border: 1px solid var(--border); color: #CBD5E1; }
+.code-comment { }
+.kagit .code-comment { color: var(--mute); }
+.gece  .code-comment { color: #3D4A5C; }
+.code-kw  { }
+.kagit .code-kw    { color: #1D9E75; }
+.gece  .code-kw    { color: #818CF8; }
+.code-fn  { }
+.kagit .code-fn    { color: #1D9E75; font-style: italic; }
+.gece  .code-fn    { color: #67E8F9; }
+.code-str { }
+.kagit .code-str   { color: #854F0B; }
+.gece  .code-str   { color: #A78BFA; }
+
+/* ─── DIVIDER / PANEL HEADER ──────────────── */
+.panel-header {
+  padding: 14px 24px;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  display: flex; align-items: center; gap: 8px;
+}
+.kagit .panel-header { background: var(--acc-soft); color: var(--acc-text); }
+.gece  .panel-header {
+  background: rgba(99,102,241,0.08);
+  border-bottom: 1px solid rgba(99,102,241,0.15);
+  color: var(--accent2);
+}
+.panel-badge {
+  font-size: 10px; padding: 2px 8px; border-radius: 999px;
+}
+.kagit .panel-badge { background: var(--accent); color: white; }
+.gece  .panel-badge { background: var(--acc-grd); color: white; font-weight: 700; }
+
+/* ─── SPLIT LAYOUT ─────────────────────── */
+html, body { height: 100%; overflow: hidden; }
+.layout { height: 100vh; }
+.divider { width: 2px; background: linear-gradient(to bottom, #E8E2D5, #ccc, #E8E2D5); flex-shrink: 0; }
+
+/* scrollbar */
+.panel::-webkit-scrollbar { width: 4px; }
+.panel::-webkit-scrollbar-track { background: transparent; }
+.kagit::-webkit-scrollbar-thumb { background: #d4cfc6; border-radius: 4px; }
+.gece::-webkit-scrollbar-thumb  { background: #1E2130; border-radius: 4px; }
+
+/* ─── FLOATING LABEL ─────────────────────── */
+.floating-label {
+  position: fixed; bottom: 20px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 6px 14px; border-radius: 999px;
+  pointer-events: none; z-index: 100;
+}
+.fl-left  { left:  calc(25% - 40px); background: #2a2620; color: #faf8f3; }
+.fl-right { right: calc(25% - 40px); background: #818CF8; color: #fff; }
+
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ════════════ SOL: MEVCUT (Kağıt) ════════════ -->
+  <div class="panel kagit">
+
+    <div class="panel-header">
+      <span>Mevcut Tasarım</span>
+      <span class="panel-badge">Kağıt</span>
+    </div>
+
+    <nav class="navbar">
+      <span class="logo">Sıfır Gecikme</span>
+      <a class="nav-pill active" href="#">Öğren</a>
+      <a class="nav-pill" href="#">Yazılar</a>
+      <a class="nav-pill" href="#">Mülakat</a>
+      <div class="spacer"></div>
+      <button class="theme-toggle">☀ Kağıt</button>
+    </nav>
+
+    <div class="hero">
+      <div class="label-row">
+        <div class="dot"></div>
+        <span class="hero-label">Veri bilimi · Türkçe</span>
+      </div>
+      <h1>Veriden anlam çıkar,<br>kararları güçlendir</h1>
+      <p>İnteraktif dersler, gerçek vaka çalışmaları<br>ve araçlarla veri bilimini öğren.</p>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-box">
+        <div class="stat-num">38+</div>
+        <div class="stat-lbl">İçerik</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">24</div>
+        <div class="stat-lbl">Başarım</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">5</div>
+        <div class="stat-lbl">Araç</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Son eklenenler</div>
+      <div class="cards">
+
+        <div class="card">
+          <div class="card-top">
+            <div class="card-title">Databricks kullanım rehberi</div>
+          </div>
+          <div class="card-desc">Lakehouse mimarisinden MLflow'a — Databricks ekosisteminin tam haritası.</div>
+          <div class="card-foot">
+            <span class="badge badge-g">rehber</span>
+            <span class="card-meta">30 dakika</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <div class="card-title">Scikit-learn Pipeline'ları</div>
+          </div>
+          <div class="card-desc">Veri sızıntısını önle, ColumnTransformer ile karışık veri tiplerini yönet.</div>
+          <div class="card-foot">
+            <span class="badge badge-g">rehber</span>
+            <span class="card-meta">20 dakika</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <div class="card-title">K-Means: müşterilerini kümele</div>
+          </div>
+          <div class="card-desc">Centroid'lerin adım adım nasıl yer değiştirdiğini izle.</div>
+          <div class="card-foot">
+            <span class="badge badge-i">interaktif</span>
+            <span class="card-meta">10 dakika</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <div class="card-title">Müşteri kaybı tahmini</div>
+          </div>
+          <div class="card-desc">Sınıf dengesizliği, eşik optimizasyonu ve maliyet matrisi ile telco churn modeli.</div>
+          <div class="card-foot">
+            <span class="badge badge-v">vaka</span>
+            <span class="card-meta">18 dakika</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="code-block">
+<span class="code-comment"># Pipeline — veri sızıntısı olmadan</span>
+<br><span class="code-kw">from</span> sklearn.pipeline <span class="code-kw">import</span> Pipeline
+<br>
+<br>pipe = <span class="code-fn">Pipeline</span>([
+<br>    (<span class="code-str">'scaler'</span>, StandardScaler()),
+<br>    (<span class="code-str">'model'</span>,  LogisticRegression()),
+<br>])
+<br>pipe.<span class="code-fn">fit</span>(X_train, y_train)
+    </div>
+
+  </div>
+
+  <!-- ══ DIVIDER ══ -->
+  <div class="divider"></div>
+
+  <!-- ════════════ SAĞ: YENİ (Gece) ════════════ -->
+  <div class="panel gece">
+
+    <div class="panel-header">
+      <span>Yeni Tasarım</span>
+      <span class="panel-badge">Gece</span>
+    </div>
+
+    <nav class="navbar">
+      <span class="logo">Sıfır Gecikme</span>
+      <a class="nav-pill active" href="#">Öğren</a>
+      <a class="nav-pill" href="#">Yazılar</a>
+      <a class="nav-pill" href="#">Mülakat</a>
+      <div class="spacer"></div>
+      <button class="theme-toggle">✦ Gece</button>
+    </nav>
+
+    <div class="hero">
+      <div class="label-row">
+        <div class="dot"></div>
+        <span class="hero-label">Veri bilimi · Türkçe</span>
+      </div>
+      <h1>Veriden anlam çıkar,<br><span>kararları güçlendir</span></h1>
+      <p>İnteraktif dersler, gerçek vaka çalışmaları<br>ve araçlarla veri bilimini öğren.</p>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-box">
+        <div class="stat-num">38+</div>
+        <div class="stat-lbl">İçerik</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">24</div>
+        <div class="stat-lbl">Başarım</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">5</div>
+        <div class="stat-lbl">Araç</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Son eklenenler</div>
+      <div class="cards">
+
+        <!-- Featured card -->
+        <div class="card card-featured">
+          <div class="feat-accent"><span class="feat-dot"></span>Öne Çıkan</div>
+          <div class="card-top">
+            <div class="card-title">Databricks kullanım rehberi</div>
+          </div>
+          <div class="card-desc">Lakehouse mimarisinden MLflow'a — Databricks ekosisteminin tam haritası.</div>
+          <div class="card-foot">
+            <span class="badge badge-g">rehber</span>
+            <span class="card-meta">30 dakika</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <div class="card-title">Scikit-learn Pipeline'ları</div>
+          </div>
+          <div class="card-desc">Veri sızıntısını önle, ColumnTransformer ile karışık veri tiplerini yönet.</div>
+          <div class="card-foot">
+            <span class="badge badge-g">rehber</span>
+            <span class="card-meta">20 dakika</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <div class="card-title">K-Means: müşterilerini kümele</div>
+          </div>
+          <div class="card-desc">Centroid'lerin adım adım nasıl yer değiştirdiğini izle.</div>
+          <div class="card-foot">
+            <span class="badge badge-i">interaktif</span>
+            <span class="card-meta">10 dakika</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <div class="card-title">Müşteri kaybı tahmini</div>
+          </div>
+          <div class="card-desc">Sınıf dengesizliği, eşik optimizasyonu ve maliyet matrisi ile telco churn modeli.</div>
+          <div class="card-foot">
+            <span class="badge badge-v">vaka</span>
+            <span class="card-meta">18 dakika</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="code-block">
+<span class="code-comment"># Pipeline — veri sızıntısı olmadan</span>
+<br><span class="code-kw">from</span> sklearn.pipeline <span class="code-kw">import</span> Pipeline
+<br>
+<br>pipe = <span class="code-fn">Pipeline</span>([
+<br>    (<span class="code-str">'scaler'</span>, StandardScaler()),
+<br>    (<span class="code-str">'model'</span>,  LogisticRegression()),
+<br>])
+<br>pipe.<span class="code-fn">fit</span>(X_train, y_train)
+    </div>
+
+  </div>
+
+</div>
+
+<div class="floating-label fl-left">Kağıt</div>
+<div class="floating-label fl-right">Gece ✦</div>
+
+</body>
+</html>
