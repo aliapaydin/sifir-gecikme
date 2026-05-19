@@ -116,14 +116,14 @@ const versiyonlar = [
 ];
 
 const tipRenk = {
-  yeni:       { bg: '#dcfce7', text: '#15803d', label: 'Yeni' },
-  düzeltme:   { bg: '#fef9c3', text: '#a16207', label: 'Düzeltme' },
-  iyileştirme:{ bg: '#dbeafe', text: '#1d4ed8', label: 'İyileştirme' },
+  yeni:        { bg: 'var(--color-correct-bg)',  text: 'var(--color-correct-text)',  label: 'Yeni' },
+  düzeltme:    { bg: 'var(--color-amber-bg)',    text: 'var(--color-amber-text)',    label: 'Düzeltme' },
+  iyileştirme: { bg: 'var(--color-purple-bg)',   text: 'var(--color-purple-text)',   label: 'İyileştirme' },
 };
 
 const versiyonTipRenk = {
-  feature: { bg: 'var(--color-accent-soft)', border: 'var(--color-accent)', text: 'var(--color-accent)' },
-  launch:  { bg: '#fdf4ff', border: '#a855f7', text: '#7c3aed' },
+  feature: { bg: 'var(--color-accent-soft)',  border: 'var(--color-accent)',      text: 'var(--color-accent)' },
+  launch:  { bg: 'var(--color-purple-bg)',    border: 'var(--color-purple-text)', text: 'var(--color-purple-text)' },
 };
 
 export default function VersiyonPage() {
