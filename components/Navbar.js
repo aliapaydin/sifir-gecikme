@@ -35,8 +35,9 @@ const GRUPLAR = [
     label: 'Modüller',
     emoji: '🧩',
     items: [
-      { href: '/ogren',        label: 'Öğren',       emoji: '📚' },
+      { href: '/ogren',        label: 'Öğren',        emoji: '📚' },
       { href: '/proje',        label: 'Proje',        emoji: '🚀' },
+      { href: '/grafik',       label: 'Bilgi Grafiği', emoji: '🕸️' },
       { href: '/kalori',       label: 'Kalori',       emoji: '🥗' },
       { href: '/veri-setleri', label: 'Veri Setleri', emoji: '🗂️' },
       { href: '/milyon',       label: 'Milyon',       emoji: '💰' },
