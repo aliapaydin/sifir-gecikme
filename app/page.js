@@ -923,7 +923,7 @@ export default function Home() {
 <OgrenKarti />
 <YolHaritasiKarti />
 
-      <section className="max-w-5xl mx-auto px-6 py-10 pb-20">
+      <section className="max-w-5xl mx-auto px-6 py-10 pb-8">
         <HeroCanvas />
 
         <div style={{ marginBottom: '2.5rem' }}>
@@ -969,8 +969,6 @@ export default function Home() {
 
         <DahaFazlaBar ornekler={bannerOrnekler} digerSayi={yazilar.length - 18} />
 
-        <div className="mt-10">
-</div>
       </section>
       <AboneOl />
     </main>
