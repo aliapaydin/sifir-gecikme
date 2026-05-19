@@ -375,6 +375,44 @@ function Icon({ type }) {
     <circle cx="26" cy="13" r="2" fill="#854F0B"/>
   </svg>
 ),
+'rol-farklari': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#E1F5EE"/>
+    <polyline points="5,26 5,20 11,20 11,14 17,14 17,8 23,8" stroke="#1D9E75" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+    <circle cx="5" cy="26" r="2.5" fill="#9FE1CB"/>
+    <circle cx="11" cy="20" r="2" fill="#1D9E75" opacity=".7"/>
+    <circle cx="17" cy="14" r="2" fill="#1D9E75" opacity=".85"/>
+    <line x1="23" y1="5" x2="23" y2="11" stroke="#0F6E56" strokeWidth="1.5" strokeLinecap="round"/>
+    <polygon points="23,5 23,9 27,7" fill="#0F6E56"/>
+  </svg>
+),
+'veri-temizleme': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#E1F5EE"/>
+    <rect x="3" y="12" width="7" height="8" rx="1.5" fill="#9FE1CB"/>
+    <rect x="12.5" y="12" width="7" height="8" rx="1.5" fill="#1D9E75"/>
+    <rect x="22" y="12" width="7" height="8" rx="1.5" fill="#0F6E56"/>
+    <line x1="10" y1="16" x2="12.5" y2="16" stroke="#0F6E56" strokeWidth="1.5" strokeLinecap="round"/>
+    <line x1="19.5" y1="16" x2="22" y2="16" stroke="#0F6E56" strokeWidth="1.5" strokeLinecap="round"/>
+    <text x="6.5" y="17.5" fontSize="5.5" fill="#0F6E56" textAnchor="middle" fontWeight="700">E</text>
+    <text x="16" y="17.5" fontSize="5.5" fill="#fff" textAnchor="middle" fontWeight="700">T</text>
+    <text x="25.5" y="17.5" fontSize="5.5" fill="#fff" textAnchor="middle" fontWeight="700">L</text>
+  </svg>
+),
+'etl-nedir': (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect width="32" height="32" rx="8" fill="#EEEDFE"/>
+    <rect x="4" y="8" width="6" height="4" rx="1" fill="#AFA9EC"/>
+    <rect x="4" y="19" width="6" height="4" rx="1" fill="#AFA9EC"/>
+    <rect x="13" y="12.5" width="7" height="7" rx="1.5" fill="#7F77DD"/>
+    <rect x="22" y="9" width="6" height="4" rx="1" fill="#534AB7"/>
+    <rect x="22" y="19" width="6" height="4" rx="1" fill="#534AB7"/>
+    <line x1="10" y1="10" x2="13" y2="14.5" stroke="#7F77DD" strokeWidth="1.2" strokeLinecap="round"/>
+    <line x1="10" y1="21" x2="13" y2="17.5" stroke="#7F77DD" strokeWidth="1.2" strokeLinecap="round"/>
+    <line x1="20" y1="14.5" x2="22" y2="11" stroke="#534AB7" strokeWidth="1.2" strokeLinecap="round"/>
+    <line x1="20" y1="17.5" x2="22" y2="21" stroke="#534AB7" strokeWidth="1.2" strokeLinecap="round"/>
+  </svg>
+),
   };
   return icons[type] || null;
 }
