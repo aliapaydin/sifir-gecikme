@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import HeroCanvas from '../components/HeroCanvas';
 import OgrenKarti from '../components/OgrenKarti';
 import GununSorusu from '../components/GununSorusu';
@@ -414,6 +415,78 @@ function ThemeToggle() {
   );
 }
 
+function karistir(arr) {
+  return [...arr].sort(() => Math.random() - 0.5);
+}
+
+function DahaFazlaBar({ ornekler, digerSayi }) {
+  return (
+    <div style={{ marginTop: '16px', borderRadius: '16px', overflow: 'hidden', border: '1px solid var(--color-border)', background: 'var(--color-cream-card)' }}>
+      <div style={{ height: '3px', background: 'linear-gradient(90deg, var(--color-accent), var(--color-purple-text), var(--color-amber-text))' }} />
+      <div style={{ padding: '28px 28px 24px', display: 'flex', gap: '28px', alignItems: 'stretch', flexWrap: 'wrap' }}>
+
+        {/* Sol: sayı + açıklama + kategori linkleri */}
+        <div style={{ flex: '0 0 auto', minWidth: '185px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ fontSize: '52px', fontWeight: 800, color: 'var(--color-accent)', lineHeight: 1, fontFamily: 'var(--font-mono)', letterSpacing: '-2px' }}>
+              +{digerSayi}
+            </div>
+            <div style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-text)', marginTop: '6px' }}>içerik daha var</div>
+            <div style={{ fontSize: '12px', color: 'var(--color-text-mute)', marginTop: '6px', lineHeight: 1.6 }}>
+              İnteraktif demolar, vaka çalışmaları,<br />rehberler ve araçlar seni bekliyor.
+            </div>
+          </div>
+          <div style={{ marginTop: '20px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+            {[
+              { href: '/kategori/interaktif', label: '⚡ Demo',   cls: 'badge-interactive' },
+              { href: '/kategori/rehber',     label: '📖 Rehber', cls: 'badge-guide' },
+              { href: '/kategori/vaka',       label: '📊 Vaka',   cls: 'badge-case' },
+            ].map(c => (
+              <a key={c.href} href={c.href} className={`badge ${c.cls}`} style={{ textDecoration: 'none' }}>{c.label}</a>
+            ))}
+          </div>
+        </div>
+
+        {/* Dikey çizgi */}
+        <div style={{ width: '1px', background: 'var(--color-border)', alignSelf: 'stretch', flexShrink: 0 }} />
+
+        {/* Sağ: 3 önizleme kartı + CTA */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px', minWidth: '240px' }}>
+          {ornekler.map(item => (
+            <a key={item.href} href={item.href} style={{
+              display: 'flex', alignItems: 'center', gap: '12px',
+              padding: '12px 14px', borderRadius: '10px', flex: 1,
+              background: 'var(--color-cream)',
+              border: '1px solid var(--color-border)',
+              borderLeft: `3px solid ${item.borderColor}`,
+              textDecoration: 'none',
+            }}>
+              <div style={{ flexShrink: 0 }}><Icon type={item.icon} /></div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                {item.badge && (
+                  <span className={`badge ${item.badgeClass}`} style={{ fontSize: '10px', marginBottom: '3px', display: 'inline-block' }}>{item.badge}</span>
+                )}
+                <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-text)', lineHeight: 1.35, fontFamily: 'var(--font-serif)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {item.baslik}
+                </div>
+              </div>
+            </a>
+          ))}
+          <a href="/kategori/interaktif" style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+            padding: '11px', borderRadius: '10px', marginTop: '4px',
+            background: 'var(--color-accent)', color: '#fff',
+            fontSize: '13px', fontWeight: 600, textDecoration: 'none',
+          }}>
+            Tüm içeriklere git →
+          </a>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const yazilar = [
     {
@@ -769,6 +842,11 @@ export default function Home() {
   const arac = yazilar.filter(y => y.badge === 'araç').length;
   const rehber = yazilar.filter(y => ['rehber', 'kariyer', 'vaka çalışması'].includes(y.badge)).length;
 
+  const [sira, setSira] = useState(() => karistir(yazilar));
+  const gorunenler = sira.slice(0, 18);
+  const bannerOrnekler = sira.slice(18, 21);
+  const shuffle = () => setSira(karistir(yazilar));
+
   return (
     <main className="min-h-screen">
 
@@ -814,15 +892,35 @@ export default function Home() {
           <GununSorusu />
         </div>
 
-        <div className="text-xs uppercase tracking-widest mb-5" style={{ color: 'var(--color-text-mute)' }}>Tüm içerikler</div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '12px' }}>
-          {yazilar.map((y) => (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+          <div className="text-xs uppercase tracking-widest" style={{ color: 'var(--color-text-mute)' }}>İçerikler</div>
+          <button onClick={shuffle} style={{
+            display: 'flex', alignItems: 'center', gap: '6px',
+            padding: '6px 14px', borderRadius: '8px',
+            border: '0.5px solid var(--color-border)',
+            background: 'var(--color-cream-card)',
+            color: 'var(--color-text-soft)',
+            fontSize: '12px', fontWeight: 500, cursor: 'pointer',
+          }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+              <rect x="2" y="2" width="20" height="20" rx="3.5"/>
+              <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" stroke="none"/>
+              <circle cx="15.5" cy="8.5" r="1.5" fill="currentColor" stroke="none"/>
+              <circle cx="8.5" cy="15.5" r="1.5" fill="currentColor" stroke="none"/>
+              <circle cx="15.5" cy="15.5" r="1.5" fill="currentColor" stroke="none"/>
+              <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>
+            </svg>
+            Karıştır
+          </button>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+          {gorunenler.map((y) => (
             <a key={y.href} href={y.href} style={{ color: 'inherit', textDecoration: 'none', display: 'block' }}>
               <div className="card" style={{ borderTop: `3px solid ${y.borderColor}`, padding: '18px 20px', height: '100%', boxSizing: 'border-box', display: 'flex', flexDirection: 'column' }}>
                 <div style={{ marginBottom: '12px' }}>
                   <Icon type={y.icon} />
                 </div>
-                <span className={`badge ${y.badgeClass} inline-block mb-3`}>{y.badge}</span>
+                {y.badge && <span className={`badge ${y.badgeClass} inline-block mb-3`}>{y.badge}</span>}
                 <h3 className="font-serif font-medium mb-2" style={{ fontSize: '16px', color: 'var(--color-text)', lineHeight: '1.4', flex: 1 }}>{y.baslik}</h3>
                 <p className="text-sm leading-relaxed mb-3" style={{ color: 'var(--color-text-mute)' }}>{y.ozet}</p>
                 <p className="text-xs" style={{ color: 'var(--color-text-faint)' }}>{y.meta}</p>
@@ -830,6 +928,8 @@ export default function Home() {
             </a>
           ))}
         </div>
+
+        <DahaFazlaBar ornekler={bannerOrnekler} digerSayi={yazilar.length - 18} />
 
         <div className="mt-10">
 </div>
