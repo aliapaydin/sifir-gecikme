@@ -885,6 +885,23 @@ export default function Home() {
   const bannerOrnekler = sira.slice(18, 21);
   const shuffle = () => setSira(karistir(yazilar));
 
+  const [durumlar, setDurumlar] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('sz_durum') || '{}'); } catch { return {}; }
+  });
+
+  const durumToggle = (href, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDurumlar(prev => {
+      const simdiki = prev[href];
+      const yeni = simdiki === 'anladi' ? 'tekrar' : simdiki === 'tekrar' ? null : 'anladi';
+      const guncel = { ...prev };
+      if (yeni) guncel[href] = yeni; else delete guncel[href];
+      try { localStorage.setItem('sz_durum', JSON.stringify(guncel)); } catch {}
+      return guncel;
+    });
+  };
+
   return (
     <main className="min-h-screen">
 
@@ -962,6 +979,28 @@ export default function Home() {
                 <h3 className="font-serif font-medium mb-2" style={{ fontSize: '16px', color: 'var(--color-text)', lineHeight: '1.4', flex: 1 }}>{y.baslik}</h3>
                 <p className="text-sm leading-relaxed mb-3" style={{ color: 'var(--color-text-mute)' }}>{y.ozet}</p>
                 <p className="text-xs" style={{ color: 'var(--color-text-faint)' }}>{y.meta}</p>
+                <button
+                  onClick={(e) => durumToggle(y.href, e)}
+                  style={{
+                    marginTop: '10px',
+                    padding: '4px 10px',
+                    borderRadius: '6px',
+                    border: '0.5px solid var(--color-border)',
+                    background: durumlar[y.href] === 'anladi' ? 'var(--color-correct-bg)'
+                              : durumlar[y.href] === 'tekrar' ? 'var(--color-amber-bg)'
+                              : 'transparent',
+                    color: durumlar[y.href] === 'anladi' ? 'var(--color-correct-text)'
+                         : durumlar[y.href] === 'tekrar' ? 'var(--color-amber-text)'
+                         : 'var(--color-text-mute)',
+                    fontSize: '11px', fontWeight: 600, cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', gap: '4px',
+                    alignSelf: 'flex-start',
+                  }}
+                >
+                  {durumlar[y.href] === 'anladi' ? '✓ Anladım'
+                   : durumlar[y.href] === 'tekrar' ? '🔖 Tekrar bak'
+                   : '○ İşaretle'}
+                </button>
               </div>
             </a>
           ))}

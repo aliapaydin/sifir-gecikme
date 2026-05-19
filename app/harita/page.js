@@ -288,6 +288,9 @@ function ModulKart({ icon, label, href, ziyaret, detaylar }) {
 export default function HaritaSayfasi() {
   const [veri, setVeri] = useState(null);
   const [aktifFiltre, setAktifFiltre] = useState('tumu');
+  const [anladiSayi, setAnladiSayi] = useState(0);
+  const [tekrarSayi, setTekrarSayi] = useState(0);
+  const [tekrarlar, setTekrarlar] = useState([]);
 
   useEffect(() => {
     try {
@@ -310,6 +313,13 @@ export default function HaritaSayfasi() {
       const regexTest       = Number(localStorage.getItem('sz_regex_test') || 0);
       const kaloriZiyaret   = localStorage.getItem('sz_kalori_ziyaret') === '1';
       const veriSetiZiyaret = ziyaretler.includes('/veri-setleri');
+
+      const durumObj = JSON.parse(localStorage.getItem('sz_durum') || '{}');
+      const anladiList = Object.entries(durumObj).filter(([,v]) => v === 'anladi').map(([k]) => k);
+      const tekrarList = Object.entries(durumObj).filter(([,v]) => v === 'tekrar').map(([k]) => k);
+      setAnladiSayi(anladiList.length);
+      setTekrarSayi(tekrarList.length);
+      setTekrarlar(tekrarList);
 
       // Profil hero verileri
       const ilkZiyaret = localStorage.getItem('sz_ilk_ziyaret') || null;
@@ -425,6 +435,60 @@ export default function HaritaSayfasi() {
             alt={`${dogru} doğru cevap`} renk="#6A1B9A" />
           <StatKart icon="🏅" label="Başarım" deger={`${kazanilanBasarim}/${BASARIMLAR.length}`}
             alt="kazanılan rozet" renk="#BA7517" />
+        </div>
+
+        {/* ─── ÖĞRENME DURUMU ─── */}
+        <div style={{
+          background: 'var(--color-cream-card)',
+          border: '0.5px solid var(--color-accent-soft)',
+          borderRadius: '16px', padding: '24px 28px', marginBottom: '32px',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
+            <span style={{ fontSize: '18px' }}>📊</span>
+            <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>Öğrenme Durumu</h2>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '10px', marginBottom: tekrarSayi > 0 ? '20px' : 0 }}>
+            <div style={{
+              background: 'var(--color-correct-bg)', border: '0.5px solid var(--color-border)',
+              borderRadius: '12px', padding: '16px 20px',
+              display: 'flex', flexDirection: 'column', gap: '4px',
+            }}>
+              <div style={{ fontSize: '26px', fontWeight: 700, color: 'var(--color-correct-text)', lineHeight: 1 }}>{anladiSayi}</div>
+              <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-correct-text)' }}>Anladım</div>
+              <div style={{ fontSize: '11px', color: 'var(--color-correct-text)', opacity: 0.75 }}>Anladım olarak işaretlediklerim</div>
+            </div>
+            <div style={{
+              background: 'var(--color-amber-bg)', border: '0.5px solid var(--color-border)',
+              borderRadius: '12px', padding: '16px 20px',
+              display: 'flex', flexDirection: 'column', gap: '4px',
+            }}>
+              <div style={{ fontSize: '26px', fontWeight: 700, color: 'var(--color-amber-text)', lineHeight: 1 }}>{tekrarSayi}</div>
+              <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-amber-text)' }}>Tekrar Bak</div>
+              <div style={{ fontSize: '11px', color: 'var(--color-amber-text)', opacity: 0.75 }}>Tekrar bakacaklarım</div>
+            </div>
+          </div>
+          {tekrarSayi > 0 && (
+            <div>
+              <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-text-mute)', marginBottom: '10px' }}>Tekrar bakacakların:</div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                {tekrarlar.map(href => {
+                  const slug = href.split('/').filter(Boolean).pop();
+                  return (
+                    <a key={href} href={href} style={{
+                      fontSize: '11px', fontWeight: 600,
+                      padding: '3px 10px', borderRadius: '999px',
+                      background: 'var(--color-amber-bg)',
+                      color: 'var(--color-amber-text)',
+                      border: '0.5px solid var(--color-border)',
+                      textDecoration: 'none',
+                    }}>
+                      {slug}
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* ─── SERTİFİKA YOLU ─── */}
