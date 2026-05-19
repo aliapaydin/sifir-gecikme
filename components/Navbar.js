@@ -302,7 +302,7 @@ export default function Navbar() {
         <div ref={pillRef} style={{ overflowX: 'auto', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch', background: pillBgMap[tema] }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '6px 1.5rem', width: 'max-content', minWidth: '100%' }}>
 
-            {/* Tümü */}
+            {/* Anasayfa */}
             <Link href="/" style={{
               padding: '4px 12px', borderRadius: '999px', fontSize: '12.5px',
               textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0,
@@ -311,7 +311,18 @@ export default function Navbar() {
               background: pathname === '/' ? 'var(--color-accent-soft)' : 'transparent',
               color: pathname === '/' ? 'var(--color-accent-text)' : 'var(--color-text-mute)',
               fontWeight: pathname === '/' ? 500 : 400,
-            }}>Tümü</Link>
+            }}>Anasayfa</Link>
+
+            {/* Tüm İçerikler */}
+            <Link href="/icerikler" style={{
+              padding: '4px 12px', borderRadius: '999px', fontSize: '12.5px',
+              textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0,
+              border: '0.5px solid',
+              borderColor: pathname === '/icerikler' ? 'var(--color-accent)' : 'var(--color-border)',
+              background: pathname === '/icerikler' ? 'var(--color-accent-soft)' : 'transparent',
+              color: pathname === '/icerikler' ? 'var(--color-accent-text)' : 'var(--color-text-mute)',
+              fontWeight: pathname === '/icerikler' ? 500 : 400,
+            }}>Tüm İçerikler</Link>
 
             <div style={{ width: '0.5px', height: '14px', background: 'var(--color-border)', flexShrink: 0, margin: '0 4px' }} />
 
@@ -396,7 +407,16 @@ export default function Navbar() {
             color: pathname === '/' ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
             fontWeight: pathname === '/' ? 500 : 400,
           }}>
-            <span>🏠</span> Tüm İçerikler
+            <span>🏠</span> Anasayfa
+          </Link>
+          <Link href="/icerikler" style={{
+            display: 'flex', alignItems: 'center', gap: '10px',
+            padding: '9px 12px', borderRadius: '8px', fontSize: '14px', textDecoration: 'none',
+            background: pathname === '/icerikler' ? 'var(--color-accent-soft)' : 'transparent',
+            color: pathname === '/icerikler' ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
+            fontWeight: pathname === '/icerikler' ? 500 : 400,
+          }}>
+            <span>📋</span> Tüm İçerikler
           </Link>
           <Link href="/hakkimda" style={{
             display: 'flex', alignItems: 'center', gap: '10px',
