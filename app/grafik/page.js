@@ -49,6 +49,9 @@ const MANUAL_META = {
   '/yazilar/superlig-xg':           { kategori: 'analiz',     seviye: 2, x: 810, y: 420 },
   '/yazilar/spotify-turkiye':       { kategori: 'analiz',     seviye: 2, x: 810, y: 490 },
   '/yazilar/deprem-analizi':        { kategori: 'analiz',     seviye: 1, x: 910, y: 450 },
+  '/yazilar/churn-tahmini':        { kategori: 'analiz',     seviye: 2, x: 450, y: 555 },
+  '/yazilar/kredi-shap':           { kategori: 'analiz',     seviye: 2, x: 580, y: 555 },
+  '/yazilar/banka-fraud':          { kategori: 'analiz',     seviye: 2, x: 700, y: 555 },
   // Kariyer
   '/yazilar/yol-haritasi':          { kategori: 'kariyer',    seviye: 1, x: 80,  y: 80  },
   '/yazilar/rol-farklari':          { kategori: 'kariyer',    seviye: 1, x: 200, y: 60  },
@@ -96,6 +99,12 @@ const EDGES = [
   ['sql-temelleri',        'superlig-xg'],
   ['deprem-analizi',       'pandas-7-sey'],
   ['deprem-analizi',       'izmir-kira-analizi'],
+  ['confusion-matrix',     'churn-tahmini'],
+  ['decision-tree',        'churn-tahmini'],
+  ['confusion-matrix',     'kredi-shap'],
+  ['decision-tree',        'kredi-shap'],
+  ['churn-tahmini',        'banka-fraud'],
+  ['kredi-shap',           'banka-fraud'],
   // Kariyer
   ['yol-haritasi',         'rol-farklari'],
   ['rol-farklari',         'portfolyo'],
@@ -190,7 +199,7 @@ export default function GrafikPage() {
   }, []);
 
   const overflowRows = Math.ceil(overflowNodes.length / 10);
-  const svgH = overflowNodes.length > 0 ? 570 + overflowRows * 72 : 530;
+  const svgH = overflowNodes.length > 0 ? 630 + overflowRows * 72 : 610;
   const svgW = 960;
 
   return (

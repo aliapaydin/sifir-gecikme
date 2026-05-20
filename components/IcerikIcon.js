@@ -347,6 +347,17 @@ export default function IcerikIcon({ type }) {
         <line x1="12" y1="28" x2="20" y2="28" stroke="#7F77DD" strokeWidth="1.8" strokeLinecap="round"/>
       </svg>
     ),
+    'banka-fraud': (
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="8" fill="#FAEEDA"/>
+        <rect x="5" y="10" width="22" height="14" rx="3" fill="#e8a04a" opacity=".25" stroke="#e8a04a" strokeWidth="1.5"/>
+        <rect x="5" y="13" width="22" height="3" fill="#e8a04a" opacity=".5"/>
+        <rect x="8" y="18" width="6" height="2" rx="1" fill="#BA7517" opacity=".7"/>
+        <circle cx="23" cy="10" r="6" fill="#EF4444"/>
+        <line x1="20.5" y1="7.5" x2="25.5" y2="12.5" stroke="#fff" strokeWidth="1.8" strokeLinecap="round"/>
+        <line x1="25.5" y1="7.5" x2="20.5" y2="12.5" stroke="#fff" strokeWidth="1.8" strokeLinecap="round"/>
+      </svg>
+    ),
     'churn': (
       <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
         <rect width="32" height="32" rx="8" fill="#FAEEDA"/>

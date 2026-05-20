@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { icerikler } from '../lib/icerikler';
+import { yazilar, getKategori } from '../lib/icerikler';
 
 const kategoriRenk = {
   interaktif: { badge: 'badge-interactive', border: '#1D9E75' },
@@ -14,17 +14,19 @@ const kategoriRenk = {
 export default function IlgiliIcerikler() {
   const pathname = usePathname();
 
-  const simdiki = icerikler.find(i => i.href === pathname);
+  const simdiki = yazilar.find(y => y.href === pathname);
   if (!simdiki) return null;
 
+  const simdikiKat = getKategori(simdiki);
+
   // Aynı kategoriden, mevcut sayfa hariç, en fazla 3 içerik
-  const ayniKategori = icerikler.filter(
-    i => i.kategori === simdiki.kategori && i.href !== pathname
+  const ayniKategori = yazilar.filter(
+    y => getKategori(y) === simdikiKat && y.href !== pathname
   );
 
   // Farklı kategoriden tamamla (toplam 3'e ulaşmak için)
-  const farklıKategori = icerikler.filter(
-    i => i.kategori !== simdiki.kategori && i.href !== pathname
+  const farklıKategori = yazilar.filter(
+    y => getKategori(y) !== simdikiKat && y.href !== pathname
   );
 
   const ilgili = [...ayniKategori, ...farklıKategori].slice(0, 3);
@@ -42,7 +44,7 @@ export default function IlgiliIcerikler() {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '10px' }}>
         {ilgili.map(icerik => {
-          const stil = kategoriRenk[icerik.kategori] || kategoriRenk.rehber;
+          const stil = kategoriRenk[getKategori(icerik)] || kategoriRenk.rehber;
           return (
             <a key={icerik.href} href={icerik.href} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
               <div className="card" style={{
@@ -56,7 +58,7 @@ export default function IlgiliIcerikler() {
                 onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
               >
                 <span className={`badge ${stil.badge}`} style={{ width: 'fit-content', fontSize: '10px' }}>
-                  {icerik.kategori}
+                  {getKategori(icerik)}
                 </span>
                 <p className="font-serif font-medium" style={{
                   fontSize: '14px', lineHeight: '1.4',

@@ -1,17 +1,17 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { icerikler, kategoriler } from '../lib/icerikler';
+import { yazilar, kategoriler, getKategori } from '../lib/icerikler';
 
 export default function Arama() {
   const [acik, setAcik] = useState(false);
   const [sorgu, setSorgu] = useState('');
   const inputRef = useRef(null);
 
-  const sonuclar = sorgu.trim().length < 2 ? [] : icerikler.filter(i =>
-    i.baslik.toLowerCase().includes(sorgu.toLowerCase()) ||
-    i.ozet.toLowerCase().includes(sorgu.toLowerCase()) ||
-    i.kategori.toLowerCase().includes(sorgu.toLowerCase())
+  const sonuclar = sorgu.trim().length < 2 ? [] : yazilar.filter(y =>
+    y.baslik.toLowerCase().includes(sorgu.toLowerCase()) ||
+    y.ozet.toLowerCase().includes(sorgu.toLowerCase()) ||
+    getKategori(y).toLowerCase().includes(sorgu.toLowerCase())
   );
 
   const kat = (slug) => kategoriler.find(k => k.slug === slug);
@@ -121,7 +121,7 @@ export default function Arama() {
                     {sonuclar.length} sonuç
                   </div>
                   {sonuclar.map((icerik, idx) => {
-                    const k = kat(icerik.kategori);
+                    const k = kat(getKategori(icerik));
                     return (
                       <a key={icerik.href} href={icerik.href} onClick={() => setAcik(false)}
                         style={{

@@ -1,4 +1,4 @@
-import { icerikler, kategoriler } from '../../../lib/icerikler';
+import { yazilar, kategoriler, getKategori } from '../../../lib/icerikler';
 
 export function generateStaticParams() {
   return kategoriler.map(k => ({ slug: k.slug }));
@@ -16,7 +16,7 @@ export async function generateMetadata({ params }) {
 export default async function KategoriSayfasi({ params }) {
   const { slug } = await params;
   const kat = kategoriler.find(k => k.slug === slug);
-  const liste = icerikler.filter(i => i.kategori === slug);
+  const liste = yazilar.filter(y => getKategori(y) === slug);
 
   if (!kat) return (
     <div style={{ padding: '4rem', textAlign: 'center', color: 'var(--color-text-mute)' }}>
