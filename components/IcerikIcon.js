@@ -405,6 +405,15 @@ export default function IcerikIcon({ type }) {
         <line x1="20" y1="17.5" x2="22" y2="21" stroke="#534AB7" strokeWidth="1.2" strokeLinecap="round"/>
       </svg>
     ),
+    'z-skor': (
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="8" fill="#EEEDFE"/>
+        <path d="M4 22 Q8 22 10 16 Q13 8 16 8 Q19 8 22 16 Q24 22 28 22" stroke="#7F77DD" strokeWidth="2" fill="none" strokeLinecap="round"/>
+        <path d="M4 22 Q8 22 10 16 Q13 8 16 8 Q19 8 22 16 Q24 22 28 22 L28 24 L4 24 Z" fill="#AFA9EC" opacity="0.3"/>
+        <line x1="4" y1="24" x2="28" y2="24" stroke="#534AB7" strokeWidth="1.2"/>
+        <line x1="16" y1="8" x2="16" y2="24" stroke="#534AB7" strokeWidth="1" strokeDasharray="2 2" opacity="0.6"/>
+      </svg>
+    ),
   };
   return icons[type] || null;
 }

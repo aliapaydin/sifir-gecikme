@@ -118,8 +118,8 @@ function DahaFazlaBar({ ornekler, digerSayi }) {
 
 export default function Home() {
   const interaktif = yazilar.filter(y => y.badge === 'interaktif').length;
-  const arac = yazilar.filter(y => y.badge === 'araç').length;
-  const rehber = yazilar.filter(y => ['rehber', 'kariyer', 'vaka çalışması'].includes(y.badge)).length;
+  const arac = yazilar.filter(y => y.badge === 'araç' || y.kategori === 'arac').length;
+  const rehber = yazilar.filter(y => ['rehber', 'kariyer', 'vaka çalışması'].includes(y.badge) || ['rehber','kariyer','vaka'].includes(y.kategori)).length;
 
   const [sira, setSira] = useState(() => karistir(yazilar));
   const gorunenler = sira.slice(0, 18);

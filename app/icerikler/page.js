@@ -14,10 +14,10 @@ const TABS = [
 
 function getKategori(y) {
   if (y.badge === 'interaktif') return 'interaktif';
-  if (y.badge === 'rehber' || y.kategori === 'rehber') return 'rehber';
-  if (y.badge === 'kariyer' || y.kategori === 'kariyer') return 'kariyer';
-  if (y.badge === 'vaka çalışması') return 'vaka';
-  if (y.badge === 'araç') return 'arac';
+  if (y.badge === 'rehber'        || y.kategori === 'rehber')   return 'rehber';
+  if (y.badge === 'kariyer'       || y.kategori === 'kariyer')  return 'kariyer';
+  if (y.badge === 'vaka çalışması'|| y.kategori === 'vaka')     return 'vaka';
+  if (y.badge === 'araç'          || y.kategori === 'arac')     return 'arac';
   return 'diger';
 }
 
