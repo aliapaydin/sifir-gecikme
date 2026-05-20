@@ -1,16 +1,31 @@
 import Link from 'next/link';
+import { CURRENT_VERSION } from '../../lib/versiyon';
 
 export const metadata = {
   title: 'Versiyon Geçmişi',
   description: 'Sıfır Gecikme sitesinin tüm sürüm notları ve özellik güncellemeleri.',
 };
 
-const CURRENT_VERSION = 'v1.7.0';
-
 const versiyonlar = [
   {
+    versiyon: 'v1.8.0',
+    tarih: '20 Mayıs 2026',
+    baslik: 'Tüm İçerikler + Z-Skor Aracı + Tek Kaynak Mimarisi',
+    tip: 'feature',
+    ozellikler: [
+      { tip: 'yeni', metin: 'Tüm İçerikler sayfası (/icerikler): sekmeli görünüm (Demo, Rehber, Kariyer, Vaka, Araç), ziyaret/anladım/tekrar durumları kartlarda gösteriliyor' },
+      { tip: 'yeni', metin: 'Z-Skor & Normal Dağılım Hesaplayıcı (/yazilar/z-skor): μ, σ ve x sliderlarıyla dört mod, SVG çan eğrisi ve 68-95-99.7 kartları' },
+      { tip: 'yeni', metin: 'Anladım / Tekrar Bak butonları tüm yazı sayfalarına eklendi — karşılıklı dışlayan, localStorage ile kalıcı' },
+      { tip: 'iyileştirme', metin: 'Haritam (/harita) ve Bilgi Grafiği (/grafik) artık lib/icerikler.js\'deki yazilar dizisinden besleniyor; yeni içerik ekleyince otomatik görünür' },
+      { tip: 'iyileştirme', metin: 'Bilgi Grafiği: koordinatı olmayan yeni içerikler alt satıra otomatik yerleştirilir, MANUAL_META ile hassas konumlandırma korunuyor' },
+      { tip: 'iyileştirme', metin: 'Navbar pill bar: "Tümü" → "Anasayfa", "Tüm İçerikler" butonu /icerikler sayfasına eklendi' },
+      { tip: 'düzeltme', metin: 'Gece teması navigasyon sırasında beyaza dönme hatası giderildi (ThemeSync bileşenine gece sınıfı eklendi)' },
+      { tip: 'düzeltme', metin: 'İçerik grid düzeni Tailwind v4 uyumsuzluğu nedeniyle tek sütuna düşüyordu — @layer utilities ile giderildi' },
+    ],
+  },
+  {
     versiyon: 'v1.7.0',
-    tarih: 'Mayıs 2025',
+    tarih: '19 Mayıs 2026',
     baslik: 'Gece Teması + Logo + Tema Uyumlu Grafikler',
     tip: 'feature',
     ozellikler: [
@@ -25,7 +40,7 @@ const versiyonlar = [
   },
   {
     versiyon: 'v1.6.0',
-    tarih: 'Mayıs 2025',
+    tarih: '18 Mayıs 2026',
     baslik: 'Sinir Ağı Playground + İlerleme Haritası 2.0',
     tip: 'feature',
     ozellikler: [
@@ -39,7 +54,7 @@ const versiyonlar = [
   },
   {
     versiyon: 'v1.5.0',
-    tarih: 'Mayıs 2025',
+    tarih: '17 Mayıs 2026',
     baslik: 'Rakam Çiz + Versiyon Geçmişi',
     tip: 'feature',
     ozellikler: [
@@ -53,7 +68,7 @@ const versiyonlar = [
   },
   {
     versiyon: 'v1.4.0',
-    tarih: 'Nisan 2025',
+    tarih: '14 Mayıs 2026',
     baslik: 'Kalori AI + Mülakat + Milyoner',
     tip: 'feature',
     ozellikler: [
@@ -65,7 +80,7 @@ const versiyonlar = [
   },
   {
     versiyon: 'v1.3.0',
-    tarih: 'Mart 2025',
+    tarih: '10 Mayıs 2026',
     baslik: 'Lacivert Tema + Öğren Genişletme',
     tip: 'feature',
     ozellikler: [
@@ -78,7 +93,7 @@ const versiyonlar = [
   },
   {
     versiyon: 'v1.2.0',
-    tarih: 'Şubat 2025',
+    tarih: '7 Mayıs 2026',
     baslik: 'Pill Bar Navbar + Yeni İçerikler',
     tip: 'feature',
     ozellikler: [
@@ -91,7 +106,7 @@ const versiyonlar = [
   },
   {
     versiyon: 'v1.1.0',
-    tarih: 'Ocak 2025',
+    tarih: '1 Mayıs 2026',
     baslik: 'İnteraktif Demolar',
     tip: 'feature',
     ozellikler: [
@@ -103,7 +118,7 @@ const versiyonlar = [
   },
   {
     versiyon: 'v1.0.0',
-    tarih: 'Aralık 2024',
+    tarih: '29 Nisan 2026',
     baslik: 'İlk Yayın',
     tip: 'launch',
     ozellikler: [
@@ -146,7 +161,7 @@ export default function VersiyonPage() {
           </p>
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             {[
-              { label: '8 sürüm', color: 'var(--color-accent)' },
+              { label: '9 sürüm', color: 'var(--color-accent)' },
               { label: 'Açık kaynak', color: 'var(--color-text-mute)' },
               { label: 'Türkçe & ücretsiz', color: 'var(--color-text-mute)' },
             ].map(b => (
