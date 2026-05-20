@@ -13,9 +13,10 @@ export default function ThemeSync() {
     try {
       const t = localStorage.getItem('theme') ?? 'light';
       const el = document.documentElement;
-      el.classList.remove('dark', 'lacivert');
-      if (t === 'dark') el.classList.add('dark');
+      el.classList.remove('dark', 'lacivert', 'gece');
+      if (t === 'dark')          el.classList.add('dark');
       else if (t === 'lacivert') el.classList.add('lacivert');
+      else if (t === 'gece')     el.classList.add('gece');
     } catch (e) {}
   }, [pathname]);
 

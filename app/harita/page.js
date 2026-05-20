@@ -1,7 +1,18 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { icerikler } from '../../lib/icerikler';
+import { yazilar } from '../../lib/icerikler';
+
+function getKategori(y) {
+  if (y.badge === 'interaktif')                        return 'interaktif';
+  if (y.badge === 'rehber'        || y.kategori === 'rehber')  return 'rehber';
+  if (y.badge === 'kariyer'       || y.kategori === 'kariyer') return 'kariyer';
+  if (y.badge === 'vaka çalışması'|| y.kategori === 'vaka')    return 'vaka';
+  if (y.badge === 'araç'          || y.kategori === 'arac')    return 'arac';
+  return 'diger';
+}
+
+const icerikler = yazilar.map(y => ({ ...y, kategori: getKategori(y) }));
 import { dersler } from '../../lib/dersler';
 
 const TOPLAM_DERS = dersler.length;
