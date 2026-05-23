@@ -173,9 +173,13 @@ function CustomerDetailPane({ customer, state, sellAction, skipAction, handleSer
       counter: { label: 'Karşı Teklif Yapıldı', color: '#F59E0B', bg: '#FEF3C7' },
     };
     const res = resultMap[customer.result] || { label: customer.result, color: '#6B7280', bg: '#F3F4F6' };
+    const isDelayed = customer.result === 'delayed';
+    const alreadyReturned = isDelayed && customer.waitUntilDay && state.currentDay >= customer.waitUntilDay;
+
     return (
       <div style={{ flex: 1, background: 'var(--color-cream)', padding: '1.5rem', overflowY: 'auto' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+        {/* Müşteri başlığı */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
           <div style={{
             width: '52px', height: '52px', borderRadius: '50%',
             background: typeColor + '22', display: 'flex', alignItems: 'center',
@@ -194,18 +198,70 @@ function CustomerDetailPane({ customer, state, sellAction, skipAction, handleSer
             </div>
           </div>
         </div>
+
+        {/* Sonuç etiketi */}
         <div style={{
-          padding: '1rem 1.25rem',
+          padding: '0.75rem 1.25rem',
           borderRadius: '10px',
           background: res.bg,
           border: `1px solid ${res.color}33`,
           fontSize: '0.95rem',
-          fontWeight: 600,
+          fontWeight: 700,
           color: res.color,
           textAlign: 'center',
+          marginBottom: isDelayed && product ? '1rem' : 0,
         }}>
           {res.label}
         </div>
+
+        {/* Bekleme detayları — sadece delayed için */}
+        {isDelayed && product && (
+          <div style={{
+            background: 'var(--color-cream-card)',
+            border: '0.5px solid var(--color-border)',
+            borderRadius: '10px',
+            overflow: 'hidden',
+          }}>
+            {/* Ürün bilgisi */}
+            <div style={{ padding: '0.875rem 1rem', borderBottom: '0.5px solid var(--color-border)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <div style={{
+                width: 38, height: 38, borderRadius: '8px', flexShrink: 0,
+                background: catColor + '18', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem',
+              }}>{catIcon}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--color-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {product.name}
+                </div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--color-text-mute)', marginTop: '2px' }}>
+                  {(customer.quantity || 1) > 1 ? `${customer.quantity} adet` : '1 adet'} · {totalPrice.toLocaleString('tr-TR')} ₺
+                </div>
+              </div>
+            </div>
+
+            {/* Bekletme bilgileri */}
+            <div style={{ padding: '0.75rem 1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.78rem', color: 'var(--color-text-mute)' }}>Bekletildiği gün</span>
+                <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--color-text)' }}>Gün {customer.delayedOnDay ?? '—'}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.78rem', color: 'var(--color-text-mute)' }}>Bekleme süresi</span>
+                <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--color-text)' }}>
+                  {customer.delayedDays === 1 ? '1 gün (~%70)' : customer.delayedDays === 2 ? '2 gün (~%50)' : `${customer.delayedDays} gün`}
+                </span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '0.4rem', borderTop: '0.5px solid var(--color-border)', marginTop: '0.1rem' }}>
+                <span style={{ fontSize: '0.78rem', color: 'var(--color-text-mute)' }}>Teslim günü</span>
+                <span style={{
+                  fontSize: '0.88rem', fontWeight: 800,
+                  color: alreadyReturned ? '#1D9E75' : '#F59E0B',
+                }}>
+                  {alreadyReturned ? `Gün ${customer.waitUntilDay} — Geri döndü ✓` : `Gün ${customer.waitUntilDay ?? '—'}`}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
