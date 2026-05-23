@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { PRODUCTS, SERVICES, CATEGORY_COLORS, CATEGORY_ICONS } from '@/lib/tech-center-data';
 
 function fmtMoney(n) {
@@ -209,13 +209,13 @@ function CustomerDetailPane({ customer, state, sellAction, skipAction, handleSer
           fontWeight: 700,
           color: res.color,
           textAlign: 'center',
-          marginBottom: isDelayed && product ? '1rem' : 0,
+          marginBottom: (isDelayed || customer.result === 'delay_rejected') && product ? '1rem' : 0,
         }}>
           {res.label}
         </div>
 
-        {/* Bekleme detayları — sadece delayed için */}
-        {isDelayed && product && (
+        {/* Bekleme detayları — delayed ve delay_rejected için */}
+        {(isDelayed || customer.result === 'delay_rejected') && product && (
           <div style={{
             background: 'var(--color-cream-card)',
             border: '0.5px solid var(--color-border)',
@@ -767,6 +767,8 @@ function CustomerDetailPane({ customer, state, sellAction, skipAction, handleSer
 export default function MailApp({ state, sellAction, skipAction, handleServiceAction, delayCustomerAction, servicePrices, addToShoppingListAction }) {
   const [selectedId, setSelectedId] = useState(null);
   const [successData, setSuccessData] = useState(null);
+  // Tracks the previous selectedId to distinguish "user just acted" from "user navigated to dealt customer"
+  const prevSelectedIdRef = useRef(null);
 
   const customers = state.customersToday || [];
   const unreadCount = customers.filter(c => !c.dealt).length;
@@ -781,13 +783,16 @@ export default function MailApp({ state, sellAction, skipAction, handleServiceAc
     }
   }, [customers.length]);
 
-  // When selection gets dealt, auto-advance to next undealt
+  // Auto-advance to next undealt ONLY when the currently selected customer just became dealt
+  // (i.e. user performed an action), not when user manually navigates to an already-dealt customer
   useEffect(() => {
-    if (selectedCustomer && selectedCustomer.dealt) {
+    const sameCustomer = prevSelectedIdRef.current === selectedId;
+    prevSelectedIdRef.current = selectedId;
+    if (sameCustomer && selectedCustomer?.dealt) {
       const next = customers.find(c => !c.dealt && c.id !== selectedId);
       if (next) setSelectedId(next.id);
     }
-  }, [selectedCustomer?.dealt]);
+  }, [selectedCustomer?.dealt, selectedId]);
 
   return (
     <>

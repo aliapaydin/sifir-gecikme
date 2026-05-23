@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import MailApp from './MailApp';
 import PazarTab from './PazarTab';
@@ -76,20 +76,25 @@ function DesktopIcon({ app, onClick, badge }) {
   );
 }
 
-function WindowTitleBar({ app, onMinimize, onClose }) {
+function WindowTitleBar({ app, onMinimize, onClose, onFloat, isFloating, isDraggable, onDragStart }) {
   return (
-    <div style={{
-      height: '38px', display: 'flex', alignItems: 'center',
-      padding: '0 12px', gap: '8px',
-      background: 'rgba(240,238,234,0.97)',
-      borderBottom: '1px solid rgba(0,0,0,0.1)',
-      flexShrink: 0,
-      backdropFilter: 'blur(8px)',
-      userSelect: 'none',
-    }}>
+    <div
+      onMouseDown={isDraggable ? onDragStart : undefined}
+      style={{
+        height: '38px', display: 'flex', alignItems: 'center',
+        padding: '0 12px', gap: '8px',
+        background: 'rgba(240,238,234,0.97)',
+        borderBottom: '1px solid rgba(0,0,0,0.1)',
+        flexShrink: 0,
+        backdropFilter: 'blur(8px)',
+        userSelect: 'none',
+        cursor: isDraggable ? 'grab' : 'default',
+      }}
+    >
       {/* Traffic lights */}
       <div style={{ display: 'flex', gap: '6px', marginRight: '4px' }}>
         <button
+          onMouseDown={e => e.stopPropagation()}
           onClick={onClose}
           title="Kapat"
           style={{
@@ -99,6 +104,7 @@ function WindowTitleBar({ app, onMinimize, onClose }) {
           }}
         />
         <button
+          onMouseDown={e => e.stopPropagation()}
           onClick={onMinimize}
           title="Küçült"
           style={{
@@ -108,11 +114,13 @@ function WindowTitleBar({ app, onMinimize, onClose }) {
           }}
         />
         <button
-          title="Ekranı Doldur"
+          onMouseDown={e => e.stopPropagation()}
+          onClick={onFloat}
+          title={isFloating ? 'Tam Ekrana Al' : 'Küçük Pencere'}
           style={{
             width: '13px', height: '13px', borderRadius: '50%',
             background: '#00CA4E', border: '0.5px solid rgba(0,0,0,0.15)',
-            cursor: 'default', flexShrink: 0,
+            cursor: 'pointer', flexShrink: 0,
           }}
         />
       </div>
@@ -122,7 +130,7 @@ function WindowTitleBar({ app, onMinimize, onClose }) {
   );
 }
 
-function Taskbar({ openWindows, activeWindowId, onFocus, onOpen, mailBadge }) {
+function Taskbar({ openWindows, activeWindowId, onFocus, mailBadge }) {
   const router = useRouter();
 
   return (
@@ -139,21 +147,19 @@ function Taskbar({ openWindows, activeWindowId, onFocus, onOpen, mailBadge }) {
       flexShrink: 0,
       position: 'relative',
     }}>
-      {DESKTOP_APPS.map(app => {
-        const win = openWindows.find(w => w.appId === app.id);
-        const isOpen = !!win;
-        const isActive = win && win.id === activeWindowId && !win.minimized;
+      {openWindows.map(win => {
+        const app = DESKTOP_APPS.find(a => a.id === win.appId);
+        if (!app) return null;
+        const isActive = win.id === activeWindowId && !win.minimized;
         const badge = app.id === 'mail' ? mailBadge : 0;
         return (
-          <div key={app.id} style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+          <div key={win.id} style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
             <button
               onClick={() => {
-                if (isActive) {
-                  if (win) onFocus(win.id, 'minimize');
-                } else if (win) {
+                if (win.minimized || win.id !== activeWindowId) {
                   onFocus(win.id, 'restore');
-                } else {
-                  onOpen(app.id);
+                } else if (!win.floating) {
+                  onFocus(win.id, 'minimize');
                 }
               }}
               title={app.label}
@@ -161,8 +167,8 @@ function Taskbar({ openWindows, activeWindowId, onFocus, onOpen, mailBadge }) {
                 width: '40px', height: '40px', borderRadius: '10px',
                 border: isActive ? '1.5px solid rgba(255,255,255,0.4)' : '1.5px solid transparent',
                 background: isActive
-                  ? `rgba(255,255,255,0.18)`
-                  : isOpen ? `rgba(255,255,255,0.08)` : 'transparent',
+                  ? 'rgba(255,255,255,0.18)'
+                  : 'rgba(255,255,255,0.08)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: '1.25rem', cursor: 'pointer',
                 transition: 'all 0.15s',
@@ -183,9 +189,7 @@ function Taskbar({ openWindows, activeWindowId, onFocus, onOpen, mailBadge }) {
                 </div>
               )}
             </button>
-            {isOpen && (
-              <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: isActive ? '#fff' : 'rgba(255,255,255,0.4)' }} />
-            )}
+            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: isActive ? '#fff' : 'rgba(255,255,255,0.4)' }} />
           </div>
         );
       })}
@@ -220,6 +224,8 @@ function Taskbar({ openWindows, activeWindowId, onFocus, onOpen, mailBadge }) {
 export default function Desktop({ state, firmaValue, ...actions }) {
   const [openWindows, setOpenWindows] = useState([]);
   const [activeWindowId, setActiveWindowId] = useState(null);
+  const desktopRef = useRef(null);
+  const dragRef = useRef(null);
 
   const mailBadge = (state.customersToday || []).filter(c => !c.dealt).length;
 
@@ -232,7 +238,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
       }
       const id = `win_${appId}_${Date.now()}`;
       setActiveWindowId(id);
-      return [...prev, { id, appId, minimized: false }];
+      return [...prev, { id, appId, minimized: false, floating: false, position: null }];
     });
   }, []);
 
@@ -256,7 +262,53 @@ export default function Desktop({ state, firmaValue, ...actions }) {
     setActiveWindowId(prev => prev === winId ? null : prev);
   }, []);
 
-  const activeWindow = openWindows.find(w => w.id === activeWindowId && !w.minimized) || null;
+  const floatWindow = useCallback((winId) => {
+    setOpenWindows(prev => {
+      const floatingCount = prev.filter(w => w.floating && !w.minimized).length;
+      return prev.map(w => {
+        if (w.id !== winId) return w;
+        if (w.floating) {
+          return { ...w, floating: false };
+        }
+        return {
+          ...w,
+          floating: true,
+          position: w.position || { x: 60 + floatingCount * 24, y: 50 + floatingCount * 24 },
+        };
+      });
+    });
+    setActiveWindowId(winId);
+  }, []);
+
+  const updateWindowPosition = useCallback((winId, x, y) => {
+    setOpenWindows(prev => prev.map(w =>
+      w.id === winId ? { ...w, position: { x, y } } : w
+    ));
+  }, []);
+
+  const handleMouseMove = useCallback((e) => {
+    if (!dragRef.current || !desktopRef.current) return;
+    const { winId, offsetX, offsetY } = dragRef.current;
+    const rect = desktopRef.current.getBoundingClientRect();
+    const newX = Math.max(0, e.clientX - rect.left - offsetX);
+    const newY = Math.max(0, e.clientY - rect.top - offsetY);
+    updateWindowPosition(winId, newX, newY);
+  }, [updateWindowPosition]);
+
+  const handleMouseUp = useCallback(() => {
+    dragRef.current = null;
+  }, []);
+
+  const handleDragStart = useCallback((winId, e, winX, winY) => {
+    e.preventDefault();
+    if (!desktopRef.current) return;
+    const rect = desktopRef.current.getBoundingClientRect();
+    dragRef.current = {
+      winId,
+      offsetX: e.clientX - rect.left - winX,
+      offsetY: e.clientY - rect.top - winY,
+    };
+  }, []);
 
   function renderAppContent(appId) {
     const {
@@ -330,12 +382,18 @@ export default function Desktop({ state, firmaValue, ...actions }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
       {/* Desktop wallpaper + content area */}
-      <div style={{
-        flex: 1,
-        position: 'relative',
-        overflow: 'hidden',
-        background: 'linear-gradient(135deg, #0f2044 0%, #1a3a6b 40%, #0d2d5a 70%, #162040 100%)',
-      }}>
+      <div
+        ref={desktopRef}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        style={{
+          flex: 1,
+          position: 'relative',
+          overflow: 'hidden',
+          background: 'linear-gradient(135deg, #0f2044 0%, #1a3a6b 40%, #0d2d5a 70%, #162040 100%)',
+        }}
+      >
         {/* Subtle grid pattern overlay */}
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.04,
@@ -343,43 +401,85 @@ export default function Desktop({ state, firmaValue, ...actions }) {
           backgroundSize: '40px 40px',
         }} />
 
-        {/* Desktop icons (shown when no active window) */}
-        {!activeWindow && (
-          <div style={{ padding: '20px', display: 'flex', flexWrap: 'wrap', gap: '4px', alignContent: 'flex-start' }}>
-            {DESKTOP_APPS.map(app => (
-              <DesktopIcon
-                key={app.id}
-                app={app}
-                onClick={() => openApp(app.id)}
-                badge={app.id === 'mail' ? mailBadge : 0}
-              />
-            ))}
-          </div>
-        )}
+        {/* Desktop icons — always visible in background */}
+        <div style={{ padding: '20px', display: 'flex', flexWrap: 'wrap', gap: '4px', alignContent: 'flex-start' }}>
+          {DESKTOP_APPS.map(app => (
+            <DesktopIcon
+              key={app.id}
+              app={app}
+              onClick={() => openApp(app.id)}
+              badge={app.id === 'mail' ? mailBadge : 0}
+            />
+          ))}
+        </div>
 
-        {/* Open windows - only render the active one fully, keep others mounted but hidden */}
+        {/* Open windows */}
         {openWindows.map(win => {
           const app = DESKTOP_APPS.find(a => a.id === win.appId);
           const isActive = win.id === activeWindowId && !win.minimized;
-          return (
-            <div
-              key={win.id}
-              style={{
-                position: 'absolute', inset: 0,
-                display: isActive ? 'flex' : 'none',
-                flexDirection: 'column',
-              }}
-            >
-              <WindowTitleBar
-                app={app}
-                onMinimize={() => minimizeWindow(win.id)}
-                onClose={() => closeWindow(win.id)}
-              />
-              <div style={{ flex: 1, overflow: 'auto', background: 'var(--color-cream)' }}>
-                {renderAppContent(win.appId)}
+          const pos = win.position || { x: 60, y: 50 };
+
+          if (win.floating && !win.minimized) {
+            return (
+              <div
+                key={win.id}
+                onMouseDown={() => setActiveWindowId(win.id)}
+                style={{
+                  position: 'absolute',
+                  left: pos.x,
+                  top: pos.y,
+                  width: '460px',
+                  height: '560px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  borderRadius: '12px',
+                  overflow: 'hidden',
+                  boxShadow: isActive
+                    ? '0 20px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.12)'
+                    : '0 8px 32px rgba(0,0,0,0.45)',
+                  zIndex: isActive ? 20 : 10,
+                }}
+              >
+                <WindowTitleBar
+                  app={app}
+                  onMinimize={() => minimizeWindow(win.id)}
+                  onClose={() => closeWindow(win.id)}
+                  onFloat={() => floatWindow(win.id)}
+                  isFloating
+                  isDraggable
+                  onDragStart={(e) => handleDragStart(win.id, e, pos.x, pos.y)}
+                />
+                <div style={{ flex: 1, overflow: 'auto', background: 'var(--color-cream)' }}>
+                  {renderAppContent(win.appId)}
+                </div>
               </div>
-            </div>
-          );
+            );
+          }
+
+          if (!win.floating) {
+            return (
+              <div
+                key={win.id}
+                style={{
+                  position: 'absolute', inset: 0,
+                  display: isActive ? 'flex' : 'none',
+                  flexDirection: 'column',
+                }}
+              >
+                <WindowTitleBar
+                  app={app}
+                  onMinimize={() => minimizeWindow(win.id)}
+                  onClose={() => closeWindow(win.id)}
+                  onFloat={() => floatWindow(win.id)}
+                />
+                <div style={{ flex: 1, overflow: 'auto', background: 'var(--color-cream)' }}>
+                  {renderAppContent(win.appId)}
+                </div>
+              </div>
+            );
+          }
+
+          return null;
         })}
       </div>
 
@@ -388,7 +488,6 @@ export default function Desktop({ state, firmaValue, ...actions }) {
         openWindows={openWindows}
         activeWindowId={activeWindowId}
         onFocus={handleTaskbarAction}
-        onOpen={openApp}
         mailBadge={mailBadge}
       />
     </div>
