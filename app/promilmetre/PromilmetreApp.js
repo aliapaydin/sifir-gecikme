@@ -63,6 +63,16 @@ const ICECEKLER = {
 
 const KATEGORILER = Object.keys(ICECEKLER);
 
+// cl seçenekleri: piyasada yaygın Türkiye formatları
+const CL_SECENEKLER = {
+  'Bira':          [25, 30, 33, 40, 44, 50, 66, 100],
+  'Rakı':          [2, 4.5, 9, 18, 35],
+  'Şarap':         [10, 15, 20, 25, 37.5, 75],
+  'Viski & Cin':   [2, 4, 4.5, 5, 7, 10],
+  'Vodka & Diğer': [2, 4, 4.5, 5, 7, 10],
+  'Hazır Kokteyl': [27.5, 33, 50],
+};
+
 const YEMEK_SECENEK = [
   { value: 'empty', label: 'Aç Karın',           desc: 'Hiçbir şey yemedim',      carpan: 1.15, emoji: '😤' },
   { value: 'light', label: 'Hafif Atıştırmalık', desc: 'Kuruyemiş, cips vb.',     carpan: 1.0,  emoji: '🥨' },
@@ -286,12 +296,13 @@ const card = {
 export default function PromilmetreApp() {
   const [kategori,   setKategori]   = useState('Bira');
   const [secili,     setSecili]     = useState('');
-  const [miktar,     setMiktar]     = useState('');
+  const [seciliCl,   setSeciliCl]   = useState('');
+  const [adet,       setAdet]       = useState(1);
   const [eklenenler, setEklenenler] = useState([]);
   const [yemek,      setYemek]      = useState('meal');
   const [icki,       setIcki]       = useState('none');
   const [profilAcik, setProfilAcik] = useState(false);
-  const [profil,     setProfil]     = useState({ kilo: 70, cinsiyet: 'male' });
+  const [profil,     setProfil]     = useState({ kilo: 70, cinsiyet: 'male', boy: 175 });
   const [aiYukleniyor, setAiYukleniyor] = useState(false);
   const [aiSonuc,    setAiSonuc]    = useState('');
   const [aiHata,     setAiHata]     = useState('');
@@ -315,29 +326,43 @@ export default function PromilmetreApp() {
 
   const icecekler = ICECEKLER[kategori] || [];
   const seciliIcecek = icecekler.find(i => i.ad === secili);
+  const clSecenekler = CL_SECENEKLER[kategori] || [];
 
   const handleKategoriDegis = (kat) => {
     setKategori(kat);
     setSecili('');
-    setMiktar('');
+    setSeciliCl('');
+    setAdet(1);
   };
 
   const handleIcecekDegis = (ad) => {
     setSecili(ad);
     const ic = (ICECEKLER[kategori] || []).find(i => i.ad === ad);
-    if (ic) setMiktar(String(ic.standartMl));
+    if (ic) {
+      const defaultCl = ic.standartMl / 10;
+      const opts = CL_SECENEKLER[kategori] || [];
+      const en_yakin = opts.reduce((prev, cur) =>
+        Math.abs(cur - defaultCl) < Math.abs(prev - defaultCl) ? cur : prev,
+        opts[0] ?? defaultCl
+      );
+      setSeciliCl(String(en_yakin));
+    }
+    setAdet(1);
   };
 
   const ekle = () => {
-    if (!secili || !miktar || Number(miktar) <= 0) return;
+    const cl = Number(seciliCl);
+    if (!secili || !cl || cl <= 0 || adet < 1) return;
     const ic = seciliIcecek;
     if (!ic) return;
+    const totalMl = cl * 10 * adet;
     setEklenenler(prev => [
       ...prev,
-      { id: Date.now(), kategori, ad: ic.ad, abv: ic.abv, ml: Number(miktar) },
+      { id: Date.now(), kategori, ad: ic.ad, abv: ic.abv, ml: totalMl, cl, adet },
     ]);
     setSecili('');
-    setMiktar('');
+    setSeciliCl('');
+    setAdet(1);
   };
 
   const sil = (id) => setEklenenler(prev => prev.filter(i => i.id !== id));
@@ -357,13 +382,20 @@ export default function PromilmetreApp() {
   const saatKaldi = promil > 0.50 ? ((promil - 0.50) / 0.15).toFixed(1) : null;
   const sifiraKadar = promil > 0 ? (promil / 0.15).toFixed(1) : null;
 
+  const bmi = profil.boy > 0 ? (profil.kilo / ((profil.boy / 100) ** 2)).toFixed(1) : null;
+  const bmiStatus = !bmi ? null
+    : parseFloat(bmi) < 18.5 ? { label: 'Zayıf',        color: '#3b82f6' }
+    : parseFloat(bmi) < 25   ? { label: 'Normal',        color: '#22c55e' }
+    : parseFloat(bmi) < 30   ? { label: 'Fazla Kilolu',  color: '#f59e0b' }
+    :                           { label: 'Obez',          color: '#ef4444' };
+
   const aiAnaliz = async () => {
     if (!eklenenler.length) return;
     setAiYukleniyor(true);
     setAiSonuc('');
     setAiHata('');
     const icerekStr = eklenenler
-      .map(i => `${i.ad} (${i.ml} ml, %${i.abv})`)
+      .map(i => `${i.ad} (${i.adet > 1 ? `${i.adet}×` : ''}${i.cl} cl, %${i.abv})`)
       .join(', ');
     const yemekLabel = YEMEK_SECENEK.find(y => y.value === yemek)?.label || yemek;
     const ickiLabel  = ICKI_SECENEK.find(c => c.value === icki)?.label || icki;
@@ -494,7 +526,7 @@ Kısa, samimi, Türkçe yaz. Markdown kullanma. Paragraf yaz.`;
             <div style={{ flex: 1 }}>
               <div style={{ fontWeight: 600, fontSize: '0.82rem', color: 'var(--color-text)' }}>{ic.ad}</div>
               <div style={{ fontSize: '0.7rem', color: 'var(--color-text-mute)' }}>
-                {ic.ml} ml · %{ic.abv} · {alkolGram(ic.ml, ic.abv).toFixed(1)} g alkol
+                {ic.adet > 1 ? `${ic.adet} × ` : ''}{ic.cl} cl · %{ic.abv} · {alkolGram(ic.ml, ic.abv).toFixed(1)} g alkol
               </div>
             </div>
             <button
@@ -592,38 +624,64 @@ Kısa, samimi, Türkçe yaz. Markdown kullanma. Paragraf yaz.`;
                 <select style={inp} value={secili} onChange={e => handleIcecekDegis(e.target.value)}>
                   <option value="">İçecek seç…</option>
                   {icecekler.map(ic => (
-                    <option key={ic.ad} value={ic.ad}>{ic.ad} — %{ic.abv} ({ic.standartMl} ml)</option>
+                    <option key={ic.ad} value={ic.ad}>{ic.ad} — %{ic.abv}</option>
                   ))}
                 </select>
               </div>
+
+              {/* CL + Adet + Ekle */}
               <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-end' }}>
-                <div style={{ flex: 1 }}>
-                  <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--color-text-soft)', marginBottom: '0.3rem' }}>Miktar (ml)</label>
-                  <input type="number" min="1" style={inp} placeholder="ml" value={miktar} onChange={e => setMiktar(e.target.value)} />
+                {/* CL dropdown */}
+                <div style={{ flex: '0 0 auto', minWidth: 90 }}>
+                  <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--color-text-soft)', marginBottom: '0.3rem' }}>Miktar</label>
+                  <select
+                    style={inp}
+                    value={seciliCl}
+                    onChange={e => setSeciliCl(e.target.value)}
+                    disabled={!secili}
+                  >
+                    {!secili && <option value="">— cl</option>}
+                    {clSecenekler.map(cl => (
+                      <option key={cl} value={String(cl)}>{cl} cl</option>
+                    ))}
+                  </select>
                 </div>
-                {seciliIcecek && (
-                  <div style={{ textAlign: 'center', padding: '0 0.5rem 0.65rem', whiteSpace: 'nowrap' }}>
-                    <span style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)' }}>%{seciliIcecek.abv} ABV</span>
-                    {miktar && (
-                      <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--color-accent-text)' }}>
-                        {alkolGram(Number(miktar), seciliIcecek.abv).toFixed(1)} g alkol
-                      </div>
-                    )}
+
+                {/* Adet stepper */}
+                <div style={{ flex: '0 0 auto' }}>
+                  <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--color-text-soft)', marginBottom: '0.3rem' }}>Adet</label>
+                  <div style={{ display: 'flex', alignItems: 'center', border: '0.5px solid var(--color-border)', borderRadius: '8px', background: 'var(--color-cream)', overflow: 'hidden', height: 38 }}>
+                    <button type="button" onClick={() => setAdet(a => Math.max(1, a - 1))} style={{ width: 34, height: '100%', border: 'none', background: 'none', cursor: 'pointer', fontSize: '1.1rem', color: 'var(--color-text-soft)', fontWeight: 700 }}>−</button>
+                    <span style={{ minWidth: 24, textAlign: 'center', fontSize: '0.875rem', fontWeight: 700, color: 'var(--color-text)' }}>{adet}</span>
+                    <button type="button" onClick={() => setAdet(a => Math.min(20, a + 1))} style={{ width: 34, height: '100%', border: 'none', background: 'none', cursor: 'pointer', fontSize: '1.1rem', color: 'var(--color-text-soft)', fontWeight: 700 }}>+</button>
                   </div>
-                )}
+                </div>
+
+                {/* Ekle butonu */}
                 <button
                   onClick={ekle}
-                  disabled={!secili || !miktar || Number(miktar) <= 0}
+                  disabled={!secili || !seciliCl}
                   style={{
-                    padding: '0.6rem 1.1rem', borderRadius: '8px', border: 'none',
-                    background: (!secili || !miktar) ? 'var(--color-border)' : 'linear-gradient(135deg, var(--color-accent), #8b5cf6)',
-                    color: (!secili || !miktar) ? 'var(--color-text-mute)' : '#fff',
-                    fontWeight: 700, fontSize: '0.85rem',
-                    cursor: (!secili || !miktar) ? 'default' : 'pointer',
+                    flex: 1, padding: '0 0.75rem', height: 38, borderRadius: '8px', border: 'none',
+                    background: (!secili || !seciliCl) ? 'var(--color-border)' : 'linear-gradient(135deg, var(--color-accent), #8b5cf6)',
+                    color: (!secili || !seciliCl) ? 'var(--color-text-mute)' : '#fff',
+                    fontWeight: 700, fontSize: '0.85rem', marginTop: 22,
+                    cursor: (!secili || !seciliCl) ? 'default' : 'pointer',
                     whiteSpace: 'nowrap', transition: 'all 0.2s', flexShrink: 0,
                   }}
                 >+ Ekle</button>
               </div>
+
+              {/* Alkol gram önizleme */}
+              {seciliIcecek && seciliCl && (
+                <div style={{ marginTop: '0.5rem', fontSize: '0.72rem', color: 'var(--color-text-mute)', display: 'flex', gap: '0.75rem' }}>
+                  <span>%{seciliIcecek.abv} ABV</span>
+                  <span style={{ color: 'var(--color-accent-text)', fontWeight: 600 }}>
+                    = {alkolGram(Number(seciliCl) * 10 * adet, seciliIcecek.abv).toFixed(1)} g saf alkol
+                  </span>
+                  <span style={{ color: 'var(--color-text-mute)' }}>({Number(seciliCl) * 10 * adet} ml toplam)</span>
+                </div>
+              )}
             </div>
 
             {/* Mide Durumu & İçecek */}
@@ -685,19 +743,23 @@ Kısa, samimi, Türkçe yaz. Markdown kullanma. Paragraf yaz.`;
                     Kişisel Bilgiler
                   </span>
                   <span style={{ fontSize: '0.7rem', color: 'var(--color-text-mute)' }}>
-                    {profil.kilo} kg · {profil.cinsiyet === 'male' ? 'Erkek' : 'Kadın'}
+                    {profil.kilo} kg · {profil.boy} cm · {profil.cinsiyet === 'male' ? 'Erkek' : 'Kadın'}
                   </span>
                 </div>
                 <span style={{ color: 'var(--color-text-mute)', fontSize: '0.75rem', transform: profilAcik ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▼</span>
               </button>
               {profilAcik && (
                 <>
-                  <div style={{ marginTop: '0.75rem', display: 'flex', gap: '0.625rem' }}>
-                    <div style={{ flex: 1 }}>
+                  <div style={{ marginTop: '0.75rem', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem' }}>
+                    <div>
                       <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--color-text-soft)', marginBottom: '0.3rem' }}>Kilo (kg)</label>
-                      <input type="number" min="30" max="200" step="0.5" style={inp} value={profil.kilo} onChange={e => updateProfil('kilo', Number(e.target.value))} />
+                      <input type="number" min="30" max="250" step="0.5" style={inp} value={profil.kilo} onChange={e => updateProfil('kilo', Number(e.target.value))} />
                     </div>
-                    <div style={{ flex: 1 }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--color-text-soft)', marginBottom: '0.3rem' }}>Boy (cm)</label>
+                      <input type="number" min="100" max="250" style={inp} value={profil.boy} onChange={e => updateProfil('boy', Number(e.target.value))} />
+                    </div>
+                    <div>
                       <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--color-text-soft)', marginBottom: '0.3rem' }}>Cinsiyet</label>
                       <select style={inp} value={profil.cinsiyet} onChange={e => updateProfil('cinsiyet', e.target.value)}>
                         <option value="male">Erkek</option>
@@ -705,6 +767,13 @@ Kısa, samimi, Türkçe yaz. Markdown kullanma. Paragraf yaz.`;
                       </select>
                     </div>
                   </div>
+                  {bmi && bmiStatus && (
+                    <div style={{ marginTop: '0.625rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <span style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)' }}>VKİ (BMI):</span>
+                      <span style={{ fontSize: '0.82rem', fontWeight: 700, color: bmiStatus.color }}>{bmi}</span>
+                      <span style={{ fontSize: '0.7rem', fontWeight: 600, color: bmiStatus.color, background: `${bmiStatus.color}18`, border: `1px solid ${bmiStatus.color}35`, borderRadius: '9999px', padding: '0.1rem 0.5rem' }}>{bmiStatus.label}</span>
+                    </div>
+                  )}
                   <p style={{ fontSize: '0.68rem', color: 'var(--color-text-mute)', margin: '0.5rem 0 0' }}>
                     Bilgilerin cihazına kaydedilir, hiçbir yere gönderilmez.
                   </p>
