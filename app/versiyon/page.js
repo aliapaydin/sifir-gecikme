@@ -8,6 +8,37 @@ export const metadata = {
 
 const versiyonlar = [
   {
+    versiyon: 'v2.2.0',
+    tarih: '23 Mayıs 2026',
+    baslik: 'Alkol Promilmetre Modülü',
+    tip: 'feature',
+    ozellikler: [
+      { tip: 'yeni', metin: 'Alkol Promilmetre (/promilmetre): 40+ Türkiye içeceği veritabanı — Efes, Bomonti, Tuborg, Heineken, Corona, Desperados, Erdinger, Leffe, Guinness, Yeni Rakı, Tekirdağ Altın/Standart, Altınbaş, Kavaklidere, Doluca, Vinkara, Prosecco, Jack Daniel\'s, Absolut, Bacardi ve daha fazlası' },
+      { tip: 'yeni', metin: 'Widmark formülü ile kan alkol hesabı: ml × (ABV/100) × 0.789 / (kilo × r); r=0.7 erkek, r=0.6 kadın' },
+      { tip: 'yeni', metin: 'Mide durumu (aç karın → ağır öğün) ve alkolsüz içecek (su, ayran, kola vb.) etki katsayıları promili anlık güncelliyor' },
+      { tip: 'yeni', metin: 'Animasyonlu SVG gösterge: yeşil→sarı→turuncu→kırmızı gradyan, 0.50‰ Türkiye limit tiki, ibre ve zaman tahminleri (saat)' },
+      { tip: 'yeni', metin: 'Trafik uyarısı: 0.50‰ yasal sınırı aşıldığında kırmızı banner ve sınır altına iniş süresi' },
+      { tip: 'yeni', metin: 'AI analizi: /api/kalori-ai üzerinden Gemini ile etki açıklaması, araç kullanım süresi ve pratik öneriler' },
+      { tip: 'yeni', metin: 'Kişisel profil (kilo, cinsiyet) localStorage\'da kalıcı; hesaplama anlık güncelleniyor' },
+      { tip: 'iyileştirme', metin: 'Desktop responsive düzen: 800px üstünde sol (gösterge + içecek listesi) / sağ (form + modifiers + AI) iki sütun grid; 1100px üstünde 5:4 oranında genişler' },
+      { tip: 'iyileştirme', metin: 'Navbar Modüller menüsüne 🍺 Promilmetre eklendi' },
+    ],
+  },
+  {
+    versiyon: 'v2.1.0',
+    tarih: '23 Mayıs 2026',
+    baslik: 'Kalori AI — Sunucu Tarafı & Güvenlik',
+    tip: 'feature',
+    ozellikler: [
+      { tip: 'yeni', metin: 'Kalori AI API route (/api/kalori-ai): Gemini API anahtarı artık sunucu tarafında (process.env.GEMINI_API_KEY); kullanıcıların API anahtarı girmesine gerek kalmadı' },
+      { tip: 'yeni', metin: 'IP başına saatlik rate limit: Map tabanlı in-memory sayaç, 20 istek/saat/IP; aşıldığında 429 döner' },
+      { tip: 'yeni', metin: 'Model fallback zinciri: gemini-2.5-flash → gemini-2.0-flash → gemini-2.0-flash-lite → gemini-flash-latest; quota hatalarında otomatik geçiş, session boyunca başarısız modeller atlanır' },
+      { tip: 'iyileştirme', metin: 'KaloriProfil: API anahtarı giriş alanı kaldırıldı; KaloriYemekEkle, KaloriEgzersizEkle ve KaloriDashboard geminiApiKey bağımlılıklarından arındırıldı' },
+      { tip: 'yeni', metin: 'Pandas Hızlı Referans aracı (/yazilar/pandas-referans): 35 fonksiyon, 9 kategori, Türkçe açıklama, kopyalanabilir kod, arama ve accordion' },
+      { tip: 'yeni', metin: 'Türkiye Sosyal Medya Davranışı vaka çalışması (/yazilar/sosyal-medya-turkiye): platform tercihleri, 24 saatlik aktivite profili, yaş × platform ısı haritası, 6 interaktif grafik' },
+    ],
+  },
+  {
     versiyon: 'v2.0.0',
     tarih: '23 Mayıs 2026',
     baslik: 'Tech Center 2.0 + Mimari Güncellemeler',
