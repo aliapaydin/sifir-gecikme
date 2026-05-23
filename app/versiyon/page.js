@@ -15,6 +15,9 @@ const versiyonlar = [
     ozellikler: [
       // Genel site değişiklikleri — normal liste
       { tip: 'yeni', metin: 'LayoutShell bileşeni eklendi: /tech-center rotasında global Navbar ve Footer otomatik gizleniyor, diğer sayfalarda değişiklik yok' },
+      { tip: 'yeni', metin: 'Türkiye Sosyal Medya Davranışı vaka çalışması (/yazilar/sosyal-medya-turkiye): platform tercihleri, 24 saatlik aktivite profili, yaş grubu × platform ısı haritası ve içerik türü analizi — 6 interaktif grafik' },
+      { tip: 'yeni', metin: 'Pandas Hızlı Referans aracı (/yazilar/pandas-referans): 35 fonksiyon, Türkçe açıklama, kopyalanabilir kod, arama kutusu ve kategori filtreleri — 9 kategori (okuma, inceleme, seçim, temizlik, gruplama, birleştirme, şekillendirme, string, zaman serisi)' },
+      { tip: 'yeni', metin: 'Alkol Promilmetre (/promilmetre): Türkiye\'de satılan 40+ içecek (Efes, Bomonti, Yeni Rakı, Tekirdağ, Kavaklidere, Jack Daniel\'s vb.) içeren veritabanı, Widmark formülü ile kan alkol hesabı, mide durumu ve alkolsüz içecek etki katsayıları, animasyonlu SVG gösterge, trafik uyarısı (0.50‰ Türkiye sınırı), AI analizi ve localStorage kişisel profil' },
       { tip: 'iyileştirme', metin: 'app/layout.js mimarisi: Navbar ve Footer doğrudan layout\'a gömülü yerine LayoutShell bileşeni üzerinden koşullu render ediliyor' },
       { tip: 'iyileştirme', metin: 'Versiyon geçmişi sayfası: gruplu değişiklikler için açılır-kapanır accordion bileşeni eklendi' },
 

@@ -52,10 +52,9 @@ const card = {
 };
 
 export default function KaloriProfil({ state }) {
-  const { profile, updateProfile, geminiApiKey, updateGeminiApiKey, clearAllData } = state;
-  const [formData, setFormData]         = useState(profile);
-  const [apiKeyInput, setApiKeyInput]   = useState(geminiApiKey);
-  const [saved, setSaved]               = useState(false);
+  const { profile, updateProfile, clearAllData } = state;
+  const [formData, setFormData] = useState(profile);
+  const [saved, setSaved]       = useState(false);
   const [clearCountdown, setClearCountdown] = useState(null);
   const countdownRef = useRef(null);
 
@@ -69,7 +68,6 @@ export default function KaloriProfil({ state }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     updateProfile({ ...formData, bmr: previewBMR });
-    updateGeminiApiKey(apiKeyInput);
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
   };
@@ -162,19 +160,6 @@ export default function KaloriProfil({ state }) {
         </div>
 
         <hr style={{ border: 'none', borderTop: '0.5px solid var(--color-border)', margin: '0.875rem 0' }} />
-
-        {/* API Key */}
-        <div style={{ marginBottom: '0.875rem' }}>
-          <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-soft)', marginBottom: '0.3rem' }}>🔑 Gemini API Anahtarı</label>
-          <input type="password" style={inp} placeholder="AI özellikleri için API key"
-            value={apiKeyInput} onChange={e => setApiKeyInput(e.target.value)} />
-          <p style={{ fontSize: '0.7rem', color: 'var(--color-text-mute)', marginTop: '0.3rem' }}>
-            <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer" style={{ color: 'var(--color-accent-text)' }}>
-              aistudio.google.com
-            </a>
-            {' '}adresinden ücretsiz alabilirsin.
-          </p>
-        </div>
 
         <button
           type="submit"

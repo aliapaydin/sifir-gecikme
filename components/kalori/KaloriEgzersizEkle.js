@@ -18,7 +18,7 @@ const inp = {
 };
 
 export default function KaloriEgzersizEkle({ state }) {
-  const { addExercise, deleteExercise, exercises, geminiApiKey } = state;
+  const { addExercise, deleteExercise, exercises } = state;
   const [name, setName]                   = useState('');
   const [duration, setDuration]           = useState('');
   const [caloriesBurned, setCaloriesBurned] = useState('');
@@ -32,10 +32,9 @@ export default function KaloriEgzersizEkle({ state }) {
 
   const handleAIFetch = async () => {
     if (!name.trim()) { setAiError('Lütfen önce egzersiz adını girin.'); return; }
-    if (!geminiApiKey) { setAiError('Lütfen Profil sekmesinden API anahtarınızı girin.'); return; }
     setLoadingAI(true); setAiError(''); setAiFilled(false);
     try {
-      const model = getGeminiModel(geminiApiKey);
+      const model = getGeminiModel();
       const dur = duration ? `${duration} dakika` : 'süre belirtilmedi';
       const prompt = `Kullanıcı şu egzersizi yaptı: "${name}", süre: ${dur}. Ortalama bir kişi için bu egzersizin yaklaşık yakılan kalorisini tahmin et. Sadece geçerli bir JSON döndür. Format: {"caloriesBurned": number} Açıklama veya markdown ekleme.`;
       const result = await model.generateContent(prompt);

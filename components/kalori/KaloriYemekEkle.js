@@ -23,7 +23,7 @@ const inp = {
 };
 
 export default function KaloriYemekEkle({ state, onNavigate }) {
-  const { addFood, geminiApiKey } = state;
+  const { addFood } = state;
   const [name, setName]                 = useState('');
   const [calories, setCalories]         = useState('');
   const [mealType, setMealType]         = useState('sabah');
@@ -35,10 +35,9 @@ export default function KaloriYemekEkle({ state, onNavigate }) {
 
   const handleAIFetch = async () => {
     if (!name.trim()) { setAiError('Lütfen önce bir yemek adı girin.'); return; }
-    if (!geminiApiKey) { setAiError('Lütfen Profil sekmesinden API anahtarınızı girin.'); return; }
     setLoadingAI(true); setAiError(''); setAiFilled(false);
     try {
-      const model = getGeminiModel(geminiApiKey);
+      const model = getGeminiModel();
       const prompt = `Kullanıcı şu yemeği yedi: "${name}". Bu yemeğin tahmini kalorisini ve genel olarak kalp dostu (sağlıklı yağlar, düşük sodyum vs.) olup olmadığını belirle. Sadece geçerli bir JSON döndür. Format: {"calories": number, "isHeartFriendly": boolean} Açıklama veya markdown ekleme.`;
       const result = await model.generateContent(prompt);
       const data = extractJSON(result.response.text());

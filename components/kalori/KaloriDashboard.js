@@ -33,7 +33,7 @@ const card = {
 };
 
 export default function KaloriDashboard({ state, onNavigate }) {
-  const { profile, foods, exercises, geminiApiKey, aiInsight, setAiInsight, todayWater, updateTodayWater, mealInsights, setMealInsights, deleteFood } = state;
+  const { profile, foods, exercises, aiInsight, setAiInsight, todayWater, updateTodayWater, mealInsights, setMealInsights, deleteFood } = state;
   const [loadingInsight, setLoadingInsight] = useState(false);
 
   const today = new Date().toISOString().split('T')[0];
@@ -65,11 +65,11 @@ export default function KaloriDashboard({ state, onNavigate }) {
 
   useEffect(() => {
     const fetchInsight = async () => {
-      if (!geminiApiKey || todaysFoods.length === 0) return;
+      if (todaysFoods.length === 0) return;
       if (aiInsight.date === today && aiInsight.foodCount === todaysFoods.length) return;
       setLoadingInsight(true);
       try {
-        const model = getGeminiModel(geminiApiKey);
+        const model = getGeminiModel();
         const foodList = todaysFoods.map(f => `${f.name} (${f.calories} kcal, ${f.mealType})`).join(', ');
         const prompt = `Kullanıcının günlük kalori hedefi: ${bmr} kcal. Bugün alınan kalori: ${totalConsumed} kcal. Yakılan: ${totalBurned} kcal. Yedikleri: ${foodList}\n\nSen samimi, motive edici bir beslenme uzmanısın. Bu verilere bakarak 2-3 cümlelik değerlendirme yaz. Son olarak yarın için 1 cümlelik spesifik öneri ver. "Sen" diliyle hitap et. Sadece düz metin, markdown kullanma.`;
         const result = await model.generateContent(prompt);
@@ -81,13 +81,12 @@ export default function KaloriDashboard({ state, onNavigate }) {
       }
     };
     fetchInsight();
-  }, [todaysFoods.length, today, geminiApiKey]);
+  }, [todaysFoods.length, today]);
 
   const insightText = () => {
     if (todaysFoods.length === 0) return 'Bugün henüz bir şey girmedin. Güne sağlıklı bir öğünle başla!';
     if (loadingInsight) return 'Yapay zeka gününü analiz ediyor...';
     if (aiInsight.date === today && aiInsight.text) return aiInsight.text;
-    if (!geminiApiKey) return 'AI yorumu için Profil sekmesinden Gemini API anahtarını gir.';
     return 'Analiz hazırlanıyor...';
   };
 
@@ -248,7 +247,6 @@ export default function KaloriDashboard({ state, onNavigate }) {
             foods={todaysFoods.filter(f => f.mealType === meal)}
             bmr={bmr}
             today={today}
-            geminiApiKey={geminiApiKey}
             mealInsights={mealInsights}
             setMealInsights={setMealInsights}
             deleteFood={deleteFood}
@@ -273,7 +271,7 @@ function StatRow({ emoji, label, value, color }) {
   );
 }
 
-function MealCard({ meal, foods, bmr, today, geminiApiKey, mealInsights, setMealInsights, deleteFood }) {
+function MealCard({ meal, foods, bmr, today, mealInsights, setMealInsights, deleteFood }) {
   const [expanded, setExpanded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errMsg, setErrMsg] = useState('');
@@ -286,7 +284,7 @@ function MealCard({ meal, foods, bmr, today, geminiApiKey, mealInsights, setMeal
   const toggleExpand = async () => {
     const next = !expanded;
     setExpanded(next);
-    if (next && foods.length > 0 && geminiApiKey && (!insight || insight.foodCount !== foods.length)) {
+    if (next && foods.length > 0 && (!insight || insight.foodCount !== foods.length)) {
       fetchMealInsight();
     }
   };
@@ -295,7 +293,7 @@ function MealCard({ meal, foods, bmr, today, geminiApiKey, mealInsights, setMeal
     setLoading(true);
     setErrMsg('');
     try {
-      const model = getGeminiModel(geminiApiKey);
+      const model = getGeminiModel();
       const foodList = foods.map(f => `${f.name} (${f.calories} kcal)`).join(', ');
       const prompt = `Kullanıcı ${meta.label} öğününde şunları yedi: ${foodList}\nBu öğünü kalp dostluğu, besin değeri dengesi ve genel sağlık açısından 100 üzerinden puanla. 1 cümlelik samimi ve motive edici yorum yap. ("sen" diliyle)\nSadece geçerli JSON döndür: {"score": number, "comment": "string"}\nBaşka hiçbir şey yazma.`;
       const result = await model.generateContent(prompt);
@@ -379,7 +377,7 @@ function MealCard({ meal, foods, bmr, today, geminiApiKey, mealInsights, setMeal
                   </div>
                 ) : (
                   <p style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', margin: 0 }}>
-                    {geminiApiKey ? (errMsg || 'Analiz için karta tıkla.') : 'API anahtarı girilmemiş.'}
+                    {errMsg || 'Analiz için karta tıkla.'}
                   </p>
                 )}
               </div>

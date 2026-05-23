@@ -435,6 +435,16 @@ export default function IcerikIcon({ type }) {
         <line x1="16" y1="8" x2="16" y2="24" stroke="#534AB7" strokeWidth="1" strokeDasharray="2 2" opacity="0.6"/>
       </svg>
     ),
+    'promilmetre': (
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="8" fill="#fff3e0"/>
+        <path d="M7 22 A9 9 0 0 1 25 22" stroke="#e2e8f0" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
+        <path d="M7 22 A9 9 0 0 1 18 13.5" stroke="#f97316" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
+        <line x1="16" y1="22" x2="22" y2="16" stroke="#ea580c" strokeWidth="2" strokeLinecap="round"/>
+        <circle cx="16" cy="22" r="2.5" fill="#f97316"/>
+        <circle cx="16" cy="22" r="1" fill="#fff"/>
+      </svg>
+    ),
   };
   return icons[type] || null;
 }
