@@ -52,6 +52,7 @@ const MANUAL_META = {
   '/yazilar/churn-tahmini':        { kategori: 'analiz',     seviye: 2, x: 450, y: 555 },
   '/yazilar/kredi-shap':           { kategori: 'analiz',     seviye: 2, x: 580, y: 555 },
   '/yazilar/banka-fraud':          { kategori: 'analiz',     seviye: 2, x: 700, y: 555 },
+  '/yazilar/sepet-terki':          { kategori: 'analiz',     seviye: 2, x: 580, y: 640 },
   // Kariyer
   '/yazilar/yol-haritasi':          { kategori: 'kariyer',    seviye: 1, x: 80,  y: 80  },
   '/yazilar/rol-farklari':          { kategori: 'kariyer',    seviye: 1, x: 200, y: 60  },
@@ -105,6 +106,8 @@ const EDGES = [
   ['decision-tree',        'kredi-shap'],
   ['churn-tahmini',        'banka-fraud'],
   ['kredi-shap',           'banka-fraud'],
+  ['churn-tahmini',        'sepet-terki'],
+  ['ab-test',              'sepet-terki'],
   // Kariyer
   ['yol-haritasi',         'rol-farklari'],
   ['rol-farklari',         'portfolyo'],
@@ -199,7 +202,7 @@ export default function GrafikPage() {
   }, []);
 
   const overflowRows = Math.ceil(overflowNodes.length / 10);
-  const svgH = overflowNodes.length > 0 ? 630 + overflowRows * 72 : 610;
+  const svgH = overflowNodes.length > 0 ? 720 + overflowRows * 72 : 695;
   const svgW = 960;
 
   return (

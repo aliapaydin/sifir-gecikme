@@ -42,6 +42,7 @@ const GRUPLAR = [
       { href: '/veri-setleri', label: 'Veri Setleri', emoji: '🗂️' },
       { href: '/milyon',       label: 'Milyon',       emoji: '💰' },
       { href: '/mulakat',      label: 'Mülakat',      emoji: '🎤' },
+      { href: '/tech-center',  label: 'Tech Center',  emoji: '🖥️' },
     ],
   },
 ];

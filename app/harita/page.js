@@ -5,6 +5,7 @@ import { yazilar, getKategori } from '../../lib/icerikler';
 
 const icerikler = yazilar.map(y => ({ ...y, kategori: getKategori(y) }));
 import { dersler } from '../../lib/dersler';
+import { LOGOS, CITIES, STORE_LEVELS, CATEGORY_LABELS, CATEGORY_ICONS } from '../../lib/tech-center-data';
 
 const TOPLAM_DERS = dersler.length;
 
@@ -69,7 +70,11 @@ const BASARIMLAR = [
   { id: 'ciz_tahmin',  icon: '✏️', label: 'Rakam Çizici',       desc: 'Sinir ağına bir rakam çizdirt',       kosul: (v) => v.cizTahmin >= 1 },
   { id: 'nn_egitim',   icon: '🔬', label: 'Bilim İnsanı',       desc: 'Sinir ağı playground\'ı kullan',      kosul: (v) => v.nnEgitim >= 1 },
   { id: 'regex_test',  icon: '🔤', label: 'Regex Ustası',       desc: 'Regex playground\'da desen dene',     kosul: (v) => v.regexTest >= 1 },
-  { id: 'kalori_ziy',  icon: '🥗', label: 'Kalori Takibi',      desc: 'Kalori modülünü ziyaret et',          kosul: (v) => v.kaloriZiyaret },
+  { id: 'kalori_ziy',  icon: '🥗', label: 'Kalori Takibi',       desc: 'Kalori modülünü ziyaret et',          kosul: (v) => v.kaloriZiyaret },
+  // Tech Center
+  { id: 'tc_ziy',     icon: '🖥️', label: 'Teknoloji Girişimcisi', desc: 'Tech Center\'ı aç',                 kosul: (v) => v.tcZiyaret },
+  { id: 'tc_100xp',   icon: '⭐', label: 'Deneyimli Teknisyen',   desc: 'Tech Center\'da 100 XP kazan',      kosul: (v) => v.tcXP >= 100 },
+  { id: 'tc_1m',      icon: '💼', label: 'Milyoncu Girişimci',    desc: 'Tech Center\'da ₺1M toplam gelir',  kosul: (v) => v.tcRevenue >= 1_000_000 },
 ];
 
 const INTERAKTIF_HREFS = [
@@ -316,6 +321,42 @@ export default function HaritaSayfasi() {
       const kaloriZiyaret   = localStorage.getItem('sz_kalori_ziyaret') === '1';
       const veriSetiZiyaret = ziyaretler.includes('/veri-setleri');
 
+      // Tech Center
+      const tcRaw = localStorage.getItem('tc_game_v2');
+      let tcData = null;
+      if (tcRaw) {
+        try {
+          const tc = JSON.parse(tcRaw);
+          const allTimeSales = tc.allTimeSales || [];
+          const totalRevenue = allTimeSales.reduce((s, x) => s + (x.revenue || 0), 0);
+          const totalCOGS    = allTimeSales.reduce((s, x) => s + (x.cogs || 0), 0);
+          const totalProfit  = allTimeSales.reduce((s, x) => s + (x.profit || 0), 0);
+          const serviceSales = allTimeSales.filter(x => x.category === 'service');
+          const productSales = allTimeSales.filter(x => x.category !== 'service');
+          const catRevenue = {};
+          for (const s of productSales) {
+            catRevenue[s.category] = (catRevenue[s.category] || 0) + s.revenue;
+          }
+          const topCatEntry = Object.entries(catRevenue).sort((a, b) => b[1] - a[1])[0];
+          const inventoryCount = Object.values(tc.inventory || {}).reduce((s, q) => s + q, 0);
+          const secondHandCount = Object.values(tc.secondHandInventory || {}).reduce((s, q) => s + q, 0);
+          const xp = tc.xp || 0;
+          const xpLevel = Math.floor(xp / 100) + 1;
+          const xpProgress = xp % 100;
+          tcData = {
+            ...tc,
+            totalRevenue, totalCOGS, totalProfit,
+            totalSalesCount: allTimeSales.length,
+            productSalesCount: productSales.length,
+            serviceSalesCount: serviceSales.length,
+            serviceRevenue: serviceSales.reduce((s, x) => s + (x.revenue || 0), 0),
+            catRevenue, topCat: topCatEntry?.[0],
+            inventoryCount, secondHandCount,
+            xpLevel, xpProgress,
+          };
+        } catch {}
+      }
+
       const durumObj = JSON.parse(localStorage.getItem('sz_durum') || '{}');
       const anladiSet = new Set([
         ...Object.entries(durumObj).filter(([,v]) => v === 'anladi').map(([k]) => k),
@@ -367,6 +408,9 @@ export default function HaritaSayfasi() {
         interaktif, kariyerZ, genelYuzde, sinavPuani,
         mulakatSoru, mulakatBiliyorum, milyonOyun, milyonMaxK,
         cizTahmin, nnEgitim, regexTest, kaloriZiyaret,
+        tcZiyaret: !!tcRaw,
+        tcXP: tcData?.xp || 0,
+        tcRevenue: tcData?.totalRevenue || 0,
       };
       const basarimDurum = BASARIMLAR.map(b => ({ ...b, kazanildi: b.kosul(stats) }));
 
@@ -375,7 +419,7 @@ export default function HaritaSayfasi() {
         uzmanlikYuzde, genelYuzde, basarimDurum, stats, tamamlananDersSayisi,
         mulakatSoru, mulakatBiliyorum, milyonOyun, milyonMaxK, milyonToplamS,
         cizTahmin, nnEgitim, regexTest, kaloriZiyaret, veriSetiZiyaret,
-        ilkZiyaret, seri, sureDk, gunler,
+        ilkZiyaret, seri, sureDk, gunler, tcData,
       });
     } catch {}
   }, []);
@@ -391,7 +435,7 @@ export default function HaritaSayfasi() {
     uzmanlikYuzde, genelYuzde, basarimDurum, sinavPuani, tamamlananDersSayisi,
     mulakatSoru, mulakatBiliyorum, milyonOyun, milyonMaxK, milyonToplamS,
     cizTahmin, nnEgitim, regexTest, kaloriZiyaret, veriSetiZiyaret,
-    ilkZiyaret, seri, sureDk, gunler,
+    ilkZiyaret, seri, sureDk, gunler, tcData,
   } = veri;
   const sinavAcik = tamamlananDersSayisi >= TOPLAM_DERS;
   const sinavaKalan = Math.max(0, TOPLAM_DERS - tamamlananDersSayisi);
@@ -634,7 +678,132 @@ export default function HaritaSayfasi() {
             <ModulKart icon="🔤" label="Regex" href="/regex" ziyaret={regexTest > 0}
               detaylar={regexTest > 0 ? [{ label: 'Desen testi', deger: String(regexTest) }] : []}
             />
+            <ModulKart icon="🖥️" label="Tech Center" href="/tech-center" ziyaret={!!tcData}
+              detaylar={tcData ? [
+                { label: 'Gün', deger: String(tcData.currentDay || 1) },
+                { label: 'XP', deger: String(tcData.xp || 0) },
+                { label: 'Toplam Gelir', deger: formatPara(tcData.totalRevenue || 0) },
+              ] : []}
+            />
           </div>
+        </div>
+
+        {/* ─── TECH CENTER ─── */}
+        <div style={{ marginBottom: '32px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', marginBottom: '16px' }}>
+            <h2 className="font-serif text-2xl font-medium" style={{ color: 'var(--color-text)' }}>🖥️ Tech Center</h2>
+            <a href="/tech-center" style={{ fontSize: '12px', color: 'var(--color-accent)', textDecoration: 'none', fontWeight: 600 }}>
+              Oyuna Gir →
+            </a>
+          </div>
+
+          {!tcData ? (
+            <div style={{ background: 'var(--color-cream-card)', border: '0.5px dashed var(--color-border)', borderRadius: '16px', padding: '32px', textAlign: 'center' }}>
+              <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🖥️</div>
+              <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-text)', marginBottom: '6px' }}>Henüz oynanmadı</div>
+              <p style={{ fontSize: '12px', color: 'var(--color-text-mute)', marginBottom: '16px' }}>Bilgisayar mağazası simülasyonu — ₺1 milyara ulaş!</p>
+              <a href="/tech-center" style={{ display: 'inline-block', padding: '8px 20px', borderRadius: '8px', background: 'var(--color-accent)', color: '#fff', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
+                Başla →
+              </a>
+            </div>
+          ) : (() => {
+            const logo = LOGOS.find(l => l.id === tcData.logoId) || LOGOS[0];
+            const city = CITIES[tcData.city] || CITIES.ankara;
+            const storeLevel = STORE_LEVELS[(tcData.storeLevel || 1) - 1];
+            const WIN_T = 1_000_000_000;
+            const firmaValueApprox = (tcData.cash || 0);
+            const progressToWin = Math.min(100, Math.round(((tcData.cash || 0) / WIN_T) * 100 * 10) / 10);
+            const margin = tcData.totalRevenue > 0
+              ? Math.round((tcData.totalProfit / tcData.totalRevenue) * 100)
+              : 0;
+            const catRevenueEntries = Object.entries(tcData.catRevenue || {}).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            const maxCatRev = catRevenueEntries[0]?.[1] || 1;
+
+            return (
+              <>
+                {/* Firma başlık */}
+                <div style={{ background: 'var(--color-cream-card)', border: '0.5px solid var(--color-border)', borderRadius: '16px', padding: '20px 24px', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
+                  <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: logo.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', flexShrink: 0 }}>
+                    {logo.emoji}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: '17px', fontWeight: 700, color: 'var(--color-text)', lineHeight: 1.2 }}>{tcData.companyName}</div>
+                    <div style={{ fontSize: '12px', color: 'var(--color-text-mute)', marginTop: '3px' }}>
+                      {city.emoji} {city.label} · {storeLevel.emoji} {storeLevel.label} · Gün {tcData.currentDay}
+                    </div>
+                  </div>
+                  {tcData.gamePhase === 'won' && (
+                    <div style={{ padding: '4px 12px', borderRadius: '999px', background: '#F59E0B22', color: '#F59E0B', fontSize: '12px', fontWeight: 700 }}>
+                      🏆 Kazandı!
+                    </div>
+                  )}
+                  {/* ₺1B hedef barı */}
+                  <div style={{ width: '100%', marginTop: '8px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--color-text-mute)', marginBottom: '5px' }}>
+                      <span>₺1B Hedefi</span>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 600 }}>{progressToWin}%</span>
+                    </div>
+                    <div style={{ width: '100%', height: '7px', borderRadius: 999, background: 'var(--color-border)', overflow: 'hidden' }}>
+                      <div style={{ width: `${progressToWin}%`, height: '100%', background: progressToWin >= 90 ? '#F59E0B' : 'var(--color-accent)', borderRadius: 999, transition: 'width 0.6s' }} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Ana stat grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '8px', marginBottom: '12px' }}>
+                  {[
+                    { icon: '⭐', label: 'Deneyim', value: `${tcData.xp || 0} XP`, sub: `Sv. ${tcData.xpLevel}`, color: '#7F77DD' },
+                    { icon: '💰', label: 'Nakit', value: (tcData.cash || 0) >= 1e6 ? `₺${((tcData.cash||0)/1e6).toFixed(1)}M` : `₺${Math.round(tcData.cash||0).toLocaleString('tr-TR')}`, sub: 'mevcut', color: '#1D9E75' },
+                    { icon: '📈', label: 'Toplam Gelir', value: (tcData.totalRevenue||0) >= 1e6 ? `₺${(tcData.totalRevenue/1e6).toFixed(1)}M` : `₺${Math.round(tcData.totalRevenue||0).toLocaleString('tr-TR')}`, sub: `${tcData.totalSalesCount} işlem`, color: '#185FA5' },
+                    { icon: '💵', label: 'Toplam Kar', value: (tcData.totalProfit||0) >= 1e6 ? `₺${(tcData.totalProfit/1e6).toFixed(1)}M` : `₺${Math.round(tcData.totalProfit||0).toLocaleString('tr-TR')}`, sub: `%${margin} marj`, color: tcData.totalProfit >= 0 ? '#1D9E75' : '#E24B4A' },
+                    { icon: '🛒', label: 'Ürün Satışı', value: String(tcData.productSalesCount || 0), sub: 'adet', color: '#e8a04a' },
+                    { icon: '🔧', label: 'Servis', value: String(tcData.serviceSalesCount || 0), sub: `₺${Math.round(tcData.serviceRevenue||0).toLocaleString('tr-TR')} gelir`, color: '#10B981' },
+                    { icon: '📦', label: 'Stok', value: String(tcData.inventoryCount || 0), sub: 'ürün', color: 'var(--color-text)' },
+                    { icon: '♻️', label: 'İkinci El', value: String(tcData.secondHandCount || 0), sub: 'parça', color: '#6B7280' },
+                  ].map(item => (
+                    <div key={item.label} style={{ background: 'var(--color-cream-card)', border: '0.5px solid var(--color-border)', borderRadius: '12px', padding: '14px 16px' }}>
+                      <div style={{ fontSize: '18px', marginBottom: '4px' }}>{item.icon}</div>
+                      <div style={{ fontSize: '20px', fontWeight: 700, color: item.color, lineHeight: 1, fontFamily: 'var(--font-mono)' }}>{item.value}</div>
+                      <div style={{ fontSize: '12px', fontWeight: 500, color: 'var(--color-text)', marginTop: '3px' }}>{item.label}</div>
+                      {item.sub && <div style={{ fontSize: '10px', color: 'var(--color-text-mute)' }}>{item.sub}</div>}
+                    </div>
+                  ))}
+                </div>
+
+                {/* XP progress bar */}
+                <div style={{ background: 'var(--color-cream-card)', border: '0.5px solid var(--color-border)', borderRadius: '12px', padding: '14px 18px', marginBottom: '12px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-text)' }}>⭐ Seviye {tcData.xpLevel}</span>
+                    <span style={{ fontSize: '11px', color: 'var(--color-text-mute)', fontFamily: 'var(--font-mono)' }}>{tcData.xpProgress}/100 XP → Sv. {tcData.xpLevel + 1}</span>
+                  </div>
+                  <div style={{ width: '100%', height: '7px', borderRadius: 999, background: 'var(--color-border)', overflow: 'hidden' }}>
+                    <div style={{ width: `${tcData.xpProgress}%`, height: '100%', background: '#7F77DD', borderRadius: 999, transition: 'width 0.6s' }} />
+                  </div>
+                </div>
+
+                {/* Kategori bazlı satış dağılımı */}
+                {catRevenueEntries.length > 0 && (
+                  <div style={{ background: 'var(--color-cream-card)', border: '0.5px solid var(--color-border)', borderRadius: '12px', padding: '16px 18px' }}>
+                    <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-text)', marginBottom: '12px' }}>📊 Kategori Bazlı Satış Geliri</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {catRevenueEntries.map(([cat, rev]) => (
+                        <div key={cat} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <span style={{ fontSize: '1rem', width: '22px', textAlign: 'center' }}>{CATEGORY_ICONS[cat] || '📦'}</span>
+                          <span style={{ fontSize: '12px', color: 'var(--color-text-soft)', width: '90px', flexShrink: 0 }}>{CATEGORY_LABELS[cat] || cat}</span>
+                          <div style={{ flex: 1, height: '8px', borderRadius: 999, background: 'var(--color-border)', overflow: 'hidden' }}>
+                            <div style={{ width: `${Math.round((rev / maxCatRev) * 100)}%`, height: '100%', background: 'var(--color-accent)', borderRadius: 999 }} />
+                          </div>
+                          <span style={{ fontSize: '11px', color: 'var(--color-text-mute)', fontFamily: 'var(--font-mono)', width: '70px', textAlign: 'right', flexShrink: 0 }}>
+                            ₺{rev >= 1e6 ? `${(rev/1e6).toFixed(1)}M` : Math.round(rev).toLocaleString('tr-TR')}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
+            );
+          })()}
         </div>
 
         {/* ─── İÇERİK HARİTASI ─── */}

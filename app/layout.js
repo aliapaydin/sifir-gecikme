@@ -1,9 +1,8 @@
 import { Inter, Lora, JetBrains_Mono } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
-import Footer from '../components/Footer';
-import Navbar from '../components/Navbar';
 import ThemeSync from '../components/ThemeSync';
+import LayoutShell from '../components/LayoutShell';
 import ZiyaretTakip from '../components/ZiyaretTakip';
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
@@ -80,9 +79,9 @@ export default function RootLayout({ children }) {
             }
           `}</Script>
           <ZiyaretTakip />
-          <Navbar />
-          {children}
-          <Footer />
+          <LayoutShell>
+            {children}
+          </LayoutShell>
           <Analytics />
           <SpeedInsights />
         </body>
