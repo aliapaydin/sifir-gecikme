@@ -24,6 +24,28 @@ const DESKTOP_APPS = [
   { id: 'cizim',    emoji: '🎨', label: 'Çizim',    color: '#EF4444', bg: '#3d0a0a' },
 ];
 
+// Default floating sizes — wider apps get more room
+const WINDOW_FLOAT_DEFAULTS = {
+  mail:    { w: 900, h: 560 },
+  pazar:   { w: 900, h: 560 },
+  urunler: { w: 900, h: 560 },
+  analiz:  { w: 900, h: 560 },
+};
+const DEFAULT_FLOAT_SIZE = { w: 460, h: 560 };
+const MIN_W = 320;
+const MIN_H = 220;
+
+const RESIZE_HANDLES = [
+  { dir: 'n',  cursor: 'ns-resize',   style: { top: 0,    left: 8,    right: 8,   height: 5, bottom: 'auto', width: 'auto' } },
+  { dir: 's',  cursor: 'ns-resize',   style: { bottom: 0, left: 8,    right: 8,   height: 5, top: 'auto',    width: 'auto' } },
+  { dir: 'e',  cursor: 'ew-resize',   style: { right: 0,  top: 8,     bottom: 8,  width: 5,  left: 'auto',   height: 'auto' } },
+  { dir: 'w',  cursor: 'ew-resize',   style: { left: 0,   top: 8,     bottom: 8,  width: 5,  right: 'auto',  height: 'auto' } },
+  { dir: 'ne', cursor: 'nesw-resize', style: { top: 0,    right: 0,   width: 10,  height: 10, left: 'auto',  bottom: 'auto' } },
+  { dir: 'nw', cursor: 'nwse-resize', style: { top: 0,    left: 0,    width: 10,  height: 10, right: 'auto', bottom: 'auto' } },
+  { dir: 'se', cursor: 'nwse-resize', style: { bottom: 0, right: 0,   width: 10,  height: 10, left: 'auto',  top: 'auto'    } },
+  { dir: 'sw', cursor: 'nesw-resize', style: { bottom: 0, left: 0,    width: 10,  height: 10, right: 'auto', top: 'auto'    } },
+];
+
 function DesktopIcon({ app, onClick, badge }) {
   const [hover, setHover] = useState(false);
   return (
@@ -91,7 +113,6 @@ function WindowTitleBar({ app, onMinimize, onClose, onFloat, isFloating, isDragg
         cursor: isDraggable ? 'grab' : 'default',
       }}
     >
-      {/* Traffic lights */}
       <div style={{ display: 'flex', gap: '6px', marginRight: '4px' }}>
         <button
           onMouseDown={e => e.stopPropagation()}
@@ -166,9 +187,7 @@ function Taskbar({ openWindows, activeWindowId, onFocus, mailBadge }) {
               style={{
                 width: '40px', height: '40px', borderRadius: '10px',
                 border: isActive ? '1.5px solid rgba(255,255,255,0.4)' : '1.5px solid transparent',
-                background: isActive
-                  ? 'rgba(255,255,255,0.18)'
-                  : 'rgba(255,255,255,0.08)',
+                background: isActive ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.08)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: '1.25rem', cursor: 'pointer',
                 transition: 'all 0.15s',
@@ -194,7 +213,6 @@ function Taskbar({ openWindows, activeWindowId, onFocus, mailBadge }) {
         );
       })}
 
-      {/* Sol: Kapat butonu */}
       <button
         onClick={() => router.push('/')}
         title="Ana Sayfaya Dön"
@@ -226,6 +244,8 @@ export default function Desktop({ state, firmaValue, ...actions }) {
   const [activeWindowId, setActiveWindowId] = useState(null);
   const desktopRef = useRef(null);
   const dragRef = useRef(null);
+  // Remembers last floating position + size per appId across open/close cycles
+  const windowMemoryRef = useRef({});
 
   const mailBadge = (state.customersToday || []).filter(c => !c.dealt).length;
 
@@ -238,7 +258,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
       }
       const id = `win_${appId}_${Date.now()}`;
       setActiveWindowId(id);
-      return [...prev, { id, appId, minimized: false, floating: false, position: null }];
+      return [...prev, { id, appId, minimized: false, floating: false, position: null, size: null }];
     });
   }, []);
 
@@ -258,7 +278,16 @@ export default function Desktop({ state, firmaValue, ...actions }) {
   }, []);
 
   const closeWindow = useCallback((winId) => {
-    setOpenWindows(prev => prev.filter(w => w.id !== winId));
+    setOpenWindows(prev => {
+      const win = prev.find(w => w.id === winId);
+      if (win?.floating && (win.position || win.size)) {
+        windowMemoryRef.current[win.appId] = {
+          position: win.position,
+          size: win.size,
+        };
+      }
+      return prev.filter(w => w.id !== winId);
+    });
     setActiveWindowId(prev => prev === winId ? null : prev);
   }, []);
 
@@ -268,32 +297,61 @@ export default function Desktop({ state, firmaValue, ...actions }) {
       return prev.map(w => {
         if (w.id !== winId) return w;
         if (w.floating) {
+          // Save state to memory before going full-screen
+          if (w.position || w.size) {
+            windowMemoryRef.current[w.appId] = { position: w.position, size: w.size };
+          }
           return { ...w, floating: false };
         }
+        // Going floating — restore from memory or use defaults
+        const memory = windowMemoryRef.current[w.appId];
+        const defaultSize = WINDOW_FLOAT_DEFAULTS[w.appId] || DEFAULT_FLOAT_SIZE;
         return {
           ...w,
           floating: true,
-          position: w.position || { x: 60 + floatingCount * 24, y: 50 + floatingCount * 24 },
+          position: memory?.position || { x: 60 + floatingCount * 24, y: 50 + floatingCount * 24 },
+          size: memory?.size || defaultSize,
         };
       });
     });
     setActiveWindowId(winId);
   }, []);
 
-  const updateWindowPosition = useCallback((winId, x, y) => {
-    setOpenWindows(prev => prev.map(w =>
-      w.id === winId ? { ...w, position: { x, y } } : w
-    ));
-  }, []);
-
   const handleMouseMove = useCallback((e) => {
     if (!dragRef.current || !desktopRef.current) return;
-    const { winId, offsetX, offsetY } = dragRef.current;
     const rect = desktopRef.current.getBoundingClientRect();
-    const newX = Math.max(0, e.clientX - rect.left - offsetX);
-    const newY = Math.max(0, e.clientY - rect.top - offsetY);
-    updateWindowPosition(winId, newX, newY);
-  }, [updateWindowPosition]);
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    if (dragRef.current.type === 'drag') {
+      const { winId, offsetX, offsetY } = dragRef.current;
+      setOpenWindows(prev => prev.map(w =>
+        w.id === winId
+          ? { ...w, position: { x: Math.max(0, mouseX - offsetX), y: Math.max(0, mouseY - offsetY) } }
+          : w
+      ));
+    } else if (dragRef.current.type === 'resize') {
+      const { winId, direction, startMouseX, startMouseY, startW, startH, startX, startY } = dragRef.current;
+      const dx = mouseX - startMouseX;
+      const dy = mouseY - startMouseY;
+      let newW = startW, newH = startH, newX = startX, newY = startY;
+      if (direction.includes('e')) newW = Math.max(MIN_W, startW + dx);
+      if (direction.includes('s')) newH = Math.max(MIN_H, startH + dy);
+      if (direction.includes('w')) {
+        newW = Math.max(MIN_W, startW - dx);
+        newX = startX + startW - newW;
+      }
+      if (direction.includes('n')) {
+        newH = Math.max(MIN_H, startH - dy);
+        newY = startY + startH - newH;
+      }
+      setOpenWindows(prev => prev.map(w =>
+        w.id === winId
+          ? { ...w, position: { x: newX, y: newY }, size: { w: newW, h: newH } }
+          : w
+      ));
+    }
+  }, []);
 
   const handleMouseUp = useCallback(() => {
     dragRef.current = null;
@@ -304,6 +362,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
     if (!desktopRef.current) return;
     const rect = desktopRef.current.getBoundingClientRect();
     dragRef.current = {
+      type: 'drag',
       winId,
       offsetX: e.clientX - rect.left - winX,
       offsetY: e.clientY - rect.top - winY,
@@ -381,7 +440,6 @@ export default function Desktop({ state, firmaValue, ...actions }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
-      {/* Desktop wallpaper + content area */}
       <div
         ref={desktopRef}
         onMouseMove={handleMouseMove}
@@ -418,6 +476,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
           const app = DESKTOP_APPS.find(a => a.id === win.appId);
           const isActive = win.id === activeWindowId && !win.minimized;
           const pos = win.position || { x: 60, y: 50 };
+          const size = win.size || (WINDOW_FLOAT_DEFAULTS[win.appId] || DEFAULT_FLOAT_SIZE);
 
           if (win.floating && !win.minimized) {
             return (
@@ -428,8 +487,10 @@ export default function Desktop({ state, firmaValue, ...actions }) {
                   position: 'absolute',
                   left: pos.x,
                   top: pos.y,
-                  width: '460px',
-                  height: '560px',
+                  width: size.w,
+                  height: size.h,
+                  minWidth: MIN_W,
+                  minHeight: MIN_H,
                   display: 'flex',
                   flexDirection: 'column',
                   borderRadius: '12px',
@@ -452,6 +513,35 @@ export default function Desktop({ state, firmaValue, ...actions }) {
                 <div style={{ flex: 1, overflow: 'auto', background: 'var(--color-cream)' }}>
                   {renderAppContent(win.appId)}
                 </div>
+                {/* Resize handles */}
+                {RESIZE_HANDLES.map(h => (
+                  <div
+                    key={h.dir}
+                    onMouseDown={e => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      if (!desktopRef.current) return;
+                      const rect = desktopRef.current.getBoundingClientRect();
+                      dragRef.current = {
+                        type: 'resize',
+                        winId: win.id,
+                        direction: h.dir,
+                        startMouseX: e.clientX - rect.left,
+                        startMouseY: e.clientY - rect.top,
+                        startW: size.w,
+                        startH: size.h,
+                        startX: pos.x,
+                        startY: pos.y,
+                      };
+                    }}
+                    style={{
+                      position: 'absolute',
+                      ...h.style,
+                      cursor: h.cursor,
+                      zIndex: 25,
+                    }}
+                  />
+                ))}
               </div>
             );
           }
@@ -483,7 +573,6 @@ export default function Desktop({ state, firmaValue, ...actions }) {
         })}
       </div>
 
-      {/* Taskbar */}
       <Taskbar
         openWindows={openWindows}
         activeWindowId={activeWindowId}
