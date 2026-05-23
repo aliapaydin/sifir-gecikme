@@ -403,413 +403,362 @@ Kısa, samimi, Türkçe yaz. Markdown kullanma. Paragraf yaz.`;
 
   if (!hidrated) return null;
 
-  return (
-    <div style={{ maxWidth: 480, margin: '0 auto', padding: '0 1rem 4rem', fontFamily: 'system-ui, sans-serif' }}>
-      {/* Header */}
-      <div style={{ paddingTop: '2rem', marginBottom: '1.5rem', textAlign: 'center' }}>
-        <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🍺</div>
-        <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-text)', margin: 0 }}>
-          Alkol Promilmetre
-        </h1>
-        <p style={{ fontSize: '0.82rem', color: 'var(--color-text-mute)', margin: '0.35rem 0 0', lineHeight: 1.5 }}>
-          İçtiğin içecekleri ekle, kan alkol seviyeni hesapla.
-        </p>
-      </div>
-
-      {/* Gauge */}
-      <div style={{
-        ...card,
-        textAlign: 'center',
-        background: `linear-gradient(135deg, ${status.bg}55, var(--color-cream-card))`,
-        border: `0.5px solid ${status.border}`,
-        transition: 'background 0.5s, border-color 0.5s',
-      }}>
-        <Gauge promil={promil} />
-
-        {/* Status badge */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
-          <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
-            background: status.bg,
-            border: `1px solid ${status.border}`,
-            borderRadius: '9999px',
-            padding: '0.3rem 0.9rem',
-            transition: 'all 0.4s',
-          }}>
-            <div style={{ width: 8, height: 8, borderRadius: '50%', background: status.color, transition: 'background 0.4s' }} />
-            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: status.color, transition: 'color 0.4s' }}>
-              {status.label}
-            </span>
-          </div>
-        </div>
-
-        {/* Time info */}
-        {(saatKaldi || sifiraKadar) && (
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '0.75rem', flexWrap: 'wrap' }}>
-            {saatKaldi && (
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#f97316' }}>{saatKaldi} saat</div>
-                <div style={{ fontSize: '0.65rem', color: 'var(--color-text-mute)' }}>yasal sınır altı</div>
-              </div>
-            )}
-            {sifiraKadar && (
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--color-text-soft)' }}>{sifiraKadar} saat</div>
-                <div style={{ fontSize: '0.65rem', color: 'var(--color-text-mute)' }}>tamamen temiz</div>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Trafik uyarısı */}
-      {status.trafik && (
+  const gaugeCard = (
+    <div style={{
+      ...card,
+      textAlign: 'center',
+      background: `linear-gradient(135deg, ${status.bg}55, var(--color-cream-card))`,
+      border: `0.5px solid ${status.border}`,
+      transition: 'background 0.5s, border-color 0.5s',
+    }}>
+      <Gauge promil={promil} />
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
         <div style={{
-          background: 'linear-gradient(135deg, #dc2626, #b91c1c)',
-          borderRadius: '12px',
-          padding: '1rem 1.25rem',
-          marginBottom: '0.75rem',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.75rem',
+          display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
+          background: status.bg, border: `1px solid ${status.border}`,
+          borderRadius: '9999px', padding: '0.3rem 0.9rem', transition: 'all 0.4s',
         }}>
-          <div style={{ fontSize: '1.75rem', flexShrink: 0 }}>🚫</div>
-          <div>
-            <div style={{ fontWeight: 800, color: '#fff', fontSize: '0.95rem' }}>TRAFİĞE ÇIKMA!</div>
-            <div style={{ color: '#fecaca', fontSize: '0.78rem', marginTop: '0.15rem', lineHeight: 1.4 }}>
-              Türkiye'de yasal sınır 0.50‰ — şu an {promil.toFixed(2)}‰ ile bu sınırın üzerindesin.
-              {saatKaldi && ` Yaklaşık ${saatKaldi} saat bekle.`}
+          <div style={{ width: 8, height: 8, borderRadius: '50%', background: status.color, transition: 'background 0.4s' }} />
+          <span style={{ fontSize: '0.82rem', fontWeight: 700, color: status.color, transition: 'color 0.4s' }}>
+            {status.label}
+          </span>
+        </div>
+      </div>
+      {(saatKaldi || sifiraKadar) && (
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', marginTop: '0.875rem', flexWrap: 'wrap' }}>
+          {saatKaldi && (
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '1.3rem', fontWeight: 800, color: '#f97316' }}>{saatKaldi} saat</div>
+              <div style={{ fontSize: '0.65rem', color: 'var(--color-text-mute)' }}>yasal sınır altı</div>
             </div>
-          </div>
+          )}
+          {sifiraKadar && (
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--color-text-soft)' }}>{sifiraKadar} saat</div>
+              <div style={{ fontSize: '0.65rem', color: 'var(--color-text-mute)' }}>tamamen temiz</div>
+            </div>
+          )}
         </div>
       )}
+    </div>
+  );
 
-      {/* Yasal sınıra yakın uyarı */}
-      {status.uyari && !status.trafik && (
-        <div style={{
-          background: '#fef3c7',
-          border: '0.5px solid #fcd34d',
-          borderRadius: '10px',
-          padding: '0.7rem 1rem',
-          marginBottom: '0.75rem',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-          color: '#92400e',
-          fontSize: '0.82rem',
-          fontWeight: 600,
-        }}>
-          ⚠️ {status.uyari}
+  const trafikUyari = status.trafik ? (
+    <div style={{
+      background: 'linear-gradient(135deg, #dc2626, #b91c1c)',
+      borderRadius: '12px', padding: '1rem 1.25rem', marginBottom: '0.75rem',
+      display: 'flex', alignItems: 'center', gap: '0.75rem',
+    }}>
+      <div style={{ fontSize: '1.75rem', flexShrink: 0 }}>🚫</div>
+      <div>
+        <div style={{ fontWeight: 800, color: '#fff', fontSize: '0.95rem' }}>TRAFİĞE ÇIKMA!</div>
+        <div style={{ color: '#fecaca', fontSize: '0.78rem', marginTop: '0.15rem', lineHeight: 1.4 }}>
+          Türkiye'de yasal sınır 0.50‰ — şu an {promil.toFixed(2)}‰ ile bu sınırın üzerindesin.
+          {saatKaldi && ` Yaklaşık ${saatKaldi} saat bekle.`}
         </div>
-      )}
+      </div>
+    </div>
+  ) : status.uyari ? (
+    <div style={{
+      background: '#fef3c7', border: '0.5px solid #fcd34d', borderRadius: '10px',
+      padding: '0.7rem 1rem', marginBottom: '0.75rem',
+      display: 'flex', alignItems: 'center', gap: '0.5rem',
+      color: '#92400e', fontSize: '0.82rem', fontWeight: 600,
+    }}>
+      ⚠️ {status.uyari}
+    </div>
+  ) : null;
 
-      {/* İçecek Ekle */}
-      <div style={card}>
-        <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-text-soft)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 0.75rem' }}>
-          İçecek Ekle
+  const iceciListesi = eklenenler.length > 0 ? (
+    <div style={card}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.625rem' }}>
+        <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-text-soft)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>
+          İçilen İçecekler
         </p>
-
-        {/* Kategori sekmeler */}
-        <div style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
-          {KATEGORILER.map(kat => (
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <span style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)' }}>
+            Toplam: <strong style={{ color: 'var(--color-text)' }}>{toplamAlkolGram.toFixed(1)} g</strong> alkol
+          </span>
+          <button onClick={temizle} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.72rem', color: '#ef4444', padding: '0.2rem 0.4rem', borderRadius: '4px' }}>
+            Temizle
+          </button>
+        </div>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+        {eklenenler.map(ic => (
+          <div key={ic.id} style={{
+            background: 'var(--color-cream)', border: '0.5px solid var(--color-border)',
+            borderRadius: '8px', padding: '0.5rem 0.75rem',
+            display: 'flex', alignItems: 'center', gap: '0.625rem',
+          }}>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontWeight: 600, fontSize: '0.82rem', color: 'var(--color-text)' }}>{ic.ad}</div>
+              <div style={{ fontSize: '0.7rem', color: 'var(--color-text-mute)' }}>
+                {ic.ml} ml · %{ic.abv} · {alkolGram(ic.ml, ic.abv).toFixed(1)} g alkol
+              </div>
+            </div>
             <button
-              key={kat}
-              onClick={() => handleKategoriDegis(kat)}
-              style={{
-                padding: '0.25rem 0.65rem',
-                borderRadius: '9999px',
-                border: `0.5px solid ${kategori === kat ? 'var(--color-accent)' : 'var(--color-border)'}`,
-                background: kategori === kat ? 'var(--color-accent-soft)' : 'transparent',
-                color: kategori === kat ? 'var(--color-accent-text)' : 'var(--color-text-mute)',
-                fontSize: '0.76rem',
-                fontWeight: kategori === kat ? 600 : 400,
-                cursor: 'pointer',
-                transition: 'all 0.15s',
-              }}
-            >{kat}</button>
-          ))}
-        </div>
-
-        {/* Dropdown */}
-        <div style={{ marginBottom: '0.625rem' }}>
-          <select
-            style={inp}
-            value={secili}
-            onChange={e => handleIcecekDegis(e.target.value)}
-          >
-            <option value="">İçecek seç…</option>
-            {icecekler.map(ic => (
-              <option key={ic.ad} value={ic.ad}>
-                {ic.ad} — %{ic.abv} ({ic.standartMl} ml)
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Miktar + ABV gösterimi */}
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-end' }}>
-          <div style={{ flex: 1 }}>
-            <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--color-text-soft)', marginBottom: '0.3rem' }}>
-              Miktar (ml)
-            </label>
-            <input
-              type="number"
-              min="1"
-              style={inp}
-              placeholder="ml"
-              value={miktar}
-              onChange={e => setMiktar(e.target.value)}
-            />
+              onClick={() => sil(ic.id)}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-mute)', fontSize: '0.85rem', padding: '0.25rem', transition: 'color 0.15s', lineHeight: 1 }}
+              onMouseEnter={e => e.currentTarget.style.color = '#ef4444'}
+              onMouseLeave={e => e.currentTarget.style.color = 'var(--color-text-mute)'}
+            >✕</button>
           </div>
-          {seciliIcecek && (
-            <div style={{ textAlign: 'center', padding: '0 0.5rem 0.65rem', whiteSpace: 'nowrap' }}>
-              <span style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)' }}>%{seciliIcecek.abv} ABV</span>
-              {miktar && (
-                <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--color-accent-text)' }}>
-                  {alkolGram(Number(miktar), seciliIcecek.abv).toFixed(1)} g alkol
+        ))}
+      </div>
+    </div>
+  ) : null;
+
+  return (
+    <>
+      <style>{`
+        .pm-wrap {
+          max-width: 520px;
+          margin: 0 auto;
+          padding: 0 1rem 4rem;
+          font-family: system-ui, sans-serif;
+        }
+        .pm-body {
+          display: flex;
+          flex-direction: column;
+        }
+        @media (min-width: 800px) {
+          .pm-wrap {
+            max-width: 1100px;
+            padding: 0 2rem 4rem;
+          }
+          .pm-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            align-items: start;
+          }
+          .pm-header {
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+          }
+        }
+        @media (min-width: 1100px) {
+          .pm-wrap { max-width: 1200px; }
+          .pm-body { grid-template-columns: 5fr 4fr; gap: 1.5rem; }
+        }
+      `}</style>
+
+      <div className="pm-wrap">
+        {/* Header */}
+        <div className="pm-header" style={{ paddingTop: '2rem', marginBottom: '1.5rem', textAlign: 'center' }}>
+          <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🍺</div>
+          <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--color-text)', margin: 0 }}>
+            Alkol Promilmetre
+          </h1>
+          <p style={{ fontSize: '0.82rem', color: 'var(--color-text-mute)', margin: '0.35rem 0 0', lineHeight: 1.5 }}>
+            İçtiğin içecekleri ekle, kan alkol seviyeni hesapla.
+          </p>
+        </div>
+
+        <div className="pm-body">
+          {/* Sol sütun: Gösterge + uyarılar + içecek listesi */}
+          <div>
+            {gaugeCard}
+            {trafikUyari}
+            {iceciListesi}
+          </div>
+
+          {/* Sağ sütun: Form + modifiers + profil + AI */}
+          <div>
+            {/* İçecek Ekle */}
+            <div style={card}>
+              <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-text-soft)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 0.75rem' }}>
+                İçecek Ekle
+              </p>
+              <div style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
+                {KATEGORILER.map(kat => (
+                  <button
+                    key={kat}
+                    onClick={() => handleKategoriDegis(kat)}
+                    style={{
+                      padding: '0.25rem 0.65rem', borderRadius: '9999px',
+                      border: `0.5px solid ${kategori === kat ? 'var(--color-accent)' : 'var(--color-border)'}`,
+                      background: kategori === kat ? 'var(--color-accent-soft)' : 'transparent',
+                      color: kategori === kat ? 'var(--color-accent-text)' : 'var(--color-text-mute)',
+                      fontSize: '0.76rem', fontWeight: kategori === kat ? 600 : 400,
+                      cursor: 'pointer', transition: 'all 0.15s',
+                    }}
+                  >{kat}</button>
+                ))}
+              </div>
+              <div style={{ marginBottom: '0.625rem' }}>
+                <select style={inp} value={secili} onChange={e => handleIcecekDegis(e.target.value)}>
+                  <option value="">İçecek seç…</option>
+                  {icecekler.map(ic => (
+                    <option key={ic.ad} value={ic.ad}>{ic.ad} — %{ic.abv} ({ic.standartMl} ml)</option>
+                  ))}
+                </select>
+              </div>
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-end' }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--color-text-soft)', marginBottom: '0.3rem' }}>Miktar (ml)</label>
+                  <input type="number" min="1" style={inp} placeholder="ml" value={miktar} onChange={e => setMiktar(e.target.value)} />
                 </div>
+                {seciliIcecek && (
+                  <div style={{ textAlign: 'center', padding: '0 0.5rem 0.65rem', whiteSpace: 'nowrap' }}>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)' }}>%{seciliIcecek.abv} ABV</span>
+                    {miktar && (
+                      <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--color-accent-text)' }}>
+                        {alkolGram(Number(miktar), seciliIcecek.abv).toFixed(1)} g alkol
+                      </div>
+                    )}
+                  </div>
+                )}
+                <button
+                  onClick={ekle}
+                  disabled={!secili || !miktar || Number(miktar) <= 0}
+                  style={{
+                    padding: '0.6rem 1.1rem', borderRadius: '8px', border: 'none',
+                    background: (!secili || !miktar) ? 'var(--color-border)' : 'linear-gradient(135deg, var(--color-accent), #8b5cf6)',
+                    color: (!secili || !miktar) ? 'var(--color-text-mute)' : '#fff',
+                    fontWeight: 700, fontSize: '0.85rem',
+                    cursor: (!secili || !miktar) ? 'default' : 'pointer',
+                    whiteSpace: 'nowrap', transition: 'all 0.2s', flexShrink: 0,
+                  }}
+                >+ Ekle</button>
+              </div>
+            </div>
+
+            {/* Mide Durumu & İçecek */}
+            <div style={card}>
+              <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-text-soft)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 0.75rem' }}>
+                Mide Durumu & İçecek
+              </p>
+              <div style={{ marginBottom: '0.75rem' }}>
+                <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--color-text-soft)', marginBottom: '0.4rem' }}>Yemek durumu</label>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.3rem' }}>
+                  {YEMEK_SECENEK.map(y => (
+                    <button
+                      key={y.value}
+                      onClick={() => setYemek(y.value)}
+                      style={{
+                        padding: '0.5rem', borderRadius: '8px',
+                        border: `0.5px solid ${yemek === y.value ? 'var(--color-accent)' : 'var(--color-border)'}`,
+                        background: yemek === y.value ? 'var(--color-accent-soft)' : 'transparent',
+                        color: yemek === y.value ? 'var(--color-accent-text)' : 'var(--color-text-mute)',
+                        cursor: 'pointer', textAlign: 'left', fontSize: '0.76rem',
+                        fontWeight: yemek === y.value ? 600 : 400,
+                        transition: 'all 0.15s', display: 'flex', gap: '0.35rem', alignItems: 'center',
+                      }}
+                    >
+                      <span>{y.emoji}</span><span>{y.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--color-text-soft)', marginBottom: '0.4rem' }}>Yanında ne içiyorsun?</label>
+                <div style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap' }}>
+                  {ICKI_SECENEK.map(ic => (
+                    <button
+                      key={ic.value}
+                      onClick={() => setIcki(ic.value)}
+                      style={{
+                        padding: '0.25rem 0.65rem', borderRadius: '9999px',
+                        border: `0.5px solid ${icki === ic.value ? 'var(--color-accent)' : 'var(--color-border)'}`,
+                        background: icki === ic.value ? 'var(--color-accent-soft)' : 'transparent',
+                        color: icki === ic.value ? 'var(--color-accent-text)' : 'var(--color-text-mute)',
+                        fontSize: '0.76rem', fontWeight: icki === ic.value ? 600 : 400,
+                        cursor: 'pointer', transition: 'all 0.15s',
+                      }}
+                    >{ic.emoji} {ic.label}</button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Kişisel Bilgiler */}
+            <div style={card}>
+              <button
+                onClick={() => setProfilAcik(p => !p)}
+                style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 0 }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-text-soft)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Kişisel Bilgiler
+                  </span>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--color-text-mute)' }}>
+                    {profil.kilo} kg · {profil.cinsiyet === 'male' ? 'Erkek' : 'Kadın'}
+                  </span>
+                </div>
+                <span style={{ color: 'var(--color-text-mute)', fontSize: '0.75rem', transform: profilAcik ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▼</span>
+              </button>
+              {profilAcik && (
+                <>
+                  <div style={{ marginTop: '0.75rem', display: 'flex', gap: '0.625rem' }}>
+                    <div style={{ flex: 1 }}>
+                      <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--color-text-soft)', marginBottom: '0.3rem' }}>Kilo (kg)</label>
+                      <input type="number" min="30" max="200" step="0.5" style={inp} value={profil.kilo} onChange={e => updateProfil('kilo', Number(e.target.value))} />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--color-text-soft)', marginBottom: '0.3rem' }}>Cinsiyet</label>
+                      <select style={inp} value={profil.cinsiyet} onChange={e => updateProfil('cinsiyet', e.target.value)}>
+                        <option value="male">Erkek</option>
+                        <option value="female">Kadın</option>
+                      </select>
+                    </div>
+                  </div>
+                  <p style={{ fontSize: '0.68rem', color: 'var(--color-text-mute)', margin: '0.5rem 0 0' }}>
+                    Bilgilerin cihazına kaydedilir, hiçbir yere gönderilmez.
+                  </p>
+                </>
               )}
             </div>
-          )}
-          <button
-            onClick={ekle}
-            disabled={!secili || !miktar || Number(miktar) <= 0}
-            style={{
-              padding: '0.6rem 1.1rem',
-              borderRadius: '8px',
-              border: 'none',
-              background: (!secili || !miktar) ? 'var(--color-border)' : 'linear-gradient(135deg, var(--color-accent), #8b5cf6)',
-              color: (!secili || !miktar) ? 'var(--color-text-mute)' : '#fff',
-              fontWeight: 700,
-              fontSize: '0.85rem',
-              cursor: (!secili || !miktar) ? 'default' : 'pointer',
-              whiteSpace: 'nowrap',
-              transition: 'all 0.2s',
-              flexShrink: 0,
-            }}
-          >+ Ekle</button>
-        </div>
-      </div>
 
-      {/* Eklenen içecekler listesi */}
-      {eklenenler.length > 0 && (
-        <div style={card}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.625rem' }}>
-            <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-text-soft)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>
-              İçilen İçecekler
-            </p>
-            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)' }}>
-                Toplam: <strong style={{ color: 'var(--color-text)' }}>{toplamAlkolGram.toFixed(1)} g</strong> alkol
-              </span>
-              <button
-                onClick={temizle}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.72rem', color: '#ef4444', padding: '0.2rem 0.4rem', borderRadius: '4px' }}
-              >Temizle</button>
-            </div>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-            {eklenenler.map(ic => (
-              <div key={ic.id} style={{
-                background: 'var(--color-cream)',
-                border: '0.5px solid var(--color-border)',
-                borderRadius: '8px',
-                padding: '0.5rem 0.75rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.625rem',
-              }}>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 600, fontSize: '0.82rem', color: 'var(--color-text)' }}>{ic.ad}</div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--color-text-mute)' }}>
-                    {ic.ml} ml · %{ic.abv} · {alkolGram(ic.ml, ic.abv).toFixed(1)} g alkol
-                  </div>
-                </div>
+            {/* AI Analiz */}
+            {eklenenler.length > 0 && (
+              <div style={card}>
                 <button
-                  onClick={() => sil(ic.id)}
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-mute)', fontSize: '0.85rem', padding: '0.25rem', transition: 'color 0.15s', lineHeight: 1 }}
-                  onMouseEnter={e => e.currentTarget.style.color = '#ef4444'}
-                  onMouseLeave={e => e.currentTarget.style.color = 'var(--color-text-mute)'}
-                >✕</button>
+                  onClick={aiAnaliz}
+                  disabled={aiYukleniyor}
+                  style={{
+                    width: '100%', padding: '0.75rem', borderRadius: '8px', border: 'none',
+                    background: aiYukleniyor ? 'var(--color-border)' : 'linear-gradient(135deg, #8b5cf6, #6366f1)',
+                    color: aiYukleniyor ? 'var(--color-text-mute)' : '#fff',
+                    fontWeight: 700, fontSize: '0.9rem', cursor: aiYukleniyor ? 'default' : 'pointer',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem',
+                    transition: 'all 0.2s',
+                  }}
+                >
+                  {aiYukleniyor ? '⏳ Analiz ediliyor…' : '✨ AI Analizi Al'}
+                </button>
+                {aiHata && (
+                  <div style={{ marginTop: '0.625rem', padding: '0.625rem 0.75rem', borderRadius: '8px', background: 'rgba(239,68,68,0.08)', border: '0.5px solid rgba(239,68,68,0.3)', color: '#ef4444', fontSize: '0.82rem' }}>
+                    ⚠️ {aiHata}
+                  </div>
+                )}
+                {aiSonuc && (
+                  <div style={{
+                    marginTop: '0.75rem', padding: '0.875rem', borderRadius: '10px',
+                    background: 'linear-gradient(135deg, rgba(139,92,246,0.06), rgba(99,102,241,0.06))',
+                    border: '0.5px solid rgba(139,92,246,0.25)',
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.5rem' }}>
+                      <span style={{ fontSize: '1rem' }}>✨</span>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#7c3aed', textTransform: 'uppercase', letterSpacing: '0.05em' }}>AI Analizi</span>
+                    </div>
+                    <p style={{ fontSize: '0.83rem', color: 'var(--color-text)', lineHeight: 1.65, margin: 0, whiteSpace: 'pre-wrap' }}>
+                      {aiSonuc}
+                    </p>
+                  </div>
+                )}
               </div>
-            ))}
-          </div>
-        </div>
-      )}
+            )}
 
-      {/* Yemek & İçecek */}
-      <div style={card}>
-        <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-text-soft)', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 0.75rem' }}>
-          Mide Durumu & İçecek
-        </p>
-
-        {/* Yemek seçenekleri */}
-        <div style={{ marginBottom: '0.75rem' }}>
-          <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--color-text-soft)', marginBottom: '0.4rem' }}>
-            Yemek durumu
-          </label>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.3rem' }}>
-            {YEMEK_SECENEK.map(y => (
-              <button
-                key={y.value}
-                onClick={() => setYemek(y.value)}
-                style={{
-                  padding: '0.5rem 0.5rem',
-                  borderRadius: '8px',
-                  border: `0.5px solid ${yemek === y.value ? 'var(--color-accent)' : 'var(--color-border)'}`,
-                  background: yemek === y.value ? 'var(--color-accent-soft)' : 'transparent',
-                  color: yemek === y.value ? 'var(--color-accent-text)' : 'var(--color-text-mute)',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  fontSize: '0.76rem',
-                  fontWeight: yemek === y.value ? 600 : 400,
-                  transition: 'all 0.15s',
-                  display: 'flex',
-                  gap: '0.35rem',
-                  alignItems: 'center',
-                }}
-              >
-                <span>{y.emoji}</span>
-                <span>{y.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Alkolsüz içecek */}
-        <div>
-          <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--color-text-soft)', marginBottom: '0.4rem' }}>
-            Yanında ne içiyorsun?
-          </label>
-          <div style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap' }}>
-            {ICKI_SECENEK.map(ic => (
-              <button
-                key={ic.value}
-                onClick={() => setIcki(ic.value)}
-                style={{
-                  padding: '0.25rem 0.65rem',
-                  borderRadius: '9999px',
-                  border: `0.5px solid ${icki === ic.value ? 'var(--color-accent)' : 'var(--color-border)'}`,
-                  background: icki === ic.value ? 'var(--color-accent-soft)' : 'transparent',
-                  color: icki === ic.value ? 'var(--color-accent-text)' : 'var(--color-text-mute)',
-                  fontSize: '0.76rem',
-                  fontWeight: icki === ic.value ? 600 : 400,
-                  cursor: 'pointer',
-                  transition: 'all 0.15s',
-                }}
-              >{ic.emoji} {ic.label}</button>
-            ))}
+            {/* Yasal uyarı */}
+            <p style={{ fontSize: '0.67rem', color: 'var(--color-text-mute)', textAlign: 'center', lineHeight: 1.5, padding: '0 0.5rem' }}>
+              Bu araç yalnızca bilgilendirme amaçlıdır. Widmark formülü ortalama değerler kullanır; bireysel farklılıklar promil seviyesini önemli ölçüde etkileyebilir. Alkol aldıktan sonra araç kullanma.
+            </p>
           </div>
         </div>
       </div>
-
-      {/* Kişisel bilgiler (collapsible) */}
-      <div style={card}>
-        <button
-          onClick={() => setProfilAcik(p => !p)}
-          style={{
-            width: '100%', background: 'none', border: 'none', cursor: 'pointer',
-            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-            padding: 0,
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-text-soft)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              Kişisel Bilgiler
-            </span>
-            <span style={{ fontSize: '0.7rem', color: 'var(--color-text-mute)' }}>
-              {profil.kilo} kg · {profil.cinsiyet === 'male' ? 'Erkek' : 'Kadın'}
-            </span>
-          </div>
-          <span style={{ color: 'var(--color-text-mute)', fontSize: '0.75rem', transform: profilAcik ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▼</span>
-        </button>
-
-        {profilAcik && (
-          <div style={{ marginTop: '0.75rem', display: 'flex', gap: '0.625rem' }}>
-            <div style={{ flex: 1 }}>
-              <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--color-text-soft)', marginBottom: '0.3rem' }}>
-                Kilo (kg)
-              </label>
-              <input
-                type="number"
-                min="30"
-                max="200"
-                step="0.5"
-                style={inp}
-                value={profil.kilo}
-                onChange={e => updateProfil('kilo', Number(e.target.value))}
-              />
-            </div>
-            <div style={{ flex: 1 }}>
-              <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--color-text-soft)', marginBottom: '0.3rem' }}>
-                Cinsiyet
-              </label>
-              <select
-                style={inp}
-                value={profil.cinsiyet}
-                onChange={e => updateProfil('cinsiyet', e.target.value)}
-              >
-                <option value="male">Erkek</option>
-                <option value="female">Kadın</option>
-              </select>
-            </div>
-          </div>
-        )}
-        {profilAcik && (
-          <p style={{ fontSize: '0.68rem', color: 'var(--color-text-mute)', marginTop: '0.5rem', margin: '0.5rem 0 0' }}>
-            Bilgilerin cihazına kaydedilir, hiçbir yere gönderilmez.
-          </p>
-        )}
-      </div>
-
-      {/* AI Analiz */}
-      {eklenenler.length > 0 && (
-        <div style={card}>
-          <button
-            onClick={aiAnaliz}
-            disabled={aiYukleniyor}
-            style={{
-              width: '100%', padding: '0.75rem', borderRadius: '8px', border: 'none',
-              background: aiYukleniyor ? 'var(--color-border)' : 'linear-gradient(135deg, #8b5cf6, #6366f1)',
-              color: aiYukleniyor ? 'var(--color-text-mute)' : '#fff',
-              fontWeight: 700, fontSize: '0.9rem', cursor: aiYukleniyor ? 'default' : 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem',
-              transition: 'all 0.2s',
-            }}
-          >
-            {aiYukleniyor ? '⏳ Analiz ediliyor…' : '✨ AI Analizi Al'}
-          </button>
-
-          {aiHata && (
-            <div style={{ marginTop: '0.625rem', padding: '0.625rem 0.75rem', borderRadius: '8px', background: 'rgba(239,68,68,0.08)', border: '0.5px solid rgba(239,68,68,0.3)', color: '#ef4444', fontSize: '0.82rem' }}>
-              ⚠️ {aiHata}
-            </div>
-          )}
-
-          {aiSonuc && (
-            <div style={{
-              marginTop: '0.75rem',
-              padding: '0.875rem',
-              borderRadius: '10px',
-              background: 'linear-gradient(135deg, rgba(139,92,246,0.06), rgba(99,102,241,0.06))',
-              border: '0.5px solid rgba(139,92,246,0.25)',
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.5rem' }}>
-                <span style={{ fontSize: '1rem' }}>✨</span>
-                <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#7c3aed', textTransform: 'uppercase', letterSpacing: '0.05em' }}>AI Analizi</span>
-              </div>
-              <p style={{ fontSize: '0.83rem', color: 'var(--color-text)', lineHeight: 1.65, margin: 0, whiteSpace: 'pre-wrap' }}>
-                {aiSonuc}
-              </p>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Yasal uyarı */}
-      <p style={{ fontSize: '0.67rem', color: 'var(--color-text-mute)', textAlign: 'center', lineHeight: 1.5, padding: '0 0.5rem' }}>
-        Bu araç yalnızca bilgilendirme amaçlıdır. Widmark formülü ortalama değerler kullanır; bireysel farklılıklar promil seviyesini önemli ölçüde etkileyebilir. Alkol aldıktan sonra araç kullanma.
-      </p>
-    </div>
+    </>
   );
 }
