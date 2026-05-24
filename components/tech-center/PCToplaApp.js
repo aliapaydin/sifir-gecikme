@@ -25,16 +25,13 @@ function CaseVisual({ product, size = 'md' }) {
       position: 'relative', overflow: 'hidden',
       boxShadow: `inset 1px 0 0 ${accent}33, 0 2px 8px rgba(0,0,0,0.3)`,
     }}>
-      {/* Front panel accent strip */}
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: size === 'sm' ? 3 : 5, background: accent, opacity: 0.8 }} />
-      {/* Power button */}
       <div style={{
         position: 'absolute', top: size === 'sm' ? 6 : 10, right: size === 'sm' ? 5 : 8,
         width: size === 'sm' ? 5 : 8, height: size === 'sm' ? 5 : 8,
         borderRadius: '50%', background: accent, opacity: 0.9,
         boxShadow: `0 0 ${size === 'sm' ? 4 : 6}px ${accent}`,
       }} />
-      {/* Drive bay lines */}
       {[0,1,2].map(i => (
         <div key={i} style={{
           position: 'absolute',
@@ -45,7 +42,6 @@ function CaseVisual({ product, size = 'md' }) {
           borderBottom: `1px solid ${accent}33`,
         }} />
       ))}
-      {/* Ventilation holes */}
       <div style={{ position: 'absolute', bottom: size === 'sm' ? 4 : 8, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 2 }}>
         {[0,1,2,3].map(i => (
           <div key={i} style={{ width: size === 'sm' ? 3 : 5, height: size === 'sm' ? 3 : 5, borderRadius: '50%', background: `${accent}44` }} />
@@ -56,20 +52,38 @@ function CaseVisual({ product, size = 'md' }) {
 }
 
 const BUILD_SLOTS = [
-  { key: 'case',        label: 'Kasa',        emoji: '🖥️', category: 'case',        required: true },
-  { key: 'cpu',         label: 'İşlemci',     emoji: '🔲', category: 'cpu',         required: true },
-  { key: 'motherboard', label: 'Anakart',     emoji: '🟩', category: 'motherboard', required: true },
-  { key: 'ram',         label: 'RAM',         emoji: '🧩', category: 'ram',         required: true },
-  { key: 'storage',     label: 'Depolama',    emoji: '💿', category: 'ssd',         required: true },
-  { key: 'psu',         label: 'Güç Kaynağı', emoji: '🔌', category: 'psu',         required: true },
-  { key: 'gpu',         label: 'Ekran Kartı', emoji: '🎮', category: 'gpu',         required: false },
+  { key: 'case',        label: 'Kasa',            emoji: '🖥️', category: 'case',        required: true },
+  { key: 'cpu',         label: 'İşlemci',          emoji: '🔲', category: 'cpu',         required: true },
+  { key: 'motherboard', label: 'Anakart',           emoji: '🟩', category: 'motherboard', required: true },
+  { key: 'ram1',        label: 'RAM (1. Kanal)',    emoji: '🧩', category: 'ram',         required: true },
+  { key: 'ram2',        label: 'RAM (2. Kanal)',    emoji: '🧩', category: 'ram',         required: false, matchKey: 'ram1' },
+  { key: 'storage1',    label: 'Depolama 1',        emoji: '💿', category: 'ssd',         required: true },
+  { key: 'storage2',    label: 'Depolama 2',        emoji: '💿', category: 'ssd',         required: false },
+  { key: 'psu',         label: 'Güç Kaynağı',      emoji: '🔌', category: 'psu',         required: true },
+  { key: 'gpu',         label: 'Ekran Kartı',       emoji: '🎮', category: 'gpu',         required: false },
 ];
+
+const PERIPHERAL_SLOTS = [
+  { key: 'monitor',  label: 'Monitör',    emoji: '🖥️', category: 'monitor'  },
+  { key: 'mouse',    label: 'Mouse',       emoji: '🖱️', category: 'mouse'    },
+  { key: 'keyboard', label: 'Klavye',      emoji: '⌨️', category: 'keyboard' },
+  { key: 'headset',  label: 'Kulaklık',    emoji: '🎧', category: 'headset'  },
+  { key: 'webcam',   label: 'Webcam',      emoji: '📷', category: 'webcam'   },
+  { key: 'speaker',  label: 'Hoparlör',    emoji: '🔊', category: 'speaker'  },
+  { key: 'printer',  label: 'Yazıcı',      emoji: '🖨️', category: 'printer'  },
+];
+
+const MAIN_SLOTS_INIT = { case: null, cpu: null, motherboard: null, ram1: null, ram2: null, storage1: null, storage2: null, psu: null, gpu: null };
+const PERIPHERAL_INIT = { monitor: null, mouse: null, keyboard: null, headset: null, webcam: null, speaker: null, printer: null };
+
+const SLOT_KEY_LABELS = BUILD_SLOTS.reduce((acc, s) => { acc[s.key] = s.label; return acc; }, {});
+const SLOT_KEY_EMOJIS = BUILD_SLOTS.reduce((acc, s) => { acc[s.key] = s.emoji; return acc; }, {});
 
 function checkCompatibility(build) {
   const issues = [];
   const cpu = build.cpu ? PRODUCTS[build.cpu] : null;
   const mb  = build.motherboard ? PRODUCTS[build.motherboard] : null;
-  const ram = build.ram ? PRODUCTS[build.ram] : null;
+  const ram = build.ram1 ? PRODUCTS[build.ram1] : null;
   const psu = build.psu ? PRODUCTS[build.psu] : null;
   const gpu = build.gpu ? PRODUCTS[build.gpu] : null;
   const cas = build.case ? PRODUCTS[build.case] : null;
@@ -89,6 +103,9 @@ function checkCompatibility(build) {
   if (cas && mb && !cas.supportedMB?.includes(mb.formFactor)) {
     issues.push(`Kasa ${mb.formFactor} anakart desteklemiyor`);
   }
+  if (build.ram2 && build.ram1 !== build.ram2) {
+    issues.push('RAM kanalları aynı model olmalı (Çift Kanal)');
+  }
   return issues;
 }
 
@@ -99,21 +116,142 @@ function estimateValue(build) {
   return Math.round(total * 1.28 + 2500);
 }
 
+function calcPCScore(build) {
+  let total = 0; let max = 0;
+  const cpu = build.cpu ? PRODUCTS[build.cpu] : null;
+  const gpu = build.gpu ? PRODUCTS[build.gpu] : null;
+  const ram = build.ram1 ? PRODUCTS[build.ram1] : null;
+  const stor = build.storage1 ? PRODUCTS[build.storage1] : null;
+  const psu = build.psu ? PRODUCTS[build.psu] : null;
+
+  if (cpu) { max += 25; total += cpu.buyPrice >= 12000 ? 25 : cpu.buyPrice >= 6000 ? 18 : cpu.buyPrice >= 3500 ? 12 : 7; }
+  if (gpu) { max += 35; total += gpu.buyPrice >= 40000 ? 35 : gpu.buyPrice >= 20000 ? 28 : gpu.buyPrice >= 10000 ? 20 : gpu.buyPrice >= 7000 ? 14 : 8; }
+  if (ram) { max += 15; const baseR = ram.ramType === 'DDR5' ? 10 : 7; total += build.ram2 ? Math.min(15, baseR + 5) : baseR; }
+  if (stor) { max += 10; total += stor.specs?.includes('NVMe') ? 10 : 6; if (build.storage2) total = Math.min(total + 3, 10); }
+  if (psu) { max += 5; total += psu.wattage >= 750 ? 5 : psu.wattage >= 650 ? 3 : 2; }
+  if (max === 0) return null;
+  const pct = Math.round((total / max) * 100);
+  const label = pct >= 86 ? { text: 'S — Efsane', color: '#F59E0B' }
+    : pct >= 71 ? { text: 'A — Harika', color: '#1D9E75' }
+    : pct >= 51 ? { text: 'B — İyi', color: '#7F77DD' }
+    : pct >= 31 ? { text: 'C — Orta', color: '#e8a04a' }
+    : { text: 'D — Temel', color: '#6B7280' };
+  return { pct, ...label };
+}
+
+function PCInteriorVisual({ build }) {
+  const caseP = build.case ? PRODUCTS[build.case] : null;
+  const accent = caseP?.caseAccent || '#4a9eff';
+  const caseBg = caseP?.caseColor || '#1a1a2e';
+
+  const slot = (label, emoji, productId, color = '#2a4a6a') => {
+    const p = productId ? PRODUCTS[productId] : null;
+    return (
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 6, padding: '4px 8px',
+        borderRadius: 6, background: p ? color + '33' : 'rgba(255,255,255,0.04)',
+        border: `1px solid ${p ? color + '66' : 'rgba(255,255,255,0.08)'}`,
+        minHeight: 32, transition: 'all 0.3s',
+      }}>
+        <span style={{ fontSize: '1rem', opacity: p ? 1 : 0.3 }}>{emoji}</span>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          {p ? (
+            <>
+              <div style={{ fontSize: '0.65rem', color: color, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{label}</div>
+              <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.85)', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {p.brand} {p.name}
+              </div>
+            </>
+          ) : (
+            <div style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.25)', fontStyle: 'italic' }}>{label} — boş</div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const peripheralKeys = PERIPHERAL_SLOTS.map(s => s.key).filter(k => build[k]);
+
+  return (
+    <div style={{
+      width: '100%', maxWidth: 320,
+      background: `linear-gradient(160deg, ${caseBg} 0%, ${caseBg}cc 100%)`,
+      border: `1.5px solid ${accent}55`,
+      borderRadius: 10, overflow: 'hidden',
+      boxShadow: `0 4px 24px ${accent}22, inset 0 1px 0 ${accent}33`,
+    }}>
+      <div style={{ height: 5, background: `linear-gradient(90deg, ${accent}, ${accent}88)` }} />
+      <div style={{ padding: '8px 12px', borderBottom: `1px solid ${accent}22`, display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div style={{ width: 8, height: 8, borderRadius: '50%', background: caseP ? accent : 'rgba(255,255,255,0.2)', boxShadow: caseP ? `0 0 6px ${accent}` : 'none' }} />
+        <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.7)', fontWeight: 600 }}>
+          {caseP ? `${caseP.brand} ${caseP.name}` : 'Kasa Seçilmedi'}
+        </span>
+      </div>
+      <div style={{ margin: 10, padding: 10, background: 'rgba(20,80,20,0.35)', border: '1px solid rgba(30,120,30,0.4)', borderRadius: 8 }}>
+        <div style={{ fontSize: '0.6rem', color: 'rgba(100,200,100,0.6)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>Anakart Bölgesi</div>
+        <div style={{ display: 'flex', gap: 6, marginBottom: 6 }}>
+          <div style={{ flex: 1 }}>{slot('CPU', '🔲', build.cpu, '#4a9eff')}</div>
+          <div style={{ flex: 1 }}>{slot('ANAKART', '🟩', build.motherboard, '#1D9E75')}</div>
+        </div>
+        <div style={{ display: 'flex', gap: 6 }}>
+          <div style={{ flex: 1 }}>{slot('RAM 1', '🧩', build.ram1, '#7F77DD')}</div>
+          <div style={{ flex: 1 }}>{slot('RAM 2', '🧩', build.ram2, '#7F77DD')}</div>
+        </div>
+      </div>
+      <div style={{ margin: '0 10px 8px', padding: '0 4px' }}>
+        {slot('Ekran Kartı', '🎮', build.gpu, '#F59E0B')}
+      </div>
+      <div style={{ margin: '0 10px 8px', display: 'flex', gap: 6 }}>
+        <div style={{ flex: 1 }}>{slot('Depo 1', '💿', build.storage1, '#0EA5E9')}</div>
+        <div style={{ flex: 1 }}>{slot('Depo 2', '💿', build.storage2, '#0EA5E9')}</div>
+      </div>
+      <div style={{ margin: '0 10px 10px', padding: '0 4px' }}>
+        {slot('Güç Kaynağı', '🔌', build.psu, '#8B5CF6')}
+      </div>
+      <div style={{ padding: '6px 14px', display: 'flex', gap: 3, borderTop: `1px solid ${accent}22` }}>
+        {[build.case, build.cpu, build.motherboard, build.ram1, build.storage1, build.psu].map((v, i) => (
+          <div key={i} style={{ width: 6, height: 6, borderRadius: '50%', background: v ? accent : 'rgba(255,255,255,0.1)', boxShadow: v ? `0 0 4px ${accent}` : 'none' }} />
+        ))}
+      </div>
+      {peripheralKeys.length > 0 && (
+        <div style={{ padding: '6px 10px 10px', borderTop: `1px solid ${accent}22` }}>
+          <div style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.35)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Çevre Birimleri</div>
+          <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+            {peripheralKeys.map(k => {
+              const ps = PERIPHERAL_SLOTS.find(s => s.key === k);
+              const p = PRODUCTS[build[k]];
+              return (
+                <div key={k} style={{ padding: '2px 6px', borderRadius: 4, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', fontSize: '0.65rem', color: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', gap: 3 }}>
+                  <span>{ps?.emoji}</span>
+                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 60 }}>{p?.brand} {p?.name}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fulfillPCOrderAction }) {
-  const [build, setBuild] = useState({
-    case: null, cpu: null, motherboard: null, ram: null,
-    storage: null, psu: null, gpu: null,
-  });
+  const [build, setBuild] = useState({ ...MAIN_SLOTS_INIT, ...PERIPHERAL_INIT });
   const [activeSlot, setActiveSlot] = useState(null);
   const [listPrices, setListPrices] = useState({});
-  const [tab, setTab] = useState('build'); // 'build' | 'built' | 'orders' | 'history'
+  const [tab, setTab] = useState('build');
+  const [expandedSaleId, setExpandedSaleId] = useState(null);
+  const [peripheralsOpen, setPeripheralsOpen] = useState(false);
 
   const inventory = state.inventory || {};
   const builtPCs = (state.builtPCs || []).filter(p => !p.sold);
   const pendingPCOrders = (state.pendingPCOrders || []).filter(o => !o.fulfilled);
-  const pcSalesHistory = (state.allTimeSales || []).filter(s => s.category === 'pc_build').sort((a, b) => b.day - a.day);
 
-  // Products available in inventory for a given category
+  // History: combine allTimeSales + todaySales, filter pc_build, sort by day desc
+  const todayPCSales = (state.todaySales || []).filter(s => s.category === 'pc_build');
+  const allTimePCSales = (state.allTimeSales || []).filter(s => s.category === 'pc_build');
+  const seenIds = new Set(allTimePCSales.map(s => s.id));
+  const pcSalesHistory = [...allTimePCSales, ...todayPCSales.filter(s => !seenIds.has(s.id))].sort((a, b) => b.day - a.day);
+
   const availableFor = (category) =>
     Object.values(PRODUCTS).filter(p =>
       p.category === category && (inventory[p.id] || 0) > 0
@@ -121,17 +259,114 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
 
   const issues = useMemo(() => checkCompatibility(build), [build]);
   const estimatedVal = useMemo(() => estimateValue(build), [build]);
-  const requiredFilled = BUILD_SLOTS.filter(s => s.required).every(s => build[s.key]);
+  const requiredFilled = ['case','cpu','motherboard','ram1','storage1','psu'].every(k => build[k]);
   const canBuild = requiredFilled && issues.length === 0;
+  const score = useMemo(() => calcPCScore(build), [build]);
 
   const handleBuild = () => {
     if (!canBuild) return;
     buildPCAction(build, estimatedVal);
-    setBuild({ case: null, cpu: null, motherboard: null, ram: null, storage: null, psu: null, gpu: null });
+    setBuild({ ...MAIN_SLOTS_INIT, ...PERIPHERAL_INIT });
     setTab('built');
   };
 
   const catColor = (cat) => CATEGORY_COLORS[cat] || '#6B7280';
+
+  // Render a slot row in the left panel
+  const renderSlotRow = (slot) => {
+    const selected = build[slot.key] ? PRODUCTS[build[slot.key]] : null;
+    const isActive = activeSlot === slot.key;
+
+    // RAM 2 special behavior
+    if (slot.key === 'ram2') {
+      const ram1 = build.ram1;
+      return (
+        <div key={slot.key} style={{
+          padding: '8px 10px', marginBottom: '4px', borderRadius: '8px',
+          border: isActive ? `1.5px solid var(--color-accent)` : `1px solid ${selected ? catColor(slot.category) + '44' : 'var(--color-border)'}`,
+          background: isActive ? 'var(--color-accent-soft, #EEF2FF)' : selected ? catColor(slot.category) + '11' : 'var(--color-cream-card)',
+          transition: 'all 0.15s',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '1rem', flexShrink: 0 }}>{slot.emoji}</span>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                {slot.label}
+                <span style={{ fontSize: '0.65rem', padding: '1px 5px', borderRadius: '3px', background: 'var(--color-cream)', border: '1px solid var(--color-border)' }}>opsiyonel</span>
+              </div>
+              {!ram1 ? (
+                <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', fontStyle: 'italic' }}>Önce RAM 1 seçin</div>
+              ) : selected ? (
+                <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {PRODUCTS[selected.id]?.brand} {selected.name} (Çift Kanal)
+                </div>
+              ) : (
+                <button
+                  onClick={e => { e.stopPropagation(); setBuild(b => ({ ...b, ram2: b.ram1 })); }}
+                  style={{ fontSize: '0.72rem', color: '#7F77DD', background: '#7F77DD22', border: '1px solid #7F77DD44', borderRadius: '4px', padding: '2px 8px', cursor: 'pointer', marginTop: '2px' }}
+                >
+                  + Çift Kanal Ekle
+                </button>
+              )}
+            </div>
+            {selected && (
+              <button
+                onClick={e => { e.stopPropagation(); setBuild(b => ({ ...b, ram2: null })); }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#E24B4A', fontSize: '0.85rem', padding: '0 2px', flexShrink: 0 }}
+              >✕</button>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    const hasStock = availableFor(slot.category).length > 0;
+    return (
+      <div
+        key={slot.key}
+        onClick={() => setActiveSlot(isActive ? null : slot.key)}
+        style={{
+          padding: '8px 10px', marginBottom: '4px', borderRadius: '8px', cursor: 'pointer',
+          border: isActive ? `1.5px solid var(--color-accent)` : `1px solid ${selected ? catColor(slot.category) + '44' : 'var(--color-border)'}`,
+          background: isActive ? 'var(--color-accent-soft, #EEF2FF)' : selected ? catColor(slot.category) + '11' : 'var(--color-cream-card)',
+          transition: 'all 0.15s',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '1rem', flexShrink: 0 }}>{slot.emoji}</span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              {slot.label}
+              {!slot.required && <span style={{ fontSize: '0.65rem', padding: '1px 5px', borderRadius: '3px', background: 'var(--color-cream)', border: '1px solid var(--color-border)' }}>opsiyonel</span>}
+            </div>
+            {selected ? (
+              <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {selected.brand} {selected.name}
+              </div>
+            ) : (
+              <div style={{ fontSize: '0.78rem', color: hasStock ? 'var(--color-text-mute)' : '#E24B4A', fontStyle: 'italic' }}>
+                {hasStock ? 'Seç...' : 'Stok yok'}
+              </div>
+            )}
+          </div>
+          {selected && (
+            <button
+              onClick={e => {
+                e.stopPropagation();
+                setBuild(b => {
+                  const next = { ...b, [slot.key]: null };
+                  // If clearing ram1, also clear ram2
+                  if (slot.key === 'ram1') next.ram2 = null;
+                  return next;
+                });
+              }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#E24B4A', fontSize: '0.85rem', padding: '0 2px', flexShrink: 0 }}
+            >✕</button>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', background: 'var(--color-cream)' }}>
@@ -161,10 +396,22 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
               Konfigürasyon
             </div>
             <div style={{ flex: 1, overflowY: 'auto', padding: '8px' }}>
-              {BUILD_SLOTS.map(slot => {
+              {BUILD_SLOTS.map(slot => renderSlotRow(slot))}
+
+              {/* Peripherals section */}
+              <div
+                onClick={() => setPeripheralsOpen(v => !v)}
+                style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 4px', cursor: 'pointer', marginTop: '4px', marginBottom: '4px', borderTop: '1px solid var(--color-border)', paddingTop: '10px' }}
+              >
+                <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--color-text-mute)', textTransform: 'uppercase', letterSpacing: '0.06em', flex: 1 }}>
+                  Çevre Birimleri (Opsiyonel)
+                </span>
+                <span style={{ fontSize: '0.75rem', color: 'var(--color-text-mute)' }}>{peripheralsOpen ? '▲' : '▼'}</span>
+              </div>
+              {peripheralsOpen && PERIPHERAL_SLOTS.map(slot => {
                 const selected = build[slot.key] ? PRODUCTS[build[slot.key]] : null;
-                const hasStock = availableFor(slot.category).length > 0;
                 const isActive = activeSlot === slot.key;
+                const hasStock = availableFor(slot.category).length > 0;
                 return (
                   <div
                     key={slot.key}
@@ -179,10 +426,7 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span style={{ fontSize: '1rem', flexShrink: 0 }}>{slot.emoji}</span>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                          {slot.label}
-                          {!slot.required && <span style={{ fontSize: '0.65rem', padding: '1px 5px', borderRadius: '3px', background: 'var(--color-cream)', border: '1px solid var(--color-border)' }}>opsiyonel</span>}
-                        </div>
+                        <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)' }}>{slot.label}</div>
                         {selected ? (
                           <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {selected.brand} {selected.name}
@@ -206,26 +450,34 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
             </div>
           </div>
 
-          {/* Middle — product picker OR case visual */}
+          {/* Middle — product picker OR PC interior visual */}
           <div style={{ flex: 1, overflow: 'auto', padding: '12px', minWidth: 0 }}>
             {activeSlot ? (
               <>
                 <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-text-mute)', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                  {BUILD_SLOTS.find(s => s.key === activeSlot)?.label} Seç
+                  {[...BUILD_SLOTS, ...PERIPHERAL_SLOTS].find(s => s.key === activeSlot)?.label} Seç
                 </div>
-                {availableFor(BUILD_SLOTS.find(s => s.key === activeSlot)?.category || '').length === 0 ? (
+                {availableFor([...BUILD_SLOTS, ...PERIPHERAL_SLOTS].find(s => s.key === activeSlot)?.category || '').length === 0 ? (
                   <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--color-text-mute)', fontSize: '0.85rem' }}>
                     Stokta ürün yok. Pazar'dan sipariş ver.
                   </div>
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    {availableFor(BUILD_SLOTS.find(s => s.key === activeSlot)?.category || '').map(p => {
+                    {availableFor([...BUILD_SLOTS, ...PERIPHERAL_SLOTS].find(s => s.key === activeSlot)?.category || '').map(p => {
                       const isSelected = build[activeSlot] === p.id;
                       const cat = p.category;
                       return (
                         <div
                           key={p.id}
-                          onClick={() => { setBuild(b => ({ ...b, [activeSlot]: p.id })); setActiveSlot(null); }}
+                          onClick={() => {
+                            setBuild(b => {
+                              const next = { ...b, [activeSlot]: p.id };
+                              // If changing ram1, reset ram2
+                              if (activeSlot === 'ram1') next.ram2 = null;
+                              return next;
+                            });
+                            setActiveSlot(null);
+                          }}
                           style={{
                             padding: '10px 12px', borderRadius: '10px', cursor: 'pointer',
                             border: isSelected ? `2px solid ${catColor(cat)}` : '1px solid var(--color-border)',
@@ -256,15 +508,12 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
                 )}
               </>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px', gap: '16px' }}>
-                {build.case && <CaseVisual product={PRODUCTS[build.case]} size="md" />}
-                {!build.case && (
-                  <div style={{ width: 64, height: 96, borderRadius: '6px 6px 4px 4px', background: 'var(--color-cream-card)', border: '2px dashed var(--color-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-text-mute)', fontSize: '1.5rem' }}>🖥️</div>
-                )}
-                <div style={{ fontSize: '0.8rem', color: 'var(--color-text-mute)', textAlign: 'center' }}>
-                  {build.case ? `${PRODUCTS[build.case]?.brand} ${PRODUCTS[build.case]?.name}` : 'Kasa seçilmedi'}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '16px', gap: '16px' }}>
+                <PCInteriorVisual build={build} />
+                <div style={{ fontSize: '0.78rem', color: 'var(--color-text-mute)', textAlign: 'center' }}>
+                  {!build.case && '← Başlamak için Kasa seç'}
+                  {build.case && !requiredFilled && '← Tüm gerekli slotları doldur'}
                 </div>
-                <div style={{ fontSize: '0.78rem', color: 'var(--color-text-mute)' }}>← Bir slot seçerek parça ekle</div>
               </div>
             )}
           </div>
@@ -276,7 +525,7 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
             </div>
             <div style={{ flex: 1, overflowY: 'auto', padding: '10px 12px' }}>
               {/* Cost breakdown */}
-              {BUILD_SLOTS.map(slot => {
+              {[...BUILD_SLOTS, ...PERIPHERAL_SLOTS].map(slot => {
                 const p = build[slot.key] ? PRODUCTS[build[slot.key]] : null;
                 if (!p) return null;
                 return (
@@ -305,6 +554,17 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
                     <span style={{ fontFamily: 'var(--font-mono)', color: '#1D9E75', fontWeight: 800 }}>{fmtMoney(estimatedVal)}</span>
                   </div>
                 </>
+              )}
+
+              {/* Performance score */}
+              {score && (
+                <div style={{ marginTop: '10px', padding: '8px 10px', borderRadius: '8px', background: score.color + '22', border: `1px solid ${score.color}44`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.75rem', color: score.color, fontWeight: 700 }}>🏆 Performans</span>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontSize: '0.78rem', color: score.color, fontWeight: 800 }}>{score.text}</div>
+                    <div style={{ fontSize: '0.68rem', color: score.color, opacity: 0.8 }}>{score.pct}%</div>
+                  </div>
+                </div>
               )}
 
               {/* Compatibility */}
@@ -423,31 +683,22 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
                         <div style={{ fontWeight: 700, color: '#1D9E75', fontFamily: 'var(--font-mono)' }}>{fmtMoney(order.budget)}</div>
                       </div>
                     </div>
-
                     {matchingPCs.length > 0 ? (
                       <div>
-                        <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', marginBottom: '6px', fontWeight: 600 }}>
-                          Bu siparişe uygun PC'ler:
-                        </div>
+                        <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', marginBottom: '6px', fontWeight: 600 }}>Bu siparişe uygun PC'ler:</div>
                         {matchingPCs.map(pc => {
                           const caseProd = pc.components.case ? PRODUCTS[pc.components.case] : null;
                           return (
                             <div key={pc.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 10px', background: 'var(--color-cream)', borderRadius: '8px', marginBottom: '4px', border: '1px solid var(--color-border)' }}>
                               <CaseVisual product={caseProd} size="sm" />
                               <div style={{ flex: 1, minWidth: 0 }}>
-                                <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--color-text)' }}>
-                                  Toplama PC #{pc.id.slice(-4)}
-                                </div>
-                                <div style={{ fontSize: '0.7rem', color: 'var(--color-text-mute)' }}>
-                                  Maliyet: {fmtMoney(pc.totalCost)} · Liste: {fmtMoney(pc.listPrice)}
-                                </div>
+                                <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--color-text)' }}>Toplama PC #{pc.id.slice(-4)}</div>
+                                <div style={{ fontSize: '0.7rem', color: 'var(--color-text-mute)' }}>Maliyet: {fmtMoney(pc.totalCost)} · Liste: {fmtMoney(pc.listPrice)}</div>
                               </div>
                               <button
                                 onClick={() => fulfillPCOrderAction && fulfillPCOrderAction(order.id, pc.id)}
                                 style={{ padding: '5px 10px', borderRadius: '6px', border: 'none', background: '#F59E0B', color: '#fff', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 }}
-                              >
-                                Bu PC'yi Ata
-                              </button>
+                              >Bu PC'yi Ata</button>
                             </div>
                           );
                         })}
@@ -474,23 +725,58 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '60px 1fr 100px 100px 100px', gap: '8px', padding: '6px 10px', fontSize: '0.7rem', fontWeight: 700, color: 'var(--color-text-mute)', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid var(--color-border)' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '60px 1fr 90px 90px 90px', gap: '8px', padding: '6px 10px', fontSize: '0.7rem', fontWeight: 700, color: 'var(--color-text-mute)', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid var(--color-border)' }}>
                 <span>Gün</span>
                 <span>PC</span>
                 <span style={{ textAlign: 'right' }}>Gelir</span>
                 <span style={{ textAlign: 'right' }}>Maliyet</span>
                 <span style={{ textAlign: 'right' }}>Kâr</span>
               </div>
-              {pcSalesHistory.map((sale, i) => (
-                <div key={sale.id || i} style={{ display: 'grid', gridTemplateColumns: '60px 1fr 100px 100px 100px', gap: '8px', padding: '8px 10px', background: 'var(--color-cream-card)', borderRadius: '8px', border: '0.5px solid var(--color-border)', fontSize: '0.8rem', alignItems: 'center' }}>
-                  <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-text-mute)' }}>G{sale.day}</span>
-                  <span style={{ fontWeight: 600, color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{sale.productName}</span>
-                  <span style={{ textAlign: 'right', fontFamily: 'var(--font-mono)', color: '#1D9E75', fontWeight: 600 }}>{fmtMoney(sale.revenue)}</span>
-                  <span style={{ textAlign: 'right', fontFamily: 'var(--font-mono)', color: '#E24B4A' }}>{fmtMoney(sale.cogs)}</span>
-                  <span style={{ textAlign: 'right', fontFamily: 'var(--font-mono)', fontWeight: 700, color: sale.profit >= 0 ? '#1D9E75' : '#E24B4A' }}>{fmtMoney(sale.profit)}</span>
-                </div>
-              ))}
-              <div style={{ padding: '8px 10px', borderTop: '1px solid var(--color-border)', display: 'grid', gridTemplateColumns: '60px 1fr 100px 100px 100px', gap: '8px', fontSize: '0.8rem', fontWeight: 700 }}>
+              {pcSalesHistory.map((sale, i) => {
+                const isExpanded = expandedSaleId === (sale.id || i);
+                const hasComponents = sale.components && Object.keys(sale.components).length > 0;
+                return (
+                  <div key={sale.id || i}>
+                    <div
+                      onClick={() => hasComponents && setExpandedSaleId(isExpanded ? null : (sale.id || i))}
+                      style={{ display: 'grid', gridTemplateColumns: '60px 1fr 90px 90px 90px', gap: '8px', padding: '8px 10px', background: isExpanded ? 'var(--color-accent-soft, #EEF2FF)' : 'var(--color-cream-card)', borderRadius: isExpanded ? '8px 8px 0 0' : '8px', border: `0.5px solid ${isExpanded ? 'var(--color-accent)' : 'var(--color-border)'}`, fontSize: '0.8rem', alignItems: 'center', cursor: hasComponents ? 'pointer' : 'default', transition: 'all 0.15s' }}
+                    >
+                      <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-text-mute)' }}>G{sale.day}</span>
+                      <span style={{ fontWeight: 600, color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {sale.productName}
+                        {hasComponents && <span style={{ marginLeft: 4, fontSize: '0.65rem', color: 'var(--color-text-mute)' }}>{isExpanded ? '▲' : '▼'}</span>}
+                      </span>
+                      <span style={{ textAlign: 'right', fontFamily: 'var(--font-mono)', color: '#1D9E75', fontWeight: 600 }}>{fmtMoney(sale.revenue)}</span>
+                      <span style={{ textAlign: 'right', fontFamily: 'var(--font-mono)', color: '#E24B4A' }}>{fmtMoney(sale.cogs)}</span>
+                      <span style={{ textAlign: 'right', fontFamily: 'var(--font-mono)', fontWeight: 700, color: sale.profit >= 0 ? '#1D9E75' : '#E24B4A' }}>{fmtMoney(sale.profit)}</span>
+                    </div>
+                    {isExpanded && hasComponents && (
+                      <div style={{ padding: '10px 14px', background: 'var(--color-cream)', border: '0.5px solid var(--color-accent)', borderTop: 'none', borderRadius: '0 0 8px 8px' }}>
+                        <div style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--color-text-mute)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '8px' }}>Parça Listesi</div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          {Object.entries(sale.components).map(([key, productId]) => {
+                            if (!productId) return null;
+                            const p = PRODUCTS[productId];
+                            if (!p) return null;
+                            const slotInfo = [...BUILD_SLOTS, ...PERIPHERAL_SLOTS].find(s => s.key === key);
+                            return (
+                              <div key={key} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '4px 6px', borderRadius: '6px', background: 'var(--color-cream-card)', border: '0.5px solid var(--color-border)' }}>
+                                <span style={{ fontSize: '0.85rem', flexShrink: 0 }}>{slotInfo?.emoji || '📦'}</span>
+                                <div style={{ flex: 1, minWidth: 0 }}>
+                                  <div style={{ fontSize: '0.7rem', color: 'var(--color-text-mute)', fontWeight: 600 }}>{slotInfo?.label || key}</div>
+                                  <div style={{ fontSize: '0.75rem', color: 'var(--color-text)', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.brand} {p.name}</div>
+                                </div>
+                                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: '#E24B4A', fontWeight: 600, flexShrink: 0 }}>{fmtMoney(p.buyPrice)}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+              <div style={{ padding: '8px 10px', borderTop: '1px solid var(--color-border)', display: 'grid', gridTemplateColumns: '60px 1fr 90px 90px 90px', gap: '8px', fontSize: '0.8rem', fontWeight: 700 }}>
                 <span></span>
                 <span style={{ color: 'var(--color-text-mute)' }}>Toplam ({pcSalesHistory.length} PC)</span>
                 <span style={{ textAlign: 'right', fontFamily: 'var(--font-mono)', color: '#1D9E75' }}>{fmtMoney(pcSalesHistory.reduce((s, r) => s + r.revenue, 0))}</span>

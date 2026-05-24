@@ -11,6 +11,7 @@ import UrunListesiApp from './UrunListesiApp';
 import Calculator from './Calculator';
 import PaintApp from './PaintApp';
 import PCToplaApp from './PCToplaApp';
+import YorumlarApp from './YorumlarApp';
 import { playClick } from '@/lib/tech-center-sounds';
 
 const WINDOW_MEMORY_KEY = 'tc_window_memory';
@@ -22,7 +23,8 @@ const DESKTOP_APPS = [
   { id: 'urunler', emoji: '📋', label: 'Ürünler',  color: '#10B981', bg: '#0a3025' },
   { id: 'analiz',  emoji: '📊', label: 'Analiz',   color: '#0EA5E9', bg: '#0a2840' },
   { id: 'yonetim', emoji: '⚙️',  label: 'Yönetim', color: '#94A3B8', bg: '#1a2030' },
-  { id: 'pctopla', emoji: '🖥️',  label: 'PC Topla', color: '#22C55E', bg: '#0a3018' },
+  { id: 'pctopla',  emoji: '🖥️',  label: 'PC Topla',  color: '#22C55E', bg: '#0a3018' },
+  { id: 'yorumlar', emoji: '⭐',  label: 'Yorumlar',  color: '#F59E0B', bg: '#3d2c0a' },
 ];
 
 // Default floating sizes — wider apps get more room
@@ -153,7 +155,7 @@ function WindowTitleBar({ app, onMinimize, onClose, onFloat, isFloating, isDragg
   );
 }
 
-function Taskbar({ openWindows, activeWindowId, onFocus, mailBadge }) {
+function Taskbar({ openWindows, activeWindowId, onFocus, badges }) {
   const router = useRouter();
 
   return (
@@ -174,7 +176,7 @@ function Taskbar({ openWindows, activeWindowId, onFocus, mailBadge }) {
         const app = DESKTOP_APPS.find(a => a.id === win.appId);
         if (!app) return null;
         const isActive = win.id === activeWindowId && !win.minimized;
-        const badge = app.id === 'mail' ? mailBadge : 0;
+        const badge = badges[app.id] || 0;
         return (
           <div key={win.id} style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
             <button
@@ -294,7 +296,13 @@ export default function Desktop({ state, firmaValue, ...actions }) {
   // Z-index counter for layering windows
   const zCounterRef = useRef(100);
 
-  const mailBadge = (state.customersToday || []).filter(c => !c.dealt).length;
+  const badges = {
+    mail:     (state.customersToday || []).filter(c => !c.dealt).length,
+    pctopla:  (state.pendingPCOrders || []).filter(o => !o.fulfilled).length,
+    stok:     Object.values(state.inventory || {}).filter(q => q > 0).length,
+    pazar:    (state.shoppingList || []).filter(i => !i.ordered).length,
+    yorumlar: (state.reviews || []).filter(r => !r.read).length,
+  };
 
   // Load window memory from localStorage on mount
   useEffect(() => {
@@ -492,6 +500,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
       cancelOrderAction, takeLoanAction,
       addToShoppingListAction, removeFromShoppingListAction,
       acceptPCOrderAction, fulfillPCOrderAction, clearLoanError,
+      markReviewsReadAction,
     } = actions;
 
     switch (appId) {
@@ -549,6 +558,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
           fulfillPCOrderAction={fulfillPCOrderAction}
         />
       );
+      case 'yorumlar': return <YorumlarApp state={state} markReviewsReadAction={markReviewsReadAction} />;
       case 'hesapmak': return <Calculator />;
       case 'cizim': return <PaintApp />;
       default: return <div style={{ padding: '2rem', color: 'var(--color-text-mute)' }}>Uygulama bulunamadı</div>;
@@ -583,7 +593,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
               key={app.id}
               app={app}
               onClick={() => openApp(app.id)}
-              badge={app.id === 'mail' ? mailBadge : 0}
+              badge={badges[app.id] || 0}
             />
           ))}
         </div>
@@ -706,7 +716,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
         openWindows={openWindows}
         activeWindowId={activeWindowId}
         onFocus={handleTaskbarAction}
-        mailBadge={mailBadge}
+        badges={badges}
       />
     </div>
   );

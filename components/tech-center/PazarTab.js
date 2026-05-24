@@ -46,9 +46,14 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
   };
 
   const handlePriceSave = (productId) => {
-    const price = parseFloat(localPrices[productId]);
-    if (!isNaN(price) && price > 0) {
-      setPriceAction(productId, price);
+    const effectiveP = getEffectiveBuyPrice(productId, activeEvents);
+    const recommended = Math.round(effectiveP * 1.25);
+    const localP = localPrices[productId];
+    const savedP = prices[productId];
+    const val = (localP !== undefined && localP !== '') ? parseFloat(localP) : (savedP || recommended);
+    if (!isNaN(val) && val > 0) {
+      setPriceAction(productId, val);
+      setLocalPrices(prev => { const n = {...prev}; delete n[productId]; return n; });
     }
   };
 
@@ -233,7 +238,8 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
               const stockQty = inventory[product.id] || 0;
               const price = prices[product.id] || '';
               const localPrice = localPrices[product.id] !== undefined ? localPrices[product.id] : '';
-              const displayPrice = localPrice !== '' ? localPrice : price;
+              const recommendedPrice = Math.round(effectivePrice * 1.25);
+              const displayPrice = localPrice !== '' ? localPrice : (price || recommendedPrice);
 
               const margin = price && effectivePrice ? ((parseFloat(price) - effectivePrice) / effectivePrice * 100).toFixed(0) : null;
 

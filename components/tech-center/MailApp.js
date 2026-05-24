@@ -137,7 +137,10 @@ function CustomerDetailPane({ customer, state, sellAction, skipAction, handleSer
     setServicePhase('idle');
     setCounterInput('');
     setPendingPrice(null);
-    setAddToList(false);
+    const prod = customer?.wantedProductId ? PRODUCTS[customer.wantedProductId] : null;
+    const stock = prod ? (state.inventory[customer.wantedProductId] || 0) : 0;
+    const needQty = customer?.quantity || 1;
+    setAddToList(!!(prod && stock < needQty));
   }, [customer?.id]);
 
   if (!customer) {
@@ -909,7 +912,7 @@ function CustomerDetailPane({ customer, state, sellAction, skipAction, handleSer
                   whiteSpace: 'nowrap',
                 }}
               >
-                1 Gün Beklet ~70%
+                1 Gün Beklet
               </button>
               <button
                 onClick={() => {
@@ -927,7 +930,7 @@ function CustomerDetailPane({ customer, state, sellAction, skipAction, handleSer
                   whiteSpace: 'nowrap',
                 }}
               >
-                2 Gün Beklet ~50%
+                2 Gün Beklet
               </button>
             </div>
             <button

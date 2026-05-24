@@ -638,6 +638,7 @@ export default function GameApp() {
     acceptPCOrderAction,
     fulfillPCOrderAction,
     clearLoanError,
+    markReviewsReadAction,
   } = useTechCenterState();
 
   if (!loaded) {
@@ -706,6 +707,7 @@ export default function GameApp() {
         acceptPCOrderAction={acceptPCOrderAction}
         fulfillPCOrderAction={fulfillPCOrderAction}
         clearLoanError={clearLoanError}
+        markReviewsReadAction={markReviewsReadAction}
       />
       {state.gamePhase === 'day_summary' && <DaySummaryModal state={state} onNext={nextDay} />}
     </div>
