@@ -36,12 +36,12 @@ function ServicePriceRow({ svc, currentPrice, setServicePriceAction }) {
   );
 }
 
-export default function YonetimTab({ state, upgradeStoreAction, hireStaffAction, fireStaffAction, clearError, servicePrices, setServicePriceAction, takeLoanAction, resetGame }) {
+export default function YonetimTab({ state, upgradeStoreAction, hireStaffAction, fireStaffAction, clearError, clearLoanError, servicePrices, setServicePriceAction, takeLoanAction, resetGame }) {
   const [confirmReset, setConfirmReset] = useState(false);
 
   if (!state) return null;
 
-  const { storeLevel, staff = [], cash, upgradeError, staffError, city, currentDay } = state;
+  const { storeLevel, staff = [], cash, upgradeError, staffError, loanError, city, currentDay } = state;
   const currentLevelInfo = STORE_LEVELS[storeLevel - 1];
   const nextLevelInfo = STORE_LEVELS[storeLevel];
   const cityInfo = CITIES[city];
@@ -351,6 +351,26 @@ export default function YonetimTab({ state, upgradeStoreAction, hireStaffAction,
           ))}
         </div>
       </section>
+
+      {loanError && (
+        <div style={{
+          padding: '10px 16px',
+          borderRadius: '8px',
+          background: 'var(--color-amber-bg)',
+          color: 'var(--color-amber-text)',
+          marginBottom: '1rem',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          fontSize: '0.875rem',
+        }}>
+          <span>⚠️ {loanError}</span>
+          <button
+            onClick={() => clearLoanError && clearLoanError()}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem', color: 'var(--color-amber-text)' }}
+          >×</button>
+        </div>
+      )}
 
       {/* 5. Krediler */}
       <section style={{

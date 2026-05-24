@@ -99,17 +99,19 @@ function estimateValue(build) {
   return Math.round(total * 1.28 + 2500);
 }
 
-export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction }) {
+export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fulfillPCOrderAction }) {
   const [build, setBuild] = useState({
     case: null, cpu: null, motherboard: null, ram: null,
     storage: null, psu: null, gpu: null,
   });
   const [activeSlot, setActiveSlot] = useState(null);
   const [listPrices, setListPrices] = useState({});
-  const [tab, setTab] = useState('build'); // 'build' | 'built'
+  const [tab, setTab] = useState('build'); // 'build' | 'built' | 'orders' | 'history'
 
   const inventory = state.inventory || {};
   const builtPCs = (state.builtPCs || []).filter(p => !p.sold);
+  const pendingPCOrders = (state.pendingPCOrders || []).filter(o => !o.fulfilled);
+  const pcSalesHistory = (state.allTimeSales || []).filter(s => s.category === 'pc_build').sort((a, b) => b.day - a.day);
 
   // Products available in inventory for a given category
   const availableFor = (category) =>
@@ -134,8 +136,13 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction }) 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', background: 'var(--color-cream)' }}>
       {/* Tab bar */}
-      <div style={{ display: 'flex', gap: '2px', padding: '10px 16px 0', background: 'var(--color-cream-card)', borderBottom: '1px solid var(--color-border)', flexShrink: 0 }}>
-        {[{ id: 'build', label: '🔧 PC Topla' }, { id: 'built', label: `📦 Hazır PC'ler${builtPCs.length > 0 ? ` (${builtPCs.length})` : ''}` }].map(t => (
+      <div style={{ display: 'flex', gap: '2px', padding: '10px 16px 0', background: 'var(--color-cream-card)', borderBottom: '1px solid var(--color-border)', flexShrink: 0, flexWrap: 'wrap' }}>
+        {[
+          { id: 'build', label: '🔧 PC Topla' },
+          { id: 'built', label: `📦 Hazır PC'ler${builtPCs.length > 0 ? ` (${builtPCs.length})` : ''}` },
+          { id: 'orders', label: `📋 Siparişler${pendingPCOrders.length > 0 ? ` (${pendingPCOrders.length})` : ''}` },
+          { id: 'history', label: '📜 PC Satışları' },
+        ].map(t => (
           <button key={t.id} onClick={() => setTab(t.id)} style={{
             padding: '8px 16px', border: 'none', background: 'none', cursor: 'pointer',
             borderBottom: tab === t.id ? '2.5px solid var(--color-accent)' : '2.5px solid transparent',
@@ -383,6 +390,113 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction }) 
                   </div>
                 );
               })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {tab === 'orders' && (
+        <div style={{ flex: 1, overflow: 'auto', padding: '16px' }}>
+          {pendingPCOrders.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--color-text-mute)' }}>
+              <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📋</div>
+              <div>Bekleyen PC siparişi yok</div>
+              <div style={{ fontSize: '0.8rem', marginTop: '0.5rem' }}>Müşterilerden gelen PC siparişleri burada görünür</div>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {pendingPCOrders.map(order => {
+                const matchingPCs = builtPCs.filter(pc => pc.listPrice <= order.budget * 1.1);
+                return (
+                  <div key={order.id} style={{ background: 'var(--color-cream-card)', border: '1px solid #F59E0B44', borderRadius: '12px', padding: '1rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
+                      <div>
+                        <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--color-text)' }}>
+                          🖥️ {order.spec?.label || 'Özel PC'} — {order.customerName}
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--color-text-mute)', marginTop: '2px', fontStyle: 'italic' }}>
+                          {order.spec?.specs}
+                        </div>
+                      </div>
+                      <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                        <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)' }}>Bütçe</div>
+                        <div style={{ fontWeight: 700, color: '#1D9E75', fontFamily: 'var(--font-mono)' }}>{fmtMoney(order.budget)}</div>
+                      </div>
+                    </div>
+
+                    {matchingPCs.length > 0 ? (
+                      <div>
+                        <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', marginBottom: '6px', fontWeight: 600 }}>
+                          Bu siparişe uygun PC'ler:
+                        </div>
+                        {matchingPCs.map(pc => {
+                          const caseProd = pc.components.case ? PRODUCTS[pc.components.case] : null;
+                          return (
+                            <div key={pc.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 10px', background: 'var(--color-cream)', borderRadius: '8px', marginBottom: '4px', border: '1px solid var(--color-border)' }}>
+                              <CaseVisual product={caseProd} size="sm" />
+                              <div style={{ flex: 1, minWidth: 0 }}>
+                                <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--color-text)' }}>
+                                  Toplama PC #{pc.id.slice(-4)}
+                                </div>
+                                <div style={{ fontSize: '0.7rem', color: 'var(--color-text-mute)' }}>
+                                  Maliyet: {fmtMoney(pc.totalCost)} · Liste: {fmtMoney(pc.listPrice)}
+                                </div>
+                              </div>
+                              <button
+                                onClick={() => fulfillPCOrderAction && fulfillPCOrderAction(order.id, pc.id)}
+                                style={{ padding: '5px 10px', borderRadius: '6px', border: 'none', background: '#F59E0B', color: '#fff', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 }}
+                              >
+                                Bu PC'yi Ata
+                              </button>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div style={{ padding: '8px 10px', background: '#FEF3C7', borderRadius: '8px', fontSize: '0.78rem', color: '#92400E' }}>
+                        ⚠️ Bütçeye uygun hazır PC yok. PC Topla sekmesinden yeni bir tane montajla.
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {tab === 'history' && (
+        <div style={{ flex: 1, overflow: 'auto', padding: '16px' }}>
+          {pcSalesHistory.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--color-text-mute)' }}>
+              <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📜</div>
+              <div>Henüz PC satışı yok</div>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '60px 1fr 100px 100px 100px', gap: '8px', padding: '6px 10px', fontSize: '0.7rem', fontWeight: 700, color: 'var(--color-text-mute)', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid var(--color-border)' }}>
+                <span>Gün</span>
+                <span>PC</span>
+                <span style={{ textAlign: 'right' }}>Gelir</span>
+                <span style={{ textAlign: 'right' }}>Maliyet</span>
+                <span style={{ textAlign: 'right' }}>Kâr</span>
+              </div>
+              {pcSalesHistory.map((sale, i) => (
+                <div key={sale.id || i} style={{ display: 'grid', gridTemplateColumns: '60px 1fr 100px 100px 100px', gap: '8px', padding: '8px 10px', background: 'var(--color-cream-card)', borderRadius: '8px', border: '0.5px solid var(--color-border)', fontSize: '0.8rem', alignItems: 'center' }}>
+                  <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-text-mute)' }}>G{sale.day}</span>
+                  <span style={{ fontWeight: 600, color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{sale.productName}</span>
+                  <span style={{ textAlign: 'right', fontFamily: 'var(--font-mono)', color: '#1D9E75', fontWeight: 600 }}>{fmtMoney(sale.revenue)}</span>
+                  <span style={{ textAlign: 'right', fontFamily: 'var(--font-mono)', color: '#E24B4A' }}>{fmtMoney(sale.cogs)}</span>
+                  <span style={{ textAlign: 'right', fontFamily: 'var(--font-mono)', fontWeight: 700, color: sale.profit >= 0 ? '#1D9E75' : '#E24B4A' }}>{fmtMoney(sale.profit)}</span>
+                </div>
+              ))}
+              <div style={{ padding: '8px 10px', borderTop: '1px solid var(--color-border)', display: 'grid', gridTemplateColumns: '60px 1fr 100px 100px 100px', gap: '8px', fontSize: '0.8rem', fontWeight: 700 }}>
+                <span></span>
+                <span style={{ color: 'var(--color-text-mute)' }}>Toplam ({pcSalesHistory.length} PC)</span>
+                <span style={{ textAlign: 'right', fontFamily: 'var(--font-mono)', color: '#1D9E75' }}>{fmtMoney(pcSalesHistory.reduce((s, r) => s + r.revenue, 0))}</span>
+                <span style={{ textAlign: 'right', fontFamily: 'var(--font-mono)', color: '#E24B4A' }}>{fmtMoney(pcSalesHistory.reduce((s, r) => s + r.cogs, 0))}</span>
+                <span style={{ textAlign: 'right', fontFamily: 'var(--font-mono)', color: '#1D9E75' }}>{fmtMoney(pcSalesHistory.reduce((s, r) => s + r.profit, 0))}</span>
+              </div>
             </div>
           )}
         </div>

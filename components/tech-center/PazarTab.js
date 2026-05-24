@@ -201,9 +201,10 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
               cursor: 'pointer',
               fontWeight: selectedCat === cat ? 600 : 400,
               whiteSpace: 'nowrap',
+              display: 'flex', alignItems: 'center', gap: '4px',
             }}
           >
-            {cat === 'all' ? 'Tümü' : CATEGORY_LABELS[cat]}
+            {cat === 'all' ? 'Tümü' : <><span>{CATEGORY_ICONS[cat]}</span><span>{CATEGORY_LABELS[cat]}</span></>}
           </button>
         ))}
       </div>
@@ -284,6 +285,9 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
                           {fmtMoney(product.buyPrice)}
                         </span>
                       )}
+                    </div>
+                    <div style={{ fontSize: '0.72rem', color: '#1D9E75', fontFamily: 'var(--font-mono)', marginTop: '3px', fontWeight: 500 }}>
+                      Önerilen Satış: {fmtMoney(Math.round(effectivePrice * 1.25))}
                     </div>
                   </div>
 
@@ -504,7 +508,8 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
                       display: 'flex', alignItems: 'flex-start', gap: '6px',
                     }}>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-text)', lineHeight: 1.3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-text)', lineHeight: 1.3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          {p?.category && CATEGORY_ICONS[p.category] && <span style={{ fontSize: '0.9rem', flexShrink: 0 }}>{CATEGORY_ICONS[p.category]}</span>}
                           {p?.brand} {p?.name}
                         </div>
                         <div style={{ fontSize: '0.68rem', color: 'var(--color-text-mute)', fontFamily: 'var(--font-mono)' }}>

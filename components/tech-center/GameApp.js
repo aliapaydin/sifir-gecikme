@@ -1,10 +1,12 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useTechCenterState } from '@/lib/tech-center-state';
 import { WIN_TARGET, LOGOS, CITIES, STORE_LEVELS } from '@/lib/tech-center-data';
 import SetupScreen from './SetupScreen';
 import TopBar from './TopBar';
 import Desktop from './Desktop';
+import { playDayStart, playGameOver } from '@/lib/tech-center-sounds';
 
 function fmtMoney(n) {
   if (n >= 1_000_000_000) return `₺${(n / 1_000_000_000).toFixed(2)}B`;
@@ -49,6 +51,10 @@ function Konfeti() {
 // Gün başı ekranı
 function DayNewScreen({ state, onStart }) {
   const { currentDay, deliveredToday = [], activeEvents = [], newEventsToday = [], newUnlocksToday = [] } = state;
+
+  useEffect(() => {
+    playDayStart();
+  }, []);
 
   return (
     <div style={{
@@ -193,6 +199,28 @@ function DaySummaryModal({ state, onNext }) {
   const progress = Math.min(1, daySummary.newFirmaValue / WIN_TARGET);
   const progressPct = (progress * 100).toFixed(2);
 
+  // Top products bar chart
+  const topProducts = daySummary.topProducts || [];
+  const maxRevenue = topProducts.length > 0 ? Math.max(...topProducts.map(p => p.revenue)) : 1;
+
+  // 3-day analysis (every 3rd day)
+  const show3DayReport = daySummary.day % 3 === 0;
+  let threeDayAnalysis = null;
+  if (show3DayReport && (state.allTimeSales || []).length > 0) {
+    const last3Days = [daySummary.day, daySummary.day - 1, daySummary.day - 2].filter(d => d > 0);
+    const recentSales = (state.allTimeSales || []).filter(s => last3Days.includes(s.day));
+    const productAgg = {};
+    for (const sale of recentSales) {
+      if (!productAgg[sale.productId]) {
+        productAgg[sale.productId] = { productName: sale.productName, revenue: 0, quantity: 0, profit: 0 };
+      }
+      productAgg[sale.productId].revenue += sale.revenue;
+      productAgg[sale.productId].quantity += sale.quantity;
+      productAgg[sale.productId].profit += sale.profit;
+    }
+    threeDayAnalysis = Object.values(productAgg).sort((a, b) => b.revenue - a.revenue).slice(0, 5);
+  }
+
   return (
     <div style={{
       position: 'fixed',
@@ -203,6 +231,7 @@ function DaySummaryModal({ state, onNext }) {
       justifyContent: 'center',
       zIndex: 500,
       padding: '1rem',
+      overflowY: 'auto',
     }}>
       <div style={{
         background: 'var(--color-cream-card)',
@@ -210,8 +239,9 @@ function DaySummaryModal({ state, onNext }) {
         borderRadius: '16px',
         padding: '2rem',
         width: '100%',
-        maxWidth: '480px',
+        maxWidth: '560px',
         boxShadow: '0 20px 60px rgba(0,0,0,0.2)',
+        margin: 'auto',
       }}>
         <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🌙</div>
@@ -309,6 +339,75 @@ function DaySummaryModal({ state, onNext }) {
           </div>
         </div>
 
+        {/* Top products bar chart */}
+        {topProducts.length > 0 && (
+          <div style={{
+            padding: '0.875rem',
+            background: 'var(--color-cream)',
+            borderRadius: '10px',
+            border: '0.5px solid var(--color-border)',
+            marginBottom: '1rem',
+          }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-mute)', marginBottom: '0.625rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              📊 En Çok Satan Ürünler
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              {topProducts.map((p, i) => {
+                const barPct = maxRevenue > 0 ? (p.revenue / maxRevenue * 100) : 0;
+                return (
+                  <div key={p.productId || i}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', marginBottom: '2px' }}>
+                      <span style={{ color: 'var(--color-text)', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '60%' }}>
+                        {p.productName}
+                      </span>
+                      <span style={{ color: '#1D9E75', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>
+                        {fmtMoney(p.revenue)}
+                      </span>
+                    </div>
+                    <div style={{ height: '6px', background: 'var(--color-border)', borderRadius: '999px', overflow: 'hidden' }}>
+                      <div style={{
+                        height: '100%',
+                        width: `${barPct}%`,
+                        background: i === 0 ? '#1D9E75' : i === 1 ? '#3B82F6' : i === 2 ? '#F59E0B' : '#8B5CF6',
+                        borderRadius: '999px',
+                        transition: 'width 0.5s',
+                      }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* 3-day analysis report */}
+        {show3DayReport && threeDayAnalysis && threeDayAnalysis.length > 0 && (
+          <div style={{
+            padding: '0.875rem',
+            background: 'var(--color-cream)',
+            borderRadius: '10px',
+            border: '1px solid #7F77DD44',
+            marginBottom: '1rem',
+          }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#7F77DD', marginBottom: '0.625rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              📈 {daySummary.day - 2}–{daySummary.day}. Gün Analizi (3 Günlük)
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              {threeDayAnalysis.map((p, i) => (
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', padding: '4px 0', borderBottom: '0.5px solid var(--color-border)' }}>
+                  <span style={{ color: 'var(--color-text)', fontWeight: 500 }}>{i + 1}. {p.productName}</span>
+                  <div style={{ display: 'flex', gap: '12px', textAlign: 'right' }}>
+                    <span style={{ color: '#1D9E75', fontFamily: 'var(--font-mono)' }}>{fmtMoney(p.revenue)}</span>
+                    <span style={{ color: p.profit >= 0 ? '#1D9E75' : '#E24B4A', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>
+                      +{fmtMoney(p.profit)}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         <button
           onClick={onNext}
           style={{
@@ -324,6 +423,76 @@ function DaySummaryModal({ state, onNext }) {
           }}
         >
           Sonraki Güne Geç →
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// Oyun Bitti ekranı
+function GameOverScreen({ state, onReset }) {
+  useEffect(() => {
+    playGameOver();
+  }, []);
+
+  return (
+    <div style={{
+      minHeight: '100vh',
+      background: '#0f1a0f',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '2rem 1rem',
+      textAlign: 'center',
+    }}>
+      <div style={{
+        background: '#1a1a1a',
+        border: '2px solid #E24B4A',
+        borderRadius: '20px',
+        padding: '3rem 2rem',
+        maxWidth: '480px',
+        width: '100%',
+        boxShadow: '0 20px 80px rgba(226,75,74,0.2)',
+      }}>
+        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>💸</div>
+        <h1 style={{ fontSize: '2rem', fontWeight: 800, color: '#E24B4A', margin: '0 0 0.5rem' }}>
+          Oyun Bitti!
+        </h1>
+        <p style={{ fontSize: '1.1rem', color: '#888', marginBottom: '1.5rem' }}>
+          Nakit -₺100.000 sınırını aştı. Firma iflas etti.
+        </p>
+        <div style={{
+          padding: '1rem',
+          background: '#111',
+          borderRadius: '12px',
+          marginBottom: '1.5rem',
+          border: '0.5px solid #333',
+        }}>
+          <div style={{ fontSize: '0.8rem', color: '#666', marginBottom: '4px' }}>Nakit Durumu</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#E24B4A', fontFamily: 'var(--font-mono)' }}>
+            {fmtMoney(state.cash)}
+          </div>
+          <div style={{ fontSize: '0.8rem', color: '#666', marginTop: '8px' }}>Ulaşılan Gün</div>
+          <div style={{ fontSize: '1.2rem', fontWeight: 700, color: '#888', fontFamily: 'var(--font-mono)' }}>
+            Gün {state.currentDay - 1}
+          </div>
+        </div>
+        <button
+          onClick={onReset}
+          style={{
+            width: '100%',
+            padding: '1rem',
+            borderRadius: '12px',
+            border: 'none',
+            background: '#E24B4A',
+            color: '#fff',
+            fontSize: '1rem',
+            fontWeight: 700,
+            cursor: 'pointer',
+          }}
+        >
+          🔄 Yeniden Dene
         </button>
       </div>
     </div>
@@ -466,6 +635,9 @@ export default function GameApp() {
     clearCancelNotif,
     addToShoppingListAction,
     removeFromShoppingListAction,
+    acceptPCOrderAction,
+    fulfillPCOrderAction,
+    clearLoanError,
   } = useTechCenterState();
 
   if (!loaded) {
@@ -479,6 +651,11 @@ export default function GameApp() {
   // Setup ekranı
   if (!state) {
     return <SetupScreen onStart={startGame} />;
+  }
+
+  // Oyun bitti ekranı
+  if (state.gamePhase === 'game_over') {
+    return <GameOverScreen state={state} onReset={resetGame} />;
   }
 
   // Kazanma ekranı
@@ -526,6 +703,9 @@ export default function GameApp() {
         fireStaffAction={fireStaffAction}
         setServicePriceAction={setServicePriceAction}
         resetGame={resetGame}
+        acceptPCOrderAction={acceptPCOrderAction}
+        fulfillPCOrderAction={fulfillPCOrderAction}
+        clearLoanError={clearLoanError}
       />
       {state.gamePhase === 'day_summary' && <DaySummaryModal state={state} onNext={nextDay} />}
     </div>

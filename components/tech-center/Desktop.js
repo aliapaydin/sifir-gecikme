@@ -11,6 +11,9 @@ import UrunListesiApp from './UrunListesiApp';
 import Calculator from './Calculator';
 import PaintApp from './PaintApp';
 import PCToplaApp from './PCToplaApp';
+import { playClick } from '@/lib/tech-center-sounds';
+
+const WINDOW_MEMORY_KEY = 'tc_window_memory';
 
 const DESKTOP_APPS = [
   { id: 'mail',    emoji: '📧', label: 'Mail',     color: '#3B82F6', bg: '#1d3461' },
@@ -49,7 +52,7 @@ function DesktopIcon({ app, onClick, badge }) {
   const [hover, setHover] = useState(false);
   return (
     <div
-      onClick={onClick}
+      onClick={() => { playClick(); onClick(); }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{
@@ -238,17 +241,77 @@ function Taskbar({ openWindows, activeWindowId, onFocus, mailBadge }) {
   );
 }
 
+function SplashScreen({ app }) {
+  return (
+    <div style={{
+      position: 'absolute', inset: 0,
+      background: '#0f172a',
+      display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center',
+      gap: '16px', zIndex: 50,
+    }}>
+      <style>{`
+        @keyframes splashLoad {
+          0% { width: 0%; }
+          100% { width: 100%; }
+        }
+      `}</style>
+      <div style={{
+        width: '72px', height: '72px', borderRadius: '18px',
+        background: `linear-gradient(135deg, ${app?.color || '#3B82F6'}44, ${app?.color || '#3B82F6'}22)`,
+        border: `1.5px solid ${app?.color || '#3B82F6'}55`,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: '2.2rem',
+        boxShadow: `0 8px 32px ${app?.color || '#3B82F6'}44`,
+      }}>
+        {app?.emoji}
+      </div>
+      <div style={{ color: 'rgba(255,255,255,0.9)', fontSize: '1rem', fontWeight: 600 }}>
+        {app?.label}
+      </div>
+      <div style={{ width: '160px', height: '4px', background: 'rgba(255,255,255,0.12)', borderRadius: '999px', overflow: 'hidden' }}>
+        <div style={{
+          height: '100%',
+          background: app?.color || '#3B82F6',
+          borderRadius: '999px',
+          animation: 'splashLoad 1.8s ease-out forwards',
+        }} />
+      </div>
+    </div>
+  );
+}
+
 export default function Desktop({ state, firmaValue, ...actions }) {
   const [openWindows, setOpenWindows] = useState([]);
   const [activeWindowId, setActiveWindowId] = useState(null);
+  const [splashApps, setSplashApps] = useState(new Set());
   const desktopRef = useRef(null);
   const dragRef = useRef(null);
   // Remembers last floating position + size + floating state per appId across open/close cycles
   const windowMemoryRef = useRef({});
   // Tracks the next window to focus — set inside the openWindows updater, applied via effect
   const pendingActiveIdRef = useRef(null);
+  // Z-index counter for layering windows
+  const zCounterRef = useRef(100);
 
   const mailBadge = (state.customersToday || []).filter(c => !c.dealt).length;
+
+  // Load window memory from localStorage on mount
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(WINDOW_MEMORY_KEY);
+      if (raw) {
+        windowMemoryRef.current = JSON.parse(raw);
+      }
+    } catch {}
+  }, []);
+
+  // Save window memory helper
+  const saveWindowMemory = useCallback(() => {
+    try {
+      localStorage.setItem(WINDOW_MEMORY_KEY, JSON.stringify(windowMemoryRef.current));
+    } catch {}
+  }, []);
 
   // Apply pending active window focus after openWindows state settles
   useEffect(() => {
@@ -258,21 +321,40 @@ export default function Desktop({ state, firmaValue, ...actions }) {
     }
   }, [openWindows]);
 
+  const focusWindow = useCallback((winId) => {
+    const z = ++zCounterRef.current;
+    setOpenWindows(prev => prev.map(w => w.id === winId ? { ...w, zIndex: z } : w));
+    setActiveWindowId(winId);
+  }, []);
+
   const openApp = useCallback((appId) => {
     setOpenWindows(prev => {
       const existing = prev.find(w => w.appId === appId);
       if (existing) {
+        const z = ++zCounterRef.current;
         pendingActiveIdRef.current = existing.id;
-        return prev.map(w => w.id === existing.id ? { ...w, minimized: false } : w);
+        return prev.map(w => w.id === existing.id ? { ...w, minimized: false, zIndex: z } : w);
       }
       const id = `win_${appId}_${Date.now()}`;
       pendingActiveIdRef.current = id;
       const memory = windowMemoryRef.current[appId];
-      if (memory?.floating) {
-        return [...prev, { id, appId, minimized: false, floating: true, position: memory.position, size: memory.size }];
-      }
-      return [...prev, { id, appId, minimized: false, floating: false, position: null, size: null }];
+      const floatingCount = prev.filter(w => w.floating && !w.minimized).length;
+      const defaultSize = WINDOW_FLOAT_DEFAULTS[appId] || DEFAULT_FLOAT_SIZE;
+      const z = ++zCounterRef.current;
+      const position = memory?.position || { x: 60 + floatingCount * 24, y: 50 + floatingCount * 24 };
+      const size = memory?.size || defaultSize;
+      // Always open as floating
+      return [...prev, { id, appId, minimized: false, floating: true, position, size, zIndex: z }];
     });
+    // Trigger splash screen for 2 seconds
+    setSplashApps(prev => new Set([...prev, appId]));
+    setTimeout(() => {
+      setSplashApps(prev => {
+        const next = new Set(prev);
+        next.delete(appId);
+        return next;
+      });
+    }, 2000);
   }, []);
 
   const handleTaskbarAction = useCallback((winId, action) => {
@@ -299,11 +381,12 @@ export default function Desktop({ state, firmaValue, ...actions }) {
           position: win.position,
           size: win.size,
         };
+        saveWindowMemory();
       }
       return prev.filter(w => w.id !== winId);
     });
     setActiveWindowId(prev => prev === winId ? null : prev);
-  }, []);
+  }, [saveWindowMemory]);
 
   const floatWindow = useCallback((winId) => {
     setOpenWindows(prev => {
@@ -368,8 +451,24 @@ export default function Desktop({ state, firmaValue, ...actions }) {
   }, []);
 
   const handleMouseUp = useCallback(() => {
+    if (dragRef.current) {
+      // Save window memory after drag/resize ends
+      const winId = dragRef.current.winId;
+      setOpenWindows(prev => {
+        const win = prev.find(w => w.id === winId);
+        if (win && win.floating && (win.position || win.size)) {
+          windowMemoryRef.current[win.appId] = {
+            floating: true,
+            position: win.position,
+            size: win.size,
+          };
+          saveWindowMemory();
+        }
+        return prev;
+      });
+    }
     dragRef.current = null;
-  }, []);
+  }, [saveWindowMemory]);
 
   const handleDragStart = useCallback((winId, e, winX, winY) => {
     e.preventDefault();
@@ -392,6 +491,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
       buildPCAction, sellBuiltPCAction,
       cancelOrderAction, takeLoanAction,
       addToShoppingListAction, removeFromShoppingListAction,
+      acceptPCOrderAction, fulfillPCOrderAction, clearLoanError,
     } = actions;
 
     switch (appId) {
@@ -404,6 +504,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
           delayCustomerAction={delayCustomerAction}
           servicePrices={state.servicePrices}
           addToShoppingListAction={addToShoppingListAction}
+          acceptPCOrderAction={acceptPCOrderAction}
         />
       );
       case 'pazar': return (
@@ -433,6 +534,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
           hireStaffAction={hireStaffAction}
           fireStaffAction={fireStaffAction}
           clearError={clearError}
+          clearLoanError={clearLoanError}
           servicePrices={state.servicePrices}
           setServicePriceAction={setServicePriceAction}
           takeLoanAction={takeLoanAction}
@@ -444,6 +546,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
           state={state}
           buildPCAction={actions.buildPCAction}
           sellBuiltPCAction={actions.sellBuiltPCAction}
+          fulfillPCOrderAction={fulfillPCOrderAction}
         />
       );
       case 'hesapmak': return <Calculator />;
@@ -491,12 +594,14 @@ export default function Desktop({ state, firmaValue, ...actions }) {
           const isActive = win.id === activeWindowId && !win.minimized;
           const pos = win.position || { x: 60, y: 50 };
           const size = win.size || (WINDOW_FLOAT_DEFAULTS[win.appId] || DEFAULT_FLOAT_SIZE);
+          const winZIndex = win.zIndex || 10;
+          const showingSplash = splashApps.has(win.appId);
 
           if (win.floating && !win.minimized) {
             return (
               <div
                 key={win.id}
-                onMouseDown={() => setActiveWindowId(win.id)}
+                onMouseDown={() => focusWindow(win.id)}
                 style={{
                   position: 'absolute',
                   left: pos.x,
@@ -512,7 +617,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
                   boxShadow: isActive
                     ? '0 20px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.12)'
                     : '0 8px 32px rgba(0,0,0,0.45)',
-                  zIndex: isActive ? 20 : 10,
+                  zIndex: winZIndex,
                 }}
               >
                 <WindowTitleBar
@@ -524,8 +629,12 @@ export default function Desktop({ state, firmaValue, ...actions }) {
                   isDraggable
                   onDragStart={(e) => handleDragStart(win.id, e, pos.x, pos.y)}
                 />
-                <div style={{ flex: 1, overflow: 'auto', background: 'var(--color-cream)' }}>
-                  {renderAppContent(win.appId)}
+                <div style={{ flex: 1, overflow: 'auto', background: 'var(--color-cream)', position: 'relative' }}>
+                  {showingSplash ? (
+                    <SplashScreen app={app} />
+                  ) : (
+                    renderAppContent(win.appId)
+                  )}
                 </div>
                 {/* Resize handles */}
                 {RESIZE_HANDLES.map(h => (
@@ -552,7 +661,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
                       position: 'absolute',
                       ...h.style,
                       cursor: h.cursor,
-                      zIndex: 25,
+                      zIndex: winZIndex + 5,
                     }}
                   />
                 ))}
@@ -564,10 +673,12 @@ export default function Desktop({ state, firmaValue, ...actions }) {
             return (
               <div
                 key={win.id}
+                onMouseDown={() => focusWindow(win.id)}
                 style={{
                   position: 'absolute', inset: 0,
                   display: isActive ? 'flex' : 'none',
                   flexDirection: 'column',
+                  zIndex: winZIndex,
                 }}
               >
                 <WindowTitleBar
@@ -576,8 +687,12 @@ export default function Desktop({ state, firmaValue, ...actions }) {
                   onClose={() => closeWindow(win.id)}
                   onFloat={() => floatWindow(win.id)}
                 />
-                <div style={{ flex: 1, overflow: 'auto', background: 'var(--color-cream)' }}>
-                  {renderAppContent(win.appId)}
+                <div style={{ flex: 1, overflow: 'auto', background: 'var(--color-cream)', position: 'relative' }}>
+                  {showingSplash ? (
+                    <SplashScreen app={app} />
+                  ) : (
+                    renderAppContent(win.appId)
+                  )}
                 </div>
               </div>
             );

@@ -21,6 +21,9 @@ function getSubjectLine(customer) {
   if (customer.isReturning) {
     return `⏰ ${customer.name} (geri döndü)`;
   }
+  if (customer.type === 'pc_order') {
+    return `🖥️ ${customer.pcOrderSpec?.label || 'PC'} siparişi`;
+  }
   if (customer.type === 'service') {
     const service = SERVICES[customer.requestedServiceId];
     return service ? `${service.emoji || '🔧'} ${service.label} hizmet talebi` : 'Servis talebi';
@@ -37,6 +40,7 @@ function getCustomerTypeLabel(type) {
     professional: 'Profesyonel',
     corporate: 'Kurumsal',
     service: 'Servis',
+    pc_order: 'PC Siparişi',
   };
   return labels[type] || type;
 }
@@ -48,6 +52,7 @@ function getCustomerTypeColor(type) {
     professional: '#185FA5',
     corporate: '#1D9E75',
     service: '#10B981',
+    pc_order: '#F59E0B',
   };
   return colors[type] || '#6B7280';
 }
@@ -122,7 +127,7 @@ function SuccessModal({ data, onClose }) {
 }
 
 // Customer detail pane
-function CustomerDetailPane({ customer, state, sellAction, skipAction, handleServiceAction, delayCustomerAction, servicePrices, onSuccess, addToShoppingListAction }) {
+function CustomerDetailPane({ customer, state, sellAction, skipAction, handleServiceAction, delayCustomerAction, servicePrices, onSuccess, addToShoppingListAction, acceptPCOrderAction }) {
   const [servicePhase, setServicePhase] = useState('idle'); // idle | pending_confirm | rejected
   const [counterInput, setCounterInput] = useState('');
   const [pendingPrice, setPendingPrice] = useState(null);
@@ -175,6 +180,7 @@ function CustomerDetailPane({ customer, state, sellAction, skipAction, handleSer
     const res = resultMap[customer.result] || { label: customer.result, color: '#6B7280', bg: '#F3F4F6' };
     const isDelayed = customer.result === 'delayed';
     const isSold = customer.result === 'sold';
+    const isTooExpensive = customer.result === 'too_expensive';
     const alreadyReturned = isDelayed && customer.waitUntilDay && state.currentDay >= customer.waitUntilDay;
     const showProductCard = (isDelayed || customer.result === 'delay_rejected' || isSold) && product;
     const showServiceCard = isSold && service;
@@ -283,6 +289,42 @@ function CustomerDetailPane({ customer, state, sellAction, skipAction, handleSer
           </div>
         )}
 
+        {/* Çok pahalı detayı */}
+        {isTooExpensive && product && (
+          <div style={{
+            background: 'var(--color-cream-card)',
+            border: '0.5px solid #FCA5A5',
+            borderRadius: '10px',
+            overflow: 'hidden',
+            marginTop: '1rem',
+          }}>
+            <div style={{ padding: '0.875rem 1rem', borderBottom: '0.5px solid #FCA5A5', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <div style={{ width: 38, height: 38, borderRadius: '8px', flexShrink: 0, background: catColor + '18', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>
+                {catIcon}
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--color-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {product.brand} {product.name}
+                </div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', marginTop: '2px' }}>{product.specs}</div>
+              </div>
+            </div>
+            <div style={{ padding: '0.75rem 1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.78rem', color: 'var(--color-text-mute)' }}>Fiyatımız</span>
+                <span style={{ fontSize: '0.88rem', fontWeight: 800, color: '#E24B4A', fontFamily: 'var(--font-mono)' }}>{fmtMoney(totalPrice)}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.78rem', color: 'var(--color-text-mute)' }}>Müşteri bütçesi</span>
+                <span style={{ fontSize: '0.88rem', fontWeight: 800, color: '#1D9E75', fontFamily: 'var(--font-mono)' }}>{fmtMoney(customer.budget)}</span>
+              </div>
+              <div style={{ paddingTop: '0.4rem', borderTop: '0.5px solid #FCA5A5', fontSize: '0.78rem', color: '#991B1B', fontWeight: 600, textAlign: 'center' }}>
+                Fiyatımız çok yüksekti ({fmtMoney(totalPrice - customer.budget)} fazla)
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Bekleme detayları — delayed ve delay_rejected için */}
         {(isDelayed || customer.result === 'delay_rejected') && product && (
           <div style={{
@@ -331,6 +373,79 @@ function CustomerDetailPane({ customer, state, sellAction, skipAction, handleSer
             </div>
           </div>
         )}
+      </div>
+    );
+  }
+
+  // PC order customer (not dealt)
+  if (customer.type === 'pc_order' && !customer.dealt) {
+    const spec = customer.pcOrderSpec || {};
+    return (
+      <div style={{ flex: 1, background: 'var(--color-cream)', padding: '1.5rem', overflowY: 'auto' }}>
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
+          <div style={{
+            width: '52px', height: '52px', borderRadius: '50%',
+            background: '#F59E0B22', display: 'flex', alignItems: 'center',
+            justifyContent: 'center', fontSize: '1.6rem', flexShrink: 0,
+          }}>
+            {customer.avatar}
+          </div>
+          <div>
+            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--color-text)' }}>{customer.name}</div>
+            <div style={{
+              display: 'inline-block', padding: '2px 10px', borderRadius: '999px',
+              background: '#F59E0B22', color: '#F59E0B',
+              fontSize: '0.75rem', fontWeight: 600, marginTop: '4px',
+            }}>
+              🖥️ PC Siparişi
+            </div>
+          </div>
+        </div>
+
+        {/* PC Order spec card */}
+        <div style={{
+          background: 'var(--color-cream-card)',
+          border: '1px solid #F59E0B44',
+          borderRadius: '12px', padding: '1.25rem', marginBottom: '1rem',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '0.75rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🖥️</span>
+            <div>
+              <div style={{ fontWeight: 700, color: 'var(--color-text)', fontSize: '1rem' }}>{spec.label || 'Özel PC'}</div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--color-text-mute)' }}>{spec.useCase || ''}</div>
+            </div>
+          </div>
+          <div style={{ fontSize: '0.82rem', color: 'var(--color-text-mute)', marginBottom: '0.75rem', background: 'var(--color-cream)', padding: '8px 10px', borderRadius: '8px', fontStyle: 'italic' }}>
+            {spec.specs || 'Belirtilmemiş'}
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
+            <span style={{ color: 'var(--color-text-mute)' }}>Bütçe</span>
+            <span style={{ fontWeight: 700, color: '#1D9E75', fontFamily: 'var(--font-mono)' }}>{fmtMoney(customer.budget)}</span>
+          </div>
+        </div>
+
+        <button
+          onClick={() => acceptPCOrderAction && acceptPCOrderAction(customer.id)}
+          style={{
+            width: '100%', padding: '12px', borderRadius: '10px', border: 'none',
+            background: '#F59E0B', color: '#fff',
+            fontSize: '0.95rem', fontWeight: 700, cursor: 'pointer', marginBottom: '8px',
+          }}
+        >
+          ✓ Siparişi Kabul Et
+        </button>
+        <button
+          onClick={() => skipAction && skipAction(customer.id)}
+          style={{
+            width: '100%', padding: '8px', borderRadius: '8px',
+            border: '1px solid var(--color-border)',
+            background: 'var(--color-cream-card)',
+            color: 'var(--color-text-mute)', fontSize: '0.85rem', cursor: 'pointer',
+          }}
+        >
+          Geç
+        </button>
       </div>
     );
   }
@@ -833,7 +948,7 @@ function CustomerDetailPane({ customer, state, sellAction, skipAction, handleSer
   );
 }
 
-export default function MailApp({ state, sellAction, skipAction, handleServiceAction, delayCustomerAction, servicePrices, addToShoppingListAction }) {
+export default function MailApp({ state, sellAction, skipAction, handleServiceAction, delayCustomerAction, servicePrices, addToShoppingListAction, acceptPCOrderAction }) {
   const [selectedId, setSelectedId] = useState(null);
   const [successData, setSuccessData] = useState(null);
   // Tracks the previous selectedId to distinguish "user just acted" from "user navigated to dealt customer"
@@ -922,6 +1037,7 @@ export default function MailApp({ state, sellAction, skipAction, handleServiceAc
               const dotColor = getStatusDot(customer);
               const subject = getSubjectLine(customer);
               const typeColor = getCustomerTypeColor(customer.type);
+              const isPCOrder = customer.type === 'pc_order';
 
               return (
                 <div
@@ -932,7 +1048,7 @@ export default function MailApp({ state, sellAction, skipAction, handleServiceAc
                     cursor: 'pointer',
                     borderBottom: '0.5px solid var(--color-border)',
                     background: isSelected ? 'var(--color-accent-soft, #EEF2FF)' : 'transparent',
-                    borderLeft: isSelected ? '3px solid var(--color-accent)' : '3px solid transparent',
+                    borderLeft: isSelected ? `3px solid ${isPCOrder ? '#F59E0B' : 'var(--color-accent)'}` : '3px solid transparent',
                     transition: 'background 0.1s',
                     display: 'flex',
                     alignItems: 'center',
@@ -944,18 +1060,29 @@ export default function MailApp({ state, sellAction, skipAction, handleServiceAc
                     width: '34px', height: '34px', borderRadius: '50%',
                     background: typeColor + '22', display: 'flex', alignItems: 'center',
                     justifyContent: 'center', fontSize: '1.1rem', flexShrink: 0,
+                    position: 'relative',
                   }}>
-                    {customer.avatar}
+                    {isPCOrder ? '🖥️' : customer.avatar}
                   </div>
 
                   {/* Info */}
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{
-                      fontWeight: customer.dealt ? 400 : 700,
-                      fontSize: '0.82rem', color: 'var(--color-text)',
-                      whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-                    }}>
-                      {customer.name}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <span style={{
+                        fontWeight: customer.dealt ? 400 : 700,
+                        fontSize: '0.82rem', color: 'var(--color-text)',
+                        overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                      }}>
+                        {customer.name}
+                      </span>
+                      <span style={{
+                        flexShrink: 0,
+                        padding: '1px 5px', borderRadius: '4px',
+                        background: typeColor + '22', color: typeColor,
+                        fontSize: '0.6rem', fontWeight: 700, lineHeight: 1.4,
+                      }}>
+                        {getCustomerTypeLabel(customer.type)}
+                      </span>
                     </div>
                     <div style={{
                       fontSize: '0.72rem', color: 'var(--color-text-mute)',
@@ -988,6 +1115,7 @@ export default function MailApp({ state, sellAction, skipAction, handleServiceAc
           servicePrices={servicePrices}
           onSuccess={(data) => setSuccessData(data)}
           addToShoppingListAction={addToShoppingListAction}
+          acceptPCOrderAction={acceptPCOrderAction}
         />
       </div>
     </>
