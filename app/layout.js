@@ -6,6 +6,7 @@ import LayoutShell from '../components/LayoutShell';
 import ZiyaretTakip from '../components/ZiyaretTakip';
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import AdStickyWrapper from '../components/AdStickyWrapper'
 
 const inter = Inter({ subsets: ['latin', 'latin-ext'], variable: '--font-sans', display: 'swap' });
 const lora = Lora({ subsets: ['latin', 'latin-ext'], variable: '--font-serif', display: 'swap' });
@@ -70,6 +71,14 @@ export default function RootLayout({ children }) {
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Sıfır Gecikme" />
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+        {process.env.NEXT_PUBLIC_ADSENSE_ID && (
+          <Script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_ID}`}
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        )}
       </head>
         <body suppressHydrationWarning>
           <ThemeSync />
@@ -82,6 +91,7 @@ export default function RootLayout({ children }) {
           <LayoutShell>
             {children}
           </LayoutShell>
+          <AdStickyWrapper />
           <Analytics />
           <SpeedInsights />
         </body>

@@ -1,6 +1,9 @@
 import Link from 'next/link';
+import { getSession } from '@/lib/session';
 
-export default function SupporterCard() {
+export default async function SupporterCard() {
+  const session = await getSession();
+  if (!session?.is_supporter) return null;
   return (
     <div style={{
       margin: '40px 0 8px',

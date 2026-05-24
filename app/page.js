@@ -7,6 +7,7 @@ import AboneOl from '../components/AboneOl';
 import YolHaritasiKarti from '../components/YolHaritasiKarti';
 import { yazilar } from '../lib/icerikler';
 import IcerikIcon from '../components/IcerikIcon';
+import AdSquare from '../components/AdSquare';
 
 function ThemeToggle() {
   const toggle = () => {
@@ -147,7 +148,8 @@ export default function Home() {
     <main className="min-h-screen">
 
       <section className="max-w-5xl mx-auto px-6 py-14" style={{ borderBottom: '0.5px solid var(--color-border)' }}>
-        <div className="flex items-start justify-between gap-8 flex-wrap">
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '32px', flexWrap: 'wrap' }}>
+          {/* Sol: başlık + stats */}
           <div style={{ flex: 1, minWidth: '280px' }}>
             <div className="flex gap-2 flex-wrap mb-5">
               <span className="badge badge-interactive">{yazilar.length} içerik</span>
@@ -157,24 +159,27 @@ export default function Home() {
             <h1 className="font-serif font-medium leading-tight mb-4" style={{ fontSize: '2.6rem', color: 'var(--color-text)', letterSpacing: '-0.01em' }}>
               Birlikte öğreniyoruz,<br />birlikte deniyoruz.
             </h1>
-            <p className="text-lg leading-relaxed" style={{ color: 'var(--color-text-soft)', maxWidth: '420px' }}>
+            <p className="text-lg leading-relaxed mb-6" style={{ color: 'var(--color-text-soft)', maxWidth: '420px' }}>
               Veri bilimi, makine öğrenmesi ve istatistik üzerine interaktif Türkçe içerikler. Her kavramı önce dener, sonra konuşuruz.
             </p>
+            {/* Stat kutuları sola taşındı */}
+            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+              {[
+                { sayi: yazilar.length, etiket: 'içerik', renk: 'var(--color-accent)' },
+                { sayi: interaktif, etiket: 'demo', renk: '#7F77DD' },
+                { sayi: arac, etiket: 'araç', renk: '#e8a04a' },
+                { sayi: rehber, etiket: 'rehber', renk: '#E24B4A' },
+              ].map(({ sayi, etiket, renk }) => (
+                <div key={etiket} className="card text-center" style={{ padding: '12px 18px', minWidth: '76px' }}>
+                  <div className="text-2xl font-medium mb-0.5" style={{ color: renk }}>{sayi}</div>
+                  <div className="text-xs" style={{ color: 'var(--color-text-mute)' }}>{etiket}</div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', flexShrink: 0 }}>
-            {[
-              { sayi: yazilar.length, etiket: 'içerik', renk: 'var(--color-accent)' },
-              { sayi: interaktif, etiket: 'demo', renk: '#7F77DD' },
-              { sayi: arac, etiket: 'araç', renk: '#e8a04a' },
-              { sayi: rehber, etiket: 'rehber', renk: '#E24B4A' },
-            ].map(({ sayi, etiket, renk }) => (
-              <div key={etiket} className="card text-center" style={{ padding: '16px 20px', minWidth: '90px' }}>
-                <div className="text-2xl font-medium mb-1" style={{ color: renk }}>{sayi}</div>
-                <div className="text-xs" style={{ color: 'var(--color-text-mute)' }}>{etiket}</div>
-              </div>
-            ))}
-          </div>
+          {/* Sağ: reklam alanı */}
+          <AdSquare />
         </div>
       </section>
 
