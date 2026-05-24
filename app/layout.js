@@ -72,11 +72,11 @@ export default function RootLayout({ children }) {
         <meta name="apple-mobile-web-app-title" content="Sıfır Gecikme" />
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
         {process.env.NEXT_PUBLIC_ADSENSE_ID && (
-          <Script
+          // eslint-disable-next-line @next/next/no-sync-scripts
+          <script
             async
             src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_ID}`}
             crossOrigin="anonymous"
-            strategy="afterInteractive"
           />
         )}
       </head>
