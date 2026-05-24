@@ -53,6 +53,22 @@ export default function Footer() {
               Türkçe veri bilimi, makine öğrenmesi ve istatistik üzerine interaktif içerikler.
               Her kavramı önce dener, sonra konuşuruz.
             </p>
+              <a href="/support"
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '6px',
+                fontSize: '13px', fontWeight: 600,
+                color: '#FF424D', textDecoration: 'none',
+                padding: '7px 14px', borderRadius: '8px',
+                border: '1px solid rgba(255,66,77,0.3)',
+                background: 'rgba(255,66,77,0.06)',
+                transition: 'background 0.15s, border-color 0.15s',
+                marginBottom: '16px',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,66,77,0.12)'; e.currentTarget.style.borderColor = '#FF424D'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,66,77,0.06)'; e.currentTarget.style.borderColor = 'rgba(255,66,77,0.3)'; }}
+            >
+              ☕ Destek Ol
+            </a>
             <div className="flex gap-2">
               {sosyal.map(({ href, label, icon }) => (
                 <a key={label} href={href} target="_blank" rel="noopener noreferrer"
@@ -111,7 +127,12 @@ export default function Footer() {
               onMouseLeave={e => { e.currentTarget.style.color = 'var(--color-text-mute)'; e.currentTarget.style.borderColor = 'var(--color-border)'; }}
             >{CURRENT_VERSION}</a>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2" style={{ alignItems: 'center' }}>
+            <a href="/support" style={{ fontSize: '12px', color: '#FF424D', textDecoration: 'none', fontWeight: 600 }}
+              onMouseEnter={e => e.currentTarget.style.opacity = '0.75'}
+              onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+            >☕ Destek Ol</a>
+            <span style={{ color: 'var(--color-border)' }}>·</span>
             <span className="badge badge-interactive">14 içerik</span>
             <span className="badge badge-interactive">8 demo</span>
             <span className="badge badge-case">Türkçe & ücretsiz</span>

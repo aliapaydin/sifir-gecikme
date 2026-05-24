@@ -174,7 +174,10 @@ function CustomerDetailPane({ customer, state, sellAction, skipAction, handleSer
     };
     const res = resultMap[customer.result] || { label: customer.result, color: '#6B7280', bg: '#F3F4F6' };
     const isDelayed = customer.result === 'delayed';
+    const isSold = customer.result === 'sold';
     const alreadyReturned = isDelayed && customer.waitUntilDay && state.currentDay >= customer.waitUntilDay;
+    const showProductCard = (isDelayed || customer.result === 'delay_rejected' || isSold) && product;
+    const showServiceCard = isSold && service;
 
     return (
       <div style={{ flex: 1, background: 'var(--color-cream)', padding: '1.5rem', overflowY: 'auto' }}>
@@ -209,10 +212,76 @@ function CustomerDetailPane({ customer, state, sellAction, skipAction, handleSer
           fontWeight: 700,
           color: res.color,
           textAlign: 'center',
-          marginBottom: (isDelayed || customer.result === 'delay_rejected') && product ? '1rem' : 0,
+          marginBottom: (showProductCard || showServiceCard) ? '1rem' : 0,
         }}>
           {res.label}
         </div>
+
+        {/* Satış detayı — sold ürün */}
+        {isSold && product && (
+          <div style={{
+            background: 'var(--color-cream-card)',
+            border: '0.5px solid var(--color-border)',
+            borderRadius: '10px',
+            overflow: 'hidden',
+          }}>
+            <div style={{ padding: '0.875rem 1rem', borderBottom: '0.5px solid var(--color-border)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <div style={{
+                width: 38, height: 38, borderRadius: '8px', flexShrink: 0,
+                background: catColor + '18', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem',
+              }}>{catIcon}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--color-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {product.brand} {product.name}
+                </div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', marginTop: '2px' }}>{product.specs}</div>
+              </div>
+            </div>
+            <div style={{ padding: '0.75rem 1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.78rem', color: 'var(--color-text-mute)' }}>Alıcı</span>
+                <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--color-text)' }}>{customer.name}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.78rem', color: 'var(--color-text-mute)' }}>Miktar</span>
+                <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--color-text)' }}>{customer.quantity || 1} adet</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '0.4rem', borderTop: '0.5px solid var(--color-border)', marginTop: '0.1rem' }}>
+                <span style={{ fontSize: '0.78rem', color: 'var(--color-text-mute)' }}>Satış fiyatı</span>
+                <span style={{ fontSize: '0.88rem', fontWeight: 800, color: '#1D9E75' }}>
+                  {totalPrice.toLocaleString('tr-TR')} ₺
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Satış detayı — sold servis */}
+        {isSold && service && (
+          <div style={{
+            background: 'var(--color-cream-card)',
+            border: '0.5px solid var(--color-border)',
+            borderRadius: '10px',
+            overflow: 'hidden',
+          }}>
+            <div style={{ padding: '0.875rem 1rem', borderBottom: '0.5px solid var(--color-border)', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <div style={{
+                width: 38, height: 38, borderRadius: '8px', flexShrink: 0,
+                background: '#10B98118', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem',
+              }}>{service.emoji || '🔧'}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--color-text)' }}>{service.label}</div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', marginTop: '2px' }}>{service.desc}</div>
+              </div>
+            </div>
+            <div style={{ padding: '0.75rem 1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.78rem', color: 'var(--color-text-mute)' }}>Ücret</span>
+              <span style={{ fontSize: '0.88rem', fontWeight: 800, color: '#1D9E75' }}>
+                {(customer.offeredPrice || 0).toLocaleString('tr-TR')} ₺
+              </span>
+            </div>
+          </div>
+        )}
 
         {/* Bekleme detayları — delayed ve delay_rejected için */}
         {(isDelayed || customer.result === 'delay_rejected') && product && (

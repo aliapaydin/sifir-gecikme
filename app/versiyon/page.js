@@ -8,6 +8,25 @@ export const metadata = {
 
 const versiyonlar = [
   {
+    versiyon: 'v2.3.0',
+    tarih: '24 Mayıs 2026',
+    baslik: 'Patreon Destekçi Sistemi',
+    tip: 'feature',
+    ozellikler: [
+      { tip: 'yeni', metin: 'Patreon OAuth entegrasyonu: "Patreon ile Giriş Yap" butonu, erişim token alışverişi ve 30 günlük JWT cookie oturumu' },
+      { tip: 'yeni', metin: 'Destekçi paneli (/support/dashboard): Patreon profil fotoğrafı, abonelik durumu (Aktif / Eski / Ödeme Başarısız), aylık destek miktarı, toplam katkı, başlangıç tarihi ve son ödeme bilgileri' },
+      { tip: 'yeni', metin: 'Aktif avantajlar gösterimi: Reklamsız Deneyim, Özel İçerikler, Öncelikli Erişim, Doğrudan İletişim — aktif/pasif durum destekçi statüsüne göre dinamik' },
+      { tip: 'yeni', metin: 'Destekçi rozeti: logo yanında altın yıldız ikonu; sadece aktif destekçilere görünür, tıklayınca dashboard\'a yönlendirir' },
+      { tip: 'yeni', metin: '"Destekçi" navbar linki: Hakkımda yanına eklendi (desktop ve mobil); sadece giriş yapmış destekçilere görünür' },
+      { tip: 'yeni', metin: 'SupporterOnly bileşeni: özel içerikleri blur + kilit kapısıyla sarar; destekçi değilse "Destekçi Ol" butonlu gate gösterilir' },
+      { tip: 'yeni', metin: 'SupporterCard: tüm yazı sayfalarının sonunda "Destekleriniz sayesinde büyüyoruz — iyi ki varsınız" teşekkür kartı' },
+      { tip: 'yeni', metin: '/support sayfası: avantajlar, Patreon CTA butonu, "Zaten destekçiyim" giriş bölümü ve masraf şeffaflık kartları; giriş yapılınca dashboard\'a yönlendirir' },
+      { tip: 'iyileştirme', metin: 'Destek sayfası /bagis → /support olarak yeniden adlandırıldı; footer ve navbar linkleri güncellendi' },
+      { tip: 'iyileştirme', metin: 'Footer\'a "☕ Destek Ol" butonu eklendi: sol kolonda belirgin kırmızı buton, alt bar\'da küçük link' },
+      { tip: 'iyileştirme', metin: 'Creator bypass: site sahibi hesabı Patreon\'da kendi kampanyasına üye olamayacağı için creator ID ile otomatik "Aktif Destekçi" statüsü' },
+    ],
+  },
+  {
     versiyon: 'v2.2.0',
     tarih: '23 Mayıs 2026',
     baslik: 'Alkol Promilmetre Modülü',

@@ -32,8 +32,10 @@ const PAD_BOT = 26;
 
 function yTicks(min, max) {
   const step = niceStep((max - min) / 4);
+  const start = Math.floor(min / step) * step;
+  const end = Math.ceil(max / step) * step;
   const ticks = [];
-  for (let v = Math.ceil(min / step) * step; v <= max + step * 0.01; v += step) {
+  for (let v = start; v <= end + step * 0.001; v += step) {
     ticks.push(Math.round(v));
   }
   return ticks;

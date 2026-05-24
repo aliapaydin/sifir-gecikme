@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import MailApp from './MailApp';
 import PazarTab from './PazarTab';
@@ -13,15 +13,13 @@ import PaintApp from './PaintApp';
 import PCToplaApp from './PCToplaApp';
 
 const DESKTOP_APPS = [
-  { id: 'mail',     emoji: '📧', label: 'Mail',     color: '#3B82F6', bg: '#1d3461' },
-  { id: 'pazar',    emoji: '🛒', label: 'Pazar',    color: '#F59E0B', bg: '#3d2c0a' },
-  { id: 'stok',     emoji: '📦', label: 'Stok',     color: '#8B5CF6', bg: '#2d1f4a' },
-  { id: 'urunler',  emoji: '📋', label: 'Ürünler',  color: '#10B981', bg: '#0a3025' },
-  { id: 'analiz',   emoji: '📊', label: 'Analiz',   color: '#0EA5E9', bg: '#0a2840' },
-  { id: 'yonetim',  emoji: '⚙️',  label: 'Yönetim', color: '#94A3B8', bg: '#1a2030' },
-  { id: 'pctopla',  emoji: '🖥️',  label: 'PC Topla',  color: '#22C55E', bg: '#0a3018' },
-  { id: 'hesapmak', emoji: '🧮', label: 'Hesap M.', color: '#EC4899', bg: '#3d0a2a' },
-  { id: 'cizim',    emoji: '🎨', label: 'Çizim',    color: '#EF4444', bg: '#3d0a0a' },
+  { id: 'mail',    emoji: '📧', label: 'Mail',     color: '#3B82F6', bg: '#1d3461' },
+  { id: 'pazar',   emoji: '🛒', label: 'Pazar',    color: '#F59E0B', bg: '#3d2c0a' },
+  { id: 'stok',    emoji: '📦', label: 'Stok',     color: '#8B5CF6', bg: '#2d1f4a' },
+  { id: 'urunler', emoji: '📋', label: 'Ürünler',  color: '#10B981', bg: '#0a3025' },
+  { id: 'analiz',  emoji: '📊', label: 'Analiz',   color: '#0EA5E9', bg: '#0a2840' },
+  { id: 'yonetim', emoji: '⚙️',  label: 'Yönetim', color: '#94A3B8', bg: '#1a2030' },
+  { id: 'pctopla', emoji: '🖥️',  label: 'PC Topla', color: '#22C55E', bg: '#0a3018' },
 ];
 
 // Default floating sizes — wider apps get more room
@@ -30,6 +28,7 @@ const WINDOW_FLOAT_DEFAULTS = {
   pazar:   { w: 900, h: 560 },
   urunler: { w: 900, h: 560 },
   analiz:  { w: 900, h: 560 },
+  pctopla: { w: 900, h: 560 },
 };
 const DEFAULT_FLOAT_SIZE = { w: 460, h: 560 };
 const MIN_W = 320;
@@ -244,20 +243,34 @@ export default function Desktop({ state, firmaValue, ...actions }) {
   const [activeWindowId, setActiveWindowId] = useState(null);
   const desktopRef = useRef(null);
   const dragRef = useRef(null);
-  // Remembers last floating position + size per appId across open/close cycles
+  // Remembers last floating position + size + floating state per appId across open/close cycles
   const windowMemoryRef = useRef({});
+  // Tracks the next window to focus — set inside the openWindows updater, applied via effect
+  const pendingActiveIdRef = useRef(null);
 
   const mailBadge = (state.customersToday || []).filter(c => !c.dealt).length;
+
+  // Apply pending active window focus after openWindows state settles
+  useEffect(() => {
+    if (pendingActiveIdRef.current !== null) {
+      setActiveWindowId(pendingActiveIdRef.current);
+      pendingActiveIdRef.current = null;
+    }
+  }, [openWindows]);
 
   const openApp = useCallback((appId) => {
     setOpenWindows(prev => {
       const existing = prev.find(w => w.appId === appId);
       if (existing) {
-        setActiveWindowId(existing.id);
+        pendingActiveIdRef.current = existing.id;
         return prev.map(w => w.id === existing.id ? { ...w, minimized: false } : w);
       }
       const id = `win_${appId}_${Date.now()}`;
-      setActiveWindowId(id);
+      pendingActiveIdRef.current = id;
+      const memory = windowMemoryRef.current[appId];
+      if (memory?.floating) {
+        return [...prev, { id, appId, minimized: false, floating: true, position: memory.position, size: memory.size }];
+      }
       return [...prev, { id, appId, minimized: false, floating: false, position: null, size: null }];
     });
   }, []);
@@ -280,8 +293,9 @@ export default function Desktop({ state, firmaValue, ...actions }) {
   const closeWindow = useCallback((winId) => {
     setOpenWindows(prev => {
       const win = prev.find(w => w.id === winId);
-      if (win?.floating && (win.position || win.size)) {
+      if (win && (win.position || win.size)) {
         windowMemoryRef.current[win.appId] = {
+          floating: win.floating,
           position: win.position,
           size: win.size,
         };
@@ -297,9 +311,9 @@ export default function Desktop({ state, firmaValue, ...actions }) {
       return prev.map(w => {
         if (w.id !== winId) return w;
         if (w.floating) {
-          // Save state to memory before going full-screen
+          // Save last floating state before going full-screen
           if (w.position || w.size) {
-            windowMemoryRef.current[w.appId] = { position: w.position, size: w.size };
+            windowMemoryRef.current[w.appId] = { floating: false, position: w.position, size: w.size };
           }
           return { ...w, floating: false };
         }

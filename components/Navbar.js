@@ -106,8 +106,12 @@ export default function Navbar() {
   const [scrolled,    setScrolled]    = useState(false);
   const [acikGrup,    setAcikGrup]    = useState(null);
   const [dropdownPos, setDropdownPos] = useState({ left: 0, top: 0 });
-  // Mobil hamburger menüde hangi grup açık
   const [acikMobGrup, setAcikMobGrup] = useState(null);
+  const [supporter,   setSupporter]   = useState(null);
+
+  useEffect(() => {
+    fetch('/api/auth/me').then(r => r.json()).then(d => setSupporter(d)).catch(() => {});
+  }, []);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -228,28 +232,44 @@ export default function Navbar() {
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '56px',
       }}>
         {/* Logo */}
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '9px', textDecoration: 'none', flexShrink: 0 }}>
-          <svg viewBox="0 0 32 32" width="28" height="28" style={{ flexShrink: 0, display: 'block' }}>
-            <defs>
-              <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#1D9E75" />
-                <stop offset="100%" stopColor="#0D6B50" />
-              </linearGradient>
-            </defs>
-            <rect width="32" height="32" rx="8" fill="url(#logoGrad)" />
-            <rect x="7"  y="20" width="4" height="6"  rx="1.5" fill="rgba(255,255,255,0.90)" />
-            <rect x="14" y="15" width="4" height="11" rx="1.5" fill="rgba(255,255,255,0.90)" />
-            <rect x="21" y="9"  width="4" height="17" rx="1.5" fill="rgba(255,255,255,0.90)" />
-          </svg>
-          <div>
-            <div className="navbar-logo-title" style={{ fontSize: '15px', fontWeight: 500, lineHeight: 1.15, fontFamily: 'var(--font-serif)' }}>
-              Sıfır Gecikme
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '9px', textDecoration: 'none' }}>
+            <svg viewBox="0 0 32 32" width="28" height="28" style={{ flexShrink: 0, display: 'block' }}>
+              <defs>
+                <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#1D9E75" />
+                  <stop offset="100%" stopColor="#0D6B50" />
+                </linearGradient>
+              </defs>
+              <rect width="32" height="32" rx="8" fill="url(#logoGrad)" />
+              <rect x="7"  y="20" width="4" height="6"  rx="1.5" fill="rgba(255,255,255,0.90)" />
+              <rect x="14" y="15" width="4" height="11" rx="1.5" fill="rgba(255,255,255,0.90)" />
+              <rect x="21" y="9"  width="4" height="17" rx="1.5" fill="rgba(255,255,255,0.90)" />
+            </svg>
+            <div>
+              <div className="navbar-logo-title" style={{ fontSize: '15px', fontWeight: 500, lineHeight: 1.15, fontFamily: 'var(--font-serif)' }}>
+                Sıfır Gecikme
+              </div>
+              <div style={{ fontSize: '10px', color: 'var(--color-text-mute)', letterSpacing: '0.03em' }}>
+                veri bilimi · türkçe
+              </div>
             </div>
-            <div style={{ fontSize: '10px', color: 'var(--color-text-mute)', letterSpacing: '0.03em' }}>
-              veri bilimi · türkçe
-            </div>
-          </div>
-        </Link>
+          </Link>
+          {supporter?.is_supporter && (
+            <Link href="/support/dashboard" title="Destekçi Paneliم"
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                width: '26px', height: '26px', borderRadius: '7px',
+                background: 'linear-gradient(135deg, #f59e0b, #ef4444)',
+                textDecoration: 'none', flexShrink: 0,
+                boxShadow: '0 1px 6px rgba(245,158,11,0.35)',
+              }}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="white">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+            </Link>
+          )}
+        </div>
 
         {/* Desktop sağ */}
         {!isMobile && (
@@ -260,6 +280,21 @@ export default function Navbar() {
               color: isActive('/hakkimda') ? 'var(--color-accent-text)' : 'var(--color-text-soft)',
               fontWeight: isActive('/hakkimda') ? 500 : 400,
             }}>Hakkımda</Link>
+            {supporter?.is_supporter && (
+              <Link href="/support/dashboard" style={{
+                padding: '5px 10px', borderRadius: '8px', fontSize: '12px', textDecoration: 'none',
+                display: 'flex', alignItems: 'center', gap: '5px',
+                background: 'linear-gradient(135deg, rgba(245,158,11,0.12), rgba(239,68,68,0.08))',
+                border: '0.5px solid rgba(245,158,11,0.3)',
+                color: '#f59e0b',
+                fontWeight: 600,
+              }}>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                Destekçi
+              </Link>
+            )}
             <Link href="/harita" style={{
               padding: '7px 11px', borderRadius: '8px', fontSize: '13px', textDecoration: 'none',
               display: 'flex', alignItems: 'center', gap: '4px',
@@ -428,6 +463,16 @@ export default function Navbar() {
           }}>
             <span>👤</span> Hakkımda
           </Link>
+          {supporter?.is_supporter && (
+            <Link href="/support/dashboard" style={{
+              display: 'flex', alignItems: 'center', gap: '10px',
+              padding: '9px 12px', borderRadius: '8px', fontSize: '14px', textDecoration: 'none',
+              background: 'linear-gradient(135deg, rgba(245,158,11,0.1), rgba(239,68,68,0.06))',
+              color: '#f59e0b', fontWeight: 600,
+            }}>
+              <span>⭐</span> Destekçi Paneli
+            </Link>
+          )}
           <Link href="/harita" style={{
             display: 'flex', alignItems: 'center', gap: '10px',
             padding: '9px 12px', borderRadius: '8px', fontSize: '14px', textDecoration: 'none',

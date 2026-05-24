@@ -53,6 +53,9 @@ const MANUAL_META = {
   '/yazilar/kredi-shap':           { kategori: 'analiz',     seviye: 2, x: 580, y: 555 },
   '/yazilar/banka-fraud':          { kategori: 'analiz',     seviye: 2, x: 700, y: 555 },
   '/yazilar/sepet-terki':          { kategori: 'analiz',     seviye: 2, x: 580, y: 640 },
+  '/yazilar/sosyal-medya-turkiye': { kategori: 'analiz',     seviye: 2, x: 710, y: 640 },
+  // Veri
+  '/yazilar/pandas-referans':      { kategori: 'veri',       seviye: 1, x: 820, y: 370 },
   // Kariyer
   '/yazilar/yol-haritasi':          { kategori: 'kariyer',    seviye: 1, x: 80,  y: 80  },
   '/yazilar/rol-farklari':          { kategori: 'kariyer',    seviye: 1, x: 200, y: 60  },
@@ -108,6 +111,11 @@ const EDGES = [
   ['kredi-shap',           'banka-fraud'],
   ['churn-tahmini',        'sepet-terki'],
   ['ab-test',              'sepet-terki'],
+  ['deprem-analizi',       'sosyal-medya-turkiye'],
+  ['spotify-turkiye',      'sosyal-medya-turkiye'],
+  // Veri
+  ['pandas-7-sey',         'pandas-referans'],
+  ['veri-temizleme',       'pandas-referans'],
   // Kariyer
   ['yol-haritasi',         'rol-farklari'],
   ['rol-farklari',         'portfolyo'],
