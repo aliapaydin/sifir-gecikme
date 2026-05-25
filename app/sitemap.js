@@ -21,6 +21,7 @@ export default function sitemap() {
     { url: '/yazilar/bezier', priority: 0.9, changeFrequency: 'monthly' },
     { url: '/yazilar/ab-test', priority: 0.9, changeFrequency: 'monthly' },
     { url: '/yazilar/sample-size', priority: 0.9, changeFrequency: 'monthly' },
+    { url: '/hipotez', priority: 0.9, changeFrequency: 'monthly' },
     { url: '/mulakat', priority: 0.9, changeFrequency: 'monthly' },
     { url: '/ciz',     priority: 0.8, changeFrequency: 'monthly' },
     { url: '/nn',      priority: 0.8, changeFrequency: 'monthly' },
