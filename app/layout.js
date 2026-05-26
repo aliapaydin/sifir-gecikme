@@ -6,7 +6,6 @@ import LayoutShell from '../components/LayoutShell';
 import ZiyaretTakip from '../components/ZiyaretTakip';
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import AdStickyWrapper from '../components/AdStickyWrapper'
 
 const inter = Inter({ subsets: ['latin', 'latin-ext'], variable: '--font-sans', display: 'swap' });
 const lora = Lora({ subsets: ['latin', 'latin-ext'], variable: '--font-serif', display: 'swap' });
@@ -91,8 +90,7 @@ export default function RootLayout({ children }) {
           <LayoutShell>
             {children}
           </LayoutShell>
-          <AdStickyWrapper />
-          <Analytics />
+<Analytics />
           <SpeedInsights />
         </body>
     </html>
