@@ -191,6 +191,10 @@ export default function V3HomePage() {
           background: linear-gradient(135deg, #f1f5f9 0%, #c7d2fe 50%, #a5f3fc 100%);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
+        .v3-light .v3-hero-title {
+          background: linear-gradient(135deg, #1e293b 0%, #4f46e5 50%, #0d9488 100%);
+          -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
         .v3-hero-sub {
           font-size: clamp(16px, 2.5vw, 20px); color: var(--v3-text-muted);
           max-width: 560px; margin: 0 auto 36px; line-height: 1.6;

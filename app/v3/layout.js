@@ -113,6 +113,23 @@ export default function V3Layout({ children }) {
 
         .v3-root * { box-sizing: border-box; }
         .v3-root a { color: inherit; text-decoration: none; }
+
+        /* Tailwind utility sınıflarını koyu temaya override et */
+        .v3-root:not(.v3-light) .bg-white      { background-color: #111827 !important; }
+        .v3-root:not(.v3-light) .bg-gray-50    { background-color: #1a2332 !important; }
+        .v3-root:not(.v3-light) .bg-gray-100   { background-color: #1e293b !important; }
+        .v3-root:not(.v3-light) .bg-green-50   { background-color: rgba(16,185,129,0.1) !important; }
+        .v3-root:not(.v3-light) .bg-red-50     { background-color: rgba(239,68,68,0.1) !important; }
+        .v3-root:not(.v3-light) .border-gray-200 { border-color: rgba(255,255,255,0.08) !important; }
+        .v3-root:not(.v3-light) .border-gray-300 { border-color: rgba(255,255,255,0.12) !important; }
+        .v3-root:not(.v3-light) .text-gray-500 { color: #64748b !important; }
+        .v3-root:not(.v3-light) .text-gray-600 { color: #94a3b8 !important; }
+        .v3-root:not(.v3-light) .text-gray-700 { color: #cbd5e1 !important; }
+        .v3-root:not(.v3-light) .text-gray-900 { color: #f1f5f9 !important; }
+        .v3-root:not(.v3-light) .text-green-800 { color: #34d399 !important; }
+        .v3-root:not(.v3-light) .text-red-800  { color: #f87171 !important; }
+        .v3-root:not(.v3-light) .hover\:bg-gray-50:hover { background-color: rgba(255,255,255,0.06) !important; }
+        .v3-root:not(.v3-light) .hover\:bg-gray-100:hover { background-color: rgba(255,255,255,0.08) !important; }
       `}</style>
       <V3ThemeWrapper>
         <V3Navbar />
