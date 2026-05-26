@@ -6,6 +6,8 @@ const MODELS = [
   'gemini-2.0-flash',
   'gemini-2.0-flash-lite',
   'gemini-flash-latest',
+  'gemini-1.5-flash',
+  'gemini-1.5-flash-8b',
 ];
 
 // IP başına saatlik istek sayacı: { ip → { count, windowStart } }

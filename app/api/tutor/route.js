@@ -4,6 +4,8 @@ const MODELS = [
   'gemini-2.5-flash',
   'gemini-2.0-flash',
   'gemini-2.0-flash-lite',
+  'gemini-1.5-flash',
+  'gemini-1.5-flash-8b',
 ];
 
 const SYSTEM_PROMPT = `Sen "Sıfır Gecikme" adlı Türkçe veri bilimi eğitim sitesinin yapay zeka tutorüsün.
