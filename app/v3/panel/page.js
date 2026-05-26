@@ -215,6 +215,39 @@ function PanelInner() {
           </div>
         </div>
 
+        {/* ── Destek Ol Banner (destekçi değilse) ── */}
+        {!user.isSupporter && (
+          <Link href="/v3/destek" style={{ textDecoration: 'none', display: 'block', marginBottom: '16px' }}>
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: '20px',
+              padding: '22px 28px', borderRadius: '20px',
+              background: 'linear-gradient(135deg, rgba(249,115,22,0.1), rgba(244,63,94,0.07))',
+              border: '1px solid rgba(249,115,22,0.25)',
+              transition: 'border-color 0.15s',
+              cursor: 'pointer',
+            }}>
+              <div style={{ fontSize: '44px', flexShrink: 0, lineHeight: 1 }}>☕</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: '16px', fontWeight: 800, color: '#fb923c', marginBottom: '5px' }}>
+                  Sıfır Gecikme'yi Destekle
+                </div>
+                <div style={{ fontSize: '13px', color: 'var(--v3-text-muted)', lineHeight: 1.55 }}>
+                  Reklamsız deneyim, özel içerikler, AI Tutor önceliği ve daha fazlası.
+                  Aylık küçük bir destekle platformun büyümesine katkı sağla.
+                </div>
+              </div>
+              <div style={{
+                flexShrink: 0, padding: '9px 18px', borderRadius: '10px',
+                background: 'linear-gradient(135deg,#f96854,#f43f5e)',
+                color: '#fff', fontSize: '13px', fontWeight: 700,
+                display: 'flex', alignItems: 'center', gap: '6px',
+              }}>
+                Destek Ol →
+              </div>
+            </div>
+          </Link>
+        )}
+
         {/* ── Hesap Bilgileri ── */}
         <div className="pnl-card">
           <div className="pnl-section-title">Hesap</div>

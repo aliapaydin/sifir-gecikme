@@ -105,7 +105,9 @@ export default function V3Footer() {
               </>
             )}
             <Link href="/" className="v3-footer-link">Sıfır Gecikme v2</Link>
-            <Link href="/v3/destek" className="v3-footer-destek">☕ Destek Ol</Link>
+            {!user?.isSupporter && (
+              <Link href="/v3/destek" className="v3-footer-destek">☕ Destek Ol</Link>
+            )}
           </div>
         </div>
       </footer>

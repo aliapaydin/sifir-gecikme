@@ -320,10 +320,10 @@ export default function V3Navbar() {
                 </button>
               </>
             ) : (
-              <>
-                <Link href="/v3/destek" className="v3-btn-destek">☕ Destek Ol</Link>
-                <Link href="/v3/giris" className="v3-btn-login">Giriş</Link>
-              </>
+              <Link href="/v3/giris" className="v3-btn-login">Giriş</Link>
+            )}
+            {!user?.isSupporter && (
+              <Link href="/v3/destek" className="v3-btn-destek">☕ Destek Ol</Link>
             )}
 
             <button className="v3-hamburger" onClick={() => setMenuOpen(o => !o)} aria-label="Menü">
@@ -358,12 +358,14 @@ export default function V3Navbar() {
             </Link>
           ))}
 
+          {!user?.isSupporter && (
+            <Link href="/v3/destek" className="v3-mobile-link" onClick={() => setMenuOpen(false)}
+              style={{ color: '#fb923c', fontWeight: 600 }}>
+              ☕ Destek Ol
+            </Link>
+          )}
           {!user && (
             <>
-              <Link href="/v3/destek" className="v3-mobile-link" onClick={() => setMenuOpen(false)}
-                style={{ color: '#fb923c', fontWeight: 600 }}>
-                ☕ Destek Ol
-              </Link>
               <Link href="/v3/giris" className="v3-mobile-link" onClick={() => setMenuOpen(false)}>Giriş Yap</Link>
               <Link href="/v3/kayit" className="v3-mobile-link" onClick={() => setMenuOpen(false)}>Kayıt Ol</Link>
             </>
