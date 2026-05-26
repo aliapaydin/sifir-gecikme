@@ -25,6 +25,12 @@ function v3href(href) {
   return href.startsWith('/yazilar/') ? `/v3${href}` : href;
 }
 
+function fmtMoney(n) {
+  if (n >= 1_000_000) return `₺${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000)     return `₺${(n / 1_000).toFixed(0)}K`;
+  return `₺${n}`;
+}
+
 const kategoriler = [
   { icon: '⚡', label: 'İnteraktif', desc: 'Deneye deneye öğren',    href: '/v3/icerikler?tip=interaktif', color: '#14b8a6' },
   { icon: '📖', label: 'Rehber',     desc: 'Adım adım açıklamalar',  href: '/v3/icerikler?tip=rehber',    color: '#8b5cf6' },
@@ -34,70 +40,126 @@ const kategoriler = [
 ];
 
 const playground = [
-  {
-    emoji: '📈', title: 'Linear Regression',
-    desc: 'Noktaları sürükle, regresyon çizgisi anlık güncellensin.',
-    href: '/v3/yazilar/linear-regression',
-    gradient: 'linear-gradient(135deg, rgba(20,184,166,0.2), rgba(20,184,166,0.05))',
-    accent: '#14b8a6',
-  },
-  {
-    emoji: '⛰️', title: 'Gradient Descent',
-    desc: 'Top yuvarlama oyunu — öğrenme hızını sen belirle.',
-    href: '/v3/yazilar/gradient-descent',
-    gradient: 'linear-gradient(135deg, rgba(99,102,241,0.2), rgba(99,102,241,0.05))',
-    accent: '#818cf8',
-  },
-  {
-    emoji: '🔵', title: 'K-Means Kümeleme',
-    desc: "Centroid'lerin adım adım nasıl yer değiştirdiğini izle.",
-    href: '/v3/yazilar/kmeans',
-    gradient: 'linear-gradient(135deg, rgba(139,92,246,0.2), rgba(139,92,246,0.05))',
-    accent: '#a78bfa',
-  },
-  {
-    emoji: '🧠', title: 'Sinir Ağı',
-    desc: 'Katmanları, nöronları ve aktivasyonları görselleştir.',
-    href: '/v3/yazilar/sinir-agi',
-    gradient: 'linear-gradient(135deg, rgba(249,115,22,0.2), rgba(249,115,22,0.05))',
-    accent: '#fb923c',
-  },
-  {
-    emoji: '📧', title: 'Lojistik Regresyon',
-    desc: 'Spam filtresini eğit — gradient descent\'i izle.',
-    href: '/v3/yazilar/lojistik-regresyon',
-    gradient: 'linear-gradient(135deg, rgba(16,185,129,0.2), rgba(16,185,129,0.05))',
-    accent: '#34d399',
-  },
-  {
-    emoji: '🎯', title: 'Confusion Matrix',
-    desc: 'Precision, recall ve F1 skorunu interaktif keşfet.',
-    href: '/v3/yazilar/confusion-matrix',
-    gradient: 'linear-gradient(135deg, rgba(244,63,94,0.2), rgba(244,63,94,0.05))',
-    accent: '#fb7185',
-  },
-  {
-    emoji: '🧪', title: 'Hipotez Testi Seçici',
-    desc: 'Verini anlat, doğru istatistiksel testi bul.',
-    href: '/hipotez',
-    gradient: 'linear-gradient(135deg, rgba(99,102,241,0.2), rgba(20,184,166,0.1))',
-    accent: '#818cf8',
-  },
-  {
-    emoji: '📐', title: 'A/B Test Hesaplayıcı',
-    desc: 'p-değeri, güven aralığı ve etki büyüklüğünü anında hesapla.',
-    href: '/v3/yazilar/ab-test',
-    gradient: 'linear-gradient(135deg, rgba(251,146,60,0.2), rgba(251,146,60,0.05))',
-    accent: '#fb923c',
-  },
-  {
-    emoji: '🕹️', title: 'Tech Center Oyun',
-    desc: 'Veri bilimi kavramlarını oyun oynayarak öğren.',
-    href: '/tech-center',
-    gradient: 'linear-gradient(135deg, rgba(139,92,246,0.25), rgba(99,102,241,0.1))',
-    accent: '#a78bfa',
-  },
+  { emoji: '📈', title: 'Linear Regression',    desc: 'Noktaları sürükle, regresyon çizgisi anlık güncellensin.',            href: '/v3/yazilar/linear-regression',   accent: '#14b8a6' },
+  { emoji: '⛰️', title: 'Gradient Descent',     desc: 'Top yuvarlama oyunu — öğrenme hızını sen belirle.',                   href: '/v3/yazilar/gradient-descent',    accent: '#818cf8' },
+  { emoji: '🔵', title: 'K-Means Kümeleme',     desc: "Centroid'lerin adım adım yer değiştirmesini izle.",                  href: '/v3/yazilar/kmeans',              accent: '#a78bfa' },
+  { emoji: '🧠', title: 'Sinir Ağı',            desc: 'Katmanları, nöronları ve aktivasyonları görselleştir.',               href: '/v3/yazilar/sinir-agi',           accent: '#fb923c' },
+  { emoji: '📧', title: 'Lojistik Regresyon',   desc: 'Spam filtresini eğit — gradient descent canlı izle.',                href: '/v3/yazilar/lojistik-regresyon',  accent: '#34d399' },
+  { emoji: '🎯', title: 'Confusion Matrix',     desc: 'Precision, recall ve F1 skorunu interaktif keşfet.',                 href: '/v3/yazilar/confusion-matrix',    accent: '#fb7185' },
+  { emoji: '📐', title: 'A/B Test Hesaplayıcı', desc: 'p-değeri, güven aralığı ve etki büyüklüğünü anında hesapla.',        href: '/v3/yazilar/ab-test',             accent: '#fb923c' },
+  { emoji: '🧪', title: 'Hipotez Testi Seçici', desc: 'Verini anlat, doğru istatistiksel testi bul.',                       href: '/hipotez',                        accent: '#818cf8' },
 ];
+
+function TechCenterCard() {
+  const [save, setSave] = useState(null);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('tc_game_v2');
+      if (raw) setSave(JSON.parse(raw));
+    } catch {}
+    setLoaded(true);
+  }, []);
+
+  const hasSave = loaded && save && save.currentDay > 1;
+
+  return (
+    <div style={{
+      position: 'relative', overflow: 'hidden', borderRadius: '24px',
+      border: '1px solid rgba(139,92,246,0.3)',
+      background: 'linear-gradient(135deg, rgba(17,7,40,0.95) 0%, rgba(13,20,65,0.95) 50%, rgba(7,30,50,0.95) 100%)',
+      padding: '40px 40px',
+    }}>
+      {/* Parlayan arka plan efekti */}
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none',
+        background: 'radial-gradient(ellipse at 30% 50%, rgba(99,102,241,0.18) 0%, transparent 60%), radial-gradient(ellipse at 70% 20%, rgba(139,92,246,0.12) 0%, transparent 50%)',
+      }} />
+      {/* Izgara desen */}
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.04,
+        backgroundImage: 'linear-gradient(rgba(255,255,255,.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.3) 1px, transparent 1px)',
+        backgroundSize: '40px 40px',
+      }} />
+
+      <div style={{ position: 'relative', display: 'flex', gap: '40px', alignItems: 'center', flexWrap: 'wrap' }}>
+        {/* Sol: içerik */}
+        <div style={{ flex: 1, minWidth: '260px' }}>
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: '8px',
+            padding: '4px 12px', borderRadius: '20px', marginBottom: '18px',
+            background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.3)',
+            fontSize: '11px', fontWeight: 700, color: '#a78bfa', letterSpacing: '0.8px', textTransform: 'uppercase',
+          }}>
+            🕹️ Simülasyon Oyunu
+          </div>
+
+          <h2 style={{
+            fontSize: 'clamp(26px, 4vw, 38px)', fontWeight: 900, margin: '0 0 12px',
+            letterSpacing: '-0.8px', lineHeight: 1.1,
+            background: 'linear-gradient(135deg, #f1f5f9 0%, #c7d2fe 60%, #a5b4fc 100%)',
+            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+          }}>
+            Tech Center
+          </h2>
+
+          <p style={{ fontSize: '15px', color: 'rgba(203,213,225,0.75)', margin: '0 0 24px', lineHeight: 1.6, maxWidth: '440px' }}>
+            Kendi bilgisayar mağazanı kur, personel işe al, pazar stratejisi belirle ve şirket değerini <strong style={{ color: '#a78bfa' }}>₺1 milyara</strong> ulaştır.
+          </p>
+
+          {/* Kayıtlı oyun varsa göster */}
+          {hasSave && (
+            <div style={{
+              display: 'flex', gap: '16px', marginBottom: '24px', flexWrap: 'wrap',
+            }}>
+              {[
+                { label: 'Gün', val: save.currentDay, color: '#a78bfa' },
+                { label: 'Kasa', val: fmtMoney(save.cash), color: '#34d399' },
+                { label: 'Şirket', val: save.companyName, color: '#93c5fd' },
+              ].map(item => (
+                <div key={item.label} style={{
+                  padding: '8px 16px', borderRadius: '10px',
+                  background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
+                }}>
+                  <div style={{ fontSize: '10px', color: 'rgba(203,213,225,0.5)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '2px' }}>{item.label}</div>
+                  <div style={{ fontSize: '15px', fontWeight: 700, color: item.color }}>{item.val}</div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            <Link
+              href="/tech-center"
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '8px',
+                padding: '12px 24px', borderRadius: '10px', fontWeight: 700, fontSize: '15px',
+                background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                color: '#fff', textDecoration: 'none',
+                boxShadow: '0 4px 20px rgba(99,102,241,0.4)',
+                transition: 'transform 0.15s, box-shadow 0.15s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(99,102,241,0.5)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 20px rgba(99,102,241,0.4)'; }}
+            >
+              {hasSave ? '▶ Devam Et' : '▶ Oyna'}
+            </Link>
+          </div>
+        </div>
+
+        {/* Sağ: büyük emoji / ikon */}
+        <div style={{
+          fontSize: '96px', lineHeight: 1, userSelect: 'none', opacity: 0.85,
+          filter: 'drop-shadow(0 0 40px rgba(139,92,246,0.4))',
+          flexShrink: 0,
+        }}>
+          🏪
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function V3HomePage() {
   const [user, setUser] = useState(undefined);
@@ -132,9 +194,7 @@ export default function V3HomePage() {
           font-size: clamp(16px, 2.5vw, 20px); color: var(--v3-text-muted);
           max-width: 560px; margin: 0 auto 36px; line-height: 1.6;
         }
-        .v3-hero-ctas {
-          display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
-        }
+        .v3-hero-ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
         .v3-btn-primary {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 13px 28px; border-radius: 10px; font-size: 15px; font-weight: 600;
@@ -167,14 +227,12 @@ export default function V3HomePage() {
         .v3-section { max-width: 1200px; margin: 0 auto; padding: 64px 24px; }
         .v3-section-title { font-size: 22px; font-weight: 700; color: var(--v3-text); margin: 0 0 8px; letter-spacing: -0.3px; }
         .v3-section-sub { font-size: 14px; color: var(--v3-text-muted); margin: 0 0 32px; }
-        .v3-grid {
-          display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;
-        }
+        .v3-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
         .v3-card {
           background: var(--v3-surface); border: 1px solid var(--v3-border);
           border-radius: 16px; padding: 24px; transition: border-color 0.2s, transform 0.2s;
           display: flex; flex-direction: column; gap: 12px;
-          cursor: pointer; text-decoration: none; color: inherit;
+          text-decoration: none; color: inherit; cursor: pointer;
         }
         .v3-card:hover { border-color: var(--v3-border-bright); transform: translateY(-2px); }
         .v3-card-title { font-size: 16px; font-weight: 600; color: var(--v3-text); line-height: 1.4; margin: 0; }
@@ -182,54 +240,26 @@ export default function V3HomePage() {
         .v3-card-meta { font-size: 12px; color: var(--v3-text-faint); margin: 0; }
 
         /* Playground kartları */
-        .pg-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-          gap: 16px;
-        }
+        .pg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
         .pg-card {
-          border: 1px solid var(--v3-border); border-radius: 18px;
-          padding: 24px; display: flex; flex-direction: column; gap: 14px;
+          border: 1px solid var(--v3-border); border-radius: 16px;
+          padding: 22px; display: flex; flex-direction: column; gap: 12px;
           text-decoration: none; color: inherit;
           transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
-          position: relative; overflow: hidden;
         }
         .pg-card:hover {
-          border-color: var(--v3-border-bright);
-          transform: translateY(-3px);
+          border-color: var(--v3-border-bright); transform: translateY(-3px);
           box-shadow: 0 12px 40px rgba(0,0,0,0.25);
         }
-        .pg-emoji {
-          font-size: 36px; line-height: 1;
-          width: 56px; height: 56px;
-          display: flex; align-items: center; justify-content: center;
-          border-radius: 14px;
+        .pg-emoji-wrap {
+          width: 48px; height: 48px; border-radius: 12px;
+          display: flex; align-items: center; justify-content: center; font-size: 26px;
         }
-        .pg-title { font-size: 16px; font-weight: 700; color: var(--v3-text); margin: 0; }
-        .pg-desc { font-size: 13px; color: var(--v3-text-muted); line-height: 1.5; margin: 0; flex: 1; }
-        .pg-cta { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+        .pg-title { font-size: 15px; font-weight: 700; color: var(--v3-text); margin: 0; }
+        .pg-desc  { font-size: 13px; color: var(--v3-text-muted); line-height: 1.5; margin: 0; flex: 1; }
+        .pg-cta   { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
 
-        .v3-ai-block {
-          background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.12), rgba(20,184,166,0.08));
-          border: 1px solid rgba(99,102,241,0.2); border-radius: 20px;
-          padding: 48px 40px; text-align: center; position: relative; overflow: hidden;
-        }
-        .v3-ai-block::before {
-          content: ''; position: absolute; top: -50%; left: -50%;
-          width: 200%; height: 200%;
-          background: radial-gradient(ellipse, rgba(99,102,241,0.08) 0%, transparent 60%);
-          pointer-events: none;
-        }
-        .v3-ai-icon { font-size: 40px; margin-bottom: 16px; display: block; }
-        .v3-ai-title {
-          font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin: 0 0 12px;
-          background: linear-gradient(135deg, #6366f1, #8b5cf6, #14b8a6);
-          -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        }
-        .v3-ai-desc { font-size: 16px; color: var(--v3-text-muted); max-width: 500px; margin: 0 auto 28px; line-height: 1.6; }
-        .v3-cat-grid {
-          display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px;
-        }
+        .v3-cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
         .v3-cat-card {
           background: rgba(255,255,255,0.03); backdrop-filter: blur(12px);
           border: 1px solid var(--v3-border); border-radius: 14px; padding: 20px;
@@ -238,19 +268,15 @@ export default function V3HomePage() {
         }
         .v3-cat-card:hover { border-color: var(--v3-border-bright); background: rgba(255,255,255,0.05); }
         .v3-cat-icon { font-size: 24px; }
-        .v3-cat-label { font-size: 15px; font-weight: 600; color: var(--v3-text); }
+        .v3-cat-label { font-size: 15px; font-weight: 600; }
         .v3-cat-desc { font-size: 12px; color: var(--v3-text-muted); }
 
         @media (max-width: 600px) {
           .v3-hero { padding: 60px 20px 48px; }
           .v3-section { padding: 40px 16px; }
-          .pg-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-          .pg-card { padding: 16px; }
-          .pg-emoji { width: 40px; height: 40px; font-size: 24px; border-radius: 10px; }
+          .pg-grid { grid-template-columns: 1fr 1fr; }
         }
-        @media (max-width: 400px) {
-          .pg-grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 400px) { .pg-grid { grid-template-columns: 1fr; } }
       `}</style>
 
       {/* Hero */}
@@ -261,60 +287,61 @@ export default function V3HomePage() {
           İnteraktif demolar, gerçek veri analizleri ve AI destekli öğrenme ile veri bilimini sıfırdan ileri seviyeye öğren.
         </p>
         <div className="v3-hero-ctas">
-          <Link href="/v3/icerikler" className="v3-btn-primary">
-            İçerikleri Keşfet →
-          </Link>
+          <Link href="/v3/icerikler" className="v3-btn-primary">İçerikleri Keşfet →</Link>
           {user === null && (
-            <Link href="/v3/kayit" className="v3-btn-secondary">
-              Ücretsiz Kaydol
-            </Link>
+            <Link href="/v3/kayit" className="v3-btn-secondary">Ücretsiz Kaydol</Link>
           )}
         </div>
       </section>
 
-      {/* Stats bar */}
+      {/* Stats */}
       <div className="v3-stats-bar">
         <div className="v3-stats-inner">
-          <div className="v3-stat">
-            <div className="v3-stat-dot" style={{ background: '#14b8a6' }} />
-            <span><span className="v3-stat-value">50+</span> içerik</span>
-          </div>
-          <div className="v3-stat">
-            <div className="v3-stat-dot" style={{ background: '#8b5cf6' }} />
-            <span><span className="v3-stat-value">10+</span> interaktif demo</span>
-          </div>
-          <div className="v3-stat">
-            <div className="v3-stat-dot" style={{ background: '#6366f1' }} />
-            <span><span className="v3-stat-value">AI Tutor</span> desteği</span>
-          </div>
-          <div className="v3-stat">
-            <div className="v3-stat-dot" style={{ background: '#10b981' }} />
-            <span><span className="v3-stat-value">Ücretsiz</span></span>
-          </div>
+          {[
+            { color: '#14b8a6', val: '50+', label: 'içerik' },
+            { color: '#8b5cf6', val: '10+', label: 'interaktif demo' },
+            { color: '#6366f1', val: 'AI Tutor', label: 'desteği' },
+            { color: '#10b981', val: 'Ücretsiz', label: '' },
+          ].map((s, i) => (
+            <div key={i} className="v3-stat">
+              <div className="v3-stat-dot" style={{ background: s.color }} />
+              <span><span className="v3-stat-value">{s.val}</span>{s.label ? ` ${s.label}` : ''}</span>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Playground & Modüller */}
+      {/* Tech Center */}
       <div className="v3-section">
-        <h2 className="v3-section-title">Playground & Modüller</h2>
+        <h2 className="v3-section-title">🕹️ Simülasyon Oyunu</h2>
+        <p className="v3-section-sub">Öğrendiklerini uygulamaya dök — iş simülasyonu, stratejik kararlar.</p>
+        <TechCenterCard />
+      </div>
+
+      {/* Playground */}
+      <div className="v3-section" style={{ paddingTop: 0 }}>
+        <h2 className="v3-section-title">⚡ Playground</h2>
         <p className="v3-section-sub">Algoritmaları çalışırken gör — sürükle, ayarla, keşfet.</p>
         <div className="pg-grid">
           {playground.map(item => (
-            <Link key={item.href} href={item.href} className="pg-card" style={{ background: item.gradient }}>
-              <div className="pg-emoji" style={{ background: `${item.accent}18` }}>
+            <Link
+              key={item.href}
+              href={item.href}
+              className="pg-card"
+              style={{ background: `linear-gradient(135deg, ${item.accent}14, ${item.accent}05)` }}
+            >
+              <div className="pg-emoji-wrap" style={{ background: `${item.accent}18` }}>
                 {item.emoji}
               </div>
               <h3 className="pg-title">{item.title}</h3>
               <p className="pg-desc">{item.desc}</p>
-              <div className="pg-cta" style={{ color: item.accent }}>
-                Dene <span>→</span>
-              </div>
+              <div className="pg-cta" style={{ color: item.accent }}>Dene →</div>
             </Link>
           ))}
         </div>
       </div>
 
-      {/* Featured content */}
+      {/* Öne çıkan içerikler */}
       <div className="v3-section" style={{ paddingTop: 0 }}>
         <h2 className="v3-section-title">Öne Çıkan İçerikler</h2>
         <p className="v3-section-sub">En popüler içerikler — dene, öğren, anla.</p>
@@ -329,26 +356,34 @@ export default function V3HomePage() {
           ))}
         </div>
         <div style={{ textAlign: 'center', marginTop: '32px' }}>
-          <Link href="/v3/icerikler" className="v3-btn-secondary">
-            Tüm içerikleri gör →
-          </Link>
+          <Link href="/v3/icerikler" className="v3-btn-secondary">Tüm içerikleri gör →</Link>
         </div>
       </div>
 
-      {/* AI Tutor block */}
-      <div style={{ padding: '0 24px 64px' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <div className="v3-ai-block">
-            <span className="v3-ai-icon">🤖</span>
-            <h2 className="v3-ai-title">Anlamadın mı? Sor.</h2>
-            <p className="v3-ai-desc">
-              AI Tutor, veri bilimi kavramlarını senin seviyene göre açıklar.
-              Soru sor, örnekler iste, kafanda netleştir.
-            </p>
-            <Link href="/ogren" className="v3-btn-primary">
-              AI Tutor&apos;ı Dene →
-            </Link>
-          </div>
+      {/* AI Tutor */}
+      <div style={{ padding: '0 24px 64px', maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{
+          background: 'linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.12), rgba(20,184,166,0.08))',
+          border: '1px solid rgba(99,102,241,0.2)', borderRadius: '20px',
+          padding: '48px 40px', textAlign: 'center', position: 'relative', overflow: 'hidden',
+        }}>
+          <div style={{
+            position: 'absolute', top: '-50%', left: '-50%', width: '200%', height: '200%',
+            background: 'radial-gradient(ellipse, rgba(99,102,241,0.08) 0%, transparent 60%)',
+            pointerEvents: 'none',
+          }} />
+          <div style={{ fontSize: '40px', marginBottom: '16px' }}>🤖</div>
+          <h2 style={{
+            fontSize: '28px', fontWeight: 800, letterSpacing: '-0.5px', margin: '0 0 12px',
+            background: 'linear-gradient(135deg, #6366f1, #8b5cf6, #14b8a6)',
+            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+          }}>
+            Anlamadın mı? Sor.
+          </h2>
+          <p style={{ fontSize: '16px', color: 'var(--v3-text-muted)', maxWidth: '500px', margin: '0 auto 28px', lineHeight: 1.6 }}>
+            AI Tutor, veri bilimi kavramlarını senin seviyene göre açıklar. Soru sor, örnekler iste, kafanda netleştir.
+          </p>
+          <Link href="/ogren" className="v3-btn-primary">AI Tutor&apos;ı Dene →</Link>
         </div>
       </div>
 

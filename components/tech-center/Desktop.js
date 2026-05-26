@@ -218,7 +218,7 @@ function Taskbar({ openWindows, activeWindowId, onFocus, badges }) {
       })}
 
       <button
-        onClick={() => router.push('/')}
+        onClick={() => window.history.length > 1 ? router.back() : router.push('/')}
         title="Ana Sayfaya Dön"
         style={{
           position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)',

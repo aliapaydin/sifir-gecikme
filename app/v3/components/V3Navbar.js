@@ -5,7 +5,11 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
 const navLinks = [
-  { href: '/v3/icerikler', label: 'İçerikler' },
+  { href: '/v3/icerikler',               label: 'İçerikler' },
+  { href: '/v3/icerikler?tip=interaktif', label: 'Playground' },
+  { href: '/v3/icerikler?tip=arac',       label: 'Araçlar' },
+  { href: '/v3/hakkimda',                 label: 'Hakkımda' },
+  { href: '/v3/yazilar/yol-haritasi',     label: 'Harita' },
 ];
 
 export default function V3Navbar() {
