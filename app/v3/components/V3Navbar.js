@@ -339,14 +339,8 @@ export default function V3Navbar() {
               {isLight ? '🌙' : '☀️'}
             </button>
 
-            {/* Geliştirici */}
-            <Link href="/v3/hakkimda" className="v3-dev-link">Geliştirici</Link>
-
             {user ? (
               <>
-                {user.role === 'admin' && (
-                  <Link href="/v3/admin" className="v3-admin-link">⚙</Link>
-                )}
                 <Link href="/v3/panel" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
                   <div className={`v3-avatar${user.isSupporter ? ' supporter' : ''}`} style={{ background: user.avatarColor || '#6366f1' }}>
                     {user.name.charAt(0).toUpperCase()}

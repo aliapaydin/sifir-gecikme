@@ -249,9 +249,12 @@ export default async function V3HomePage() {
       <div className="v3-stats-bar">
         <div className="v3-stats-inner">
           {[
-            { color: '#14b8a6', val: '50+', label: 'içerik' },
-            { color: '#8b5cf6', val: '10+', label: 'interaktif demo' },
-            { color: '#6366f1', val: 'AI Tutor', label: 'desteği' },
+            { color: '#14b8a6', val: '50+',    label: 'içerik' },
+            { color: '#8b5cf6', val: '10+',    label: 'interaktif demo' },
+            { color: '#6366f1', val: '5',       label: 'playground aracı' },
+            { color: '#fb923c', val: '8',       label: 'modül' },
+            { color: '#34d399', val: 'AI Tutor', label: 'desteği' },
+            { color: '#f472b6', val: 'Python & SQL', label: 'tarayıcıda' },
             { color: '#10b981', val: 'Ücretsiz', label: '' },
           ].map((s, i) => (
             <div key={i} className="v3-stat">

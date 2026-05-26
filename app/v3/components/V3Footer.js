@@ -66,6 +66,13 @@ export default function V3Footer() {
           color: #fff; text-decoration: none; transition: opacity 0.15s;
         }
         .v3-footer-destek:hover { opacity: 0.85; }
+        .v3-footer-developer {
+          display: inline-flex; align-items: center; gap: 6px;
+          padding: 8px 16px; border-radius: 9px; font-size: 13px; font-weight: 600;
+          background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.22);
+          color: #818cf8; text-decoration: none; transition: background 0.15s, border-color 0.15s;
+        }
+        .v3-footer-developer:hover { background: rgba(99,102,241,0.18); border-color: rgba(99,102,241,0.38); }
         .v3-footer-version {
           display: inline-flex;
           align-items: center;
@@ -97,17 +104,16 @@ export default function V3Footer() {
           </div>
           <div className="v3-footer-links">
             <Link href="/v3" className="v3-footer-link">Anasayfa</Link>
-            <Link href="/v3/icerikler" className="v3-footer-link">İçerikler</Link>
             {user === null && (
               <>
                 <Link href="/v3/giris" className="v3-footer-link">Giriş Yap</Link>
                 <Link href="/v3/kayit" className="v3-footer-link">Kayıt Ol</Link>
               </>
             )}
-            <Link href="/" className="v3-footer-link">Sıfır Gecikme v2</Link>
             {!user?.isSupporter && (
               <Link href="/v3/destek" className="v3-footer-destek">☕ Destek Ol</Link>
             )}
+            <Link href="/v3/hakkimda" className="v3-footer-developer">👨‍💻 Developer</Link>
           </div>
         </div>
       </footer>
