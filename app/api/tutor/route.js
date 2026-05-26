@@ -106,9 +106,8 @@ export async function POST(request) {
       if (msg.includes('api key') || msg.includes('401') || msg.includes('403')) {
         return new Response('API anahtarı geçersiz.', { status: 401 });
       }
-      if (msg.includes('429') || msg.includes('quota') || msg.includes('404') || msg.includes('not found')) continue;
-      if (msg.includes('503') || msg.includes('service unavailable') || msg.includes('overloaded') || msg.includes('high demand')) continue;
-      return new Response(err.message || 'Bir hata oluştu.', { status: 500 });
+      console.error(`Tutor model ${modelName} failed:`, err.message);
+      continue;
     }
   }
 

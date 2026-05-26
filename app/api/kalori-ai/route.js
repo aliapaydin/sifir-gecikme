@@ -77,10 +77,8 @@ export async function POST(request) {
       if (msg.includes('api key') || msg.includes('401') || msg.includes('403')) {
         return NextResponse.json({ error: 'API anahtarı geçersiz veya yetkisiz.' }, { status: 401 });
       }
-      if (msg.includes('429') || msg.includes('quota')) continue;
-      if (msg.includes('503') || msg.includes('service unavailable') || msg.includes('overloaded') || msg.includes('high demand')) continue;
-      if (msg.includes('404') || msg.includes('not found') || msg.includes('invalid_argument')) continue;
-      return NextResponse.json({ error: err.message }, { status: 500 });
+      console.error(`Kalori-AI model ${modelName} failed:`, err.message);
+      continue;
     }
   }
 
