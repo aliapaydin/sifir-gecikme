@@ -41,6 +41,14 @@ const kategoriler = [
   { icon: '💼', label: 'Kariyer',    desc: 'İş hayatına hazırlık',   href: '/v3/icerikler?tip=kariyer',   color: '#10b981' },
 ];
 
+const tools = [
+  { emoji: '🐍', title: 'Python Playground', desc: 'Tarayıcıda gerçek Python — Pyodide ile kurulum yok, anında çalıştır.', href: '/v3/python', accent: '#3b82f6', tag: 'Pyodide' },
+  { emoji: '🗄️', title: 'SQL Playground',    desc: '3 farklı veritabanı, şema gezgini ve sql.js motoru — tarayıcıda SQLite.', href: '/v3/sql',    accent: '#8b5cf6', tag: 'sql.js' },
+  { emoji: '🔍', title: 'Regex Tester',       desc: 'Türkçe açıklamalı regex playground — pattern yaz, anlık test et.', href: '/v3/regex',  accent: '#14b8a6', tag: 'Regex' },
+  { emoji: '✏️', title: 'Rakam Çiz',          desc: 'El yazısı rakam çiz, tarayıcıda CNN modelini eğit — TensorFlow.js.', href: '/v3/ciz',   accent: '#f59e0b', tag: 'CNN' },
+  { emoji: '🧪', title: 'Sinir Ağı',          desc: 'XOR/çember/spiral veri setleriyle karar sınırını gerçek zamanlı görselleştir.', href: '/v3/nn', accent: '#fb923c', tag: 'Neural Net' },
+];
+
 const playground = [
   { emoji: '📈', title: 'Linear Regression',    desc: 'Noktaları sürükle, regresyon çizgisi anlık güncellensin.',            href: '/v3/yazilar/linear-regression',   accent: '#14b8a6' },
   { emoji: '⛰️', title: 'Gradient Descent',     desc: 'Top yuvarlama oyunu — öğrenme hızını sen belirle.',                   href: '/v3/yazilar/gradient-descent',    accent: '#818cf8' },
@@ -372,12 +380,40 @@ export default function V3HomePage() {
         .v3-cat-label { font-size: 15px; font-weight: 600; }
         .v3-cat-desc { font-size: 12px; color: var(--v3-text-muted); }
 
+        /* Araçlar grid */
+        .tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+        .tool-card {
+          border: 1px solid var(--v3-border); border-radius: 14px;
+          padding: 18px 20px; display: flex; flex-direction: column; gap: 10px;
+          text-decoration: none; color: inherit;
+          transition: border-color 0.2s, transform 0.2s;
+          position: relative; overflow: hidden;
+        }
+        .tool-card::before {
+          content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+          border-radius: 14px 14px 0 0;
+        }
+        .tool-card:hover { border-color: var(--v3-border-bright); transform: translateY(-2px); }
+        .tool-card-top { display: flex; align-items: center; gap: 10px; }
+        .tool-card-emoji { font-size: 24px; flex-shrink: 0; }
+        .tool-card-title { font-size: 14px; font-weight: 700; color: var(--v3-text); }
+        .tool-card-desc { font-size: 12px; color: var(--v3-text-muted); line-height: 1.55; flex: 1; }
+        .tool-card-footer { display: flex; align-items: center; justify-content: space-between; }
+        .tool-card-tag {
+          font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; letter-spacing: 0.05em;
+        }
+        .tool-card-run { font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 3px; }
+
         @media (max-width: 600px) {
           .v3-hero { padding: 60px 20px 48px; }
           .v3-section { padding: 40px 16px; }
           .pg-grid { grid-template-columns: 1fr 1fr; }
+          .tool-grid { grid-template-columns: 1fr 1fr; }
         }
-        @media (max-width: 400px) { .pg-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 400px) {
+          .pg-grid { grid-template-columns: 1fr; }
+          .tool-grid { grid-template-columns: 1fr; }
+        }
       `}</style>
 
       {/* Hero */}
@@ -426,9 +462,34 @@ export default function V3HomePage() {
         <TechCenterCard />
       </div>
 
+      {/* Araçlar */}
+      <div className="v3-section" style={{ paddingTop: 0, paddingBottom: '32px' }}>
+        <h2 className="v3-section-title">🛠️ Araçlar & Playgroundlar</h2>
+        <p className="v3-section-sub">Doğrudan tarayıcıda çalışan araçlar — kurulum yok, anında başla.</p>
+        <div className="tool-grid">
+          {tools.map(tool => (
+            <Link key={tool.href} href={tool.href} className="tool-card"
+              style={{ background: `linear-gradient(135deg, ${tool.accent}0f, ${tool.accent}04)` }}>
+              <div className="tool-card-top">
+                <span className="tool-card-emoji">{tool.emoji}</span>
+                <span className="tool-card-title">{tool.title}</span>
+              </div>
+              <p className="tool-card-desc">{tool.desc}</p>
+              <div className="tool-card-footer">
+                <span className="tool-card-tag"
+                  style={{ background: `${tool.accent}18`, color: tool.accent }}>
+                  {tool.tag}
+                </span>
+                <span className="tool-card-run" style={{ color: tool.accent }}>Aç →</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
       {/* Playground */}
       <div className="v3-section" style={{ paddingTop: 0 }}>
-        <h2 className="v3-section-title">⚡ Playground</h2>
+        <h2 className="v3-section-title">⚡ İnteraktif Demolar</h2>
         <p className="v3-section-sub">Algoritmaları çalışırken gör — sürükle, ayarla, keşfet.</p>
         <div className="pg-grid">
           {playground.map(item => (

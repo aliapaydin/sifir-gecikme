@@ -192,6 +192,10 @@ export default function V3Navbar() {
           width: 32px; height: 32px; border-radius: 50%;
           display: flex; align-items: center; justify-content: center;
           font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0; cursor: default;
+          transition: box-shadow 0.2s;
+        }
+        .v3-avatar.supporter {
+          box-shadow: 0 0 0 2px #fbbf24, 0 0 0 4px rgba(251,191,36,0.25), 0 0 12px rgba(251,191,36,0.2);
         }
         .v3-user-name { font-size: 14px; font-weight: 500; color: var(--v3-text); }
         .v3-btn-logout {
@@ -310,7 +314,7 @@ export default function V3Navbar() {
                   <Link href="/v3/admin" className="v3-admin-link">⚙</Link>
                 )}
                 <Link href="/v3/panel" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
-                  <div className="v3-avatar" style={{ background: user.avatarColor || '#6366f1' }}>
+                  <div className={`v3-avatar${user.isSupporter ? ' supporter' : ''}`} style={{ background: user.avatarColor || '#6366f1' }}>
                     {user.name.charAt(0).toUpperCase()}
                   </div>
                   <span className="v3-user-name">{user.name}</span>

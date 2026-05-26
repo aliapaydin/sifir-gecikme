@@ -215,15 +215,39 @@ function PanelInner() {
           </div>
         </div>
 
-        {/* ── Destek Ol Banner (destekçi değilse) ── */}
-        {!user.isSupporter && (
+        {/* ── Banner: destekçiyse teşekkür, değilse destek ol ── */}
+        {user.isSupporter ? (
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: '20px',
+            padding: '22px 28px', borderRadius: '20px', marginBottom: '16px',
+            background: 'linear-gradient(135deg, rgba(251,191,36,0.1), rgba(245,158,11,0.06))',
+            border: '1px solid rgba(251,191,36,0.3)',
+          }}>
+            <div style={{ fontSize: '44px', flexShrink: 0, lineHeight: 1 }}>✨</div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: '16px', fontWeight: 800, color: '#fbbf24', marginBottom: '5px' }}>
+                Desteğinle büyüyoruz!
+              </div>
+              <div style={{ fontSize: '13px', color: 'var(--v3-text-muted)', lineHeight: 1.6 }}>
+                Sıfır Gecikme'yi desteklediğin için çok teşekkürler. Reklamsız, ücretsiz ve
+                Türkçe kalabilmesi senin gibi destekçiler sayesinde mümkün. İyi ki varsın 🙏
+              </div>
+            </div>
+            <div style={{
+              flexShrink: 0, padding: '6px 12px', borderRadius: '8px',
+              background: 'rgba(251,191,36,0.15)', border: '1px solid rgba(251,191,36,0.3)',
+              color: '#fbbf24', fontSize: '12px', fontWeight: 700,
+            }}>
+              ✦ Destekçi
+            </div>
+          </div>
+        ) : (
           <Link href="/v3/destek" style={{ textDecoration: 'none', display: 'block', marginBottom: '16px' }}>
             <div style={{
               display: 'flex', alignItems: 'center', gap: '20px',
               padding: '22px 28px', borderRadius: '20px',
               background: 'linear-gradient(135deg, rgba(249,115,22,0.1), rgba(244,63,94,0.07))',
               border: '1px solid rgba(249,115,22,0.25)',
-              transition: 'border-color 0.15s',
               cursor: 'pointer',
             }}>
               <div style={{ fontSize: '44px', flexShrink: 0, lineHeight: 1 }}>☕</div>
@@ -240,7 +264,6 @@ function PanelInner() {
                 flexShrink: 0, padding: '9px 18px', borderRadius: '10px',
                 background: 'linear-gradient(135deg,#f96854,#f43f5e)',
                 color: '#fff', fontSize: '13px', fontWeight: 700,
-                display: 'flex', alignItems: 'center', gap: '6px',
               }}>
                 Destek Ol →
               </div>
