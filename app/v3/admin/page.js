@@ -219,21 +219,18 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <div
-            className="admin-nav-card"
-            style={{ opacity: 0.5, cursor: 'not-allowed' }}
-          >
+          <Link href="/v3/admin/analitik" className="admin-nav-card">
             <div className="admin-nav-icon" style={{ background: 'rgba(249,115,22,0.1)' }}>
               📊
             </div>
             <div className="admin-nav-label">Analitik</div>
             <div className="admin-nav-desc">
-              Sayfa görüntülenmeleri, aktif kullanıcılar, içerik performansı.
+              Günlük kayıtlar, aktif oturumlar, rol dağılımı, son üyeler.
             </div>
-            <div style={{ fontSize: '12px', color: 'var(--v3-text-faint)', fontWeight: 500 }}>
-              Yakında
+            <div style={{ fontSize: '13px', color: '#fb923c', fontWeight: 600 }}>
+              Görüntüle →
             </div>
-          </div>
+          </Link>
         </div>
       </div>
     </>

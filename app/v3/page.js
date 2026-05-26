@@ -330,7 +330,11 @@ export default function V3HomePage() {
         <p className="v3-section-sub">En popüler içerikler — dene, öğren, anla.</p>
         <div className="v3-grid">
           {featured.map(yazi => (
-            <Link key={yazi.href} href={yazi.href} className="v3-card">
+            <Link
+              key={yazi.href}
+              href={yazi.href.startsWith('/yazilar/') ? `/v3${yazi.href}` : yazi.href}
+              className="v3-card"
+            >
               <div className="v3-card-badge">
                 <span style={getBadgeStyle(yazi.badge)}>{yazi.badge}</span>
               </div>

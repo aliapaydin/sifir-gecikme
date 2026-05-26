@@ -6,8 +6,6 @@ import { usePathname, useRouter } from 'next/navigation';
 
 const navLinks = [
   { href: '/v3/icerikler', label: 'İçerikler' },
-  { href: '/v3/araclar', label: 'Araçlar' },
-  { href: '/v3/oyun', label: 'Oyun' },
 ];
 
 export default function V3Navbar() {
