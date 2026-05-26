@@ -1,37 +1,73 @@
 <div align="center">
 
-<img src="https://img.shields.io/badge/Sıfır_Gecikme-v2.0.0-1D9E75?style=for-the-badge&labelColor=1a1815" alt="Sıfır Gecikme v2.0.0"/>
+<img src="https://img.shields.io/badge/Sıfır_Gecikme-v3.3.0-6366f1?style=for-the-badge&labelColor=0d1421" alt="Sıfır Gecikme v3.3.0"/>
 
-# 🟢 Sıfır Gecikme
+# ◈ Sıfır Gecikme
 
 ### Türkçe veri bilimi, makine öğrenmesi ve istatistik üzerine interaktif içerikler.
 ### Her kavramı önce dener, sonra konuşuruz.
 
-[![Site](https://img.shields.io/badge/🌐_Siteyi_Ziyaret_Et-sifirgecikme.com-1D9E75?style=flat-square)](https://www.sifirgecikme.com)
+[![Site v3](https://img.shields.io/badge/🌐_v3_Siteyi_Ziyaret_Et-sifirgecikme.com/v3-6366f1?style=flat-square)](https://www.sifirgecikme.com/v3)
+[![Site v2](https://img.shields.io/badge/🌐_v2-sifirgecikme.com-1D9E75?style=flat-square)](https://www.sifirgecikme.com)
 [![X](https://img.shields.io/badge/𝕏_Twitter-@sifirgecikme-000000?style=flat-square&logo=x)](https://x.com/sifirgecikme)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Ali_Apaydın-0077B5?style=flat-square&logo=linkedin)](https://linkedin.com/in/aliapaydin35)
-[![Instagram](https://img.shields.io/badge/Instagram-@sifirgecikme-E4405F?style=flat-square&logo=instagram)](https://instagram.com/sifirgecikme)
 
 </div>
 
 ---
 
-## 🖥️ Tech Center — v2.0.0 ile Tanışın
+## 🆕 Sıfır Gecikme v3 — Yeni Platform
 
-> Sıfır Gecikme'nin en büyük özelliği: tarayıcıda çalışan, kayıt gerektirmeyen, tam bir **teknoloji mağazası simülasyon oyunu.**
+> v3, v2'nin üstüne inşa edildi. v2 rotaları ve içerikleri **değişmeden çalışmaya devam ediyor.**
 
-**Bir IT mağazası işlet.** Müşteri mailleri gelir, siparişleri yönetirsin, fiyatlar değişir, kredi çekebilirsin — hepsi gerçek zamanlı, hepsi localStorage'da.
+**Ne değişti?** Hesap sistemi, kişisel panel, Patreon entegrasyonu, v3 tasarım sistemi ve tüm modüllerin yeni arayüzü.
+
+### v3.3.0 — Kullanıcı Paneli + Patreon Entegrasyonu
+
+- **Kullanıcı paneli** (`/v3/panel`): avatar, rol rozeti, hesap bilgileri, öğrenme istatistikleri (Anladım / Tekrar / Ziyaret / XP)
+- **Patreon OAuth2 bağlantısı**: kullanıcılar Patreon hesaplarını v3 hesabına bağlayabilir; destekçi rozeti otomatik atanır
+- **Destekçi takibi**: patron_status, aylık destek miktarı, toplam katkı — veritabanında saklanıyor
+- **Navbar kullanıcı adına tıklama** → panel yönlendirmesi
+- DB migration güvenliği: `initDb()` her çalışmada Patreon kolonlarını `IF NOT EXISTS` ile ekliyor
+
+### v3.2.0 — Hakkımda Sayfası CV'den Yeniden Tasarlandı
+
+- Deneyim timeline'ı, yetenekler, sertifikalar, eğitim ve iletişim bölümleriyle tam CV sayfası
+
+### v3.1.0 — Tüm Modüller v3'te
+
+- Kalori AI, Mülakat, Milyon, Veri Setleri, Proje Lab, Bilgi Grafiği, Promilmetre, Tech Center — hepsi `/v3/*` altında
+- Navbar'a **Modüller dropdown** menüsü eklendi
+
+### v3.0.0 — Platform Temeli
+
+- E-posta/şifre tabanlı hesap sistemi (kayıt, giriş, JWT cookie oturumu — 30 gün)
+- **Neon PostgreSQL** altyapısı: `v3_users`, `v3_sessions` tabloları
+- v3 tasarım sistemi: CSS custom properties (`--v3-bg`, `--v3-surface`, `--v3-text` vb.)
+- AI Tutor bileşeni: her yazı sayfasına gömülebilir, streamed yanıt
+- Python Playground v3 dark mode: matplotlib grafikleri v3 tema paletine uyum sağlıyor
+- Anladım/Tekrar Bak butonları ve ZiyaretTakip v3 layout'unda
+
+[📋 Tüm v3 sürüm notları →](https://www.sifirgecikme.com/v3/versiyon)
+
+---
+
+## 🖥️ Tech Center
+
+> Tarayıcıda çalışan, kayıt gerektirmeyen tam bir **teknoloji mağazası simülasyon oyunu.**
+
+**Bir IT mağazası işlet.** Müşteri mailleri gelir, siparişleri yönetirsin, fiyatlar değişir, kredi çekebilirsin.
 
 <details>
 <summary><strong>🎮 Oyun mekaniği detayları (genişlet)</strong></summary>
 
 ### Nasıl oynanır?
 
-- **Mail kutusu**: Müşterilerden gelen talepleri gör. Siparişi hemen al ya da beklet (1-2 gün). Alışveriş listesine ekleyerek Pazar'da takip et.
-- **Pazar**: Tedarikçilerden ürün al. Yerel (+%5 pahalı, aynı gün) veya uzak (standart fiyat, ertesi gün). Aktif etkinlikler fiyatları etkiler.
-- **Stok yönetimi**: Ürünler teslim edilene kadar bekleyen sipariş olarak görünür, teslimatta stoka geçer.
-- **Müşteri memnuniyeti**: Gecikme, iptal ve düşük stok memnuniyeti düşürür. Hızlı teslimat ve doğru ürün yükseltir.
-- **Gün döngüsü**: Her gün müşteriler gelir, siparişler teslim edilir, masraflar düşülür, loan taksitleri ödenir.
+- **Mail kutusu**: Müşterilerden gelen talepleri gör. Siparişi hemen al ya da beklet (1-2 gün).
+- **Pazar**: Tedarikçilerden ürün al. Yerel (+%5 pahalı, aynı gün) veya uzak (standart fiyat, ertesi gün).
+- **Stok yönetimi**: Ürünler teslim edilene kadar bekleyen sipariş olarak görünür.
+- **Müşteri memnuniyeti**: Gecikme ve iptal memnuniyeti düşürür. Hızlı teslimat yükseltir.
+- **Gün döngüsü**: Her gün müşteriler gelir, siparişler teslim edilir, loan taksitleri ödenir.
 
 ### Ekonomi sistemi
 
@@ -41,7 +77,7 @@
 | 📦 Stok | 6 kategori: telefon, laptop, tablet, kulaklık, oyun, aksesuvar |
 | 🏪 Tedarikçi | Yerel (anlık) vs uzak (ertesi gün, %5 ucuz) |
 | 🎪 Etkinlikler | Rastgele fiyat etkileri — indirim veya zam |
-| 💳 Kredi | ₺10K-100K arası seçenekler, %10 faiz, 5 günde ödeme |
+| 💳 Kredi | ₺10K–100K arası seçenekler, %10 faiz, 5 günde ödeme |
 | ⭐ XP & Seviye | Her başarılı sipariş XP kazandırır |
 
 ### Teknik mimari
@@ -51,33 +87,15 @@ lib/
 ├── tech-center-engine.js    # Pure fonksiyon oyun motoru (side-effect yok)
 ├── tech-center-state.js     # useReducer state yönetimi + tüm action'lar
 └── tech-center-data.js      # Ürün kataloğu, kategoriler, etkinlik tablosu
-
-components/tech-center/
-├── GameApp.js               # Kök bileşen — state + dispatch bağlayıcı
-├── Desktop.js               # Tab router (Mail/Pazar/Stok/Yönetim)
-├── TopBar.js                # Nakit/XP/memnuniyet badge'leri + kredi modal
-├── MailApp.js               # Müşteri mailbox + detay paneli
-├── PazarTab.js              # Tedarikçi sipariş ekranı + alışveriş listesi
-├── StokTab.js               # Anlık stok tablosu
-├── YonetimTab.js            # Kredi takibi + firma değeri + tehlike bölgesi
-└── ...diğer bileşenler
 ```
-
-**Önemli tasarım kararları:**
-- Tüm oyun mantığı `tech-center-engine.js`'de saf fonksiyonlar — test edilebilir, yan etkisiz
-- Kayıt gerektirmez — state `localStorage`'da `tc_game_v2` anahtarında
-- Save game uyumluluğu — `processDayStart` her gün yeni unlock'ları mevcut state'e reconcile eder
-- Aktif etkinlik fiyatları her işlemde `getEffectiveBuyPrice` ile hesaplanır
 
 </details>
 
-[🎮 Oyna →](https://www.sifirgecikme.com/tech-center)
+[🎮 Oyna →](https://www.sifirgecikme.com/v3/tech-center)
 
 ---
 
 ## ⚡ İnteraktif Demolar
-
-> Sürükle, kaydır, izle — kavramları oynarken öğren.
 
 | Demo | Açıklama | Link |
 |------|----------|------|
@@ -93,62 +111,22 @@ components/tech-center/
 
 ---
 
-## 🛠️ Interaktif Araçlar
+## 🛠️ Araçlar & Modüller
 
 | Araç | Açıklama | Link |
 |------|----------|------|
-| 🧪 A/B Test Hesaplayıcı | p-değeri, güven aralığı, etki büyüklüğü | [→](https://www.sifirgecikme.com/yazilar/ab-test) |
-| 📐 Sample Size Aracı | Test başlatmadan önce kaç kullanıcı lazım? | [→](https://www.sifirgecikme.com/yazilar/sample-size) |
-| 🐍 Python Playground | Tarayıcıda gerçek Python (Pyodide) — kurulum yok! | [→](https://www.sifirgecikme.com/python) |
-| 🗄️ SQL Playground | 3 farklı veritabanı, şema gezgini, sql.js motoru | [→](https://www.sifirgecikme.com/sql) |
-| 🤖 Kalori AI | Fotoğraftan kalori tahmini — Gemini Vision | [→](https://www.sifirgecikme.com/kalori) |
-| ✏️ Rakam Çiz | El yazısı rakam tanıma — TensorFlow.js CNN | [→](https://www.sifirgecikme.com/yazilar/sinir-agi) |
-| 🧪 NN Playground | Katman/nöron/aktivasyon deneyi | [→](https://www.sifirgecikme.com/yazilar/sinir-agi) |
-| 🔍 Regex Test | Türkçe açıklamalı regex playground | [→](https://www.sifirgecikme.com/yazilar/regex) |
-| 💰 Milyon Soru | Kim milyoner tarzı veri bilimi soruları | [→](https://www.sifirgecikme.com/milyon) |
-| 💼 Mülakat Simülatörü | Gerçek mülakat soruları, zamanlı pratik | [→](https://www.sifirgecikme.com/mulakat) |
-
----
-
-## 📖 Rehberler
-
-| Rehber | Açıklama | Link |
-|--------|----------|------|
-| 🗄️ SQL Temelleri | SELECT → JOIN → GROUP BY → Window fonksiyonlar | [→](https://www.sifirgecikme.com/yazilar/sql-temelleri) |
-| 🔧 ETL Nedir? | Extract, Transform, Load — veri mühendisliğinin temeli | [→](https://www.sifirgecikme.com/yazilar/etl-nedir) |
-| 📦 dbt Nedir? | Analytics engineering, model katmanları, Jinja | [→](https://www.sifirgecikme.com/yazilar/dbt-nedir) |
-| ☁️ Cloud Platformları | AWS vs GCP vs Azure — veri bilimcinin perspektifi | [→](https://www.sifirgecikme.com/yazilar/cloud) |
-| 🧱 Databricks | Lakehouse mimarisi, Spark, Unity Catalog | [→](https://www.sifirgecikme.com/yazilar/databricks) |
-| 🐼 Pandas'ta 7 Hata | inplace, apply, merge ve daha fazlası | [→](https://www.sifirgecikme.com/yazilar/pandas-7-sey) |
-| 🧹 Veri Temizleme | Eksik değer, aykırı değer, tip dönüşümü | [→](https://www.sifirgecikme.com/yazilar/veri-temizleme) |
-| 🔧 Feature Engineering | Encoding, ölçekleme, etkileşim özellikleri | [→](https://www.sifirgecikme.com/yazilar/feature-engineering) |
-| 🌲 Random Forest | Bagging, önem skoru, hiperparametre ayarı | [→](https://www.sifirgecikme.com/yazilar/random-forest) |
-| 🔁 sklearn Pipeline | Preprocessing + model zinciri, CV entegrasyonu | [→](https://www.sifirgecikme.com/yazilar/sklearn-pipeline) |
-
----
-
-## 📊 Vaka Çalışmaları
-
-| Vaka | Açıklama | Link |
-|------|----------|------|
-| 🏠 İzmir Kira Analizi | 5.841 ilan, ilçe bazında m² fiyatı | [→](https://www.sifirgecikme.com/yazilar/izmir-kira-analizi) |
-| ⚽ Süper Lig xG | Gol mu şans mı? Expected Goals analizi | [→](https://www.sifirgecikme.com/yazilar/superlig-xg) |
-| 📊 BI Karşılaştırma | Tableau vs Power BI vs Looker — hangisi ne zaman? | [→](https://www.sifirgecikme.com/yazilar/bi-karsilastirma) |
-| 🛒 Sepet Terki Analizi | E-ticaret funnel, kohort ve RFM | [→](https://www.sifirgecikme.com/yazilar/sepet-terki) |
-| 💳 Kredi Riski SHAP | XGBoost + SHAP ile model yorumlanabilirliği | [→](https://www.sifirgecikme.com/yazilar/kredi-shap) |
-
----
-
-## 💼 Kariyer
-
-| Yazı | Açıklama | Link |
-|------|----------|------|
-| 🗓️ İlk 90 Gün | 15 yıl sonra keşke bilseydim dediklerim | [→](https://www.sifirgecikme.com/yazilar/ilk-90-gun) |
-| 🤔 Roller Arası Fark | Veri analisti vs data scientist vs ML engineer | [→](https://www.sifirgecikme.com/yazilar/rol-farklari) |
-| 🗺️ Yol Haritası | Veri bilimi öğrenme rotası, adım adım | [→](https://www.sifirgecikme.com/yazilar/yol-haritasi) |
-| 📁 Portfolyo Rehberi | GitHub, Kaggle, proje fikirleri — ne, nasıl, neden | [→](https://www.sifirgecikme.com/yazilar/portfolyo) |
-| 💬 Mülakat SQL Soruları | En çok sorulan 10 SQL sorusu, çözümüyle | [→](https://www.sifirgecikme.com/yazilar/mulakat-sql) |
-| 🔗 LinkedIn Profili | İşe alınanların profilinden fark yaratan detaylar | [→](https://www.sifirgecikme.com/yazilar/linkedin-profili) |
+| 🐍 Python Playground | Tarayıcıda gerçek Python (Pyodide) — kurulum yok! | [→](https://www.sifirgecikme.com/v3/python) |
+| 🗄️ SQL Playground | 3 farklı veritabanı, şema gezgini, sql.js motoru | [→](https://www.sifirgecikme.com/v3/sql) |
+| 🤖 Kalori AI | Fotoğraftan kalori tahmini — Gemini Vision | [→](https://www.sifirgecikme.com/v3/kalori) |
+| ✏️ Rakam Çiz | El yazısı rakam tanıma — TensorFlow.js CNN | [→](https://www.sifirgecikme.com/v3/ciz) |
+| 🧪 NN Playground | Katman/nöron/aktivasyon deneyi, karar sınırı görselleştirme | [→](https://www.sifirgecikme.com/v3/nn) |
+| 🔍 Regex Test | Türkçe açıklamalı regex playground | [→](https://www.sifirgecikme.com/v3/regex) |
+| 💰 Milyon Soru | Kim milyoner tarzı veri bilimi soruları | [→](https://www.sifirgecikme.com/v3/milyon) |
+| 💼 Mülakat Simülatörü | Gerçek mülakat soruları, zamanlı pratik | [→](https://www.sifirgecikme.com/v3/mulakat) |
+| 🍺 Promilmetre | Widmark formülü ile kan alkol hesaplayıcı | [→](https://www.sifirgecikme.com/v3/promilmetre) |
+| 🗺️ Bilgi Grafiği | İçerikler arası bağlantı haritası | [→](https://www.sifirgecikme.com/v3/grafik) |
+| 🛠️ Proje Lab | Uctan uca veri projesi rehberi | [→](https://www.sifirgecikme.com/v3/proje) |
+| 📊 Veri Setleri | Hazır CSV & veri seti arşivi | [→](https://www.sifirgecikme.com/v3/veri-setleri) |
 
 ---
 
@@ -164,63 +142,50 @@ components/tech-center/
 🔍 Hangi Grafik?  →  💡 Görsel İpuçları  →  🌍 Gerçek Veri
 ```
 
-**10 ders · 315 XP · Tamamen ücretsiz**
+**20 ders · 315 XP · Tamamen ücretsiz**
 
-Tüm dersleri tamamlayınca **Site İçerik Uzmanlığı** sertifika sınavına girebilirsin.
+İlerleme kaydedilir: XP, tamamlanan dersler ve "Anladım / Tekrar Bak" durumları localStorage'da saklanır.
 
-[📚 Öğrenmeye Başla →](https://www.sifirgecikme.com/ogren)
-
----
-
-## 🚀 Uctan Uca Proje
-
-> Veri bulma → temizleme → analiz → görselleştirme → sunum. Tek sayfada, 6 adım.
-
-[🛠️ Projeye Başla →](https://www.sifirgecikme.com/proje)
-
----
-
-## 📅 Bugünün Sorusu
-
-Her gün yeni bir veri bilimi sorusu. Doğru cevapla, ilerleni haritanda gör.
-
-[🧠 Cevapla →](https://www.sifirgecikme.com)
+[📚 Öğrenmeye Başla →](https://www.sifirgecikme.com/v3/ogren)
 
 ---
 
 ## 📍 İlerleme Haritam
 
-Hesap açmana gerek yok. Ziyaret ettiğin içerikler, çalıştırdığın sorgular, tamamladığın dersler — hepsi cihazında saklanır.
+Ziyaret ettiğin içerikler, tamamladığın dersler — hepsi cihazında saklanır. v3 hesabı açarsan panelden takip edebilirsin.
 
 - 📚 Ziyaret edilen içerikler
 - 🗄️ SQL ve 🐍 Python sorgu sayacı
 - 🎯 Uzmanlık alanı yüzdeleri (ML, SQL, Python, İstatistik, Kariyer)
-- 🏅 13 başarım rozeti
+- 🏅 24 başarım rozeti
 - 🎓 Sertifika sınav ilerlemesi
 
-[📍 Haritama Git →](https://www.sifirgecikme.com/harita)
+[📍 Haritama Git →](https://www.sifirgecikme.com/v3/harita)
 
 ---
 
 ## 🛠️ Tech Stack
 
-![Next.js](https://img.shields.io/badge/Next.js_16-000000?style=flat-square&logo=next.js)
+![Next.js](https://img.shields.io/badge/Next.js_15-000000?style=flat-square&logo=next.js)
 ![React](https://img.shields.io/badge/React_19-61DAFB?style=flat-square&logo=react&logoColor=000)
+![PostgreSQL](https://img.shields.io/badge/Neon_PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white)
 ![TensorFlow.js](https://img.shields.io/badge/TensorFlow.js-FF6F00?style=flat-square&logo=tensorflow&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel)
 ![Pyodide](https://img.shields.io/badge/Pyodide-3776AB?style=flat-square&logo=python&logoColor=white)
-![sql.js](https://img.shields.io/badge/sql.js-003B57?style=flat-square&logo=sqlite&logoColor=white)
 
 | Katman | Teknoloji |
 |--------|-----------|
-| Framework | Next.js 16 (App Router) |
-| Stil | CSS Variables + inline styles |
+| Framework | Next.js 15 (App Router) |
+| Stil | CSS Custom Properties (v3 tasarım sistemi) |
 | Deploy | Vercel (otomatik CI/CD) |
+| Veritabanı | Neon serverless PostgreSQL |
+| Kimlik doğrulama | JWT (jose) + bcrypt + httpOnly cookie |
+| Patreon | OAuth2 token exchange + API entegrasyonu |
 | Python Playground | Pyodide (WebAssembly) |
 | SQL Playground | sql.js (SQLite in-browser) |
 | ML / AI | TensorFlow.js, Google Gemini |
 | İnteraktif demolar | Vanilla JS + SVG + Canvas |
-| Kullanıcı verisi | localStorage (hesap gerekmez) |
+| Kullanıcı verisi | localStorage (v2) + Neon PostgreSQL (v3) |
 
 ---
 
@@ -229,62 +194,68 @@ Hesap açmana gerek yok. Ziyaret ettiğin içerikler, çalıştırdığın sorgu
 ```
 sifir_gecikme/
 ├── app/
-│   ├── layout.js              # Global layout (LayoutShell wrapper)
-│   ├── page.js                # Ana sayfa + hero canvas + günün sorusu
-│   ├── harita/                # İlerleme Haritası sayfası
-│   ├── hakkimda/              # Hakkımda sayfası
-│   ├── kalori/                # Kalori AI (Gemini Vision)
-│   ├── kategori/[slug]/       # Dinamik kategori sayfaları
-│   ├── milyon/                # Kim milyoner tarzı soru oyunu
-│   ├── mulakat/               # Mülakat simülatörü
-│   ├── ogren/                 # Öğrenme modülü listesi
-│   │   └── [slug]/            # Dinamik ders sayfaları
-│   ├── proje/                 # Uctan uca proje rehberi
-│   ├── python/                # Python Playground (Pyodide)
-│   ├── sinav/                 # Sertifika sınavı
-│   ├── sql/                   # SQL Playground (sql.js)
-│   ├── tech-center/           # 🖥️ Tech Center oyunu
-│   ├── versiyon/              # Sürüm geçmişi (changelog)
-│   │   ├── page.js            # Server component (metadata)
-│   │   └── VersiyonIcerik.js  # Client component (accordion)
-│   └── yazilar/               # Tüm içerik sayfaları (25+)
-│       └── layout.js          # İlgili içerikler + sosyal paylaşım
-├── components/
-│   ├── LayoutShell.js         # Client wrapper (tema/scroll/analytics)
-│   ├── Navbar.js              # Sticky nav + pill bar + dark mode
-│   ├── Footer.js              # 3 kolonlu footer
-│   ├── HeroCanvas.js          # Gece/gündüz canvas animasyonu
-│   ├── GununSorusu.js         # Günlük soru widget'ı
-│   ├── IlgiliIcerikler.js     # Makale altı ilgili içerik önerileri
-│   ├── SosyalPaylasim.js      # X, LinkedIn, link kopyalama butonları
-│   ├── ZiyaretTakip.js        # localStorage ziyaret kaydı
-│   ├── Arama.js               # Site içi arama
-│   └── tech-center/           # 🖥️ Oyun bileşenleri
-│       ├── GameApp.js         # Kök bileşen — state + dispatch
-│       ├── Desktop.js         # Tab router
-│       ├── TopBar.js          # Badge'ler + kredi modal
-│       ├── MailApp.js         # Müşteri mailbox
-│       ├── PazarTab.js        # Tedarikçi sipariş + alışveriş listesi
-│       ├── StokTab.js         # Anlık stok
-│       ├── YonetimTab.js      # Kredi takibi + firma değeri
-│       ├── MusteriApp.js      # Müşteri karşılama
-│       ├── StokUyariApp.js    # Stok uyarı sistemi
-│       ├── TaskbarApp.js      # Görev çubuğu
-│       ├── StartMenu.js       # Başlat menüsü
-│       ├── Window.js          # Pencere bileşeni
-│       └── icons/             # Oyun içi ikonlar
+│   ├── v3/                        # 🆕 v3 platform
+│   │   ├── layout.js              # v3 layout (V3Navbar + V3Footer)
+│   │   ├── page.js                # v3 ana sayfa
+│   │   ├── panel/                 # Kullanıcı paneli
+│   │   ├── giris/                 # Giriş sayfası
+│   │   ├── kayit/                 # Kayıt sayfası
+│   │   ├── hakkimda/              # CV tabanlı hakkımda sayfası
+│   │   ├── harita/                # İlerleme haritası
+│   │   ├── icerikler/             # Tüm içerikler listesi
+│   │   ├── versiyon/              # v3 sürüm geçmişi
+│   │   ├── ogren/                 # Öğrenme modülü
+│   │   ├── yazilar/               # Yazı sayfaları + layout
+│   │   ├── python/                # Python Playground (v3 wrapper)
+│   │   ├── sql/                   # SQL Playground (v3 wrapper)
+│   │   ├── kalori/                # Kalori AI
+│   │   ├── mulakat/               # Mülakat simülatörü
+│   │   ├── milyon/                # Kim milyoner soruları
+│   │   ├── veri-setleri/          # Veri seti arşivi
+│   │   ├── proje/                 # Proje rehberi
+│   │   ├── grafik/                # Bilgi grafiği
+│   │   ├── promilmetre/           # Alkol promilmetre
+│   │   ├── tech-center/           # Tech Center oyunu
+│   │   ├── ciz/                   # Rakam çiz (CNN)
+│   │   ├── nn/                    # NN Playground
+│   │   ├── regex/                 # Regex playground
+│   │   └── components/
+│   │       ├── V3Navbar.js        # Sticky nav + dropdown + mobil menü
+│   │       ├── V3Footer.js        # Footer + versiyon badge
+│   │       └── V3EmbeddedTutor.js # AI Tutor (streamed)
+│   ├── api/
+│   │   ├── v3/auth/               # v3 auth API routes
+│   │   │   ├── login/             # POST — JWT oturumu oluştur
+│   │   │   ├── register/          # POST — yeni kullanıcı
+│   │   │   ├── logout/            # POST — oturumu sil
+│   │   │   ├── me/                # GET — mevcut kullanıcı
+│   │   │   ├── init/              # POST — DB tablolarını oluştur
+│   │   │   └── patreon/
+│   │   │       ├── route.js       # GET — OAuth başlat
+│   │   │       ├── callback/      # GET — token exchange + DB güncelle
+│   │   │       └── refresh/       # POST — Patreon durumunu yenile
+│   │   ├── kalori-ai/             # Gemini Vision API (rate limited)
+│   │   └── tutor/                 # AI Tutor streaming API
+│   ├── layout.js                  # Global layout (v2)
+│   ├── page.js                    # v2 ana sayfa
+│   ├── harita/                    # v2 ilerleme haritası
+│   ├── versiyon/                  # v2 sürüm geçmişi
+│   ├── tech-center/               # v2 Tech Center
+│   └── yazilar/                   # v2 içerik sayfaları (25+)
+├── components/                    # v2 paylaşımlı bileşenler
+│   ├── AnladimButonlar.js         # Anladım/Tekrar Bak (v2+v3 uyumlu)
+│   ├── ZiyaretTakip.js            # localStorage ziyaret kaydı
+│   └── tech-center/               # Tech Center oyun bileşenleri
 └── lib/
-    ├── icerikler.js           # Merkezi içerik listesi (tüm makaleler)
-    ├── dersler.js             # Öğrenme modülü ders verisi
-    ├── ilerleme.js            # localStorage ilerleme yönetimi
-    ├── gunun-sorusu.js        # 30 soruluk günlük soru havuzu
-    ├── takip.js               # Ziyaret + sorgu takip yardımcıları
-    ├── sinav.js               # Sertifika sınavı soru havuzu
-    ├── sqlVeritabanlari.js    # SQL Playground örnek veritabanları
-    ├── versiyon.js            # Mevcut versiyon sabiti (CURRENT_VERSION)
-    ├── tech-center-engine.js  # Pure fonksiyon oyun motoru
-    ├── tech-center-state.js   # useReducer + tüm action'lar
-    └── tech-center-data.js    # Ürün kataloğu, etkinlik tablosu
+    ├── v3/
+    │   ├── db.js                  # Neon SQL bağlantısı + initDb()
+    │   └── auth.js                # JWT session yönetimi
+    ├── patreon.js                 # Patreon API yardımcıları
+    ├── icerikler.js               # Merkezi içerik listesi
+    ├── dersler.js                 # Öğrenme modülü ders verisi
+    ├── tech-center-engine.js      # Pure fonksiyon oyun motoru
+    ├── tech-center-state.js       # useReducer + action'lar
+    └── tech-center-data.js        # Ürün kataloğu, etkinlik tablosu
 ```
 
 ---
@@ -293,18 +264,19 @@ sifir_gecikme/
 
 | Versiyon | Öne Çıkanlar |
 |----------|--------------|
-| **v2.0.0** | Tech Center büyük güncelleme — kredi sistemi, sipariş iptali, alışveriş listesi, tooltip badge'ler |
-| v1.8.0 | Tech Center oyunu — stok, mail, pazar, müşteri sistemi |
-| v1.7.0 | Kalori AI modülü (Gemini Vision) |
-| v1.6.0 | Yeni laciver tema, tema sistemi yeniden yazıldı |
-| v1.5.0 | LayoutShell refactor, layout temizlendi |
-| v1.4.0 | Versiyon geçmişi sayfası eklendi |
-| v1.3.0 | Milyon & Mülakat modülleri |
-| v1.2.0 | Rakam Çiz (TensorFlow.js CNN) |
-| v1.1.0 | Python & SQL Playground |
+| **v3.3.0** | Kullanıcı paneli, Patreon OAuth2 entegrasyonu, destekçi rozeti |
+| **v3.2.0** | Hakkımda sayfası CV'den yeniden tasarlandı |
+| **v3.1.0** | Tüm modüller v3'te, Modüller dropdown menüsü |
+| **v3.0.0** | v3 platform lansmanı — hesap sistemi, JWT, Neon PostgreSQL, v3 tasarım sistemi |
+| v2.3.0 | Patreon destekçi sistemi (v2) |
+| v2.2.0 | Alkol Promilmetre modülü |
+| v2.1.0 | Kalori AI sunucu tarafına taşındı, model fallback zinciri |
+| v2.0.0 | Tech Center 2.0 — kredi sistemi, sipariş iptali, alışveriş listesi |
+| v1.8.0 | Tüm İçerikler sayfası, Z-Skor aracı, Anladım/Tekrar Bak |
+| v1.7.0 | Gece teması, Data bars logosu |
 | v1.0.0 | İlk yayın |
 
-[📋 Tüm sürüm notları →](https://www.sifirgecikme.com/versiyon)
+[📋 v3 sürüm notları →](https://www.sifirgecikme.com/v3/versiyon) · [📋 v2 sürüm notları →](https://www.sifirgecikme.com/versiyon)
 
 ---
 
@@ -317,7 +289,18 @@ npm install
 npm run dev
 ```
 
-`http://localhost:3000` aç, başla.
+`.env.local` dosyası gerekli değişkenler:
+
+```
+DATABASE_URL=          # Neon PostgreSQL bağlantı URL'si
+SESSION_SECRET=        # JWT imzalama anahtarı (min. 32 karakter)
+PATREON_CLIENT_ID=     # Patreon OAuth2 Client ID
+PATREON_CLIENT_SECRET= # Patreon OAuth2 Client Secret
+PATREON_CREATOR_ID=    # Patreon kampanya sahibi kullanıcı ID'si
+GEMINI_API_KEY=        # Google Gemini API anahtarı
+```
+
+`http://localhost:3000/v3` aç, başla.
 
 ---
 
@@ -327,6 +310,6 @@ npm run dev
 
 *Tüm içerikler Türkçe ve ücretsiz.*
 
-[![Site](https://img.shields.io/badge/www.sifirgecikme.com-1D9E75?style=for-the-badge)](https://www.sifirgecikme.com)
+[![Site](https://img.shields.io/badge/www.sifirgecikme.com/v3-6366f1?style=for-the-badge)](https://www.sifirgecikme.com/v3)
 
 </div>
