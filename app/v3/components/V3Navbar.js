@@ -12,6 +12,17 @@ const playgroundItems = [
   { emoji: '🧠', label: 'Sinir Ağı',          href: '/v3/nn' },
 ];
 
+const modulItems = [
+  { emoji: '🥗', label: 'Kalori Takip',      href: '/v3/kalori' },
+  { emoji: '🗂️', label: 'Veri Setleri',      href: '/v3/veri-setleri' },
+  { emoji: '🎤', label: 'Mülakat',           href: '/v3/mulakat' },
+  { emoji: '💰', label: 'Kim Milyoner?',     href: '/v3/milyon' },
+  { emoji: '🧪', label: 'Proje Lab',         href: '/v3/proje' },
+  { emoji: '📊', label: 'Bilgi Grafiği',     href: '/v3/grafik' },
+  { emoji: '🍺', label: 'Promilmetre',       href: '/v3/promilmetre' },
+  { emoji: '🖥️', label: 'Tech Center',       href: '/v3/tech-center' },
+];
+
 const navLinks = [
   { href: '/v3/icerikler', label: 'İçerikler' },
   { href: '/v3/harita',    label: 'Haritam' },
@@ -24,9 +35,11 @@ export default function V3Navbar() {
   const [menuOpen, setMenuOpen]       = useState(false);
   const [pgOpen, setPgOpen]           = useState(false);
   const [pgMobileOpen, setPgMobileOpen] = useState(false);
+  const [modOpen, setModOpen]         = useState(false);
   const [loggingOut, setLoggingOut]   = useState(false);
   const [isLight, setIsLight]         = useState(false);
-  const pgRef = useRef(null);
+  const pgRef  = useRef(null);
+  const modRef = useRef(null);
 
   useEffect(() => {
     fetch('/api/v3/auth/me')
@@ -44,6 +57,7 @@ export default function V3Navbar() {
   useEffect(() => {
     function onOutside(e) {
       if (pgRef.current && !pgRef.current.contains(e.target)) setPgOpen(false);
+      if (modRef.current && !modRef.current.contains(e.target)) setModOpen(false);
     }
     document.addEventListener('mousedown', onOutside);
     return () => document.removeEventListener('mousedown', onOutside);
@@ -252,6 +266,27 @@ export default function V3Navbar() {
                 </div>
               )}
             </div>
+
+            {/* Modüller dropdown */}
+            <div className="v3-pg-wrap" ref={modRef}>
+              <button
+                className={`v3-pg-btn${modOpen ? ' open' : ''}`}
+                onClick={() => setModOpen(o => !o)}
+              >
+                Modüller <span className="v3-pg-arrow">▼</span>
+              </button>
+              {modOpen && (
+                <div className="v3-dropdown">
+                  {modulItems.map(item => (
+                    <Link key={item.href} href={item.href} className="v3-dd-item"
+                      onClick={() => setModOpen(false)}>
+                      <span className="v3-dd-emoji">{item.emoji}</span>
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="v3-nav-right">
@@ -298,6 +333,14 @@ export default function V3Navbar() {
 
           <div className="v3-mobile-pg-title">Playground</div>
           {playgroundItems.map(item => (
+            <Link key={item.href} href={item.href} className="v3-mobile-link"
+              onClick={() => setMenuOpen(false)}>
+              {item.emoji} {item.label}
+            </Link>
+          ))}
+
+          <div className="v3-mobile-pg-title">Modüller</div>
+          {modulItems.map(item => (
             <Link key={item.href} href={item.href} className="v3-mobile-link"
               onClick={() => setMenuOpen(false)}>
               {item.emoji} {item.label}
