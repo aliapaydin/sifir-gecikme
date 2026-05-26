@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { yazilar } from '../../lib/icerikler';
+import V3EmbeddedTutor from './components/V3EmbeddedTutor';
 
 const BADGE_COLORS = {
   'interaktif':      { bg: 'rgba(20,184,166,0.12)',  color: '#2dd4bf', border: 'rgba(20,184,166,0.2)' },
@@ -360,31 +361,11 @@ export default function V3HomePage() {
         </div>
       </div>
 
-      {/* AI Tutor */}
-      <div style={{ padding: '0 24px 64px', maxWidth: '1200px', margin: '0 auto' }}>
-        <div style={{
-          background: 'linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.12), rgba(20,184,166,0.08))',
-          border: '1px solid rgba(99,102,241,0.2)', borderRadius: '20px',
-          padding: '48px 40px', textAlign: 'center', position: 'relative', overflow: 'hidden',
-        }}>
-          <div style={{
-            position: 'absolute', top: '-50%', left: '-50%', width: '200%', height: '200%',
-            background: 'radial-gradient(ellipse, rgba(99,102,241,0.08) 0%, transparent 60%)',
-            pointerEvents: 'none',
-          }} />
-          <div style={{ fontSize: '40px', marginBottom: '16px' }}>🤖</div>
-          <h2 style={{
-            fontSize: '28px', fontWeight: 800, letterSpacing: '-0.5px', margin: '0 0 12px',
-            background: 'linear-gradient(135deg, #6366f1, #8b5cf6, #14b8a6)',
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-          }}>
-            Anlamadın mı? Sor.
-          </h2>
-          <p style={{ fontSize: '16px', color: 'var(--v3-text-muted)', maxWidth: '500px', margin: '0 auto 28px', lineHeight: 1.6 }}>
-            AI Tutor, veri bilimi kavramlarını senin seviyene göre açıklar. Soru sor, örnekler iste, kafanda netleştir.
-          </p>
-          <Link href="/ogren" className="v3-btn-primary">AI Tutor&apos;ı Dene →</Link>
-        </div>
+      {/* AI Tutor — gömülü sohbet */}
+      <div className="v3-section" style={{ paddingTop: 0 }}>
+        <h2 className="v3-section-title">🤖 AI Tutor</h2>
+        <p className="v3-section-sub">Kafana takılan her şeyi sor — veri bilimi asistanın burada.</p>
+        <V3EmbeddedTutor />
       </div>
 
       {/* Kategoriler */}
