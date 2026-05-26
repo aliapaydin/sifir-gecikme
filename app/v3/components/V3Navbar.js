@@ -370,76 +370,77 @@ export default function V3Navbar() {
           </div>
         </div>
 
-        {/* Mobile menu */}
-        <div className={`v3-mobile-menu${menuOpen ? ' open' : ''}`}>
-          {navLinks.map(link => (
-            <Link key={link.href} href={link.href}
-              className={`v3-mobile-link${isActive(link.href) ? ' active' : ''}`}
-              onClick={() => setMenuOpen(false)}>
-              {link.label}
-            </Link>
-          ))}
-
-          <div className="v3-mobile-divider" />
-
-          {/* Playground accordion */}
-          <button
-            className={`v3-mobile-section-btn${pgMobileOpen ? ' open' : ''}`}
-            onClick={() => setPgMobileOpen(o => !o)}
-          >
-            <span>🧪 Playground</span>
-            <span className="v3-mobile-section-arrow">▼</span>
-          </button>
-          {pgMobileOpen && (
-            <div className="v3-mobile-section-items">
-              {playgroundItems.map(item => (
-                <Link key={item.href} href={item.href} className="v3-mobile-sub-link"
-                  onClick={() => { setMenuOpen(false); setPgMobileOpen(false); }}>
-                  <span style={{ width: '20px', textAlign: 'center', flexShrink: 0 }}>{item.emoji}</span>
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          )}
-
-          <div className="v3-mobile-divider" />
-
-          {/* Modüller accordion */}
-          <button
-            className={`v3-mobile-section-btn${modMobileOpen ? ' open' : ''}`}
-            onClick={() => setModMobileOpen(o => !o)}
-          >
-            <span>🗂️ Modüller</span>
-            <span className="v3-mobile-section-arrow">▼</span>
-          </button>
-          {modMobileOpen && (
-            <div className="v3-mobile-section-items">
-              {modulItems.map(item => (
-                <Link key={item.href} href={item.href} className="v3-mobile-sub-link"
-                  onClick={() => { setMenuOpen(false); setModMobileOpen(false); }}>
-                  <span style={{ width: '20px', textAlign: 'center', flexShrink: 0 }}>{item.emoji}</span>
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          )}
-
-          <div className="v3-mobile-divider" />
-
-          {!user?.isSupporter && (
-            <Link href="/v3/destek" className="v3-mobile-link" onClick={() => setMenuOpen(false)}
-              style={{ color: '#fb923c', fontWeight: 600 }}>
-              ☕ Destek Ol
-            </Link>
-          )}
-          {!user && (
-            <>
-              <Link href="/v3/giris" className="v3-mobile-link" onClick={() => setMenuOpen(false)}>Giriş Yap</Link>
-              <Link href="/v3/kayit" className="v3-mobile-link" onClick={() => setMenuOpen(false)}>Kayıt Ol</Link>
-            </>
-          )}
-        </div>
       </nav>
+
+      {/* Mobile menu — nav dışında, backdrop-filter containment'ından kaçınmak için */}
+      <div className={`v3-mobile-menu${menuOpen ? ' open' : ''}`}>
+        {navLinks.map(link => (
+          <Link key={link.href} href={link.href}
+            className={`v3-mobile-link${isActive(link.href) ? ' active' : ''}`}
+            onClick={() => setMenuOpen(false)}>
+            {link.label}
+          </Link>
+        ))}
+
+        <div className="v3-mobile-divider" />
+
+        {/* Playground accordion */}
+        <button
+          className={`v3-mobile-section-btn${pgMobileOpen ? ' open' : ''}`}
+          onClick={() => setPgMobileOpen(o => !o)}
+        >
+          <span>🧪 Playground</span>
+          <span className="v3-mobile-section-arrow">▼</span>
+        </button>
+        {pgMobileOpen && (
+          <div className="v3-mobile-section-items">
+            {playgroundItems.map(item => (
+              <Link key={item.href} href={item.href} className="v3-mobile-sub-link"
+                onClick={() => { setMenuOpen(false); setPgMobileOpen(false); }}>
+                <span style={{ width: '20px', textAlign: 'center', flexShrink: 0 }}>{item.emoji}</span>
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        )}
+
+        <div className="v3-mobile-divider" />
+
+        {/* Modüller accordion */}
+        <button
+          className={`v3-mobile-section-btn${modMobileOpen ? ' open' : ''}`}
+          onClick={() => setModMobileOpen(o => !o)}
+        >
+          <span>🗂️ Modüller</span>
+          <span className="v3-mobile-section-arrow">▼</span>
+        </button>
+        {modMobileOpen && (
+          <div className="v3-mobile-section-items">
+            {modulItems.map(item => (
+              <Link key={item.href} href={item.href} className="v3-mobile-sub-link"
+                onClick={() => { setMenuOpen(false); setModMobileOpen(false); }}>
+                <span style={{ width: '20px', textAlign: 'center', flexShrink: 0 }}>{item.emoji}</span>
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        )}
+
+        <div className="v3-mobile-divider" />
+
+        {!user?.isSupporter && (
+          <Link href="/v3/destek" className="v3-mobile-link" onClick={() => setMenuOpen(false)}
+            style={{ color: '#fb923c', fontWeight: 600 }}>
+            ☕ Destek Ol
+          </Link>
+        )}
+        {!user && (
+          <>
+            <Link href="/v3/giris" className="v3-mobile-link" onClick={() => setMenuOpen(false)}>Giriş Yap</Link>
+            <Link href="/v3/kayit" className="v3-mobile-link" onClick={() => setMenuOpen(false)}>Kayıt Ol</Link>
+          </>
+        )}
+      </div>
     </>
   );
 }
