@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getIdentity, parseMembership } from '../../../../../../lib/patreon';
-import { sql } from '../../../../../../lib/v3/db';
+import { sql, initDb } from '../../../../../../lib/v3/db';
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -18,6 +18,9 @@ export async function GET(request) {
   }
 
   try {
+    // Patreon kolonları yoksa ekle
+    await initDb();
+
     // Token exchange — redirect_uri callback URL'imizle aynı olmalı
     const redirectUri = `${origin}/api/v3/auth/patreon/callback`;
     const tokenRes = await fetch('https://www.patreon.com/api/oauth2/token', {
