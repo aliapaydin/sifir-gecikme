@@ -41,7 +41,13 @@ export default function AdminDashboard() {
 
     fetch('/api/v3/settings/hero')
       .then(r => r.ok ? r.json() : null)
-      .then(s => { if (s) { setHeroForm(s); setHeroLoaded(true); } })
+      .then(s => {
+        if (s) {
+          // Gerçek newline'ları input'ta göstermek için \n yazısına çevir
+          setHeroForm({ ...s, title: s.title.replace(/\n/g, '\\n') });
+          setHeroLoaded(true);
+        }
+      })
       .catch(() => {});
   }, []);
 
@@ -49,10 +55,16 @@ export default function AdminDashboard() {
     e.preventDefault();
     setHeroSaving(true);
     try {
+      // Literal \n → gerçek newline karakterine çevir
+      const payload = {
+        ...heroForm,
+        title:    heroForm.title.replace(/\\n/g, '\n'),
+        subtitle: heroForm.subtitle.replace(/\\n/g, '\n'),
+      };
       const res = await fetch('/api/v3/settings/hero', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(heroForm),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       const msg = data.ok ? '✅ Hero ayarları kaydedildi.' : (data.error || 'Kayıt başarısız.');

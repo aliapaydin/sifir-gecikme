@@ -337,6 +337,7 @@ export default function V3HomePage() {
         .v3-hero-sub {
           font-size: clamp(14px, 2vw, 17px); color: var(--v3-text-muted);
           max-width: 480px; margin: 0 0 28px; line-height: 1.65;
+          white-space: pre-line;
         }
         .v3-hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
         .v3-btn-primary {
