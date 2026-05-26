@@ -228,11 +228,11 @@ export default function V3Navbar() {
         .v3-mobile-menu {
           display: none; position: fixed; top: 64px; left: 0; right: 0; bottom: 0;
           background: #0d1421;
-          padding: 12px 20px 32px; flex-direction: column; gap: 2px;
-          z-index: 99; overflow-y: auto; -webkit-overflow-scrolling: touch;
+          padding: 12px 20px 32px;
+          z-index: 101; overflow-y: scroll; -webkit-overflow-scrolling: touch;
         }
         .v3-light .v3-mobile-menu { background: #ffffff; }
-        .v3-mobile-menu.open { display: flex; }
+        .v3-mobile-menu.open { display: block; }
         .v3-mobile-link {
           padding: 10px 12px; border-radius: 8px; font-size: 15px; font-weight: 500;
           color: var(--v3-text-muted); transition: color 0.15s, background 0.15s;
