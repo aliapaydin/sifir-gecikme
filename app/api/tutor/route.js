@@ -4,8 +4,7 @@ const MODELS = [
   'gemini-2.5-flash',
   'gemini-2.0-flash',
   'gemini-2.0-flash-lite',
-  'gemini-1.5-flash',
-  'gemini-1.5-flash-8b',
+  'gemini-flash-latest',
 ];
 
 const SYSTEM_PROMPT = `Sen "Sıfır Gecikme" adlı Türkçe veri bilimi eğitim sitesinin yapay zeka tutorüsün.
@@ -113,7 +112,6 @@ export async function POST(request) {
     }
   }
 
-  const detail = errors.join(' | ');
-  console.error('Tutor: tüm modeller başarısız:', detail);
-  return new Response(`AI servisi şu an meşgul. Lütfen biraz bekle.\n\nDetay: ${detail}`, { status: 503 });
+  console.error('Tutor: tüm modeller başarısız:', errors.join(' | '));
+  return new Response('AI servisi şu an meşgul. Lütfen biraz bekle.', { status: 503 });
 }
