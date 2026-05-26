@@ -31,7 +31,11 @@ export async function POST(request) {
     `;
 
     const origin = new URL(request.url).origin;
-    await sendVerificationEmail({ to: email, name: name.trim(), token, origin });
+    try {
+      await sendVerificationEmail({ to: email, name: name.trim(), token, origin });
+    } catch (mailErr) {
+      console.error('Doğrulama maili gönderilemedi:', mailErr?.message);
+    }
 
     return NextResponse.json({ ok: true }, { status: 201 });
   } catch (err) {

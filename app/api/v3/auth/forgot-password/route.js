@@ -25,7 +25,11 @@ export async function POST(request) {
       `;
 
       const origin = new URL(request.url).origin;
-      await sendPasswordResetEmail({ to: email, name: user.name, token, origin });
+      try {
+        await sendPasswordResetEmail({ to: email, name: user.name, token, origin });
+      } catch (mailErr) {
+        console.error('Şifre sıfırlama maili gönderilemedi:', mailErr?.message);
+      }
     }
 
     return NextResponse.json({ ok: true });
