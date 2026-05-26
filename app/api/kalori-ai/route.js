@@ -76,6 +76,7 @@ export async function POST(request) {
         return NextResponse.json({ error: 'API anahtarı geçersiz veya yetkisiz.' }, { status: 401 });
       }
       if (msg.includes('429') || msg.includes('quota')) continue;
+      if (msg.includes('503') || msg.includes('service unavailable') || msg.includes('overloaded') || msg.includes('high demand')) continue;
       if (msg.includes('404') || msg.includes('not found') || msg.includes('invalid_argument')) continue;
       return NextResponse.json({ error: err.message }, { status: 500 });
     }
