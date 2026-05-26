@@ -14,6 +14,14 @@ export async function GET() {
         email: session.email,
         role: session.role,
         avatarColor: session.avatarColor,
+        createdAt: session.createdAt,
+        lastLogin: session.lastLogin,
+        isSupporter: session.isSupporter,
+        patronStatus: session.patronStatus,
+        pledgeCents: session.pledgeCents,
+        lifetimeCents: session.lifetimeCents,
+        patreonLinkedAt: session.patreonLinkedAt,
+        patreonName: session.patreonName,
       },
     });
   } catch (err) {

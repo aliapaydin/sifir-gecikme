@@ -303,10 +303,12 @@ export default function V3Navbar() {
                 {user.role === 'admin' && (
                   <Link href="/v3/admin" className="v3-admin-link">⚙</Link>
                 )}
-                <div className="v3-avatar" style={{ background: user.avatarColor || '#6366f1' }}>
-                  {user.name.charAt(0).toUpperCase()}
-                </div>
-                <span className="v3-user-name">{user.name}</span>
+                <Link href="/v3/panel" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+                  <div className="v3-avatar" style={{ background: user.avatarColor || '#6366f1' }}>
+                    {user.name.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="v3-user-name">{user.name}</span>
+                </Link>
                 <button className="v3-btn-logout" onClick={handleLogout} disabled={loggingOut}>
                   {loggingOut ? '...' : 'Çıkış'}
                 </button>
