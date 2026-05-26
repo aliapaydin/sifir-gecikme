@@ -34,19 +34,20 @@ export default function AdStickyBanner() {
       background: 'var(--color-cream)',
       borderTop: '0.5px solid var(--color-border)',
       boxShadow: '0 -4px 20px rgba(0,0,0,0.08)',
-      padding: '6px 16px 6px',
+      padding: '4px 12px',
       display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+      maxHeight: '70px', overflow: 'hidden',
     }}>
       <span style={{ fontSize: '9px', color: 'var(--color-text-mute)', textTransform: 'uppercase', letterSpacing: '0.08em', flexShrink: 0 }}>
         Reklam
       </span>
-      <div style={{ flex: 1, maxWidth: '728px' }}>
+      <div style={{ flex: 1, maxWidth: '728px', height: '50px', overflow: 'hidden' }}>
         <ins
           className="adsbygoogle"
-          style={{ display: 'block' }}
+          style={{ display: 'block', height: '50px' }}
           data-ad-client={process.env.NEXT_PUBLIC_ADSENSE_ID}
           data-ad-slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_STICKY}
-          data-ad-format="auto"
+          data-ad-format="horizontal"
           data-full-width-responsive="true"
         />
       </div>

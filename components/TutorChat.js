@@ -158,6 +158,11 @@ function inlineFormat(text) {
 
 export default function TutorChat() {
   const pathname = usePathname();
+  if (pathname?.startsWith('/tech-center')) return null;
+  return <TutorChatPanel pathname={pathname} />;
+}
+
+function TutorChatPanel({ pathname }) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -168,9 +173,6 @@ export default function TutorChat() {
   const abortRef = useRef(null);
 
   const topic = TOPIC_MAP[pathname] || null;
-
-  // Hide on tech-center
-  if (pathname?.startsWith('/tech-center')) return null;
 
   useEffect(() => {
     if (open && messages.length === 0) {
@@ -271,12 +273,12 @@ export default function TutorChat() {
       {/* Chat panel */}
       {open && (
         <div style={{
-          position: 'fixed', bottom: '80px', right: '84px', zIndex: 60,
+          position: 'fixed', bottom: '80px', right: '16px', zIndex: 60,
           width: '360px', maxWidth: 'calc(100vw - 32px)',
           background: 'var(--color-bg-raised)', border: '1px solid var(--color-border)',
           borderRadius: '16px', boxShadow: '0 8px 40px rgba(0,0,0,0.15)',
           display: 'flex', flexDirection: 'column', overflow: 'hidden',
-          maxHeight: 'calc(100vh - 120px)',
+          maxHeight: '60vh',
         }}>
 
           {/* Header */}
