@@ -75,6 +75,7 @@ export async function POST(request) {
   }));
 
   const genAI = new GoogleGenerativeAI(apiKey);
+  const errors = [];
 
   for (const modelName of MODELS) {
     try {
@@ -106,10 +107,13 @@ export async function POST(request) {
       if (msg.includes('api key') || msg.includes('401') || msg.includes('403')) {
         return new Response('API anahtarı geçersiz.', { status: 401 });
       }
+      errors.push(`[${modelName}] ${err.message}`);
       console.error(`Tutor model ${modelName} failed:`, err.message);
       continue;
     }
   }
 
-  return new Response('AI servisi şu an meşgul. Lütfen biraz bekle.', { status: 503 });
+  const detail = errors.join(' | ');
+  console.error('Tutor: tüm modeller başarısız:', detail);
+  return new Response(`AI servisi şu an meşgul. Lütfen biraz bekle.\n\nDetay: ${detail}`, { status: 503 });
 }
