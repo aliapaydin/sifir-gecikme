@@ -816,7 +816,10 @@ export default function PythonPlayground() {
     const t0 = performance.now();
 
     const el = document.documentElement;
-    const tema = el.classList.contains('gece') ? 'gece'
+    const v3Root = document.getElementById('v3-root');
+    const tema = v3Root
+      ? (v3Root.classList.contains('v3-light') ? 'light' : 'v3dark')
+      : el.classList.contains('gece') ? 'gece'
       : el.classList.contains('lacivert') ? 'lacivert'
       : el.classList.contains('dark') ? 'dark' : 'light';
 
@@ -861,6 +864,18 @@ elif _TEMA_JS == 'dark':
     _BG  = '#1a1815'
     _FG  = '#f0ebe3'
     _GRD = '#3a3530'
+    matplotlib.rcParams.update({
+        'figure.facecolor': _BG, 'axes.facecolor': _BG, 'savefig.facecolor': _BG,
+        'text.color': _FG, 'axes.labelcolor': _FG,
+        'xtick.color': _FG, 'ytick.color': _FG,
+        'axes.edgecolor': _GRD, 'grid.color': _GRD,
+        'legend.facecolor': _BG, 'legend.edgecolor': _GRD,
+    })
+elif _TEMA_JS == 'v3dark':
+    plt.style.use('dark_background')
+    _BG  = '#0d1421'
+    _FG  = '#f1f5f9'
+    _GRD = '#1e293b'
     matplotlib.rcParams.update({
         'figure.facecolor': _BG, 'axes.facecolor': _BG, 'savefig.facecolor': _BG,
         'text.color': _FG, 'axes.labelcolor': _FG,

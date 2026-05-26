@@ -65,13 +65,7 @@ export default function V3EmbeddedTutor() {
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-        const lines = decoder.decode(value).split('\n');
-        for (const line of lines) {
-          if (!line.startsWith('data: ')) continue;
-          const raw = line.slice(6).trim();
-          if (raw === '[DONE]') break;
-          try { full += JSON.parse(raw); } catch {}
-        }
+        full += decoder.decode(value, { stream: true });
         setMessages(prev => { const m = [...prev]; m[m.length - 1].content = full; return m; });
       }
     } catch {

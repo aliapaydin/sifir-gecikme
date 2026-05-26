@@ -4,7 +4,8 @@ import { usePathname } from 'next/navigation';
 import { sayfaZiyaretEt } from '../lib/takip';
 
 export default function ZiyaretTakip() {
-  const pathname = usePathname();
+  const rawPathname = usePathname();
+  const pathname = rawPathname?.startsWith('/v3/') ? rawPathname.slice(3) : rawPathname;
   useEffect(() => { sayfaZiyaretEt(pathname); }, [pathname]);
 
   useEffect(() => {

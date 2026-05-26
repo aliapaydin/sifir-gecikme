@@ -12,7 +12,8 @@ function toggle(key, href) {
 }
 
 export default function AnladimButonlar() {
-  const pathname = usePathname();
+  const rawPathname = usePathname();
+  const pathname = rawPathname?.startsWith('/v3/') ? rawPathname.slice(3) : rawPathname;
   const [anladi, setAnladi] = useState(false);
   const [tekrar, setTekrar] = useState(false);
 
