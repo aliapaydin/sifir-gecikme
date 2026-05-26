@@ -28,7 +28,8 @@ export default function GirisPage() {
       if (!res.ok) {
         setError(data.error || 'Giriş yapılamadı.');
       } else {
-        router.push('/v3');
+        const params = new URLSearchParams(window.location.search);
+        router.push(params.get('from') || '/v3/panel');
       }
     } catch {
       setError('Bağlantı hatası. Lütfen tekrar deneyin.');

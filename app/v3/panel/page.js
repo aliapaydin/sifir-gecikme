@@ -49,7 +49,7 @@ function PanelInner() {
     fetch('/api/v3/auth/me')
       .then(r => r.ok ? r.json() : null)
       .then(data => {
-        if (!data?.user) { router.push('/v3/giris'); return; }
+        if (!data?.user) { router.push('/v3/giris?from=/v3/panel'); return; }
         setUser(data.user);
         setLoading(false);
       })
