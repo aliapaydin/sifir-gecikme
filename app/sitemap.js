@@ -12,6 +12,7 @@ export default function sitemap() {
     { url: '/kategori/arac', priority: 0.8, changeFrequency: 'weekly' },
     { url: '/kategori/vaka', priority: 0.8, changeFrequency: 'weekly' },
     { url: '/kategori/kariyer', priority: 0.8, changeFrequency: 'weekly' },
+    { url: '/yazilar/lojistik-regresyon', priority: 0.9, changeFrequency: 'monthly' },
     { url: '/yazilar/linear-regression', priority: 0.9, changeFrequency: 'monthly' },
     { url: '/yazilar/gradient-descent', priority: 0.9, changeFrequency: 'monthly' },
     { url: '/yazilar/kmeans', priority: 0.9, changeFrequency: 'monthly' },
