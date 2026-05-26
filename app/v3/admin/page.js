@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { HERO_ANIMATIONS } from '../components/HeroAnimations';
 
 function StatCard({ label, value, color, sub }) {
   return (
@@ -26,13 +27,45 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [heroForm, setHeroForm] = useState({ title: '', subtitle: '', animation: '1' });
+  const [heroLoaded, setHeroLoaded] = useState(false);
+  const [heroSaving, setHeroSaving] = useState(false);
+  const [heroToast, setHeroToast] = useState(null);
+
   useEffect(() => {
     fetch('/api/v3/admin/stats')
       .then(r => r.ok ? r.json() : Promise.reject(r.status))
       .then(setStats)
       .catch(e => setError(`Veriler alınamadı (${e})`))
       .finally(() => setLoading(false));
+
+    fetch('/api/v3/settings/hero')
+      .then(r => r.ok ? r.json() : null)
+      .then(s => { if (s) { setHeroForm(s); setHeroLoaded(true); } })
+      .catch(() => {});
   }, []);
+
+  async function handleHeroSave(e) {
+    e.preventDefault();
+    setHeroSaving(true);
+    try {
+      const res = await fetch('/api/v3/settings/hero', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(heroForm),
+      });
+      const data = await res.json();
+      const msg = data.ok ? '✅ Hero ayarları kaydedildi.' : (data.error || 'Kayıt başarısız.');
+      const type = data.ok ? 'success' : 'error';
+      setHeroToast({ msg, type });
+      setTimeout(() => setHeroToast(null), 3500);
+    } catch {
+      setHeroToast({ msg: 'Bağlantı hatası.', type: 'error' });
+      setTimeout(() => setHeroToast(null), 3500);
+    } finally {
+      setHeroSaving(false);
+    }
+  }
 
   return (
     <>
@@ -125,11 +158,48 @@ export default function AdminDashboard() {
           letter-spacing: 0.6px;
           margin: 0 0 20px;
         }
+        .admin-settings-card {
+          background: var(--v3-surface);
+          border: 1px solid var(--v3-border);
+          border-radius: 16px;
+          padding: 28px;
+        }
+        .admin-settings-label {
+          font-size: 11px; font-weight: 700; letter-spacing: 0.8px;
+          text-transform: uppercase; color: var(--v3-text-muted); margin-bottom: 8px;
+          display: block;
+        }
+        .admin-settings-input {
+          width: 100%; padding: 10px 12px; border-radius: 8px;
+          background: var(--v3-bg); border: 1px solid var(--v3-border-bright);
+          color: var(--v3-text); font-size: 14px; outline: none;
+          font-family: inherit;
+        }
+        .admin-anim-grid {
+          display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
+        }
+        .admin-anim-btn {
+          display: flex; flex-direction: column; align-items: center; gap: 6px;
+          padding: 12px 6px; border-radius: 12px; cursor: pointer;
+          transition: border-color 0.15s, background 0.15s;
+        }
+        .admin-toast {
+          position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+          padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 500;
+          z-index: 9999; border: 1px solid; animation: admin-toast-in 0.2s ease;
+          white-space: nowrap;
+        }
+        .admin-toast.success { background: rgba(20,184,166,0.15); border-color: rgba(20,184,166,0.3); color: #2dd4bf; }
+        .admin-toast.error   { background: rgba(239,68,68,0.12);  border-color: rgba(239,68,68,0.3);  color: #f87171; }
+        @keyframes admin-toast-in { from { opacity:0; transform:translateX(-50%) translateY(10px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
         @media (max-width: 600px) {
           .admin-page { padding: 32px 16px; }
           .admin-title { font-size: 22px; }
+          .admin-anim-grid { grid-template-columns: repeat(3, 1fr); }
         }
       `}</style>
+
+      {heroToast && <div className={`admin-toast ${heroToast.type}`}>{heroToast.msg}</div>}
 
       <div className="admin-page">
         <div className="admin-header">
@@ -232,6 +302,75 @@ export default function AdminDashboard() {
             </div>
           </Link>
         </div>
+
+        {/* Site Ayarları */}
+        <div style={{ marginTop: '48px', marginBottom: '12px' }}>
+          <div className="admin-section-title">Site Ayarları</div>
+        </div>
+        {heroLoaded && (
+          <form onSubmit={handleHeroSave}>
+            <div className="admin-settings-card">
+              <div style={{ fontSize: '15px', fontWeight: 700, color: 'var(--v3-text)', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                🖼 Anasayfa Hero Bölümü
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                <div>
+                  <label className="admin-settings-label">
+                    Başlık <span style={{ opacity: 0.5, fontWeight: 400 }}>(\n ile satır kır)</span>
+                  </label>
+                  <input className="admin-settings-input" type="text"
+                    value={heroForm.title}
+                    onChange={e => setHeroForm(f => ({ ...f, title: e.target.value }))}
+                  />
+                </div>
+                <div>
+                  <label className="admin-settings-label">Alt Başlık</label>
+                  <textarea className="admin-settings-input" rows={3}
+                    value={heroForm.subtitle}
+                    onChange={e => setHeroForm(f => ({ ...f, subtitle: e.target.value }))}
+                    style={{ resize: 'vertical', lineHeight: 1.6 }}
+                  />
+                </div>
+                <div>
+                  <label className="admin-settings-label">Animasyon</label>
+                  <div className="admin-anim-grid">
+                    {Object.entries(HERO_ANIMATIONS).map(([id, { label, emoji }]) => {
+                      const active = heroForm.animation === id;
+                      return (
+                        <button key={id} type="button" className="admin-anim-btn"
+                          onClick={() => setHeroForm(f => ({ ...f, animation: id }))}
+                          style={{
+                            border: `2px solid ${active ? '#6366f1' : 'var(--v3-border)'}`,
+                            background: active ? 'rgba(99,102,241,0.1)' : 'var(--v3-surface2)',
+                          }}
+                        >
+                          <span style={{ fontSize: '24px' }}>{emoji}</span>
+                          <span style={{ fontSize: '10px', fontWeight: 600, textAlign: 'center', lineHeight: 1.3, color: active ? '#818cf8' : 'var(--v3-text-muted)' }}>
+                            {label}
+                          </span>
+                          {active && (
+                            <span style={{ fontSize: '9px', background: '#6366f1', color: '#fff', padding: '1px 6px', borderRadius: '4px', fontWeight: 700 }}>Aktif</span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div>
+                  <button type="submit" disabled={heroSaving} style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '8px',
+                    padding: '10px 24px', borderRadius: '10px', fontSize: '14px', fontWeight: 700,
+                    background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: '#fff',
+                    border: 'none', cursor: heroSaving ? 'not-allowed' : 'pointer',
+                    opacity: heroSaving ? 0.6 : 1, transition: 'opacity 0.15s',
+                  }}>
+                    {heroSaving ? 'Kaydediliyor…' : '💾 Kaydet'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        )}
       </div>
     </>
   );
