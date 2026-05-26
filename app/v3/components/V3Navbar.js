@@ -211,6 +211,22 @@ export default function V3Navbar() {
           <div className="v3-nav-right">
             {user ? (
               <>
+                {user.role === 'admin' && (
+                  <Link
+                    href="/v3/admin"
+                    style={{
+                      padding: '5px 12px',
+                      borderRadius: '6px',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      background: 'rgba(249,115,22,0.1)',
+                      border: '1px solid rgba(249,115,22,0.25)',
+                      color: '#fb923c',
+                    }}
+                  >
+                    ⚙ Admin
+                  </Link>
+                )}
                 <div
                   className="v3-avatar"
                   style={{ background: user.avatarColor || '#6366f1' }}
