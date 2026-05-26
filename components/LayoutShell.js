@@ -8,12 +8,14 @@ import TutorChat from './TutorChat';
 export default function LayoutShell({ children }) {
   const pathname = usePathname();
   const isGame = pathname?.startsWith('/tech-center');
+  const isV3   = pathname?.startsWith('/v3');
+  const showShell = !isGame && !isV3;
   return (
     <>
-      {!isGame && <Navbar />}
+      {showShell && <Navbar />}
       {children}
-      {!isGame && <Footer />}
-      <TutorChat />
+      {showShell && <Footer />}
+      {showShell && <TutorChat />}
     </>
   );
 }
