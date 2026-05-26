@@ -29,7 +29,7 @@ export default function GirisPage() {
         setError(data.error || 'Giriş yapılamadı.');
       } else {
         const params = new URLSearchParams(window.location.search);
-        router.push(params.get('from') || '/v3/panel');
+        window.location.href = params.get('from') || '/v3/panel';
       }
     } catch {
       setError('Bağlantı hatası. Lütfen tekrar deneyin.');

@@ -77,8 +77,7 @@ export default function V3Navbar() {
     setLoggingOut(true);
     try {
       await fetch('/api/v3/auth/logout', { method: 'POST' });
-      setUser(null);
-      router.push('/v3');
+      window.location.href = '/v3';
     } finally {
       setLoggingOut(false);
     }
