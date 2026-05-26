@@ -32,10 +32,11 @@ export default function V3Navbar() {
   const pathname   = usePathname();
   const router     = useRouter();
   const [user, setUser]               = useState(null);
-  const [menuOpen, setMenuOpen]       = useState(false);
-  const [pgOpen, setPgOpen]           = useState(false);
+  const [menuOpen, setMenuOpen]         = useState(false);
+  const [pgOpen, setPgOpen]             = useState(false);
   const [pgMobileOpen, setPgMobileOpen] = useState(false);
-  const [modOpen, setModOpen]         = useState(false);
+  const [modOpen, setModOpen]           = useState(false);
+  const [modMobileOpen, setModMobileOpen] = useState(false);
   const [loggingOut, setLoggingOut]   = useState(false);
   const [isLight, setIsLight]         = useState(false);
   const pgRef  = useRef(null);
@@ -232,10 +233,32 @@ export default function V3Navbar() {
         .v3-light .v3-mobile-link:hover, .v3-light .v3-mobile-link.active {
           background: #f1f5f9; color: #0f172a;
         }
-        .v3-mobile-pg-title {
-          padding: 6px 12px; font-size: 11px; font-weight: 700;
-          color: var(--v3-text-faint); text-transform: uppercase; letter-spacing: 0.5px;
+        .v3-mobile-section-btn {
+          width: 100%; display: flex; align-items: center; justify-content: space-between;
+          padding: 10px 12px; border-radius: 8px; font-size: 15px; font-weight: 600;
+          color: var(--v3-text-muted); background: none; border: none;
+          cursor: pointer; font-family: inherit; transition: color 0.15s, background 0.15s;
         }
+        .v3-mobile-section-btn:hover { color: var(--v3-text); background: rgba(255,255,255,0.05); }
+        .v3-light .v3-mobile-section-btn:hover { background: #f1f5f9; color: #0f172a; }
+        .v3-mobile-section-btn.open { color: var(--v3-text); }
+        .v3-mobile-section-arrow { font-size: 10px; opacity: 0.5; transition: transform 0.2s; }
+        .v3-mobile-section-btn.open .v3-mobile-section-arrow { transform: rotate(180deg); }
+        .v3-mobile-section-items {
+          padding-left: 8px;
+          overflow: hidden;
+        }
+        .v3-mobile-sub-link {
+          padding: 8px 12px; border-radius: 8px; font-size: 14px; font-weight: 400;
+          color: var(--v3-text-muted); transition: color 0.15s, background 0.15s;
+          text-decoration: none; display: flex; align-items: center; gap: 8px;
+        }
+        .v3-mobile-sub-link:hover { color: var(--v3-text); background: rgba(255,255,255,0.05); }
+        .v3-light .v3-mobile-sub-link:hover { background: #f1f5f9; color: #0f172a; }
+        .v3-mobile-divider {
+          height: 1px; background: rgba(255,255,255,0.06); margin: 4px 0;
+        }
+        .v3-light .v3-mobile-divider { background: #e2e8f0; }
         @media (max-width: 768px) {
           .v3-nav-links { display: none; }
           .v3-hamburger { display: flex; align-items: center; }
@@ -346,21 +369,51 @@ export default function V3Navbar() {
             </Link>
           ))}
 
-          <div className="v3-mobile-pg-title">Playground</div>
-          {playgroundItems.map(item => (
-            <Link key={item.href} href={item.href} className="v3-mobile-link"
-              onClick={() => setMenuOpen(false)}>
-              {item.emoji} {item.label}
-            </Link>
-          ))}
+          <div className="v3-mobile-divider" />
 
-          <div className="v3-mobile-pg-title">Modüller</div>
-          {modulItems.map(item => (
-            <Link key={item.href} href={item.href} className="v3-mobile-link"
-              onClick={() => setMenuOpen(false)}>
-              {item.emoji} {item.label}
-            </Link>
-          ))}
+          {/* Playground accordion */}
+          <button
+            className={`v3-mobile-section-btn${pgMobileOpen ? ' open' : ''}`}
+            onClick={() => setPgMobileOpen(o => !o)}
+          >
+            <span>🧪 Playground</span>
+            <span className="v3-mobile-section-arrow">▼</span>
+          </button>
+          {pgMobileOpen && (
+            <div className="v3-mobile-section-items">
+              {playgroundItems.map(item => (
+                <Link key={item.href} href={item.href} className="v3-mobile-sub-link"
+                  onClick={() => { setMenuOpen(false); setPgMobileOpen(false); }}>
+                  <span style={{ width: '20px', textAlign: 'center', flexShrink: 0 }}>{item.emoji}</span>
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          )}
+
+          <div className="v3-mobile-divider" />
+
+          {/* Modüller accordion */}
+          <button
+            className={`v3-mobile-section-btn${modMobileOpen ? ' open' : ''}`}
+            onClick={() => setModMobileOpen(o => !o)}
+          >
+            <span>🗂️ Modüller</span>
+            <span className="v3-mobile-section-arrow">▼</span>
+          </button>
+          {modMobileOpen && (
+            <div className="v3-mobile-section-items">
+              {modulItems.map(item => (
+                <Link key={item.href} href={item.href} className="v3-mobile-sub-link"
+                  onClick={() => { setMenuOpen(false); setModMobileOpen(false); }}>
+                  <span style={{ width: '20px', textAlign: 'center', flexShrink: 0 }}>{item.emoji}</span>
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          )}
+
+          <div className="v3-mobile-divider" />
 
           {!user?.isSupporter && (
             <Link href="/v3/destek" className="v3-mobile-link" onClick={() => setMenuOpen(false)}
