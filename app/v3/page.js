@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { yazilar } from '../../lib/icerikler';
 import { dersler } from '../../lib/dersler';
 import V3EmbeddedTutor from './components/V3EmbeddedTutor';
+import HeroAnimation from './components/HeroAnimations';
 
 const BADGE_COLORS = {
   'interaktif':      { bg: 'rgba(20,184,166,0.12)',  color: '#2dd4bf', border: 'rgba(20,184,166,0.2)' },
@@ -268,6 +269,7 @@ function TechCenterCard() {
 
 export default function V3HomePage() {
   const [user, setUser] = useState(undefined);
+  const [heroSettings, setHeroSettings] = useState({ title: 'Veriyi Anla,\nKararını Ver', subtitle: 'İnteraktif demolar, gerçek veri analizleri ve AI destekli öğrenme ile veri bilimini sıfırdan ileri seviyeye öğren.', animation: '1' });
   const featured = yazilar.slice(0, 6);
 
   useEffect(() => {
@@ -275,35 +277,52 @@ export default function V3HomePage() {
       .then(r => r.ok ? r.json() : null)
       .then(data => setUser(data?.user || null))
       .catch(() => setUser(null));
+    fetch('/api/v3/settings/hero')
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if (data) setHeroSettings(data); })
+      .catch(() => {});
   }, []);
 
   return (
     <>
       <style>{`
         .v3-hero {
-          position: relative; padding: 100px 24px 80px;
-          text-align: center; overflow: hidden;
+          position: relative; padding: 52px 24px 44px;
+          overflow: hidden;
         }
         .v3-hero-bg {
           position: absolute; inset: 0;
-          background: radial-gradient(ellipse at top, rgba(99,102,241,0.15) 0%, transparent 70%);
+          background: radial-gradient(ellipse at 30% 50%, rgba(99,102,241,0.13) 0%, transparent 65%);
           pointer-events: none;
         }
+        .v3-hero-inner {
+          max-width: 1100px; margin: 0 auto;
+          display: flex; align-items: center; gap: 48px;
+        }
+        .v3-hero-text { flex: 1; min-width: 0; }
+        .v3-hero-anim {
+          width: 300px; height: 220px; flex-shrink: 0;
+          border-radius: 20px;
+          background: rgba(255,255,255,0.025);
+          border: 1px solid rgba(99,102,241,0.18);
+          overflow: hidden; position: relative;
+        }
         .v3-hero-title {
-          font-size: clamp(36px, 6vw, 64px); font-weight: 800;
-          line-height: 1.1; letter-spacing: -1.5px; margin: 0 0 20px;
+          font-size: clamp(30px, 4.5vw, 52px); font-weight: 800;
+          line-height: 1.12; letter-spacing: -1.2px; margin: 0 0 16px;
           background: linear-gradient(135deg, #f1f5f9 0%, #c7d2fe 50%, #a5f3fc 100%);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+          white-space: pre-line;
         }
         .v3-light .v3-hero-title {
           background: linear-gradient(135deg, #1e293b 0%, #4f46e5 50%, #0d9488 100%);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
         .v3-hero-sub {
-          font-size: clamp(16px, 2.5vw, 20px); color: var(--v3-text-muted);
-          max-width: 560px; margin: 0 auto 36px; line-height: 1.6;
+          font-size: clamp(14px, 2vw, 17px); color: var(--v3-text-muted);
+          max-width: 480px; margin: 0 0 28px; line-height: 1.65;
         }
-        .v3-hero-ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .v3-hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
         .v3-btn-primary {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 13px 28px; border-radius: 10px; font-size: 15px; font-weight: 600;
@@ -404,8 +423,14 @@ export default function V3HomePage() {
         }
         .tool-card-run { font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 3px; }
 
+        @media (max-width: 860px) {
+          .v3-hero-inner { flex-direction: column; gap: 32px; }
+          .v3-hero-anim { width: 100%; height: 180px; }
+          .v3-hero-title { font-size: clamp(28px, 7vw, 40px); }
+          .v3-hero-ctas { justify-content: flex-start; }
+        }
         @media (max-width: 600px) {
-          .v3-hero { padding: 60px 20px 48px; }
+          .v3-hero { padding: 36px 20px 32px; }
           .v3-section { padding: 40px 16px; }
           .pg-grid { grid-template-columns: 1fr 1fr; }
           .tool-grid { grid-template-columns: 1fr 1fr; }
@@ -419,15 +444,20 @@ export default function V3HomePage() {
       {/* Hero */}
       <section className="v3-hero">
         <div className="v3-hero-bg" />
-        <h1 className="v3-hero-title">Veriyi Anla,<br />Kararını Ver</h1>
-        <p className="v3-hero-sub">
-          İnteraktif demolar, gerçek veri analizleri ve AI destekli öğrenme ile veri bilimini sıfırdan ileri seviyeye öğren.
-        </p>
-        <div className="v3-hero-ctas">
-          <Link href="/v3/icerikler" className="v3-btn-primary">İçerikleri Keşfet →</Link>
-          {user === null && (
-            <Link href="/v3/kayit" className="v3-btn-secondary">Ücretsiz Kaydol</Link>
-          )}
+        <div className="v3-hero-inner">
+          <div className="v3-hero-text">
+            <h1 className="v3-hero-title">{heroSettings.title}</h1>
+            <p className="v3-hero-sub">{heroSettings.subtitle}</p>
+            <div className="v3-hero-ctas">
+              <Link href="/v3/icerikler" className="v3-btn-primary">İçerikleri Keşfet →</Link>
+              {user === null && (
+                <Link href="/v3/kayit" className="v3-btn-secondary">Ücretsiz Kaydol</Link>
+              )}
+            </div>
+          </div>
+          <div className="v3-hero-anim">
+            <HeroAnimation id={heroSettings.animation} />
+          </div>
         </div>
       </section>
 

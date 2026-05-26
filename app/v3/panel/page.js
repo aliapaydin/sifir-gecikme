@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { HERO_ANIMATIONS } from '../components/HeroAnimations';
 
 const ROLE_LABELS = {
   admin:     { label: 'Admin',      bg: 'rgba(249,115,22,0.12)',  color: '#fb923c', border: 'rgba(249,115,22,0.25)' },
@@ -46,6 +47,11 @@ function PanelInner() {
   const [pwError, setPwError] = useState('');
   const [pwOpen, setPwOpen] = useState(false);
 
+  // Admin: hero ayarları
+  const [heroForm, setHeroForm] = useState({ title: '', subtitle: '', animation: '1' });
+  const [heroLoaded, setHeroLoaded] = useState(false);
+  const [heroSaving, setHeroSaving] = useState(false);
+
   // localStorage stats
   const [stats, setStats] = useState({ anladi: 0, tekrar: 0, xp: 0, ziyaret: 0 });
 
@@ -56,6 +62,12 @@ function PanelInner() {
         if (!data?.user) { router.push('/v3/giris?from=/v3/panel'); return; }
         setUser(data.user);
         setLoading(false);
+        if (data.user.role === 'admin') {
+          fetch('/api/v3/settings/hero')
+            .then(r => r.ok ? r.json() : null)
+            .then(s => { if (s) { setHeroForm(s); setHeroLoaded(true); } })
+            .catch(() => {});
+        }
       })
       .catch(() => { router.push('/v3/giris'); });
   }, [router]);
@@ -125,6 +137,25 @@ function PanelInner() {
       showToast('Bağlantı hatası.', 'error');
     } finally {
       setRefreshing(false);
+    }
+  }
+
+  async function handleHeroSave(e) {
+    e.preventDefault();
+    setHeroSaving(true);
+    try {
+      const res = await fetch('/api/v3/settings/hero', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(heroForm),
+      });
+      const data = await res.json();
+      if (data.ok) showToast('✅ Hero ayarları kaydedildi.');
+      else showToast(data.error || 'Kayıt başarısız.', 'error');
+    } catch {
+      showToast('Bağlantı hatası.', 'error');
+    } finally {
+      setHeroSaving(false);
     }
   }
 
@@ -457,6 +488,65 @@ function PanelInner() {
             </>
           )}
         </div>
+
+        {/* ── Admin: Hero Ayarları ── */}
+        {user.role === 'admin' && heroLoaded && (
+          <div className="pnl-card">
+            <div className="pnl-section-title">⚙ Hero Bölümü Ayarları</div>
+            <form onSubmit={handleHeroSave} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+              {/* Başlık */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--v3-text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  Başlık <span style={{ opacity: .5, fontWeight: 400 }}>(\\n ile satır kır)</span>
+                </label>
+                <input
+                  type="text" value={heroForm.title}
+                  onChange={e => setHeroForm(f => ({ ...f, title: e.target.value }))}
+                  style={{ padding: '10px 12px', borderRadius: '8px', background: 'var(--v3-bg)', border: '1px solid var(--v3-border-bright)', color: 'var(--v3-text)', fontSize: '14px', outline: 'none', width: '100%' }}
+                />
+              </div>
+              {/* Alt başlık */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--v3-text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Alt Başlık</label>
+                <textarea
+                  rows={3} value={heroForm.subtitle}
+                  onChange={e => setHeroForm(f => ({ ...f, subtitle: e.target.value }))}
+                  style={{ padding: '10px 12px', borderRadius: '8px', background: 'var(--v3-bg)', border: '1px solid var(--v3-border-bright)', color: 'var(--v3-text)', fontSize: '14px', outline: 'none', width: '100%', resize: 'vertical', lineHeight: 1.6 }}
+                />
+              </div>
+              {/* Animasyon seçici */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--v3-text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Animasyon</label>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px' }}>
+                  {Object.entries(HERO_ANIMATIONS).map(([id, { label, emoji }]) => {
+                    const active = heroForm.animation === id;
+                    return (
+                      <button
+                        key={id} type="button"
+                        onClick={() => setHeroForm(f => ({ ...f, animation: id }))}
+                        style={{
+                          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px',
+                          padding: '10px 6px', borderRadius: '10px', border: `2px solid ${active ? '#6366f1' : 'var(--v3-border)'}`,
+                          background: active ? 'rgba(99,102,241,0.1)' : 'var(--v3-surface2)',
+                          cursor: 'pointer', transition: 'border-color 0.15s, background 0.15s',
+                        }}
+                      >
+                        <span style={{ fontSize: '22px' }}>{emoji}</span>
+                        <span style={{ fontSize: '10px', fontWeight: 600, color: active ? '#818cf8' : 'var(--v3-text-muted)', textAlign: 'center', lineHeight: 1.3 }}>{label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+              <div>
+                <button type="submit" className="pnl-btn" disabled={heroSaving}
+                  style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', color: '#fff' }}>
+                  {heroSaving ? 'Kaydediliyor…' : '💾 Kaydet'}
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
 
         {/* ── Hızlı Linkler ── */}
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
