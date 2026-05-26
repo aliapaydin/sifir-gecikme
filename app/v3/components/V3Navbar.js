@@ -64,6 +64,16 @@ export default function V3Navbar() {
     return () => document.removeEventListener('mousedown', onOutside);
   }, []);
 
+  // Menü kapanınca accordion sıfırla + body scroll kilidi
+  useEffect(() => {
+    if (!menuOpen) {
+      setPgMobileOpen(false);
+      setModMobileOpen(false);
+    }
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
+
   function toggleTheme() {
     const root = document.getElementById('v3-root');
     const next = !isLight;
@@ -216,11 +226,12 @@ export default function V3Navbar() {
           border-radius: 6px; padding: 6px 10px; font-size: 18px; cursor: pointer;
         }
         .v3-mobile-menu {
-          display: none; position: absolute; top: 64px; left: 0; right: 0;
-          background: #0d1421; border-bottom: 1px solid rgba(255,255,255,0.06);
-          padding: 12px 20px; flex-direction: column; gap: 2px; z-index: 99;
+          display: none; position: fixed; top: 64px; left: 0; right: 0; bottom: 0;
+          background: #0d1421;
+          padding: 12px 20px 32px; flex-direction: column; gap: 2px;
+          z-index: 99; overflow-y: auto; -webkit-overflow-scrolling: touch;
         }
-        .v3-light .v3-mobile-menu { background: #ffffff; border-color: #e2e8f0; }
+        .v3-light .v3-mobile-menu { background: #ffffff; }
         .v3-mobile-menu.open { display: flex; }
         .v3-mobile-link {
           padding: 10px 12px; border-radius: 8px; font-size: 15px; font-weight: 500;
