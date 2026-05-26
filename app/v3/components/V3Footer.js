@@ -59,6 +59,13 @@ export default function V3Footer() {
         .v3-footer-link:hover {
           color: var(--v3-text);
         }
+        .v3-footer-destek {
+          display: inline-flex; align-items: center; gap: 6px;
+          padding: 8px 18px; border-radius: 9px; font-size: 13px; font-weight: 700;
+          background: linear-gradient(135deg, #f96854, #f43f5e);
+          color: #fff; text-decoration: none; transition: opacity 0.15s;
+        }
+        .v3-footer-destek:hover { opacity: 0.85; }
         .v3-footer-version {
           display: inline-flex;
           align-items: center;
@@ -98,6 +105,7 @@ export default function V3Footer() {
               </>
             )}
             <Link href="/" className="v3-footer-link">Sıfır Gecikme v2</Link>
+            <Link href="/v3/destek" className="v3-footer-destek">☕ Destek Ol</Link>
           </div>
         </div>
       </footer>

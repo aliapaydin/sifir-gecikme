@@ -181,6 +181,13 @@ export default function V3Navbar() {
           color: #818cf8; cursor: pointer; transition: background 0.15s; text-decoration: none;
         }
         .v3-btn-login:hover { background: rgba(99,102,241,0.25); }
+        .v3-btn-destek {
+          padding: 7px 16px; border-radius: 8px; font-size: 13px; font-weight: 700;
+          background: linear-gradient(135deg, #f96854, #f43f5e);
+          color: #fff; text-decoration: none; white-space: nowrap;
+          transition: opacity 0.15s; display: flex; align-items: center; gap: 5px;
+        }
+        .v3-btn-destek:hover { opacity: 0.85; }
         .v3-avatar {
           width: 32px; height: 32px; border-radius: 50%;
           display: flex; align-items: center; justify-content: center;
@@ -313,7 +320,10 @@ export default function V3Navbar() {
                 </button>
               </>
             ) : (
-              <Link href="/v3/giris" className="v3-btn-login">Giriş</Link>
+              <>
+                <Link href="/v3/destek" className="v3-btn-destek">☕ Destek Ol</Link>
+                <Link href="/v3/giris" className="v3-btn-login">Giriş</Link>
+              </>
             )}
 
             <button className="v3-hamburger" onClick={() => setMenuOpen(o => !o)} aria-label="Menü">
@@ -350,6 +360,10 @@ export default function V3Navbar() {
 
           {!user && (
             <>
+              <Link href="/v3/destek" className="v3-mobile-link" onClick={() => setMenuOpen(false)}
+                style={{ color: '#fb923c', fontWeight: 600 }}>
+                ☕ Destek Ol
+              </Link>
               <Link href="/v3/giris" className="v3-mobile-link" onClick={() => setMenuOpen(false)}>Giriş Yap</Link>
               <Link href="/v3/kayit" className="v3-mobile-link" onClick={() => setMenuOpen(false)}>Kayıt Ol</Link>
             </>
