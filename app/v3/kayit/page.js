@@ -28,7 +28,7 @@ export default function KayitPage() {
       if (!res.ok) {
         setError(data.error || 'Kayıt olunamadı.');
       } else {
-        router.push('/v3');
+        window.location.href = '/v3/kayit-tamam';
       }
     } catch {
       setError('Bağlantı hatası. Lütfen tekrar deneyin.');

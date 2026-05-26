@@ -187,6 +187,9 @@ export default function GirisPage() {
           </form>
 
           <div className="v3-auth-footer">
+            <Link href="/v3/sifremi-unuttum">Şifremi unuttum</Link>
+          </div>
+          <div className="v3-auth-footer" style={{ marginTop: '10px' }}>
             Hesabın yok mu?{' '}
             <Link href="/v3/kayit">Kaydol</Link>
           </div>

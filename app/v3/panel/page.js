@@ -41,6 +41,10 @@ function PanelInner() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [toast, setToast] = useState(null);
+  const [pwForm, setPwForm] = useState({ current: '', next: '', confirm: '' });
+  const [pwLoading, setPwLoading] = useState(false);
+  const [pwError, setPwError] = useState('');
+  const [pwOpen, setPwOpen] = useState(false);
 
   // localStorage stats
   const [stats, setStats] = useState({ anladi: 0, tekrar: 0, xp: 0, ziyaret: 0 });
@@ -66,11 +70,37 @@ function PanelInner() {
     } catch {}
   }, []);
 
+  async function handleChangePassword(e) {
+    e.preventDefault();
+    setPwError('');
+    if (pwForm.next !== pwForm.confirm) { setPwError('Yeni şifreler eşleşmiyor.'); return; }
+    if (pwForm.next.length < 8) { setPwError('Yeni şifre en az 8 karakter olmalıdır.'); return; }
+    setPwLoading(true);
+    try {
+      const res = await fetch('/api/v3/auth/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPassword: pwForm.current, newPassword: pwForm.next }),
+      });
+      const data = await res.json();
+      if (!res.ok) { setPwError(data.error || 'Bir hata oluştu.'); return; }
+      showToast('✅ Şifren başarıyla güncellendi.');
+      setPwForm({ current: '', next: '', confirm: '' });
+      setPwOpen(false);
+    } catch {
+      setPwError('Bağlantı hatası.');
+    } finally {
+      setPwLoading(false);
+    }
+  }
+
   useEffect(() => {
     const p = searchParams.get('patreon');
     const e = searchParams.get('error');
+    const v = searchParams.get('verified');
     if (p === 'linked') showToast('✅ Patreon başarıyla bağlandı!', 'success');
     if (e) showToast(`Patreon bağlantısı başarısız: ${e}`, 'error');
+    if (v === '1') showToast('✅ E-posta adresin doğrulandı, hoş geldin!', 'success');
   }, [searchParams]);
 
   function showToast(msg, type = 'success') {
@@ -241,6 +271,64 @@ function PanelInner() {
               <div className="pnl-stat-lbl">XP</div>
             </div>
           </div>
+        </div>
+
+        {/* ── Şifre Değiştir ── */}
+        <div className="pnl-card">
+          <button
+            onClick={() => { setPwOpen(v => !v); setPwError(''); }}
+            style={{
+              width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+            }}
+          >
+            <span className="pnl-section-title" style={{ margin: 0, flex: 1 }}>Şifre Değiştir</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
+              strokeLinecap="round" strokeLinejoin="round"
+              style={{ color: 'var(--v3-text-faint)', flexShrink: 0, marginLeft: '8px', transform: pwOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+
+          {pwOpen && (
+            <form onSubmit={handleChangePassword} style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '20px' }}>
+              {[
+                { key: 'current', label: 'Mevcut Şifre', placeholder: 'Mevcut şifren' },
+                { key: 'next',    label: 'Yeni Şifre',    placeholder: 'En az 8 karakter' },
+                { key: 'confirm', label: 'Yeni Şifre Tekrar', placeholder: 'Yeni şifreni tekrar gir' },
+              ].map(({ key, label, placeholder }) => (
+                <div key={key} style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <label style={{ fontSize: '13px', fontWeight: 500, color: 'var(--v3-text-muted)' }}>{label}</label>
+                  <input
+                    type="password" placeholder={placeholder}
+                    value={pwForm[key]}
+                    onChange={e => setPwForm(f => ({ ...f, [key]: e.target.value }))}
+                    required autoComplete="new-password"
+                    style={{
+                      padding: '10px 12px', borderRadius: '8px', background: 'var(--v3-bg)',
+                      border: '1px solid var(--v3-border-bright)', color: 'var(--v3-text)',
+                      fontSize: '14px', outline: 'none', width: '100%',
+                    }}
+                  />
+                </div>
+              ))}
+              {pwError && (
+                <div style={{ padding: '10px 14px', borderRadius: '8px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', color: '#fca5a5', fontSize: '13px' }}>
+                  {pwError}
+                </div>
+              )}
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button type="submit" className="pnl-btn" disabled={pwLoading}
+                  style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', color: '#fff' }}>
+                  {pwLoading ? 'Kaydediliyor…' : '🔒 Şifremi Güncelle'}
+                </button>
+                <button type="button" className="pnl-btn" onClick={() => { setPwOpen(false); setPwError(''); setPwForm({ current: '', next: '', confirm: '' }); }}
+                  style={{ background: 'var(--v3-surface2)', border: '1px solid var(--v3-border)', color: 'var(--v3-text-muted)' }}>
+                  İptal
+                </button>
+              </div>
+            </form>
+          )}
         </div>
 
         {/* ── Patreon ── */}
