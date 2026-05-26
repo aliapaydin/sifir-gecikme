@@ -59,11 +59,33 @@ export default function V3Footer() {
         .v3-footer-link:hover {
           color: var(--v3-text);
         }
+        .v3-footer-version {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          padding: 3px 9px;
+          border-radius: 999px;
+          background: rgba(99,102,241,0.1);
+          border: 1px solid rgba(99,102,241,0.2);
+          font-size: 11px;
+          font-weight: 700;
+          font-family: monospace;
+          color: #818cf8;
+          text-decoration: none;
+          transition: background 0.15s, border-color 0.15s;
+        }
+        .v3-footer-version:hover {
+          background: rgba(99,102,241,0.18);
+          border-color: rgba(99,102,241,0.35);
+        }
       `}</style>
       <footer className="v3-footer">
         <div className="v3-footer-inner">
           <div>
-            <div className="v3-footer-brand">Sıfır Gecikme v3</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+              <span className="v3-footer-brand">Sıfır Gecikme v3</span>
+              <Link href="/v3/versiyon" className="v3-footer-version">v3.3.0</Link>
+            </div>
             <div className="v3-footer-copy">© 2026 Ali Apaydın. Tüm hakları saklıdır.</div>
           </div>
           <div className="v3-footer-links">
