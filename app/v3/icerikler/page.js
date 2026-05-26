@@ -20,23 +20,33 @@ function badgeStyle(badge) {
   };
 }
 
-// href: '/yazilar/slug' → '/v3/yazilar/slug'
+// URL-safe slug → gerçek badge değeri
+const SLUG_TO_BADGE = {
+  'interaktif':  'interaktif',
+  'rehber':      'rehber',
+  'arac':        'araç',
+  'vaka':        'vaka çalışması',
+  'kariyer':     'kariyer',
+};
+
 function v3href(href) {
   return href.startsWith('/yazilar/') ? `/v3${href}` : href;
 }
 
 const KATEGORILER = [
-  { key: '',              label: 'Tümü' },
-  { key: 'interaktif',   label: 'İnteraktif' },
-  { key: 'rehber',       label: 'Rehber' },
-  { key: 'araç',         label: 'Araç' },
-  { key: 'vaka çalışması', label: 'Vaka' },
-  { key: 'kariyer',      label: 'Kariyer' },
+  { key: '',            label: 'Tümü' },
+  { key: 'interaktif',  label: 'İnteraktif' },
+  { key: 'rehber',      label: 'Rehber' },
+  { key: 'arac',        label: 'Araç' },
+  { key: 'vaka',        label: 'Vaka' },
+  { key: 'kariyer',     label: 'Kariyer' },
 ];
 
-export default function IceriklerPage({ searchParams }) {
-  const tip = searchParams?.tip || '';
-  const filtered = tip ? yazilar.filter(y => y.badge === tip) : yazilar;
+export default async function IceriklerPage({ searchParams }) {
+  const params = await searchParams;
+  const tip = params?.tip || '';
+  const badgeFilter = SLUG_TO_BADGE[tip] || tip;
+  const filtered = badgeFilter ? yazilar.filter(y => y.badge === badgeFilter) : yazilar;
 
   return (
     <>
@@ -62,9 +72,7 @@ export default function IceriklerPage({ searchParams }) {
           background: rgba(99,102,241,0.12); color: #818cf8;
           border-color: rgba(99,102,241,0.3);
         }
-        .ic-count {
-          font-size: 12px; color: var(--v3-text-faint); margin-bottom: 20px;
-        }
+        .ic-count { font-size: 12px; color: var(--v3-text-faint); margin-bottom: 20px; }
         .ic-grid {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

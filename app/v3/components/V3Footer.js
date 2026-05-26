@@ -1,6 +1,20 @@
+'use client';
+
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 export default function V3Footer() {
+  const pathname = usePathname();
+  const [user, setUser] = useState(undefined); // undefined = loading
+
+  useEffect(() => {
+    fetch('/api/v3/auth/me')
+      .then(r => r.ok ? r.json() : null)
+      .then(data => setUser(data?.user || null))
+      .catch(() => setUser(null));
+  }, [pathname]);
+
   return (
     <>
       <style>{`
@@ -33,11 +47,14 @@ export default function V3Footer() {
         .v3-footer-links {
           display: flex;
           gap: 20px;
+          align-items: center;
+          flex-wrap: wrap;
         }
         .v3-footer-link {
           font-size: 13px;
           color: var(--v3-text-muted);
           transition: color 0.15s;
+          text-decoration: none;
         }
         .v3-footer-link:hover {
           color: var(--v3-text);
@@ -51,9 +68,14 @@ export default function V3Footer() {
           </div>
           <div className="v3-footer-links">
             <Link href="/v3" className="v3-footer-link">Anasayfa</Link>
-            <Link href="/v3/giris" className="v3-footer-link">Giriş Yap</Link>
-            <Link href="/v3/kayit" className="v3-footer-link">Kayıt Ol</Link>
-            <Link href="/" className="v3-footer-link">v1 Site</Link>
+            <Link href="/v3/icerikler" className="v3-footer-link">İçerikler</Link>
+            {user === null && (
+              <>
+                <Link href="/v3/giris" className="v3-footer-link">Giriş Yap</Link>
+                <Link href="/v3/kayit" className="v3-footer-link">Kayıt Ol</Link>
+              </>
+            )}
+            <Link href="/" className="v3-footer-link">Sıfır Gecikme v2</Link>
           </div>
         </div>
       </footer>

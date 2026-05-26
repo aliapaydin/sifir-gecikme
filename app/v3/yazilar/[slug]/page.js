@@ -22,7 +22,7 @@ export default async function V3YaziPage({ params }) {
 
   let PageComponent;
   try {
-    const mod = await import(`../../yazilar/${slug}/page`);
+    const mod = await import(`../../../yazilar/${slug}/page`);
     PageComponent = mod.default;
   } catch {
     notFound();
