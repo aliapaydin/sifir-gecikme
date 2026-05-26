@@ -1,18 +1,24 @@
-'use client';
-
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { yazilar } from '../../lib/icerikler';
-import { dersler } from '../../lib/dersler';
-import V3EmbeddedTutor from './components/V3EmbeddedTutor';
+import { sql, initDb } from '../../lib/v3/db';
 import HeroAnimation from './components/HeroAnimations';
+import HeroRegisterBtn from './components/HeroRegisterBtn';
+import OgrenCard from './components/OgrenCard';
+import TechCenterCard from './components/TechCenterCard';
+import V3EmbeddedTutor from './components/V3EmbeddedTutor';
+
+const HERO_DEFAULTS = {
+  title: 'Veriyi Anla,\nKararını Ver',
+  subtitle: 'İnteraktif demolar, gerçek veri analizleri ve AI destekli öğrenme ile veri bilimini sıfırdan ileri seviyeye öğren.',
+  animation: '1',
+};
 
 const BADGE_COLORS = {
-  'interaktif':      { bg: 'rgba(20,184,166,0.12)',  color: '#2dd4bf', border: 'rgba(20,184,166,0.2)' },
-  'rehber':          { bg: 'rgba(139,92,246,0.12)',  color: '#a78bfa', border: 'rgba(139,92,246,0.2)' },
-  'araç':            { bg: 'rgba(99,102,241,0.12)',   color: '#818cf8', border: 'rgba(99,102,241,0.2)' },
-  'vaka çalışması':  { bg: 'rgba(249,115,22,0.12)',  color: '#fb923c', border: 'rgba(249,115,22,0.2)' },
-  'kariyer':         { bg: 'rgba(16,185,129,0.12)',  color: '#34d399', border: 'rgba(16,185,129,0.2)' },
+  'interaktif':     { bg: 'rgba(20,184,166,0.12)',  color: '#2dd4bf', border: 'rgba(20,184,166,0.2)' },
+  'rehber':         { bg: 'rgba(139,92,246,0.12)',  color: '#a78bfa', border: 'rgba(139,92,246,0.2)' },
+  'araç':           { bg: 'rgba(99,102,241,0.12)',  color: '#818cf8', border: 'rgba(99,102,241,0.2)' },
+  'vaka çalışması': { bg: 'rgba(249,115,22,0.12)',  color: '#fb923c', border: 'rgba(249,115,22,0.2)' },
+  'kariyer':        { bg: 'rgba(16,185,129,0.12)',  color: '#34d399', border: 'rgba(16,185,129,0.2)' },
 };
 
 function getBadgeStyle(badge) {
@@ -26,12 +32,6 @@ function getBadgeStyle(badge) {
 
 function v3href(href) {
   return href.startsWith('/yazilar/') ? `/v3${href}` : href;
-}
-
-function fmtMoney(n) {
-  if (n >= 1_000_000) return `₺${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000)     return `₺${(n / 1_000).toFixed(0)}K`;
-  return `₺${n}`;
 }
 
 const kategoriler = [
@@ -51,253 +51,30 @@ const tools = [
 ];
 
 const playground = [
-  { emoji: '📈', title: 'Linear Regression',    desc: 'Noktaları sürükle, regresyon çizgisi anlık güncellensin.',            href: '/v3/yazilar/linear-regression',   accent: '#14b8a6' },
-  { emoji: '⛰️', title: 'Gradient Descent',     desc: 'Top yuvarlama oyunu — öğrenme hızını sen belirle.',                   href: '/v3/yazilar/gradient-descent',    accent: '#818cf8' },
-  { emoji: '🔵', title: 'K-Means Kümeleme',     desc: "Centroid'lerin adım adım yer değiştirmesini izle.",                  href: '/v3/yazilar/kmeans',              accent: '#a78bfa' },
-  { emoji: '🧠', title: 'Sinir Ağı',            desc: 'Katmanları, nöronları ve aktivasyonları görselleştir.',               href: '/v3/yazilar/sinir-agi',           accent: '#fb923c' },
-  { emoji: '📧', title: 'Lojistik Regresyon',   desc: 'Spam filtresini eğit — gradient descent canlı izle.',                href: '/v3/yazilar/lojistik-regresyon',  accent: '#34d399' },
-  { emoji: '🎯', title: 'Confusion Matrix',     desc: 'Precision, recall ve F1 skorunu interaktif keşfet.',                 href: '/v3/yazilar/confusion-matrix',    accent: '#fb7185' },
-  { emoji: '📐', title: 'A/B Test Hesaplayıcı', desc: 'p-değeri, güven aralığı ve etki büyüklüğünü anında hesapla.',        href: '/v3/yazilar/ab-test',             accent: '#fb923c' },
-  { emoji: '🧪', title: 'Hipotez Testi Seçici', desc: 'Verini anlat, doğru istatistiksel testi bul.',                       href: '/hipotez',                        accent: '#818cf8' },
+  { emoji: '📈', title: 'Linear Regression',    desc: 'Noktaları sürükle, regresyon çizgisi anlık güncellensin.',          href: '/v3/yazilar/linear-regression',  accent: '#14b8a6' },
+  { emoji: '⛰️', title: 'Gradient Descent',     desc: 'Top yuvarlama oyunu — öğrenme hızını sen belirle.',                 href: '/v3/yazilar/gradient-descent',   accent: '#818cf8' },
+  { emoji: '🔵', title: 'K-Means Kümeleme',     desc: "Centroid'lerin adım adım yer değiştirmesini izle.",                href: '/v3/yazilar/kmeans',             accent: '#a78bfa' },
+  { emoji: '🧠', title: 'Sinir Ağı',            desc: 'Katmanları, nöronları ve aktivasyonları görselleştir.',             href: '/v3/yazilar/sinir-agi',          accent: '#fb923c' },
+  { emoji: '📧', title: 'Lojistik Regresyon',   desc: 'Spam filtresini eğit — gradient descent canlı izle.',              href: '/v3/yazilar/lojistik-regresyon', accent: '#34d399' },
+  { emoji: '🎯', title: 'Confusion Matrix',     desc: 'Precision, recall ve F1 skorunu interaktif keşfet.',               href: '/v3/yazilar/confusion-matrix',   accent: '#fb7185' },
+  { emoji: '📐', title: 'A/B Test Hesaplayıcı', desc: 'p-değeri, güven aralığı ve etki büyüklüğünü anında hesapla.',      href: '/v3/yazilar/ab-test',            accent: '#fb923c' },
+  { emoji: '🧪', title: 'Hipotez Testi Seçici', desc: 'Verini anlat, doğru istatistiksel testi bul.',                     href: '/hipotez',                       accent: '#818cf8' },
 ];
 
-function OgrenCard() {
-  const [ilerleme, setIlerleme] = useState(null);
+export default async function V3HomePage() {
+  // Hero ayarlarını server-side çek — flash olmaz
+  let hero = { ...HERO_DEFAULTS };
+  try {
+    await initDb();
+    const rows = await sql`SELECT key, value FROM v3_settings WHERE key IN ('hero_title', 'hero_subtitle', 'hero_animation')`;
+    const map = {};
+    for (const r of rows) map[r.key] = r.value;
+    if (map.hero_title)     hero.title     = map.hero_title;
+    if (map.hero_subtitle)  hero.subtitle  = map.hero_subtitle;
+    if (map.hero_animation) hero.animation = map.hero_animation;
+  } catch {}
 
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem('sz_ilerleme_v1');
-      setIlerleme(raw ? JSON.parse(raw) : {});
-    } catch {
-      setIlerleme({});
-    }
-  }, []);
-
-  if (!ilerleme) return null;
-
-  const tamamlananlar = ilerleme.tamamlananDersler || {};
-  const tamamlananSayi = Object.keys(tamamlananlar).length;
-  const toplamXP = ilerleme.toplamXP || 0;
-  const toplamDers = dersler.length;
-  const yuzde = Math.round((tamamlananSayi / toplamDers) * 100);
-  const devamEden = ilerleme.devamEdenDers;
-  const devamDers = devamEden ? dersler.find(d => d.id === devamEden.dersId) : null;
-  const sonrakiDers = dersler.find(d => !tamamlananlar[d.id]);
-  const hedefDers = devamDers || sonrakiDers || dersler[0];
-
-  return (
-    <div style={{
-      borderRadius: '20px', border: '1px solid rgba(20,184,166,0.25)',
-      background: 'linear-gradient(135deg, rgba(20,184,166,0.06) 0%, rgba(99,102,241,0.06) 100%)',
-      padding: '28px 32px', display: 'flex', gap: '32px', alignItems: 'center', flexWrap: 'wrap',
-    }}>
-      <div style={{ flex: 1, minWidth: '220px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
-          <div style={{
-            width: '40px', height: '40px', borderRadius: '12px', flexShrink: 0,
-            background: 'linear-gradient(135deg, #14b8a6, #6366f1)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px',
-          }}>📚</div>
-          <div>
-            <div style={{ fontSize: '15px', fontWeight: 700, color: 'var(--v3-text)' }}>İnteraktif Öğrenme</div>
-            <div style={{ fontSize: '12px', color: 'var(--v3-text-muted)' }}>Adım adım veri bilimi dersleri</div>
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', gap: '20px', marginBottom: '16px' }}>
-          <div>
-            <div style={{ fontSize: '22px', fontWeight: 800, color: '#2dd4bf' }}>{tamamlananSayi}</div>
-            <div style={{ fontSize: '11px', color: 'var(--v3-text-muted)' }}>/ {toplamDers} ders</div>
-          </div>
-          <div>
-            <div style={{ fontSize: '22px', fontWeight: 800, color: '#818cf8' }}>{toplamXP}</div>
-            <div style={{ fontSize: '11px', color: 'var(--v3-text-muted)' }}>XP kazanıldı</div>
-          </div>
-          <div>
-            <div style={{ fontSize: '22px', fontWeight: 800, color: 'var(--v3-text)' }}>{yuzde}%</div>
-            <div style={{ fontSize: '11px', color: 'var(--v3-text-muted)' }}>tamamlandı</div>
-          </div>
-        </div>
-
-        <div style={{ background: 'rgba(255,255,255,0.06)', borderRadius: '8px', height: '6px', marginBottom: '16px', overflow: 'hidden' }}>
-          <div style={{
-            height: '100%', width: `${yuzde}%`, borderRadius: '8px',
-            background: 'linear-gradient(90deg, #14b8a6, #6366f1)',
-            transition: 'width 0.6s ease',
-          }} />
-        </div>
-
-        <Link href="/v3/ogren" style={{
-          display: 'inline-flex', alignItems: 'center', gap: '6px',
-          padding: '8px 18px', borderRadius: '8px', fontSize: '13px', fontWeight: 600,
-          background: 'linear-gradient(135deg, #14b8a6, #6366f1)', color: '#fff',
-          textDecoration: 'none', transition: 'opacity 0.15s',
-        }}>
-          {tamamlananSayi === 0 ? 'Öğrenmeye Başla →' : devamEden ? 'Devam Et →' : 'İlerle →'}
-        </Link>
-      </div>
-
-      {hedefDers && (
-        <div style={{
-          flexShrink: 0, borderRadius: '14px', border: '1px solid rgba(255,255,255,0.08)',
-          background: 'rgba(255,255,255,0.03)', padding: '16px 20px', minWidth: '160px',
-        }}>
-          <div style={{ fontSize: '11px', color: 'var(--v3-text-muted)', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-            {devamEden ? 'Devam Eden' : 'Sıradaki Ders'}
-          </div>
-          <div style={{ fontSize: '24px', marginBottom: '6px' }}>{hedefDers.emoji}</div>
-          <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--v3-text)', marginBottom: '4px' }}>{hedefDers.baslik}</div>
-          <div style={{ display: 'inline-flex', padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600, color: '#2dd4bf', background: 'rgba(20,184,166,0.1)', border: '1px solid rgba(20,184,166,0.2)' }}>
-            +{hedefDers.xp} XP
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function TechCenterCard() {
-  const [save, setSave] = useState(null);
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem('tc_game_v2');
-      if (raw) setSave(JSON.parse(raw));
-    } catch {}
-    setLoaded(true);
-  }, []);
-
-  const hasSave = loaded && save && save.currentDay > 1;
-
-  return (
-    <>
-      <style>{`
-        .tc-card {
-          position: relative; overflow: hidden; border-radius: 24px; padding: 40px;
-          border: 1px solid rgba(139,92,246,0.3);
-          background: linear-gradient(135deg, rgba(17,7,40,0.95) 0%, rgba(13,20,65,0.95) 50%, rgba(7,30,50,0.95) 100%);
-        }
-        .v3-light .tc-card {
-          background: linear-gradient(135deg, #ede9fe 0%, #e0e7ff 50%, #dbeafe 100%);
-          border-color: rgba(139,92,246,0.25);
-        }
-        .tc-grid-overlay {
-          position: absolute; inset: 0; pointer-events: none; opacity: 0.04;
-          background-image: linear-gradient(rgba(255,255,255,.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.3) 1px, transparent 1px);
-          background-size: 40px 40px;
-        }
-        .v3-light .tc-grid-overlay {
-          background-image: linear-gradient(rgba(0,0,0,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,.07) 1px, transparent 1px);
-          opacity: 1;
-        }
-        .tc-title {
-          font-size: clamp(26px, 4vw, 38px); font-weight: 900; margin: 0 0 12px;
-          letter-spacing: -0.8px; line-height: 1.1;
-          background: linear-gradient(135deg, #f1f5f9 0%, #c7d2fe 60%, #a5b4fc 100%);
-          -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        }
-        .v3-light .tc-title {
-          background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 60%, #6366f1 100%);
-          -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        }
-        .tc-desc { font-size: 15px; color: rgba(203,213,225,0.8); margin: 0 0 24px; line-height: 1.6; max-width: 440px; }
-        .v3-light .tc-desc { color: rgba(30,27,75,0.7); }
-        .tc-stat-chip {
-          padding: 8px 16px; border-radius: 10px;
-          background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
-        }
-        .v3-light .tc-stat-chip { background: rgba(99,102,241,0.08); border-color: rgba(99,102,241,0.18); }
-        .tc-stat-label { font-size: 10px; color: rgba(203,213,225,0.5); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
-        .v3-light .tc-stat-label { color: rgba(30,27,75,0.45); }
-      `}</style>
-      <div className="tc-card">
-        {/* Parlayan arka plan efekti */}
-        <div style={{
-          position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: 'radial-gradient(ellipse at 30% 50%, rgba(99,102,241,0.18) 0%, transparent 60%), radial-gradient(ellipse at 70% 20%, rgba(139,92,246,0.12) 0%, transparent 50%)',
-        }} />
-        <div className="tc-grid-overlay" />
-
-        <div style={{ position: 'relative', display: 'flex', gap: '40px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <div style={{ flex: 1, minWidth: '260px' }}>
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: '8px',
-              padding: '4px 12px', borderRadius: '20px', marginBottom: '18px',
-              background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.3)',
-              fontSize: '11px', fontWeight: 700, color: '#a78bfa', letterSpacing: '0.8px', textTransform: 'uppercase',
-            }}>
-              🕹️ Simülasyon Oyunu
-            </div>
-
-            <h2 className="tc-title">Tech Center</h2>
-
-            <p className="tc-desc">
-              Kendi bilgisayar mağazanı kur, personel işe al, pazar stratejisi belirle ve şirket değerini <strong style={{ color: '#a78bfa' }}>₺1 milyara</strong> ulaştır.
-            </p>
-
-            {hasSave && (
-              <div style={{ display: 'flex', gap: '16px', marginBottom: '24px', flexWrap: 'wrap' }}>
-                {[
-                  { label: 'Gün', val: save.currentDay, color: '#a78bfa' },
-                  { label: 'Kasa', val: fmtMoney(save.cash), color: '#34d399' },
-                  { label: 'Şirket', val: save.companyName, color: '#93c5fd' },
-                ].map(item => (
-                  <div key={item.label} className="tc-stat-chip">
-                    <div className="tc-stat-label">{item.label}</div>
-                    <div style={{ fontSize: '15px', fontWeight: 700, color: item.color }}>{item.val}</div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-              <Link
-                href="/tech-center"
-                style={{
-                  display: 'inline-flex', alignItems: 'center', gap: '8px',
-                  padding: '12px 24px', borderRadius: '10px', fontWeight: 700, fontSize: '15px',
-                  background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-                  color: '#fff', textDecoration: 'none',
-                  boxShadow: '0 4px 20px rgba(99,102,241,0.4)',
-                  transition: 'transform 0.15s, box-shadow 0.15s',
-                }}
-                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(99,102,241,0.5)'; }}
-                onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 20px rgba(99,102,241,0.4)'; }}
-              >
-                {hasSave ? '▶ Devam Et' : '▶ Oyna'}
-              </Link>
-            </div>
-          </div>
-
-          <div style={{
-            fontSize: '96px', lineHeight: 1, userSelect: 'none', opacity: 0.85,
-            filter: 'drop-shadow(0 0 40px rgba(139,92,246,0.4))',
-            flexShrink: 0,
-          }}>
-            🏪
-          </div>
-        </div>
-      </div>
-    </>
-  );
-}
-
-export default function V3HomePage() {
-  const [user, setUser] = useState(undefined);
-  const [heroSettings, setHeroSettings] = useState({ title: 'Veriyi Anla,\nKararını Ver', subtitle: 'İnteraktif demolar, gerçek veri analizleri ve AI destekli öğrenme ile veri bilimini sıfırdan ileri seviyeye öğren.', animation: '1' });
   const featured = yazilar.slice(0, 6);
-
-  useEffect(() => {
-    fetch('/api/v3/auth/me')
-      .then(r => r.ok ? r.json() : null)
-      .then(data => setUser(data?.user || null))
-      .catch(() => setUser(null));
-    fetch('/api/v3/settings/hero')
-      .then(r => r.ok ? r.json() : null)
-      .then(data => { if (data) setHeroSettings(data); })
-      .catch(() => {});
-  }, []);
 
   return (
     <>
@@ -383,8 +160,6 @@ export default function V3HomePage() {
         .v3-card-title { font-size: 16px; font-weight: 600; color: var(--v3-text); line-height: 1.4; margin: 0; }
         .v3-card-desc { font-size: 14px; color: var(--v3-text-muted); line-height: 1.5; margin: 0; flex: 1; }
         .v3-card-meta { font-size: 12px; color: var(--v3-text-faint); margin: 0; }
-
-        /* Playground kartları */
         .pg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
         .pg-card {
           border: 1px solid var(--v3-border); border-radius: 16px;
@@ -403,7 +178,6 @@ export default function V3HomePage() {
         .pg-title { font-size: 15px; font-weight: 700; color: var(--v3-text); margin: 0; }
         .pg-desc  { font-size: 13px; color: var(--v3-text-muted); line-height: 1.5; margin: 0; flex: 1; }
         .pg-cta   { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
-
         .v3-cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
         .v3-cat-card {
           background: rgba(255,255,255,0.03); backdrop-filter: blur(12px);
@@ -415,8 +189,6 @@ export default function V3HomePage() {
         .v3-cat-icon { font-size: 24px; }
         .v3-cat-label { font-size: 15px; font-weight: 600; }
         .v3-cat-desc { font-size: 12px; color: var(--v3-text-muted); }
-
-        /* Araçlar grid */
         .tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
         .tool-card {
           border: 1px solid var(--v3-border); border-radius: 14px;
@@ -435,11 +207,8 @@ export default function V3HomePage() {
         .tool-card-title { font-size: 14px; font-weight: 700; color: var(--v3-text); }
         .tool-card-desc { font-size: 12px; color: var(--v3-text-muted); line-height: 1.55; flex: 1; }
         .tool-card-footer { display: flex; align-items: center; justify-content: space-between; }
-        .tool-card-tag {
-          font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; letter-spacing: 0.05em;
-        }
+        .tool-card-tag { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; letter-spacing: 0.05em; }
         .tool-card-run { font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 3px; }
-
         @media (max-width: 860px) {
           .v3-hero-inner { flex-direction: column; gap: 32px; }
           .v3-hero-anim { width: 100%; height: 180px; }
@@ -458,22 +227,20 @@ export default function V3HomePage() {
         }
       `}</style>
 
-      {/* Hero */}
+      {/* Hero — server-side render, flash yok */}
       <section className="v3-hero">
         <div className="v3-hero-bg" />
         <div className="v3-hero-inner">
           <div className="v3-hero-text">
-            <h1 className="v3-hero-title">{heroSettings.title}</h1>
-            <p className="v3-hero-sub">{heroSettings.subtitle}</p>
+            <h1 className="v3-hero-title">{hero.title}</h1>
+            <p className="v3-hero-sub">{hero.subtitle}</p>
             <div className="v3-hero-ctas">
               <Link href="/v3/icerikler" className="v3-btn-primary">İçerikleri Keşfet →</Link>
-              {user === null && (
-                <Link href="/v3/kayit" className="v3-btn-secondary">Ücretsiz Kaydol</Link>
-              )}
+              <HeroRegisterBtn />
             </div>
           </div>
           <div className="v3-hero-anim">
-            <HeroAnimation id={heroSettings.animation} />
+            <HeroAnimation id={hero.animation} />
           </div>
         </div>
       </section>
@@ -495,14 +262,14 @@ export default function V3HomePage() {
         </div>
       </div>
 
-      {/* Öğren Progress */}
+      {/* Öğren Progress — client (localStorage) */}
       <div className="v3-section" style={{ paddingBottom: '32px' }}>
         <h2 className="v3-section-title">📚 İnteraktif Öğrenme</h2>
         <p className="v3-section-sub">Adım adım dersler, sorular ve anında geri bildirim ile veri bilimini öğren.</p>
         <OgrenCard />
       </div>
 
-      {/* Tech Center */}
+      {/* Tech Center — client (localStorage) */}
       <div className="v3-section" style={{ paddingTop: '32px' }}>
         <h2 className="v3-section-title">🕹️ Simülasyon Oyunu</h2>
         <p className="v3-section-sub">Öğrendiklerini uygulamaya dök — iş simülasyonu, stratejik kararlar.</p>
@@ -523,10 +290,7 @@ export default function V3HomePage() {
               </div>
               <p className="tool-card-desc">{tool.desc}</p>
               <div className="tool-card-footer">
-                <span className="tool-card-tag"
-                  style={{ background: `${tool.accent}18`, color: tool.accent }}>
-                  {tool.tag}
-                </span>
+                <span className="tool-card-tag" style={{ background: `${tool.accent}18`, color: tool.accent }}>{tool.tag}</span>
                 <span className="tool-card-run" style={{ color: tool.accent }}>Aç →</span>
               </div>
             </Link>
@@ -540,15 +304,9 @@ export default function V3HomePage() {
         <p className="v3-section-sub">Algoritmaları çalışırken gör — sürükle, ayarla, keşfet.</p>
         <div className="pg-grid">
           {playground.map(item => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="pg-card"
-              style={{ background: `linear-gradient(135deg, ${item.accent}14, ${item.accent}05)` }}
-            >
-              <div className="pg-emoji-wrap" style={{ background: `${item.accent}18` }}>
-                {item.emoji}
-              </div>
+            <Link key={item.href} href={item.href} className="pg-card"
+              style={{ background: `linear-gradient(135deg, ${item.accent}14, ${item.accent}05)` }}>
+              <div className="pg-emoji-wrap" style={{ background: `${item.accent}18` }}>{item.emoji}</div>
               <h3 className="pg-title">{item.title}</h3>
               <p className="pg-desc">{item.desc}</p>
               <div className="pg-cta" style={{ color: item.accent }}>Dene →</div>
@@ -576,7 +334,7 @@ export default function V3HomePage() {
         </div>
       </div>
 
-      {/* AI Tutor — gömülü sohbet */}
+      {/* AI Tutor — client */}
       <div className="v3-section" style={{ paddingTop: 0 }}>
         <h2 className="v3-section-title">🤖 AI Tutor</h2>
         <p className="v3-section-sub">Kafana takılan her şeyi sor — veri bilimi asistanın burada.</p>
