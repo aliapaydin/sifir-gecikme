@@ -14,7 +14,7 @@ function NeuralNetAnim() {
         .ha-nn-wrap svg { animation: ha-glow 3s ease-in-out infinite; }
       `}</style>
       <div className="ha-nn-wrap">
-        <svg width="260" height="200" viewBox="0 0 260 200" fill="none">
+        <svg width="100%" height="100%" viewBox="0 0 260 200" fill="none" preserveAspectRatio="xMidYMid slice">
           {/* Layer 1 — 3 nodes */}
           {[40,100,160].map((y, i) => (
             <circle key={`l1-${i}`} cx="50" cy={y} r="14"
@@ -119,7 +119,7 @@ function ScatterAnim() {
         @keyframes ha-centroid { 0%,100%{r:7} 50%{r:10} }
       `}</style>
       <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <svg width="260" height="200" viewBox="0 0 260 200" fill="none">
+        <svg width="100%" height="100%" viewBox="0 0 260 200" fill="none" preserveAspectRatio="xMidYMid slice">
           {/* Axis */}
           <line x1="24" y1="176" x2="240" y2="176" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
           <line x1="24" y1="176" x2="24"  y2="16"  stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
@@ -210,7 +210,7 @@ function SineWaveAnim() {
         @keyframes ha-dot-blink { 0%,100%{opacity:1;r:4} 50%{opacity:0.4;r:2.5} }
       `}</style>
       <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <svg width={W} height={H + 40} viewBox={`0 0 ${W} ${H + 40}`} fill="none">
+        <svg width="100%" height="100%" viewBox={`0 0 ${W} ${H + 40}`} fill="none" preserveAspectRatio="xMidYMid slice">
           {/* Grid */}
           {[0.25,0.5,0.75].map(f => (
             <line key={f} x1="0" y1={cy + amp * (f * 2 - 1)} x2={W} y2={cy + amp * (f * 2 - 1)}

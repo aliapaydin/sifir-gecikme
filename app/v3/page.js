@@ -1,11 +1,15 @@
 import Link from 'next/link';
 import { yazilar } from '../../lib/icerikler';
 import { sql, initDb } from '../../lib/v3/db';
+
+export const dynamic = 'force-dynamic';
 import HeroAnimation from './components/HeroAnimations';
 import HeroRegisterBtn from './components/HeroRegisterBtn';
 import OgrenCard from './components/OgrenCard';
 import TechCenterCard from './components/TechCenterCard';
 import V3EmbeddedTutor from './components/V3EmbeddedTutor';
+import StatsBar from './components/StatsBar';
+import V3FeaturedSection from './components/V3FeaturedSection';
 
 const HERO_DEFAULTS = {
   title: 'Veriyi Anla,\nKararını Ver',
@@ -13,25 +17,14 @@ const HERO_DEFAULTS = {
   animation: '1',
 };
 
-const BADGE_COLORS = {
-  'interaktif':     { bg: 'rgba(20,184,166,0.12)',  color: '#2dd4bf', border: 'rgba(20,184,166,0.2)' },
-  'rehber':         { bg: 'rgba(139,92,246,0.12)',  color: '#a78bfa', border: 'rgba(139,92,246,0.2)' },
-  'araç':           { bg: 'rgba(99,102,241,0.12)',  color: '#818cf8', border: 'rgba(99,102,241,0.2)' },
-  'vaka çalışması': { bg: 'rgba(249,115,22,0.12)',  color: '#fb923c', border: 'rgba(249,115,22,0.2)' },
-  'kariyer':        { bg: 'rgba(16,185,129,0.12)',  color: '#34d399', border: 'rgba(16,185,129,0.2)' },
-};
-
-function getBadgeStyle(badge) {
-  const b = BADGE_COLORS[badge] || BADGE_COLORS['rehber'];
-  return {
-    display: 'inline-block', padding: '2px 8px', borderRadius: '4px',
-    fontSize: '11px', fontWeight: 600, letterSpacing: '0.3px', textTransform: 'uppercase',
-    background: b.bg, color: b.color, border: `1px solid ${b.border}`,
-  };
-}
+const V3_PAGES = ['/yazilar/', '/ogren/', '/python', '/sql', '/regex', '/ciz', '/nn',
+  '/hipotez', '/mulakat', '/kalori', '/tech-center', '/harita', '/milyon',
+  '/veri-setleri', '/proje', '/grafik', '/promilmetre', '/csv', '/renk', '/sinav'];
 
 function v3href(href) {
-  return href.startsWith('/yazilar/') ? `/v3${href}` : href;
+  if (href.startsWith('/v3') || href.startsWith('http')) return href;
+  const shouldPrefix = V3_PAGES.some(p => href === p || href.startsWith(p));
+  return shouldPrefix ? `/v3${href}` : href;
 }
 
 const kategoriler = [
@@ -58,7 +51,7 @@ const playground = [
   { emoji: '📧', title: 'Lojistik Regresyon',   desc: 'Spam filtresini eğit — gradient descent canlı izle.',              href: '/v3/yazilar/lojistik-regresyon', accent: '#34d399' },
   { emoji: '🎯', title: 'Confusion Matrix',     desc: 'Precision, recall ve F1 skorunu interaktif keşfet.',               href: '/v3/yazilar/confusion-matrix',   accent: '#fb7185' },
   { emoji: '📐', title: 'A/B Test Hesaplayıcı', desc: 'p-değeri, güven aralığı ve etki büyüklüğünü anında hesapla.',      href: '/v3/yazilar/ab-test',            accent: '#fb923c' },
-  { emoji: '🧪', title: 'Hipotez Testi Seçici', desc: 'Verini anlat, doğru istatistiksel testi bul.',                     href: '/hipotez',                       accent: '#818cf8' },
+  { emoji: '🧪', title: 'Hipotez Testi Seçici', desc: 'Verini anlat, doğru istatistiksel testi bul.',                     href: '/v3/hipotez',                    accent: '#818cf8' },
 ];
 
 export default async function V3HomePage() {
@@ -74,8 +67,6 @@ export default async function V3HomePage() {
     if (map.hero_animation) hero.animation = map.hero_animation;
   } catch {}
 
-  const featured = yazilar.slice(0, 6);
-
   return (
     <>
       <style>{`
@@ -84,22 +75,19 @@ export default async function V3HomePage() {
           overflow: hidden;
         }
         .v3-hero-bg {
-          position: absolute; inset: 0;
-          background: radial-gradient(ellipse at 30% 50%, rgba(99,102,241,0.13) 0%, transparent 65%);
+          position: absolute; inset: 0; z-index: 1;
+          background: radial-gradient(ellipse at 30% 50%, rgba(99,102,241,0.18) 0%, transparent 70%);
           pointer-events: none;
+        }
+        .v3-hero-anim-bg {
+          position: absolute; inset: 0; z-index: 0;
+          pointer-events: none; opacity: 0.3; overflow: hidden;
         }
         .v3-hero-inner {
           max-width: 1100px; margin: 0 auto;
-          display: flex; align-items: center; gap: 48px;
+          position: relative; z-index: 2;
         }
-        .v3-hero-text { flex: 1; min-width: 0; }
-        .v3-hero-anim {
-          width: 300px; height: 220px; flex-shrink: 0;
-          border-radius: 20px;
-          background: rgba(255,255,255,0.025);
-          border: 1px solid rgba(99,102,241,0.18);
-          overflow: hidden; position: relative;
-        }
+        .v3-hero-text { max-width: 620px; }
         .v3-hero-title {
           font-size: clamp(30px, 4.5vw, 52px); font-weight: 800;
           line-height: 1.12; letter-spacing: -1.2px; margin: 0 0 16px;
@@ -143,9 +131,9 @@ export default async function V3HomePage() {
           display: flex; align-items: center; justify-content: center;
           gap: 32px; flex-wrap: wrap;
         }
-        .v3-stat { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--v3-text-muted); }
+        .v3-stat { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--v3-text-muted); flex-shrink: 0; }
         .v3-stat-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--v3-accent); flex-shrink: 0; }
-        .v3-stat-value { font-weight: 600; color: var(--v3-text); }
+        .v3-stat-value { font-weight: 600; color: var(--v3-text); white-space: nowrap; }
         .v3-section { max-width: 1200px; margin: 0 auto; padding: 64px 24px; }
         .v3-section-title { font-size: 22px; font-weight: 700; color: var(--v3-text); margin: 0 0 8px; letter-spacing: -0.3px; }
         .v3-section-sub { font-size: 14px; color: var(--v3-text-muted); margin: 0 0 32px; }
@@ -210,8 +198,6 @@ export default async function V3HomePage() {
         .tool-card-tag { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; letter-spacing: 0.05em; }
         .tool-card-run { font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 3px; }
         @media (max-width: 860px) {
-          .v3-hero-inner { flex-direction: column; gap: 32px; }
-          .v3-hero-anim { width: 100%; height: 180px; }
           .v3-hero-title { font-size: clamp(28px, 7vw, 40px); }
           .v3-hero-ctas { justify-content: flex-start; }
         }
@@ -230,6 +216,9 @@ export default async function V3HomePage() {
       {/* Hero — server-side render, flash yok */}
       <section className="v3-hero">
         <div className="v3-hero-bg" />
+        <div className="v3-hero-anim-bg">
+          <HeroAnimation id={hero.animation} />
+        </div>
         <div className="v3-hero-inner">
           <div className="v3-hero-text">
             <h1 className="v3-hero-title">{hero.title}</h1>
@@ -239,31 +228,11 @@ export default async function V3HomePage() {
               <HeroRegisterBtn />
             </div>
           </div>
-          <div className="v3-hero-anim">
-            <HeroAnimation id={hero.animation} />
-          </div>
         </div>
       </section>
 
       {/* Stats */}
-      <div className="v3-stats-bar">
-        <div className="v3-stats-inner">
-          {[
-            { color: '#14b8a6', val: '50+',    label: 'içerik' },
-            { color: '#8b5cf6', val: '10+',    label: 'interaktif demo' },
-            { color: '#6366f1', val: '5',       label: 'playground aracı' },
-            { color: '#fb923c', val: '8',       label: 'modül' },
-            { color: '#34d399', val: 'AI Tutor', label: 'desteği' },
-            { color: '#f472b6', val: 'Python & SQL', label: 'tarayıcıda' },
-            { color: '#10b981', val: 'Ücretsiz', label: '' },
-          ].map((s, i) => (
-            <div key={i} className="v3-stat">
-              <div className="v3-stat-dot" style={{ background: s.color }} />
-              <span><span className="v3-stat-value">{s.val}</span>{s.label ? ` ${s.label}` : ''}</span>
-            </div>
-          ))}
-        </div>
-      </div>
+      <StatsBar />
 
       {/* Öğren Progress — client (localStorage) */}
       <div className="v3-section" style={{ paddingBottom: '32px' }}>
@@ -319,23 +288,7 @@ export default async function V3HomePage() {
       </div>
 
       {/* Öne çıkan içerikler */}
-      <div className="v3-section" style={{ paddingTop: 0 }}>
-        <h2 className="v3-section-title">Öne Çıkan İçerikler</h2>
-        <p className="v3-section-sub">En popüler içerikler — dene, öğren, anla.</p>
-        <div className="v3-grid">
-          {featured.map(yazi => (
-            <Link key={yazi.href} href={v3href(yazi.href)} className="v3-card">
-              <div><span style={getBadgeStyle(yazi.badge)}>{yazi.badge}</span></div>
-              <h3 className="v3-card-title">{yazi.baslik}</h3>
-              <p className="v3-card-desc">{yazi.ozet}</p>
-              <p className="v3-card-meta">{yazi.meta}</p>
-            </Link>
-          ))}
-        </div>
-        <div style={{ textAlign: 'center', marginTop: '32px' }}>
-          <Link href="/v3/icerikler" className="v3-btn-secondary">Tüm içerikleri gör →</Link>
-        </div>
-      </div>
+      <V3FeaturedSection />
 
       {/* AI Tutor — client */}
       <div className="v3-section" style={{ paddingTop: 0 }}>
