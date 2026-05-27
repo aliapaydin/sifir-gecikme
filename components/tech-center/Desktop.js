@@ -102,13 +102,14 @@ function DesktopIcon({ app, onClick, badge }) {
   );
 }
 
-function WindowTitleBar({ app, onMinimize, onClose, onFloat, isFloating, isDraggable, onDragStart }) {
+function WindowTitleBar({ app, onMinimize, onClose, onFloat, isFloating, isDraggable, onDragStart, isMobile }) {
   return (
     <div
       onMouseDown={isDraggable ? onDragStart : undefined}
       style={{
-        height: '38px', display: 'flex', alignItems: 'center',
-        padding: '0 12px', gap: '8px',
+        height: isMobile ? '44px' : '38px',
+        display: 'flex', alignItems: 'center',
+        padding: isMobile ? '0 16px' : '0 12px', gap: '8px',
         background: 'rgba(240,238,234,0.97)',
         borderBottom: '1px solid rgba(0,0,0,0.1)',
         flexShrink: 0,
@@ -117,40 +118,60 @@ function WindowTitleBar({ app, onMinimize, onClose, onFloat, isFloating, isDragg
         cursor: isDraggable ? 'grab' : 'default',
       }}
     >
-      <div style={{ display: 'flex', gap: '6px', marginRight: '4px' }}>
-        <button
-          onMouseDown={e => e.stopPropagation()}
-          onClick={onClose}
-          title="Kapat"
-          style={{
-            width: '13px', height: '13px', borderRadius: '50%',
-            background: '#FF5F57', border: '0.5px solid rgba(0,0,0,0.15)',
-            cursor: 'pointer', flexShrink: 0,
-          }}
-        />
-        <button
-          onMouseDown={e => e.stopPropagation()}
-          onClick={onMinimize}
-          title="Küçült"
-          style={{
-            width: '13px', height: '13px', borderRadius: '50%',
-            background: '#FFBD44', border: '0.5px solid rgba(0,0,0,0.15)',
-            cursor: 'pointer', flexShrink: 0,
-          }}
-        />
-        <button
-          onMouseDown={e => e.stopPropagation()}
-          onClick={onFloat}
-          title={isFloating ? 'Tam Ekrana Al' : 'Küçük Pencere'}
-          style={{
-            width: '13px', height: '13px', borderRadius: '50%',
-            background: '#00CA4E', border: '0.5px solid rgba(0,0,0,0.15)',
-            cursor: 'pointer', flexShrink: 0,
-          }}
-        />
-      </div>
-      <span style={{ fontSize: '0.88rem' }}>{app?.emoji}</span>
-      <span style={{ fontSize: '0.82rem', fontWeight: 600, color: '#374151' }}>{app?.label}</span>
+      {isMobile ? (
+        <>
+          <span style={{ fontSize: '1.1rem' }}>{app?.emoji}</span>
+          <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#374151', flex: 1 }}>{app?.label}</span>
+          <button
+            onClick={onClose}
+            style={{
+              padding: '6px 14px', borderRadius: '8px',
+              background: 'rgba(226,75,74,0.12)', border: '1px solid rgba(226,75,74,0.3)',
+              color: '#E24B4A', fontSize: '0.8rem', fontWeight: 700,
+              cursor: 'pointer',
+            }}
+          >
+            ✕ Kapat
+          </button>
+        </>
+      ) : (
+        <>
+          <div style={{ display: 'flex', gap: '6px', marginRight: '4px' }}>
+            <button
+              onMouseDown={e => e.stopPropagation()}
+              onClick={onClose}
+              title="Kapat"
+              style={{
+                width: '13px', height: '13px', borderRadius: '50%',
+                background: '#FF5F57', border: '0.5px solid rgba(0,0,0,0.15)',
+                cursor: 'pointer', flexShrink: 0,
+              }}
+            />
+            <button
+              onMouseDown={e => e.stopPropagation()}
+              onClick={onMinimize}
+              title="Küçült"
+              style={{
+                width: '13px', height: '13px', borderRadius: '50%',
+                background: '#FFBD44', border: '0.5px solid rgba(0,0,0,0.15)',
+                cursor: 'pointer', flexShrink: 0,
+              }}
+            />
+            <button
+              onMouseDown={e => e.stopPropagation()}
+              onClick={onFloat}
+              title={isFloating ? 'Tam Ekrana Al' : 'Küçük Pencere'}
+              style={{
+                width: '13px', height: '13px', borderRadius: '50%',
+                background: '#00CA4E', border: '0.5px solid rgba(0,0,0,0.15)',
+                cursor: 'pointer', flexShrink: 0,
+              }}
+            />
+          </div>
+          <span style={{ fontSize: '0.88rem' }}>{app?.emoji}</span>
+          <span style={{ fontSize: '0.82rem', fontWeight: 600, color: '#374151' }}>{app?.label}</span>
+        </>
+      )}
     </div>
   );
 }
@@ -218,7 +239,7 @@ function Taskbar({ openWindows, activeWindowId, onFocus, badges }) {
       })}
 
       <button
-        onClick={() => window.history.length > 1 ? router.back() : router.push('/')}
+        onClick={() => router.push('/v3')}
         title="Ana Sayfaya Dön"
         style={{
           position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)',
@@ -287,6 +308,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
   const [openWindows, setOpenWindows] = useState([]);
   const [activeWindowId, setActiveWindowId] = useState(null);
   const [splashApps, setSplashApps] = useState(new Set());
+  const [isMobile, setIsMobile] = useState(false);
   const desktopRef = useRef(null);
   const dragRef = useRef(null);
   // Remembers last floating position + size + floating state per appId across open/close cycles
@@ -295,6 +317,13 @@ export default function Desktop({ state, firmaValue, ...actions }) {
   const pendingActiveIdRef = useRef(null);
   // Z-index counter for layering windows
   const zCounterRef = useRef(100);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   const badges = {
     mail:     (state.customersToday || []).filter(c => !c.dealt).length,
@@ -351,10 +380,11 @@ export default function Desktop({ state, firmaValue, ...actions }) {
       const z = ++zCounterRef.current;
       const position = memory?.position || { x: 60 + floatingCount * 24, y: 50 + floatingCount * 24 };
       const size = memory?.size || defaultSize;
-      // Always open as floating
-      return [...prev, { id, appId, minimized: false, floating: true, position, size, zIndex: z }];
+      // Mobile: open full-screen (non-floating); desktop: open as floating
+      const floating = !isMobile;
+      return [...prev, { id, appId, minimized: false, floating, position, size, zIndex: z }];
     });
-    // Trigger splash screen for 2 seconds
+    // Trigger splash screen for 1 second
     setSplashApps(prev => new Set([...prev, appId]));
     setTimeout(() => {
       setSplashApps(prev => {
@@ -362,7 +392,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
         next.delete(appId);
         return next;
       });
-    }, 2000);
+    }, 1000);
   }, []);
 
   const handleTaskbarAction = useCallback((winId, action) => {
@@ -490,7 +520,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
     };
   }, []);
 
-  function renderAppContent(appId) {
+  function renderAppContent(appId, isMobile) {
     const {
       sellAction, skipAction, handleServiceAction, delayCustomerAction,
       orderProduct, setPriceAction, clearError,
@@ -514,6 +544,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
           servicePrices={state.servicePrices}
           addToShoppingListAction={addToShoppingListAction}
           acceptPCOrderAction={acceptPCOrderAction}
+          isMobile={isMobile}
         />
       );
       case 'pazar': return (
@@ -524,6 +555,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
           clearError={clearError}
           cancelOrderAction={cancelOrderAction}
           removeFromShoppingListAction={removeFromShoppingListAction}
+          isMobile={isMobile}
         />
       );
       case 'stok': return (
@@ -532,10 +564,11 @@ export default function Desktop({ state, firmaValue, ...actions }) {
           setPriceAction={setPriceAction}
           secondHandInventory={state.secondHandInventory}
           sellSecondHandAction={sellSecondHandAction}
+          isMobile={isMobile}
         />
       );
-      case 'urunler': return <UrunListesiApp state={state} />;
-      case 'analiz': return <AnalizTab state={state} />;
+      case 'urunler': return <UrunListesiApp state={state} isMobile={isMobile} />;
+      case 'analiz': return <AnalizTab state={state} isMobile={isMobile} />;
       case 'yonetim': return (
         <YonetimTab
           state={state}
@@ -548,6 +581,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
           setServicePriceAction={setServicePriceAction}
           takeLoanAction={takeLoanAction}
           resetGame={resetGame}
+          isMobile={isMobile}
         />
       );
       case 'pctopla': return (
@@ -556,9 +590,10 @@ export default function Desktop({ state, firmaValue, ...actions }) {
           buildPCAction={actions.buildPCAction}
           sellBuiltPCAction={actions.sellBuiltPCAction}
           fulfillPCOrderAction={fulfillPCOrderAction}
+          isMobile={isMobile}
         />
       );
-      case 'yorumlar': return <YorumlarApp state={state} markReviewsReadAction={markReviewsReadAction} />;
+      case 'yorumlar': return <YorumlarApp state={state} markReviewsReadAction={markReviewsReadAction} isMobile={isMobile} />;
       case 'hesapmak': return <Calculator />;
       case 'cizim': return <PaintApp />;
       default: return <div style={{ padding: '2rem', color: 'var(--color-text-mute)' }}>Uygulama bulunamadı</div>;
@@ -586,17 +621,36 @@ export default function Desktop({ state, firmaValue, ...actions }) {
           backgroundSize: '40px 40px',
         }} />
 
-        {/* Desktop icons — always visible in background */}
-        <div style={{ padding: '20px', display: 'flex', flexWrap: 'wrap', gap: '4px', alignContent: 'flex-start' }}>
-          {DESKTOP_APPS.map(app => (
-            <DesktopIcon
-              key={app.id}
-              app={app}
-              onClick={() => openApp(app.id)}
-              badge={badges[app.id] || 0}
-            />
-          ))}
-        </div>
+        {/* Desktop icons — hidden on mobile when a window is open */}
+        {(!isMobile || openWindows.filter(w => !w.minimized).length === 0) && (
+          <div style={isMobile ? {
+            position: 'absolute', inset: 0,
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            gap: '8px', padding: '16px',
+          } : {
+            padding: '20px', display: 'flex', flexWrap: 'wrap', gap: '4px', alignContent: 'flex-start',
+          }}>
+            {isMobile && (
+              <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', marginBottom: '8px', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                Uygulama Seç
+              </div>
+            )}
+            <div style={isMobile ? {
+              display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', width: '100%', maxWidth: '360px',
+            } : {
+              display: 'flex', flexWrap: 'wrap', gap: '4px',
+            }}>
+              {DESKTOP_APPS.map(app => (
+                <DesktopIcon
+                  key={app.id}
+                  app={app}
+                  onClick={() => openApp(app.id)}
+                  badge={badges[app.id] || 0}
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Open windows */}
         {openWindows.map(win => {
@@ -638,12 +692,13 @@ export default function Desktop({ state, firmaValue, ...actions }) {
                   isFloating
                   isDraggable
                   onDragStart={(e) => handleDragStart(win.id, e, pos.x, pos.y)}
+                  isMobile={isMobile}
                 />
-                <div style={{ flex: 1, overflow: 'auto', background: 'var(--color-cream)', position: 'relative' }}>
+                <div style={{ flex: 1, overflow: 'auto', overflowX: 'hidden', background: 'var(--color-cream)', position: 'relative', minHeight: 0 }}>
                   {showingSplash ? (
                     <SplashScreen app={app} />
                   ) : (
-                    renderAppContent(win.appId)
+                    renderAppContent(win.appId, isMobile)
                   )}
                 </div>
                 {/* Resize handles */}
@@ -696,12 +751,13 @@ export default function Desktop({ state, firmaValue, ...actions }) {
                   onMinimize={() => minimizeWindow(win.id)}
                   onClose={() => closeWindow(win.id)}
                   onFloat={() => floatWindow(win.id)}
+                  isMobile={isMobile}
                 />
-                <div style={{ flex: 1, overflow: 'auto', background: 'var(--color-cream)', position: 'relative' }}>
+                <div style={{ flex: 1, overflow: 'auto', overflowX: 'hidden', background: 'var(--color-cream)', position: 'relative', minHeight: 0 }}>
                   {showingSplash ? (
                     <SplashScreen app={app} />
                   ) : (
-                    renderAppContent(win.appId)
+                    renderAppContent(win.appId, isMobile)
                   )}
                 </div>
               </div>

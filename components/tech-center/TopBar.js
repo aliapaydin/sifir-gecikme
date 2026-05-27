@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { LOGOS, WIN_TARGET } from '@/lib/tech-center-data';
 import { LOAN_OPTIONS } from '@/lib/tech-center-engine';
 
@@ -193,6 +193,25 @@ function LoanModal({ state, onTake, onClose }) {
 
 export default function TopBar({ state, firmaValue, onStartDay, onCloseDay, takeLoanAction, clearCancelNotif }) {
   const [showLoan, setShowLoan] = useState(false);
+  const [isLight, setIsLight] = useState(false);
+  useEffect(() => {
+    const root = document.getElementById('v3-root');
+    setIsLight(root?.classList.contains('v3-light') || false);
+  }, []);
+  const toggleTheme = () => {
+    const root = document.getElementById('v3-root');
+    if (!root) return;
+    const nowLight = root.classList.contains('v3-light');
+    if (nowLight) {
+      root.classList.remove('v3-light');
+      localStorage.setItem('v3_theme', 'dark');
+      setIsLight(false);
+    } else {
+      root.classList.add('v3-light');
+      localStorage.setItem('v3_theme', 'light');
+      setIsLight(true);
+    }
+  };
 
   if (!state) return null;
 
@@ -359,8 +378,20 @@ export default function TopBar({ state, firmaValue, onStartDay, onCloseDay, take
           </div>
         )}
 
-        {/* Sağ: Gün Butonu */}
-        <div>
+        {/* Sağ: Tema Toggle + Gün Butonu */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <button
+            onClick={toggleTheme}
+            title={isLight ? 'Karanlık Moda Geç' : 'Aydınlık Moda Geç'}
+            style={{
+              width: '36px', height: '36px', borderRadius: '8px', border: '1px solid var(--color-border)',
+              background: 'var(--color-cream)', color: 'var(--color-text)',
+              fontSize: '1.1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >
+            {isLight ? '🌙' : '☀️'}
+          </button>
           {canStart && (
             <button
               onClick={onStartDay}

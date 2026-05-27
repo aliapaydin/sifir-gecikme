@@ -951,7 +951,7 @@ function CustomerDetailPane({ customer, state, sellAction, skipAction, handleSer
   );
 }
 
-export default function MailApp({ state, sellAction, skipAction, handleServiceAction, delayCustomerAction, servicePrices, addToShoppingListAction, acceptPCOrderAction }) {
+export default function MailApp({ state, sellAction, skipAction, handleServiceAction, delayCustomerAction, servicePrices, addToShoppingListAction, acceptPCOrderAction, isMobile }) {
   const [selectedId, setSelectedId] = useState(null);
   const [successData, setSuccessData] = useState(null);
   // Tracks the previous selectedId to distinguish "user just acted" from "user navigated to dealt customer"
@@ -986,18 +986,21 @@ export default function MailApp({ state, sellAction, skipAction, handleServiceAc
       <SuccessModal data={successData} onClose={() => setSuccessData(null)} />
       <div style={{
         display: 'flex',
+        flexDirection: isMobile ? 'column' : 'row',
         height: '100%',
         background: 'var(--color-cream)',
         overflow: 'hidden',
       }}>
-        {/* Left panel — inbox list */}
+        {/* Top (mobile) / left (desktop) panel — inbox list */}
         <div style={{
-          width: '280px',
-          minWidth: '220px',
-          maxWidth: '300px',
+          width: isMobile ? '100%' : '280px',
+          height: isMobile ? '42%' : undefined,
+          minWidth: isMobile ? undefined : '220px',
+          maxWidth: isMobile ? undefined : '300px',
           flexShrink: 0,
           background: 'var(--color-cream-card)',
-          borderRight: '1px solid var(--color-border)',
+          borderRight: isMobile ? 'none' : '1px solid var(--color-border)',
+          borderBottom: isMobile ? '1px solid var(--color-border)' : 'none',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
@@ -1045,7 +1048,7 @@ export default function MailApp({ state, sellAction, skipAction, handleServiceAc
               return (
                 <div
                   key={customer.id}
-                  onClick={() => setSelectedId(customer.id)}
+                  onClick={() => { setSelectedId(customer.id); }}
                   style={{
                     padding: '0.625rem 0.875rem',
                     cursor: 'pointer',
@@ -1106,20 +1109,22 @@ export default function MailApp({ state, sellAction, skipAction, handleServiceAc
           </div>
         </div>
 
-        {/* Right panel — detail */}
-        <CustomerDetailPane
-          key={selectedId}
-          customer={selectedCustomer}
-          state={state}
-          sellAction={sellAction}
-          skipAction={skipAction}
-          handleServiceAction={handleServiceAction}
-          delayCustomerAction={delayCustomerAction}
-          servicePrices={servicePrices}
-          onSuccess={(data) => setSuccessData(data)}
-          addToShoppingListAction={addToShoppingListAction}
-          acceptPCOrderAction={acceptPCOrderAction}
-        />
+        {/* Bottom/right panel — detail */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minHeight: 0 }}>
+          <CustomerDetailPane
+            key={selectedId}
+            customer={selectedCustomer}
+            state={state}
+            sellAction={sellAction}
+            skipAction={skipAction}
+            handleServiceAction={handleServiceAction}
+            delayCustomerAction={delayCustomerAction}
+            servicePrices={servicePrices}
+            onSuccess={(data) => setSuccessData(data)}
+            addToShoppingListAction={addToShoppingListAction}
+            acceptPCOrderAction={acceptPCOrderAction}
+          />
+        </div>
       </div>
     </>
   );
