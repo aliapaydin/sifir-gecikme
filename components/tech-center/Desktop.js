@@ -393,7 +393,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
         return next;
       });
     }, 1000);
-  }, []);
+  }, [isMobile]);
 
   const handleTaskbarAction = useCallback((winId, action) => {
     if (action === 'minimize') {

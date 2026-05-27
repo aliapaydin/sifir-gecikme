@@ -15,6 +15,8 @@ export default function V3Footer() {
       .catch(() => setUser(null));
   }, [pathname]);
 
+  if (pathname === '/v3/tech-center') return null;
+
   return (
     <>
       <style>{`
@@ -97,13 +99,13 @@ export default function V3Footer() {
         <div className="v3-footer-inner">
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-              <span className="v3-footer-brand">Sıfır Gecikme v3</span>
-              <Link href="/v3/versiyon" className="v3-footer-version">v3.3.0</Link>
+              <span className="v3-footer-brand">Sıfır Gecikme</span>
+              <Link href="/v3/versiyon" className="v3-footer-version">v3.4.0</Link>
             </div>
             <div className="v3-footer-copy">© 2026 Ali Apaydın. Tüm hakları saklıdır.</div>
           </div>
           <div className="v3-footer-links">
-            <Link href="/v3" className="v3-footer-link">Anasayfa</Link>
+            <a href="/v3" className="v3-footer-link" onClick={e => { if (window.location.pathname === '/v3') { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); } }}>Anasayfa</a>
             {user === null && (
               <>
                 <Link href="/v3/giris" className="v3-footer-link">Giriş Yap</Link>

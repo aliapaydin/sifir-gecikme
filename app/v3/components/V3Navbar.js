@@ -25,7 +25,6 @@ const modulItems = [
 
 const navLinks = [
   { href: '/v3/icerikler', label: 'İçerikler' },
-  { href: '/v3/harita',    label: 'Haritam' },
 ];
 
 export default function V3Navbar() {
@@ -95,6 +94,8 @@ export default function V3Navbar() {
   }
 
   const isActive = (href) => pathname === href || pathname.startsWith(href + '/') || pathname.startsWith(href + '?');
+
+  if (pathname === '/v3/tech-center') return null;
 
   return (
     <>
@@ -199,6 +200,11 @@ export default function V3Navbar() {
           transition: opacity 0.15s; display: flex; align-items: center; gap: 5px;
         }
         .v3-btn-destek:hover { opacity: 0.85; }
+        .v3-btn-destek-text { display: inline; }
+        @media (max-width: 768px) {
+          .v3-btn-destek { padding: 7px 9px; }
+          .v3-btn-destek-text { display: none; }
+        }
         .v3-avatar {
           width: 32px; height: 32px; border-radius: 50%;
           display: flex; align-items: center; justify-content: center;
@@ -280,7 +286,26 @@ export default function V3Navbar() {
 
       <nav className="v3-nav">
         <div className="v3-nav-inner">
-          <Link href="/v3" className="v3-nav-logo">◈ Sıfır Gecikme v3</Link>
+          <Link href="/v3" className="v3-nav-logo">
+            <svg width="26" height="26" viewBox="0 0 28 28" fill="none">
+              <defs>
+                <linearGradient id="logo-neural" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#6366f1"/>
+                  <stop offset="100%" stopColor="#8b5cf6"/>
+                </linearGradient>
+              </defs>
+              <rect width="28" height="28" rx="7" fill="url(#logo-neural)" opacity="0.15"/>
+              <line x1="7" y1="21" x2="14" y2="8" stroke="url(#logo-neural)" strokeWidth="1.5" opacity="0.6"/>
+              <line x1="7" y1="21" x2="21" y2="18" stroke="url(#logo-neural)" strokeWidth="1.5" opacity="0.6"/>
+              <line x1="14" y1="8" x2="21" y2="18" stroke="url(#logo-neural)" strokeWidth="1.5" opacity="0.6"/>
+              <line x1="14" y1="8" x2="14" y2="18" stroke="url(#logo-neural)" strokeWidth="1.5" opacity="0.4"/>
+              <circle cx="7" cy="21" r="3" fill="url(#logo-neural)"/>
+              <circle cx="14" cy="8" r="3.5" fill="url(#logo-neural)"/>
+              <circle cx="21" cy="18" r="3" fill="url(#logo-neural)"/>
+              <circle cx="14" cy="18" r="2" fill="url(#logo-neural)" opacity="0.7"/>
+            </svg>
+            Sıfır Gecikme
+          </Link>
 
           <div className="v3-nav-links">
             {navLinks.map(link => (
@@ -331,6 +356,11 @@ export default function V3Navbar() {
                 </div>
               )}
             </div>
+
+            <Link href="/v3/harita"
+              className={`v3-nav-link${isActive('/v3/harita') ? ' active' : ''}`}>
+              Haritam
+            </Link>
           </div>
 
           <div className="v3-nav-right">
@@ -355,7 +385,9 @@ export default function V3Navbar() {
               <Link href="/v3/giris" className="v3-btn-login">Giriş</Link>
             )}
             {!user?.isSupporter && (
-              <Link href="/v3/destek" className="v3-btn-destek">☕ Destek Ol</Link>
+              <Link href="/v3/destek" className="v3-btn-destek">
+                ☕{!user && <span className="v3-btn-destek-text"> Destek Ol</span>}
+              </Link>
             )}
 
             <button className="v3-hamburger" onClick={() => setMenuOpen(o => !o)} aria-label="Menü">
@@ -419,6 +451,14 @@ export default function V3Navbar() {
             ))}
           </div>
         )}
+
+        <div className="v3-mobile-divider" />
+
+        <Link href="/v3/harita"
+          className={`v3-mobile-link${isActive('/v3/harita') ? ' active' : ''}`}
+          onClick={() => setMenuOpen(false)}>
+          🗺️ Haritam
+        </Link>
 
         <div className="v3-mobile-divider" />
 
