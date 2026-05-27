@@ -25,6 +25,7 @@ const MANUAL_META = {
   '/yazilar/decision-tree':         { kategori: 'ml',         seviye: 2, x: 360, y: 300 },
   '/yazilar/random-forest':         { kategori: 'ml',         seviye: 3, x: 480, y: 310 },
   '/yazilar/naive-bayes':           { kategori: 'ml',         seviye: 2, x: 370, y: 420 },
+  '/yazilar/lojistik-regresyon':    { kategori: 'ml',         seviye: 2, x: 360, y: 185 },
   '/yazilar/sinir-agi':             { kategori: 'ml',         seviye: 3, x: 230, y: 450 },
   // İstatistik
   '/yazilar/merkezi-limit-teoremi': { kategori: 'istatistik', seviye: 1, x: 450, y: 80  },
@@ -81,6 +82,9 @@ const EDGES = [
   ['linear-regression',    'confusion-matrix'],
   ['confusion-matrix',     'bias-variance'],
   ['kmeans',               'decision-tree'],
+  ['linear-regression',    'lojistik-regresyon'],
+  ['lojistik-regresyon',   'confusion-matrix'],
+  ['lojistik-regresyon',   'bias-variance'],
   // İstatistik
   ['merkezi-limit-teoremi','ab-test'],
   ['sample-size',          'ab-test'],
@@ -149,7 +153,7 @@ function getAutoKategori(y) {
 }
 
 // ─── SAYFA ──────────────────────────────────────────────────────────────────
-export default function GrafikPage() {
+export default function GrafikPage({ getHref = href => href }) {
   const [hover, setHover] = useState(null);
 
   const { nodes, positions, overflowNodes } = useMemo(() => {
@@ -284,7 +288,7 @@ export default function GrafikPage() {
                 <g key={node.id}
                   onMouseEnter={() => setHover(node.id)}
                   onMouseLeave={() => setHover(null)}
-                  onClick={() => { window.location.href = node.href; }}
+                  onClick={() => { window.location.href = getHref(node.href); }}
                   style={{ cursor: 'pointer', transition: 'opacity 0.15s', opacity: dimmed ? 0.18 : 1 }}
                 >
                   {isHov && (
@@ -342,7 +346,7 @@ export default function GrafikPage() {
                     ))}
                   </div>
                 )}
-                <a href={node.href} style={{ marginLeft: 'auto', fontSize: '12px', fontWeight: 600, color: renk.fill, textDecoration: 'none', padding: '4px 12px', borderRadius: '8px', background: renk.bg, flexShrink: 0 }}>
+                <a href={getHref(node.href)} style={{ marginLeft: 'auto', fontSize: '12px', fontWeight: 600, color: renk.fill, textDecoration: 'none', padding: '4px 12px', borderRadius: '8px', background: renk.bg, flexShrink: 0 }}>
                   Konuya git →
                 </a>
               </div>
