@@ -371,6 +371,39 @@ export default function Desktop({ state, firmaValue, ...actions }) {
     } catch {}
   }, []);
 
+  // Belt-and-suspenders: also restore when entering day_active with no open windows.
+  // Handles the case where Desktop stays mounted across phase transitions.
+  useEffect(() => {
+    if (state.gamePhase === 'day_active') {
+      setOpenWindows(prev => {
+        if (prev.length > 0) return prev;
+        const memory = windowMemoryRef.current;
+        const mobile = window.innerWidth < 768;
+        const toRestore = [];
+        Object.entries(memory).forEach(([appId, mem], i) => {
+          if (mem?.isOpen && DESKTOP_APPS.find(a => a.id === appId)) {
+            const defaultSize = WINDOW_FLOAT_DEFAULTS[appId] || DEFAULT_FLOAT_SIZE;
+            const z = ++zCounterRef.current;
+            toRestore.push({
+              id: `win_${appId}_${Date.now() + i}`,
+              appId,
+              minimized: false,
+              floating: mobile ? false : (mem.floating ?? true),
+              position: mem.position || { x: 60 + i * 24, y: 50 + i * 24 },
+              size: mem.size || defaultSize,
+              zIndex: z,
+            });
+          }
+        });
+        if (toRestore.length > 0) {
+          pendingActiveIdRef.current = toRestore[toRestore.length - 1].id;
+          return toRestore;
+        }
+        return prev;
+      });
+    }
+  }, [state.gamePhase]);
+
   // Apply pending active window focus after openWindows state settles
   useEffect(() => {
     if (pendingActiveIdRef.current !== null) {

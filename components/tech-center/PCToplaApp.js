@@ -387,24 +387,10 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
             fontFamily: 'inherit',
           }}>{t.label}</button>
         ))}
-        {tab === 'build' && (
-          <button
-            onClick={() => setSummaryOpen(v => !v)}
-            style={{
-              marginLeft: 'auto', padding: '6px 12px', border: '1px solid var(--color-border)',
-              borderRadius: '8px', background: summaryOpen ? 'var(--color-accent-soft)' : 'transparent',
-              color: summaryOpen ? 'var(--color-accent)' : 'var(--color-text-mute)',
-              fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap',
-              alignSelf: 'center', marginBottom: '4px', fontFamily: 'inherit',
-            }}
-          >
-            {summaryOpen ? '✕ Özet' : '📋 Özet'}
-          </button>
-        )}
       </div>
 
       {tab === 'build' && (
-        <div style={{ flex: 1, overflow: 'auto', display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '0', minHeight: 0 }}>
+        <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: isMobile ? 'column' : 'row', minHeight: 0 }}>
           {/* Left — slot selector */}
           <div style={{ width: isMobile ? '100%' : '260px', flexShrink: 0, borderRight: isMobile ? 'none' : '1px solid var(--color-border)', borderBottom: isMobile ? '1px solid var(--color-border)' : 'none', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
             <div style={{ padding: '10px 14px', fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-mute)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '1px solid var(--color-border)' }}>
@@ -535,12 +521,33 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
           </div>
           )}
 
-          {/* Right — summary + build (collapsible) */}
-          {summaryOpen && <div style={{ width: isMobile ? '100%' : '220px', flexShrink: 0, borderLeft: isMobile ? 'none' : '1px solid var(--color-border)', borderTop: isMobile ? '1px solid var(--color-border)' : 'none', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-            <div style={{ padding: '10px 14px', fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-mute)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '1px solid var(--color-border)' }}>
-              Özet
-            </div>
-            <div style={{ flex: 1, overflowY: 'auto', padding: '10px 12px' }}>
+          {/* Right: toggle tab + collapsible summary drawer (desktop only) */}
+          {!isMobile && (
+            <div style={{ display: 'flex', flexShrink: 0 }}>
+              <button
+                onClick={() => setSummaryOpen(v => !v)}
+                title={summaryOpen ? 'Özeti Kapat' : 'Özeti Aç'}
+                style={{
+                  width: '22px', flexShrink: 0, padding: 0, cursor: 'pointer',
+                  borderLeft: '1px solid var(--color-border)', background: summaryOpen ? 'var(--color-accent-soft, #EEF2FF)' : 'var(--color-cream-card)',
+                  border: 'none', outline: 'none', borderLeft: '1px solid var(--color-border)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: summaryOpen ? 'var(--color-accent)' : 'var(--color-text-mute)',
+                  fontSize: '13px', transition: 'background 0.15s',
+                }}
+              >
+                {summaryOpen ? '›' : '‹'}
+              </button>
+              <div style={{
+                width: summaryOpen ? '220px' : '0px', flexShrink: 0,
+                overflow: 'hidden', transition: 'width 0.25s ease',
+                display: 'flex', flexDirection: 'column',
+              }}>
+                <div style={{ width: '220px', display: 'flex', flexDirection: 'column', height: '100%', borderLeft: '1px solid var(--color-border)' }}>
+                  <div style={{ padding: '10px 14px', fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-mute)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '1px solid var(--color-border)' }}>
+                    Özet
+                  </div>
+                  <div style={{ flex: 1, overflowY: 'auto', padding: '10px 12px' }}>
               {/* Cost breakdown */}
               {[...BUILD_SLOTS, ...PERIPHERAL_SLOTS].map(slot => {
                 const p = build[slot.key] ? PRODUCTS[build[slot.key]] : null;
@@ -598,26 +605,29 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
                   <div style={{ fontSize: '0.75rem', color: '#065F46', fontWeight: 600 }}>✓ Tüm parçalar uyumlu</div>
                 </div>
               )}
-            </div>
+                  </div>
 
-            {/* Build button */}
-            <div style={{ padding: '10px 12px', borderTop: '1px solid var(--color-border)', flexShrink: 0 }}>
-              <button
-                onClick={handleBuild}
-                disabled={!canBuild}
-                style={{
-                  width: '100%', padding: '10px', borderRadius: '10px', border: 'none',
-                  background: canBuild ? '#1D9E75' : 'var(--color-border)',
-                  color: canBuild ? '#fff' : 'var(--color-text-mute)',
-                  fontSize: '0.88rem', fontWeight: 700,
-                  cursor: canBuild ? 'pointer' : 'not-allowed',
-                  transition: 'all 0.15s',
-                }}
-              >
-                {canBuild ? '🔧 PC Topla →' : requiredFilled ? '⚠️ Uyumsuz' : 'Parçaları Seç'}
-              </button>
+                  {/* Build button */}
+                  <div style={{ padding: '10px 12px', borderTop: '1px solid var(--color-border)', flexShrink: 0 }}>
+                    <button
+                      onClick={handleBuild}
+                      disabled={!canBuild}
+                      style={{
+                        width: '100%', padding: '10px', borderRadius: '10px', border: 'none',
+                        background: canBuild ? '#1D9E75' : 'var(--color-border)',
+                        color: canBuild ? '#fff' : 'var(--color-text-mute)',
+                        fontSize: '0.88rem', fontWeight: 700,
+                        cursor: canBuild ? 'pointer' : 'not-allowed',
+                        transition: 'all 0.15s',
+                      }}
+                    >
+                      {canBuild ? '🔧 PC Topla →' : requiredFilled ? '⚠️ Uyumsuz' : 'Parçaları Seç'}
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>}
+          )}
         </div>
       )}
 

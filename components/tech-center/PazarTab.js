@@ -71,76 +71,79 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
   return (
     <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', height: '100%', overflow: 'hidden' }}>
       {/* Sol: Ana içerik */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem 1rem' }}>
-      {orderError && (
-        <div style={{
-          padding: '10px 16px',
-          borderRadius: '8px',
-          background: 'var(--color-amber-bg)',
-          color: 'var(--color-amber-text)',
-          marginBottom: '1rem',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          fontSize: '0.875rem',
-        }}>
-          <span>⚠️ {orderError}</span>
-          <button
-            onClick={() => clearError('orderError')}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-amber-text)', fontSize: '1rem' }}
-          >×</button>
+      <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+        {/* Sticky header: nakit + arama + kategori */}
+        <div style={{ flexShrink: 0, padding: '0.75rem 1rem 0', background: 'var(--color-cream)', borderBottom: '1px solid var(--color-border)' }}>
+          {orderError && (
+            <div style={{
+              padding: '8px 12px', borderRadius: '8px', background: 'var(--color-amber-bg)',
+              color: 'var(--color-amber-text)', marginBottom: '0.625rem',
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.875rem',
+            }}>
+              <span>⚠️ {orderError}</span>
+              <button onClick={() => clearError('orderError')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-amber-text)', fontSize: '1rem' }}>×</button>
+            </div>
+          )}
+
+          {/* Nakit + Arama — yan yana */}
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '0.625rem' }}>
+            <div style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              padding: '6px 10px', borderRadius: '8px', flexShrink: 0,
+              background: cash < 5000 ? '#FEE2E2' : 'var(--color-correct-bg)',
+              border: `1px solid ${cash < 5000 ? '#FCA5A5' : 'var(--color-correct-text)33'}`,
+              fontSize: '0.82rem', gap: '8px',
+            }}>
+              <span style={{ color: cash < 5000 ? '#991B1B' : 'var(--color-correct-text)', fontWeight: 600 }}>💰</span>
+              <span style={{ fontWeight: 800, fontFamily: 'var(--font-mono)', color: cash < 5000 ? '#E24B4A' : '#1D9E75' }}>
+                {fmtMoney(cash)}
+              </span>
+            </div>
+            <div style={{ flex: 1, position: 'relative' }}>
+              <input
+                type="text"
+                placeholder="Ürün ara... (marka, model, özellik)"
+                value={searchText}
+                onChange={e => setSearchText(e.target.value)}
+                style={{
+                  width: '100%', padding: '6px 30px 6px 10px', borderRadius: '8px',
+                  border: '1px solid var(--color-border)', background: 'var(--color-cream)',
+                  color: 'var(--color-text)', fontSize: '0.82rem', outline: 'none', boxSizing: 'border-box',
+                }}
+              />
+              {searchText && (
+                <button onClick={() => setSearchText('')} style={{
+                  position: 'absolute', right: '6px', top: '50%', transform: 'translateY(-50%)',
+                  background: 'none', border: 'none', cursor: 'pointer',
+                  color: 'var(--color-text-mute)', fontSize: '1rem', lineHeight: 1, padding: 0,
+                }}>×</button>
+              )}
+            </div>
+          </div>
+
+          {/* Kategori filtre */}
+          <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', paddingBottom: '0.625rem' }}>
+            {categories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCat(cat)}
+                style={{
+                  padding: '4px 12px', borderRadius: '999px',
+                  border: `1px solid ${selectedCat === cat ? 'var(--color-accent)' : 'var(--color-border)'}`,
+                  background: selectedCat === cat ? 'var(--color-accent-soft)' : 'transparent',
+                  color: selectedCat === cat ? 'var(--color-accent)' : 'var(--color-text-mute)',
+                  fontSize: '0.78rem', cursor: 'pointer', fontWeight: selectedCat === cat ? 600 : 400,
+                  whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '4px',
+                }}
+              >
+                {cat === 'all' ? 'Tümü' : <><span>{CATEGORY_ICONS[cat]}</span><span>{CATEGORY_LABELS[cat]}</span></>}
+              </button>
+            ))}
+          </div>
         </div>
-      )}
 
-      {/* Mevcut nakit bilgisi — belirgin */}
-      <div style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '8px 12px',
-        borderRadius: '10px',
-        background: cash < 5000 ? '#FEE2E2' : 'var(--color-correct-bg)',
-        border: `1px solid ${cash < 5000 ? '#FCA5A5' : 'var(--color-correct-text)33'}`,
-        marginBottom: '0.875rem',
-        fontSize: '0.85rem',
-      }}>
-        <span style={{ color: cash < 5000 ? '#991B1B' : 'var(--color-correct-text)', fontWeight: 600 }}>
-          💰 Mevcut Nakit
-        </span>
-        <span style={{ fontWeight: 800, fontFamily: 'var(--font-mono)', color: cash < 5000 ? '#E24B4A' : '#1D9E75', fontSize: '1rem' }}>
-          {fmtMoney(cash)}
-        </span>
-      </div>
-
-      {/* Arama kutusu */}
-      <div style={{ position: 'relative', marginBottom: '0.875rem' }}>
-        <input
-          type="text"
-          placeholder="Ürün ara... (marka, model, özellik)"
-          value={searchText}
-          onChange={e => setSearchText(e.target.value)}
-          style={{
-            width: '100%',
-            padding: '8px 36px 8px 12px',
-            borderRadius: '8px',
-            border: '1px solid var(--color-border)',
-            background: 'var(--color-cream)',
-            color: 'var(--color-text)',
-            fontSize: '0.85rem',
-            outline: 'none',
-            boxSizing: 'border-box',
-          }}
-        />
-        {searchText && (
-          <button
-            onClick={() => setSearchText('')}
-            style={{
-              position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)',
-              background: 'none', border: 'none', cursor: 'pointer',
-              color: 'var(--color-text-mute)', fontSize: '1rem', lineHeight: 1,
-              padding: 0,
-            }}
-          >×</button>
-        )}
-      </div>
+        {/* Scrollable content area */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '0.875rem 1rem 1.5rem' }}>
 
       {/* Bekleyen siparişler - detaylı */}
       {pendingOrders.length > 0 && (
@@ -223,30 +226,6 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
           </div>
         </div>
       )}
-
-      {/* Kategori filtre */}
-      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '1.25rem' }}>
-        {categories.map(cat => (
-          <button
-            key={cat}
-            onClick={() => setSelectedCat(cat)}
-            style={{
-              padding: '5px 14px',
-              borderRadius: '999px',
-              border: `1px solid ${selectedCat === cat ? 'var(--color-accent)' : 'var(--color-border)'}`,
-              background: selectedCat === cat ? 'var(--color-accent-soft)' : 'transparent',
-              color: selectedCat === cat ? 'var(--color-accent)' : 'var(--color-text-mute)',
-              fontSize: '0.8rem',
-              cursor: 'pointer',
-              fontWeight: selectedCat === cat ? 600 : 400,
-              whiteSpace: 'nowrap',
-              display: 'flex', alignItems: 'center', gap: '4px',
-            }}
-          >
-            {cat === 'all' ? 'Tümü' : <><span>{CATEGORY_ICONS[cat]}</span><span>{CATEGORY_LABELS[cat]}</span></>}
-          </button>
-        ))}
-      </div>
 
       {/* Ürün grupları */}
       {Object.entries(grouped).map(([cat, products]) => (
@@ -482,7 +461,8 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
           </div>
         </div>
       )}
-      </div>{/* /sol içerik */}
+        </div>{/* /scrollable */}
+      </div>{/* /sol panel */}
 
       {/* Sağ: Alışveriş Listesi sidebar */}
       {hasShopping && (
