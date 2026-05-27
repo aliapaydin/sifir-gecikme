@@ -73,7 +73,7 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
       {/* Sol: Ana içerik */}
       <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         {/* Sticky header: nakit + arama + kategori */}
-        <div style={{ flexShrink: 0, padding: '0.75rem 1rem 0', background: 'var(--color-cream)', borderBottom: '1px solid var(--color-border)' }}>
+        <div style={{ flexShrink: 0, padding: '0.75rem 1rem 0.75rem', background: 'var(--color-cream)', borderBottom: '1px solid var(--color-border)' }}>
           {orderError && (
             <div style={{
               padding: '8px 12px', borderRadius: '8px', background: 'var(--color-amber-bg)',
@@ -86,7 +86,7 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
           )}
 
           {/* Nakit + Arama — yan yana */}
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '0.625rem' }}>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             <div style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               padding: '6px 10px', borderRadius: '8px', flexShrink: 0,
@@ -121,8 +121,13 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
             </div>
           </div>
 
-          {/* Kategori filtre */}
-          <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', paddingBottom: '0.625rem' }}>
+        </div>
+
+        {/* Scrollable content area */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '0.875rem 1rem 1.5rem' }}>
+
+          {/* Kategori filtre — sayfayla kayar */}
+          <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', marginBottom: '0.875rem' }}>
             {categories.map(cat => (
               <button
                 key={cat}
@@ -140,10 +145,6 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
               </button>
             ))}
           </div>
-        </div>
-
-        {/* Scrollable content area */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '0.875rem 1rem 1.5rem' }}>
 
       {/* Bekleyen siparişler - detaylı */}
       {pendingOrders.length > 0 && (

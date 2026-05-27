@@ -390,13 +390,79 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
       </div>
 
       {tab === 'build' && (
-        <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: isMobile ? 'column' : 'row', minHeight: 0 }}>
+        <div style={{ flex: 1, overflow: isMobile ? 'auto' : 'hidden', display: 'flex', flexDirection: isMobile ? 'column' : 'row', minHeight: 0 }}>
+          {/* Mobile: PC visual + özet toggle */}
+          {isMobile && (
+            <>
+              <div style={{ flexShrink: 0, padding: '10px 12px', borderBottom: '1px solid var(--color-border)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', background: 'var(--color-cream)' }}>
+                <PCInteriorVisual build={build} />
+                {!build.case && (
+                  <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', textAlign: 'center' }}>Aşağıdan parça seçerek montajı başlat</div>
+                )}
+              </div>
+              <div style={{ flexShrink: 0, padding: '7px 12px', borderBottom: '1px solid var(--color-border)', background: 'var(--color-cream-card)', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                <button
+                  onClick={() => setSummaryOpen(v => !v)}
+                  style={{ padding: '5px 12px', borderRadius: '7px', border: '1px solid var(--color-border)', background: summaryOpen ? 'var(--color-accent-soft, #EEF2FF)' : 'transparent', color: summaryOpen ? 'var(--color-accent)' : 'var(--color-text-mute)', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontFamily: 'inherit' }}
+                >
+                  📊 {summaryOpen ? 'Özeti Gizle ▲' : 'Özeti Gör ▼'}
+                </button>
+                {score && <span style={{ fontSize: '0.72rem', fontWeight: 700, color: score.color, padding: '3px 8px', borderRadius: '6px', background: score.color + '22' }}>{score.text}</span>}
+                {issues.length > 0 && <span style={{ fontSize: '0.72rem', color: '#991B1B', padding: '3px 8px', borderRadius: '6px', background: '#FEE2E2' }}>⚠️ {issues.length} uyumsuzluk</span>}
+              </div>
+              {summaryOpen && (
+                <div style={{ flexShrink: 0, padding: '10px 14px', borderBottom: '1px solid var(--color-border)', background: 'var(--color-cream-card)' }}>
+                  {[...BUILD_SLOTS, ...PERIPHERAL_SLOTS].map(slot => {
+                    const p = build[slot.key] ? PRODUCTS[build[slot.key]] : null;
+                    if (!p) return null;
+                    return (
+                      <div key={slot.key} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '4px' }}>
+                        <span style={{ color: 'var(--color-text-mute)' }}>{slot.label}</span>
+                        <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-text)', fontWeight: 600 }}>{fmtMoney(p.buyPrice)}</span>
+                      </div>
+                    );
+                  })}
+                  {requiredFilled && (
+                    <>
+                      <div style={{ height: '1px', background: 'var(--color-border)', margin: '8px 0' }} />
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '4px' }}>
+                        <span style={{ color: 'var(--color-text-mute)' }}>Parça toplam</span>
+                        <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700 }}>{fmtMoney(Object.values(build).filter(Boolean).reduce((s, id) => s + (PRODUCTS[id]?.buyPrice || 0), 0))}</span>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '4px' }}>
+                        <span style={{ color: 'var(--color-text-mute)' }}>Montaj ücreti</span>
+                        <span style={{ fontFamily: 'var(--font-mono)', color: '#1D9E75', fontWeight: 600 }}>+₺2.500</span>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem', marginTop: '4px' }}>
+                        <span style={{ color: 'var(--color-text)', fontWeight: 700 }}>Satış fiyatı</span>
+                        <span style={{ fontFamily: 'var(--font-mono)', color: '#1D9E75', fontWeight: 800 }}>{fmtMoney(estimatedVal)}</span>
+                      </div>
+                    </>
+                  )}
+                  {issues.length > 0 && (
+                    <div style={{ marginTop: '8px', padding: '8px', borderRadius: '6px', background: '#FEE2E2', border: '1px solid #FCA5A5' }}>
+                      <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#991B1B', marginBottom: '4px' }}>⚠️ Uyumsuzluk</div>
+                      {issues.map((iss, i) => <div key={i} style={{ fontSize: '0.7rem', color: '#991B1B', lineHeight: 1.4 }}>{iss}</div>)}
+                    </div>
+                  )}
+                  {requiredFilled && issues.length === 0 && (
+                    <div style={{ marginTop: '8px', padding: '8px', borderRadius: '6px', background: '#D1FAE5', border: '1px solid #6EE7B7' }}>
+                      <div style={{ fontSize: '0.75rem', color: '#065F46', fontWeight: 600 }}>✓ Tüm parçalar uyumlu</div>
+                    </div>
+                  )}
+                  <button onClick={handleBuild} disabled={!canBuild} style={{ width: '100%', padding: '10px', borderRadius: '10px', border: 'none', background: canBuild ? '#1D9E75' : 'var(--color-border)', color: canBuild ? '#fff' : 'var(--color-text-mute)', fontSize: '0.88rem', fontWeight: 700, marginTop: '10px', cursor: canBuild ? 'pointer' : 'not-allowed', transition: 'all 0.15s' }}>
+                    {canBuild ? '🔧 PC Topla →' : requiredFilled ? '⚠️ Uyumsuz' : 'Parçaları Seç'}
+                  </button>
+                </div>
+              )}
+            </>
+          )}
           {/* Left — slot selector */}
-          <div style={{ width: isMobile ? '100%' : '260px', flexShrink: 0, borderRight: isMobile ? 'none' : '1px solid var(--color-border)', borderBottom: isMobile ? '1px solid var(--color-border)' : 'none', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          <div style={{ width: isMobile ? '100%' : '260px', flexShrink: 0, borderRight: isMobile ? 'none' : '1px solid var(--color-border)', borderBottom: isMobile ? '1px solid var(--color-border)' : 'none', display: 'flex', flexDirection: 'column', overflow: isMobile ? 'visible' : 'hidden' }}>
             <div style={{ padding: '10px 14px', fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-mute)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '1px solid var(--color-border)' }}>
               Konfigürasyon
             </div>
-            <div style={{ flex: 1, overflowY: 'auto', padding: '8px' }}>
+            <div style={{ flex: isMobile ? 'none' : 1, overflowY: isMobile ? 'visible' : 'auto', padding: '8px' }}>
               {BUILD_SLOTS.map(slot => renderSlotRow(slot))}
 
               {/* Peripherals section */}
@@ -453,11 +519,16 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
 
           {/* Middle — product picker OR PC interior visual */}
           {(!isMobile || activeSlot) && (
-          <div style={{ flex: 1, overflow: 'auto', padding: '12px', minWidth: 0 }}>
+          <div style={{ flex: isMobile ? 'none' : 1, overflow: isMobile ? 'visible' : 'auto', padding: '12px', minWidth: 0 }}>
             {activeSlot ? (
               <>
-                <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-text-mute)', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                  {[...BUILD_SLOTS, ...PERIPHERAL_SLOTS].find(s => s.key === activeSlot)?.label} Seç
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+                  {isMobile && (
+                    <button onClick={() => setActiveSlot(null)} style={{ padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--color-border)', background: 'transparent', color: 'var(--color-text-mute)', fontSize: '0.78rem', cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0 }}>← Geri</button>
+                  )}
+                  <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-text-mute)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                    {[...BUILD_SLOTS, ...PERIPHERAL_SLOTS].find(s => s.key === activeSlot)?.label} Seç
+                  </div>
                 </div>
                 {availableFor([...BUILD_SLOTS, ...PERIPHERAL_SLOTS].find(s => s.key === activeSlot)?.category || '').length === 0 ? (
                   <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--color-text-mute)', fontSize: '0.85rem' }}>
