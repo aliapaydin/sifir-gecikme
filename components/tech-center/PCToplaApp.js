@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, Fragment } from 'react';
 import { PRODUCTS, CATEGORY_LABELS, CATEGORY_COLORS } from '@/lib/tech-center-data';
 
 function fmtMoney(n) {
@@ -322,55 +322,88 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
     }
 
     const hasStock = availableFor(slot.category).length > 0;
+    const inlineProducts = isMobile ? availableFor(slot.category) : [];
     return (
-      <div
-        key={slot.key}
-        onClick={() => setActiveSlot(isActive ? null : slot.key)}
-        style={{
-          padding: '8px 10px', marginBottom: '4px', borderRadius: '8px', cursor: 'pointer',
-          border: isActive ? `1.5px solid var(--color-accent)` : `1px solid ${selected ? catColor(slot.category) + '44' : 'var(--color-border)'}`,
-          background: isActive ? 'var(--color-accent-soft, #EEF2FF)' : selected ? catColor(slot.category) + '11' : 'var(--color-cream-card)',
-          transition: 'all 0.15s',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontSize: '1rem', flexShrink: 0 }}>{slot.emoji}</span>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              {slot.label}
-              {!slot.required && <span style={{ fontSize: '0.65rem', padding: '1px 5px', borderRadius: '3px', background: 'var(--color-cream)', border: '1px solid var(--color-border)' }}>opsiyonel</span>}
-            </div>
-            {selected ? (
-              <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {selected.brand} {selected.name}
+      <Fragment key={slot.key}>
+        <div
+          onClick={() => setActiveSlot(isActive ? null : slot.key)}
+          style={{
+            padding: '8px 10px', marginBottom: isActive && isMobile ? '0' : '4px',
+            borderRadius: isActive && isMobile ? '8px 8px 0 0' : '8px', cursor: 'pointer',
+            border: isActive ? `1.5px solid var(--color-accent)` : `1px solid ${selected ? catColor(slot.category) + '44' : 'var(--color-border)'}`,
+            background: isActive ? 'var(--color-accent-soft, #EEF2FF)' : selected ? catColor(slot.category) + '11' : 'var(--color-cream-card)',
+            transition: 'all 0.15s',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '1rem', flexShrink: 0 }}>{slot.emoji}</span>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                {slot.label}
+                {!slot.required && <span style={{ fontSize: '0.65rem', padding: '1px 5px', borderRadius: '3px', background: 'var(--color-cream)', border: '1px solid var(--color-border)' }}>opsiyonel</span>}
               </div>
+              {selected ? (
+                <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {selected.brand} {selected.name}
+                </div>
+              ) : (
+                <div style={{ fontSize: '0.78rem', color: hasStock ? 'var(--color-text-mute)' : '#E24B4A', fontStyle: 'italic' }}>
+                  {hasStock ? 'Seç...' : 'Stok yok'}
+                </div>
+              )}
+            </div>
+            {selected && (
+              <button
+                onClick={e => {
+                  e.stopPropagation();
+                  setBuild(b => {
+                    const next = { ...b, [slot.key]: null };
+                    if (slot.key === 'ram1') next.ram2 = null;
+                    return next;
+                  });
+                }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#E24B4A', fontSize: '0.85rem', padding: '0 2px', flexShrink: 0 }}
+              >✕</button>
+            )}
+          </div>
+        </div>
+        {isMobile && isActive && (
+          <div style={{ marginBottom: '4px', padding: '8px', background: 'var(--color-cream)', border: '1.5px solid var(--color-accent)', borderTop: 'none', borderRadius: '0 0 8px 8px' }}>
+            {inlineProducts.length === 0 ? (
+              <div style={{ padding: '0.75rem', textAlign: 'center', color: 'var(--color-text-mute)', fontSize: '0.82rem' }}>Stokta ürün yok. Pazar'dan sipariş ver.</div>
             ) : (
-              <div style={{ fontSize: '0.78rem', color: hasStock ? 'var(--color-text-mute)' : '#E24B4A', fontStyle: 'italic' }}>
-                {hasStock ? 'Seç...' : 'Stok yok'}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {inlineProducts.map(p => {
+                  const isSel = build[activeSlot] === p.id;
+                  const cat = p.category;
+                  return (
+                    <div key={p.id}
+                      onClick={() => { setBuild(b => { const n = { ...b, [activeSlot]: p.id }; if (activeSlot === 'ram1') n.ram2 = null; return n; }); setActiveSlot(null); }}
+                      style={{ padding: '8px 10px', borderRadius: '8px', cursor: 'pointer', border: isSel ? `2px solid ${catColor(cat)}` : '1px solid var(--color-border)', background: isSel ? catColor(cat) + '15' : 'var(--color-cream-card)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      {cat === 'case' ? <CaseVisual product={p} size="sm" /> : (
+                        <div style={{ width: 28, height: 28, borderRadius: '6px', background: catColor(cat) + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', flexShrink: 0 }}>{p.icon || '📦'}</div>
+                      )}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--color-text)' }}>{p.brand} {p.name}</div>
+                        <div style={{ fontSize: '0.7rem', color: 'var(--color-text-mute)' }}>{p.specs}</div>
+                      </div>
+                      <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                        <div style={{ fontSize: '0.8rem', fontFamily: 'var(--font-mono)', fontWeight: 700, color: catColor(cat) }}>{fmtMoney(p.buyPrice)}</div>
+                        <div style={{ fontSize: '0.68rem', color: 'var(--color-text-mute)' }}>{inventory[p.id]}x</div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
-          {selected && (
-            <button
-              onClick={e => {
-                e.stopPropagation();
-                setBuild(b => {
-                  const next = { ...b, [slot.key]: null };
-                  // If clearing ram1, also clear ram2
-                  if (slot.key === 'ram1') next.ram2 = null;
-                  return next;
-                });
-              }}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#E24B4A', fontSize: '0.85rem', padding: '0 2px', flexShrink: 0 }}
-            >✕</button>
-          )}
-        </div>
-      </div>
+        )}
+      </Fragment>
     );
   };
 
   return (
-    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', background: 'var(--color-cream)' }}>
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', background: 'var(--color-cream)', position: 'relative', overflow: 'hidden' }}>
       {/* Tab bar */}
       <div style={{ display: 'flex', gap: '2px', padding: '10px 16px 0', background: 'var(--color-cream-card)', borderBottom: '1px solid var(--color-border)', flexShrink: 0, flexWrap: 'wrap' }}>
         {[
@@ -405,56 +438,11 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
                   onClick={() => setSummaryOpen(v => !v)}
                   style={{ padding: '5px 12px', borderRadius: '7px', border: '1px solid var(--color-border)', background: summaryOpen ? 'var(--color-accent-soft, #EEF2FF)' : 'transparent', color: summaryOpen ? 'var(--color-accent)' : 'var(--color-text-mute)', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontFamily: 'inherit' }}
                 >
-                  📊 {summaryOpen ? 'Özeti Gizle ▲' : 'Özeti Gör ▼'}
+                  📊 Özet {summaryOpen ? '›' : '‹'}
                 </button>
                 {score && <span style={{ fontSize: '0.72rem', fontWeight: 700, color: score.color, padding: '3px 8px', borderRadius: '6px', background: score.color + '22' }}>{score.text}</span>}
                 {issues.length > 0 && <span style={{ fontSize: '0.72rem', color: '#991B1B', padding: '3px 8px', borderRadius: '6px', background: '#FEE2E2' }}>⚠️ {issues.length} uyumsuzluk</span>}
               </div>
-              {summaryOpen && (
-                <div style={{ flexShrink: 0, padding: '10px 14px', borderBottom: '1px solid var(--color-border)', background: 'var(--color-cream-card)' }}>
-                  {[...BUILD_SLOTS, ...PERIPHERAL_SLOTS].map(slot => {
-                    const p = build[slot.key] ? PRODUCTS[build[slot.key]] : null;
-                    if (!p) return null;
-                    return (
-                      <div key={slot.key} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '4px' }}>
-                        <span style={{ color: 'var(--color-text-mute)' }}>{slot.label}</span>
-                        <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-text)', fontWeight: 600 }}>{fmtMoney(p.buyPrice)}</span>
-                      </div>
-                    );
-                  })}
-                  {requiredFilled && (
-                    <>
-                      <div style={{ height: '1px', background: 'var(--color-border)', margin: '8px 0' }} />
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '4px' }}>
-                        <span style={{ color: 'var(--color-text-mute)' }}>Parça toplam</span>
-                        <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700 }}>{fmtMoney(Object.values(build).filter(Boolean).reduce((s, id) => s + (PRODUCTS[id]?.buyPrice || 0), 0))}</span>
-                      </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '4px' }}>
-                        <span style={{ color: 'var(--color-text-mute)' }}>Montaj ücreti</span>
-                        <span style={{ fontFamily: 'var(--font-mono)', color: '#1D9E75', fontWeight: 600 }}>+₺2.500</span>
-                      </div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem', marginTop: '4px' }}>
-                        <span style={{ color: 'var(--color-text)', fontWeight: 700 }}>Satış fiyatı</span>
-                        <span style={{ fontFamily: 'var(--font-mono)', color: '#1D9E75', fontWeight: 800 }}>{fmtMoney(estimatedVal)}</span>
-                      </div>
-                    </>
-                  )}
-                  {issues.length > 0 && (
-                    <div style={{ marginTop: '8px', padding: '8px', borderRadius: '6px', background: '#FEE2E2', border: '1px solid #FCA5A5' }}>
-                      <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#991B1B', marginBottom: '4px' }}>⚠️ Uyumsuzluk</div>
-                      {issues.map((iss, i) => <div key={i} style={{ fontSize: '0.7rem', color: '#991B1B', lineHeight: 1.4 }}>{iss}</div>)}
-                    </div>
-                  )}
-                  {requiredFilled && issues.length === 0 && (
-                    <div style={{ marginTop: '8px', padding: '8px', borderRadius: '6px', background: '#D1FAE5', border: '1px solid #6EE7B7' }}>
-                      <div style={{ fontSize: '0.75rem', color: '#065F46', fontWeight: 600 }}>✓ Tüm parçalar uyumlu</div>
-                    </div>
-                  )}
-                  <button onClick={handleBuild} disabled={!canBuild} style={{ width: '100%', padding: '10px', borderRadius: '10px', border: 'none', background: canBuild ? '#1D9E75' : 'var(--color-border)', color: canBuild ? '#fff' : 'var(--color-text-mute)', fontSize: '0.88rem', fontWeight: 700, marginTop: '10px', cursor: canBuild ? 'pointer' : 'not-allowed', transition: 'all 0.15s' }}>
-                    {canBuild ? '🔧 PC Topla →' : requiredFilled ? '⚠️ Uyumsuz' : 'Parçaları Seç'}
-                  </button>
-                </div>
-              )}
             </>
           )}
           {/* Left — slot selector */}
@@ -479,56 +467,82 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
                 const selected = build[slot.key] ? PRODUCTS[build[slot.key]] : null;
                 const isActive = activeSlot === slot.key;
                 const hasStock = availableFor(slot.category).length > 0;
+                const periphProds = isMobile ? availableFor(slot.category) : [];
                 return (
-                  <div
-                    key={slot.key}
-                    onClick={() => setActiveSlot(isActive ? null : slot.key)}
-                    style={{
-                      padding: '8px 10px', marginBottom: '4px', borderRadius: '8px', cursor: 'pointer',
-                      border: isActive ? `1.5px solid var(--color-accent)` : `1px solid ${selected ? catColor(slot.category) + '44' : 'var(--color-border)'}`,
-                      background: isActive ? 'var(--color-accent-soft, #EEF2FF)' : selected ? catColor(slot.category) + '11' : 'var(--color-cream-card)',
-                      transition: 'all 0.15s',
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ fontSize: '1rem', flexShrink: 0 }}>{slot.emoji}</span>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)' }}>{slot.label}</div>
-                        {selected ? (
-                          <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                            {selected.brand} {selected.name}
-                          </div>
+                  <Fragment key={slot.key}>
+                    <div
+                      onClick={() => setActiveSlot(isActive ? null : slot.key)}
+                      style={{
+                        padding: '8px 10px', marginBottom: isActive && isMobile ? '0' : '4px',
+                        borderRadius: isActive && isMobile ? '8px 8px 0 0' : '8px', cursor: 'pointer',
+                        border: isActive ? `1.5px solid var(--color-accent)` : `1px solid ${selected ? catColor(slot.category) + '44' : 'var(--color-border)'}`,
+                        background: isActive ? 'var(--color-accent-soft, #EEF2FF)' : selected ? catColor(slot.category) + '11' : 'var(--color-cream-card)',
+                        transition: 'all 0.15s',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ fontSize: '1rem', flexShrink: 0 }}>{slot.emoji}</span>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)' }}>{slot.label}</div>
+                          {selected ? (
+                            <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              {selected.brand} {selected.name}
+                            </div>
+                          ) : (
+                            <div style={{ fontSize: '0.78rem', color: hasStock ? 'var(--color-text-mute)' : '#E24B4A', fontStyle: 'italic' }}>
+                              {hasStock ? 'Seç...' : 'Stok yok'}
+                            </div>
+                          )}
+                        </div>
+                        {selected && (
+                          <button
+                            onClick={e => { e.stopPropagation(); setBuild(b => ({ ...b, [slot.key]: null })); }}
+                            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#E24B4A', fontSize: '0.85rem', padding: '0 2px', flexShrink: 0 }}
+                          >✕</button>
+                        )}
+                      </div>
+                    </div>
+                    {isMobile && isActive && (
+                      <div style={{ marginBottom: '4px', padding: '8px', background: 'var(--color-cream)', border: '1.5px solid var(--color-accent)', borderTop: 'none', borderRadius: '0 0 8px 8px' }}>
+                        {periphProds.length === 0 ? (
+                          <div style={{ padding: '0.75rem', textAlign: 'center', color: 'var(--color-text-mute)', fontSize: '0.82rem' }}>Stokta ürün yok.</div>
                         ) : (
-                          <div style={{ fontSize: '0.78rem', color: hasStock ? 'var(--color-text-mute)' : '#E24B4A', fontStyle: 'italic' }}>
-                            {hasStock ? 'Seç...' : 'Stok yok'}
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                            {periphProds.map(p => {
+                              const isSel = build[activeSlot] === p.id;
+                              const cat = p.category;
+                              return (
+                                <div key={p.id} onClick={() => { setBuild(b => ({ ...b, [activeSlot]: p.id })); setActiveSlot(null); }}
+                                  style={{ padding: '8px 10px', borderRadius: '8px', cursor: 'pointer', border: isSel ? `2px solid ${catColor(cat)}` : '1px solid var(--color-border)', background: isSel ? catColor(cat) + '15' : 'var(--color-cream-card)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                  <div style={{ width: 28, height: 28, borderRadius: '6px', background: catColor(cat) + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', flexShrink: 0 }}>{p.icon || '📦'}</div>
+                                  <div style={{ flex: 1, minWidth: 0 }}>
+                                    <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--color-text)' }}>{p.brand} {p.name}</div>
+                                    <div style={{ fontSize: '0.7rem', color: 'var(--color-text-mute)' }}>{p.specs}</div>
+                                  </div>
+                                  <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                                    <div style={{ fontSize: '0.8rem', fontFamily: 'var(--font-mono)', fontWeight: 700, color: catColor(cat) }}>{fmtMoney(p.buyPrice)}</div>
+                                    <div style={{ fontSize: '0.68rem', color: 'var(--color-text-mute)' }}>{inventory[p.id]}x</div>
+                                  </div>
+                                </div>
+                              );
+                            })}
                           </div>
                         )}
                       </div>
-                      {selected && (
-                        <button
-                          onClick={e => { e.stopPropagation(); setBuild(b => ({ ...b, [slot.key]: null })); }}
-                          style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#E24B4A', fontSize: '0.85rem', padding: '0 2px', flexShrink: 0 }}
-                        >✕</button>
-                      )}
-                    </div>
-                  </div>
+                    )}
+                  </Fragment>
                 );
               })}
             </div>
           </div>
 
-          {/* Middle — product picker OR PC interior visual */}
-          {(!isMobile || activeSlot) && (
-          <div style={{ flex: isMobile ? 'none' : 1, overflow: isMobile ? 'visible' : 'auto', padding: '12px', minWidth: 0 }}>
+          {/* Middle — product picker OR PC interior visual (desktop only) */}
+          {!isMobile && (
+          <div style={{ flex: 1, overflow: 'auto', padding: '12px', minWidth: 0 }}>
             {activeSlot ? (
               <>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-                  {isMobile && (
-                    <button onClick={() => setActiveSlot(null)} style={{ padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--color-border)', background: 'transparent', color: 'var(--color-text-mute)', fontSize: '0.78rem', cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0 }}>← Geri</button>
-                  )}
-                  <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-text-mute)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                    {[...BUILD_SLOTS, ...PERIPHERAL_SLOTS].find(s => s.key === activeSlot)?.label} Seç
-                  </div>
+                <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-text-mute)', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                  {[...BUILD_SLOTS, ...PERIPHERAL_SLOTS].find(s => s.key === activeSlot)?.label} Seç
                 </div>
                 {availableFor([...BUILD_SLOTS, ...PERIPHERAL_SLOTS].find(s => s.key === activeSlot)?.category || '').length === 0 ? (
                   <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--color-text-mute)', fontSize: '0.85rem' }}>
@@ -884,6 +898,77 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
             </div>
           )}
         </div>
+      )}
+
+      {/* Mobile summary overlay — sağdan kayan panel */}
+      {isMobile && (
+        <>
+          {summaryOpen && (
+            <div onClick={() => setSummaryOpen(false)} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.35)', zIndex: 99 }} />
+          )}
+          <div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, width: summaryOpen ? '260px' : '0', overflow: 'hidden', transition: 'width 0.25s ease', zIndex: 100 }}>
+            <div style={{ width: '260px', height: '100%', background: 'var(--color-cream-card)', borderLeft: '1px solid var(--color-border)', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ padding: '10px 14px', borderBottom: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-mute)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Özet</span>
+                <button onClick={() => setSummaryOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-mute)', fontSize: '1.2rem', padding: '0 4px', lineHeight: 1 }}>×</button>
+              </div>
+              <div style={{ flex: 1, overflowY: 'auto', padding: '10px 12px' }}>
+                {[...BUILD_SLOTS, ...PERIPHERAL_SLOTS].map(slot => {
+                  const p = build[slot.key] ? PRODUCTS[build[slot.key]] : null;
+                  if (!p) return null;
+                  return (
+                    <div key={slot.key} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '4px' }}>
+                      <span style={{ color: 'var(--color-text-mute)' }}>{slot.label}</span>
+                      <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-text)', fontWeight: 600 }}>{fmtMoney(p.buyPrice)}</span>
+                    </div>
+                  );
+                })}
+                {requiredFilled && (
+                  <>
+                    <div style={{ height: '1px', background: 'var(--color-border)', margin: '8px 0' }} />
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '4px' }}>
+                      <span style={{ color: 'var(--color-text-mute)' }}>Parça toplam</span>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700 }}>{fmtMoney(Object.values(build).filter(Boolean).reduce((s, id) => s + (PRODUCTS[id]?.buyPrice || 0), 0))}</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '4px' }}>
+                      <span style={{ color: 'var(--color-text-mute)' }}>Montaj ücreti</span>
+                      <span style={{ fontFamily: 'var(--font-mono)', color: '#1D9E75', fontWeight: 600 }}>+₺2.500</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.88rem', marginTop: '4px' }}>
+                      <span style={{ color: 'var(--color-text)', fontWeight: 700 }}>Satış fiyatı</span>
+                      <span style={{ fontFamily: 'var(--font-mono)', color: '#1D9E75', fontWeight: 800 }}>{fmtMoney(estimatedVal)}</span>
+                    </div>
+                  </>
+                )}
+                {score && (
+                  <div style={{ marginTop: '10px', padding: '8px 10px', borderRadius: '8px', background: score.color + '22', border: `1px solid ${score.color}44`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.75rem', color: score.color, fontWeight: 700 }}>🏆 Performans</span>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontSize: '0.78rem', color: score.color, fontWeight: 800 }}>{score.text}</div>
+                      <div style={{ fontSize: '0.68rem', color: score.color, opacity: 0.8 }}>{score.pct}%</div>
+                    </div>
+                  </div>
+                )}
+                {issues.length > 0 && (
+                  <div style={{ marginTop: '10px', padding: '8px', borderRadius: '6px', background: '#FEE2E2', border: '1px solid #FCA5A5' }}>
+                    <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#991B1B', marginBottom: '4px' }}>⚠️ Uyumsuzluk</div>
+                    {issues.map((iss, i) => <div key={i} style={{ fontSize: '0.7rem', color: '#991B1B', lineHeight: 1.4 }}>{iss}</div>)}
+                  </div>
+                )}
+                {requiredFilled && issues.length === 0 && (
+                  <div style={{ marginTop: '10px', padding: '8px', borderRadius: '6px', background: '#D1FAE5', border: '1px solid #6EE7B7' }}>
+                    <div style={{ fontSize: '0.75rem', color: '#065F46', fontWeight: 600 }}>✓ Tüm parçalar uyumlu</div>
+                  </div>
+                )}
+              </div>
+              <div style={{ padding: '10px 12px', borderTop: '1px solid var(--color-border)', flexShrink: 0 }}>
+                <button onClick={handleBuild} disabled={!canBuild} style={{ width: '100%', padding: '10px', borderRadius: '10px', border: 'none', background: canBuild ? '#1D9E75' : 'var(--color-border)', color: canBuild ? '#fff' : 'var(--color-text-mute)', fontSize: '0.88rem', fontWeight: 700, cursor: canBuild ? 'pointer' : 'not-allowed', transition: 'all 0.15s' }}>
+                  {canBuild ? '🔧 PC Topla →' : requiredFilled ? '⚠️ Uyumsuz' : 'Parçaları Seç'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );
