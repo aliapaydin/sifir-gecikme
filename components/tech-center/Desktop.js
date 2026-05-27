@@ -665,22 +665,23 @@ export default function Desktop({ state, firmaValue, ...actions }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
+      <style>{`
+        .tc-wallpaper { background: linear-gradient(135deg, #0f2044 0%, #1a3a6b 40%, #0d2d5a 70%, #162040 100%); }
+        .v3-root.v3-light .tc-wallpaper { background: linear-gradient(135deg, #dde8f5 0%, #c8d8ee 40%, #d0e2f5 70%, #dce8f5 100%); }
+        .tc-wallpaper-grid { background-image: linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px); }
+        .v3-root.v3-light .tc-wallpaper-grid { background-image: linear-gradient(rgba(0,0,0,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.08) 1px, transparent 1px); }
+      `}</style>
       <div
         ref={desktopRef}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
-        style={{
-          flex: 1,
-          position: 'relative',
-          overflow: 'hidden',
-          background: 'linear-gradient(135deg, #0f2044 0%, #1a3a6b 40%, #0d2d5a 70%, #162040 100%)',
-        }}
+        className="tc-wallpaper"
+        style={{ flex: 1, position: 'relative', overflow: 'hidden' }}
       >
         {/* Subtle grid pattern overlay */}
-        <div style={{
+        <div className="tc-wallpaper-grid" style={{
           position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.04,
-          backgroundImage: 'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)',
           backgroundSize: '40px 40px',
         }} />
 

@@ -15,15 +15,18 @@ function CaseVisual({ product, size = 'md' }) {
   const h = size === 'sm' ? 60 : 96;
   const bg = product?.caseColor || '#2a2a2a';
   const accent = product?.caseAccent || '#4a9eff';
+  const lightCase = isLightBg(bg);
 
   return (
     <div style={{
       width: w, height: h, flexShrink: 0,
       borderRadius: size === 'sm' ? '4px 4px 3px 3px' : '6px 6px 4px 4px',
       background: `linear-gradient(160deg, ${bg} 0%, ${bg}dd 100%)`,
-      border: `1px solid ${accent}44`,
+      border: lightCase ? `1.5px solid ${accent}99` : `1px solid ${accent}44`,
       position: 'relative', overflow: 'hidden',
-      boxShadow: `inset 1px 0 0 ${accent}33, 0 2px 8px rgba(0,0,0,0.3)`,
+      boxShadow: lightCase
+        ? `inset 1px 0 0 ${accent}66, 0 2px 8px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.12)`
+        : `inset 1px 0 0 ${accent}33, 0 2px 8px rgba(0,0,0,0.3)`,
     }}>
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: size === 'sm' ? 3 : 5, background: accent, opacity: 0.8 }} />
       <div style={{
@@ -109,6 +112,14 @@ function checkCompatibility(build) {
   return issues;
 }
 
+function isLightBg(hex) {
+  if (!hex || !hex.startsWith('#') || hex.length < 7) return false;
+  const r = parseInt(hex.slice(1,3), 16);
+  const g = parseInt(hex.slice(3,5), 16);
+  const b = parseInt(hex.slice(5,7), 16);
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.55;
+}
+
 function estimateValue(build) {
   const total = Object.values(build)
     .filter(Boolean)
@@ -143,14 +154,20 @@ function PCInteriorVisual({ build }) {
   const caseP = build.case ? PRODUCTS[build.case] : null;
   const accent = caseP?.caseAccent || '#4a9eff';
   const caseBg = caseP?.caseColor || '#1a1a2e';
+  const lightCase = isLightBg(caseBg);
+  const textOn   = lightCase ? 'rgba(0,0,0,0.80)' : 'rgba(255,255,255,0.85)';
+  const textFaint = lightCase ? 'rgba(0,0,0,0.35)' : 'rgba(255,255,255,0.25)';
+  const textSoft  = lightCase ? 'rgba(0,0,0,0.55)' : 'rgba(255,255,255,0.70)';
+  const slotEmpty = lightCase ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.04)';
+  const slotEmptyBorder = lightCase ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.08)';
 
   const slot = (label, emoji, productId, color = '#2a4a6a') => {
     const p = productId ? PRODUCTS[productId] : null;
     return (
       <div style={{
         display: 'flex', alignItems: 'center', gap: 6, padding: '4px 8px',
-        borderRadius: 6, background: p ? color + '33' : 'rgba(255,255,255,0.04)',
-        border: `1px solid ${p ? color + '66' : 'rgba(255,255,255,0.08)'}`,
+        borderRadius: 6, background: p ? color + '33' : slotEmpty,
+        border: `1px solid ${p ? color + '66' : slotEmptyBorder}`,
         minHeight: 32, transition: 'all 0.3s',
       }}>
         <span style={{ fontSize: '1rem', opacity: p ? 1 : 0.3 }}>{emoji}</span>
@@ -158,12 +175,12 @@ function PCInteriorVisual({ build }) {
           {p ? (
             <>
               <div style={{ fontSize: '0.65rem', color: color, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{label}</div>
-              <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.85)', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <div style={{ fontSize: '0.7rem', color: textOn, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {p.brand} {p.name}
               </div>
             </>
           ) : (
-            <div style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.25)', fontStyle: 'italic' }}>{label} — boş</div>
+            <div style={{ fontSize: '0.68rem', color: textFaint, fontStyle: 'italic' }}>{label} — boş</div>
           )}
         </div>
       </div>
@@ -182,8 +199,8 @@ function PCInteriorVisual({ build }) {
     }}>
       <div style={{ height: 5, background: `linear-gradient(90deg, ${accent}, ${accent}88)` }} />
       <div style={{ padding: '8px 12px', borderBottom: `1px solid ${accent}22`, display: 'flex', alignItems: 'center', gap: 8 }}>
-        <div style={{ width: 8, height: 8, borderRadius: '50%', background: caseP ? accent : 'rgba(255,255,255,0.2)', boxShadow: caseP ? `0 0 6px ${accent}` : 'none' }} />
-        <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.7)', fontWeight: 600 }}>
+        <div style={{ width: 8, height: 8, borderRadius: '50%', background: caseP ? accent : textFaint, boxShadow: caseP ? `0 0 6px ${accent}` : 'none' }} />
+        <span style={{ fontSize: '0.75rem', color: textSoft, fontWeight: 600 }}>
           {caseP ? `${caseP.brand} ${caseP.name}` : 'Kasa Seçilmedi'}
         </span>
       </div>
@@ -210,18 +227,18 @@ function PCInteriorVisual({ build }) {
       </div>
       <div style={{ padding: '6px 14px', display: 'flex', gap: 3, borderTop: `1px solid ${accent}22` }}>
         {[build.case, build.cpu, build.motherboard, build.ram1, build.storage1, build.psu].map((v, i) => (
-          <div key={i} style={{ width: 6, height: 6, borderRadius: '50%', background: v ? accent : 'rgba(255,255,255,0.1)', boxShadow: v ? `0 0 4px ${accent}` : 'none' }} />
+          <div key={i} style={{ width: 6, height: 6, borderRadius: '50%', background: v ? accent : slotEmpty, boxShadow: v ? `0 0 4px ${accent}` : 'none' }} />
         ))}
       </div>
       {peripheralKeys.length > 0 && (
         <div style={{ padding: '6px 10px 10px', borderTop: `1px solid ${accent}22` }}>
-          <div style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.35)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Çevre Birimleri</div>
+          <div style={{ fontSize: '0.6rem', color: textFaint, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Çevre Birimleri</div>
           <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
             {peripheralKeys.map(k => {
               const ps = PERIPHERAL_SLOTS.find(s => s.key === k);
               const p = PRODUCTS[build[k]];
               return (
-                <div key={k} style={{ padding: '2px 6px', borderRadius: 4, background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', fontSize: '0.65rem', color: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', gap: 3 }}>
+                <div key={k} style={{ padding: '2px 6px', borderRadius: 4, background: slotEmpty, border: `1px solid ${slotEmptyBorder}`, fontSize: '0.65rem', color: textSoft, display: 'flex', alignItems: 'center', gap: 3 }}>
                   <span>{ps?.emoji}</span>
                   <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 60 }}>{p?.brand} {p?.name}</span>
                 </div>
@@ -778,7 +795,6 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {pendingPCOrders.map(order => {
-                const matchingPCs = builtPCs.filter(pc => pc.listPrice <= order.budget * 1.1);
                 return (
                   <div key={order.id} style={{ background: 'var(--color-cream-card)', border: '1px solid #F59E0B44', borderRadius: '12px', padding: '1rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
@@ -795,29 +811,54 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
                         <div style={{ fontWeight: 700, color: '#1D9E75', fontFamily: 'var(--font-mono)' }}>{fmtMoney(order.budget)}</div>
                       </div>
                     </div>
-                    {matchingPCs.length > 0 ? (
+                    {builtPCs.length > 0 ? (
                       <div>
-                        <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', marginBottom: '6px', fontWeight: 600 }}>Bu siparişe uygun PC'ler:</div>
-                        {matchingPCs.map(pc => {
+                        <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', marginBottom: '6px', fontWeight: 600 }}>Atanabilir PC'ler:</div>
+                        {builtPCs.map(pc => {
                           const caseProd = pc.components.case ? PRODUCTS[pc.components.case] : null;
+                          const overage = pc.listPrice > order.budget
+                            ? (pc.listPrice - order.budget) / order.budget
+                            : 0;
+                          const btnBg = overage > 0.60 ? '#DC2626'
+                            : overage > 0.25 ? '#EA580C'
+                            : overage > 0 ? '#F59E0B'
+                            : '#1D9E75';
+                          const btnLabel = overage > 0.60 ? `Ata (+%${Math.round(overage*100)}) ⚠️`
+                            : overage > 0.25 ? `Ata (+%${Math.round(overage*100)})`
+                            : overage > 0 ? `Ata (+%${Math.round(overage*100)})`
+                            : 'Bu PC\'yi Ata';
+                          const warningText = overage > 0.60
+                            ? 'Müşteri reddedebilir — bütçe çok aşıldı'
+                            : overage > 0.25
+                            ? 'Müşteri itiraz edebilir'
+                            : overage > 0
+                            ? 'Bütçe hafif aşılıyor — müşteri kabul eder'
+                            : null;
                           return (
-                            <div key={pc.id} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 10px', background: 'var(--color-cream)', borderRadius: '8px', marginBottom: '4px', border: '1px solid var(--color-border)' }}>
-                              <CaseVisual product={caseProd} size="sm" />
-                              <div style={{ flex: 1, minWidth: 0 }}>
-                                <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--color-text)' }}>Toplama PC #{pc.id.slice(-4)}</div>
-                                <div style={{ fontSize: '0.7rem', color: 'var(--color-text-mute)' }}>Maliyet: {fmtMoney(pc.totalCost)} · Liste: {fmtMoney(pc.listPrice)}</div>
+                            <div key={pc.id} style={{ marginBottom: '6px' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 10px', background: 'var(--color-cream)', borderRadius: warningText ? '8px 8px 0 0' : '8px', border: '1px solid var(--color-border)', borderBottom: warningText ? 'none' : undefined }}>
+                                <CaseVisual product={caseProd} size="sm" />
+                                <div style={{ flex: 1, minWidth: 0 }}>
+                                  <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--color-text)' }}>Toplama PC #{pc.id.slice(-4)}</div>
+                                  <div style={{ fontSize: '0.7rem', color: 'var(--color-text-mute)' }}>Maliyet: {fmtMoney(pc.totalCost)} · Liste: {fmtMoney(pc.listPrice)}</div>
+                                </div>
+                                <button
+                                  onClick={() => fulfillPCOrderAction && fulfillPCOrderAction(order.id, pc.id)}
+                                  style={{ padding: '5px 10px', borderRadius: '6px', border: 'none', background: btnBg, color: '#fff', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 }}
+                                >{btnLabel}</button>
                               </div>
-                              <button
-                                onClick={() => fulfillPCOrderAction && fulfillPCOrderAction(order.id, pc.id)}
-                                style={{ padding: '5px 10px', borderRadius: '6px', border: 'none', background: '#F59E0B', color: '#fff', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 }}
-                              >Bu PC'yi Ata</button>
+                              {warningText && (
+                                <div style={{ padding: '4px 10px', background: overage > 0.60 ? '#FEE2E2' : overage > 0.25 ? '#FFF7ED' : '#FEF3C7', border: `1px solid ${overage > 0.60 ? '#FCA5A5' : overage > 0.25 ? '#FDBA74' : '#FDE68A'}`, borderTop: 'none', borderRadius: '0 0 8px 8px', fontSize: '0.7rem', color: overage > 0.60 ? '#991B1B' : overage > 0.25 ? '#9A3412' : '#92400E' }}>
+                                  {warningText}
+                                </div>
+                              )}
                             </div>
                           );
                         })}
                       </div>
                     ) : (
                       <div style={{ padding: '8px 10px', background: '#FEF3C7', borderRadius: '8px', fontSize: '0.78rem', color: '#92400E' }}>
-                        ⚠️ Bütçeye uygun hazır PC yok. PC Topla sekmesinden yeni bir tane montajla.
+                        ⚠️ Hazır PC yok. PC Topla sekmesinden bir tane montajla.
                       </div>
                     )}
                   </div>
