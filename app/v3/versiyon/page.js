@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-const CURRENT_VERSION = 'v3.3.0';
+const CURRENT_VERSION = 'v3.5.0';
 
 const tipRenk = {
   yeni:        { bg: 'rgba(99,102,241,0.12)',  text: '#818cf8', label: 'YENİ' },
@@ -78,6 +78,38 @@ function GrupItem({ o }) {
 
 const versiyonlar = [
   {
+    versiyon: 'v3.5.0',
+    tarih: '27 Mayıs 2026',
+    baslik: 'Mobil PC Topla Yenilendi + Anasayfa Güncellemeleri',
+    ozellikler: [
+      { tip: 'yeni', metin: 'PC Topla mobil: slot tıklandığında ürünler hemen o slotun altında accordion olarak açılır — ayrı bir alana kaymaz' },
+      { tip: 'yeni', metin: 'PC Topla mobil: Özet paneli sağdan kayan overlay olarak gelir (desktop ile aynı davranış); backdrop tıklayınca kapanır' },
+      { tip: 'iyileştirme', metin: 'Pazar: kategori filtre butonları sayfayla birlikte kayar; sadece nakit+arama satırı ekranın üstünde sabit kalır' },
+      { tip: 'iyileştirme', metin: 'Anasayfa hero animasyonu 300×220px kutu yerine tüm hero bölümünün arkaplanını kaplıyor (opacity: 0.3, sürekli hareketli)' },
+      { tip: 'iyileştirme', metin: 'Mobil stats bar: 3 rastgele istat nowrap tek satırda gösterilir' },
+      { tip: 'iyileştirme', metin: "Öne çıkan içerikler: 6'dan 12'ye çıkarıldı, Karıştır butonu eklendi" },
+      { tip: 'düzeltme', metin: 'Alan adı yönlendirmesi: sifirgecikme.com artık doğrudan v3 anasayfasına yönlendirilir' },
+    ],
+  },
+  {
+    versiyon: 'v3.4.0',
+    tarih: '26 Mayıs 2026',
+    baslik: 'Hero Yeniden Tasarım + Navbar & Footer İyileştirmeleri',
+    ozellikler: [
+      { tip: 'yeni', metin: 'Hero bölümü yeniden tasarlandı: 2 sütunlu layout, 5 SVG animasyon seçeneği (Sinir Ağı, Bar Chart, Scatter, Data Stream, Sine Wave)' },
+      { tip: 'yeni', metin: 'Hero içeriği admin panelinden yönetilebilir: başlık (\\n ile satır kırma), alt başlık ve animasyon seçimi; v3_settings tablosuna kaydediliyor' },
+      { tip: 'yeni', metin: 'İstatistik barı 4\'ten 7 maddeye genişletildi: içerik, konu, araç, modül, oyun, kullanıcı ve XP sayaçları' },
+      { tip: 'yeni', metin: 'Mobil hamburger menüsü: Playground ve Modüller accordion (aşağı açılır) olarak güncellendi; tam ekran overlay, body scroll kilidi' },
+      { tip: 'yeni', metin: 'Footer\'a "👨‍💻 Developer" butonu eklendi (→ /v3/hakkimda); "Anasayfa" butonuna basınca sayfa en üste kaydırılıyor' },
+      { tip: 'yeni', metin: 'Navbar\'da "Haritam" linki Playground ve Modüller dropdown\'larından sonraya taşındı' },
+      { tip: 'iyileştirme', metin: 'Anasayfa sunucu bileşenine (async server component) dönüştürüldü: hero ayarları DB\'den SSR ile çekiliyor, sayfa yüklenirken flaş yaşanmıyor' },
+      { tip: 'iyileştirme', metin: 'Kullanıcı panelinde Admin Paneli bağlantısı görsel kart olarak yeniden tasarlandı' },
+      { tip: 'iyileştirme', metin: 'Bilgi Grafiği: Lojistik Regresyon içeriği grafikte konumlandırıldı ve bağlantıları (Doğrusal Regresyon → Confusion Matrix, Bias-Variance) eklendi' },
+      { tip: 'düzeltme', metin: 'Mobil menü: backdrop-filter\'ın oluşturduğu containing block nedeniyle fixed konumlandırma bozuluyordu; menü nav dışına taşınarak çözüldü' },
+      { tip: 'düzeltme', metin: 'Footer\'dan İçerikler ve Sıfır Gecikme v2 linkleri kaldırıldı; navbar\'dan Geliştirici linki ve ⚙ admin butonu kaldırıldı' },
+    ],
+  },
+  {
     versiyon: 'v3.3.0',
     tarih: '26 Mayıs 2026',
     baslik: 'Kullanıcı Paneli + Patreon Entegrasyonu',
@@ -125,7 +157,7 @@ const versiyonlar = [
   {
     versiyon: 'v3.0.0',
     tarih: '24 Mayıs 2026',
-    baslik: 'Sıfır Gecikme v3 — Yeniden Başlangıç',
+    baslik: 'Sıfır Gecikme — Yeniden Başlangıç',
     ozellikler: [
       { tip: 'yeni', metin: 'Tamamen yeni mimari: Next.js 15 App Router, v3 tasarım sistemi (CSS custom properties: --v3-bg, --v3-surface, --v3-text vb.)' },
       { tip: 'yeni', metin: 'E-posta/şifre tabanlı hesap sistemi: kayıt, giriş, oturum yönetimi (JWT, 30 günlük cookie)' },
@@ -337,7 +369,7 @@ export default function V3VersiyonPage() {
               <span className="v3-ver-badge-current">{CURRENT_VERSION}</span>
             </div>
             <p className="v3-ver-desc">
-              Sıfır Gecikme v3'ün tüm sürüm notları. Her güncellemeyle ne eklendi, ne düzeltildi.
+              Sıfır Gecikme'nin tüm sürüm notları. Her güncellemeyle ne eklendi, ne düzeltildi.
             </p>
             <div className="v3-ver-stats">
               {[

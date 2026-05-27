@@ -100,7 +100,7 @@ export default function V3Footer() {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
               <span className="v3-footer-brand">Sıfır Gecikme</span>
-              <Link href="/v3/versiyon" className="v3-footer-version">v3.4.0</Link>
+              <Link href="/v3/versiyon" className="v3-footer-version">v3.5.0</Link>
             </div>
             <div className="v3-footer-copy">© 2026 Ali Apaydın. Tüm hakları saklıdır.</div>
           </div>
