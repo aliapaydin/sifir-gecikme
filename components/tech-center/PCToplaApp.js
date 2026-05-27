@@ -234,13 +234,14 @@ function PCInteriorVisual({ build }) {
   );
 }
 
-export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fulfillPCOrderAction }) {
+export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fulfillPCOrderAction, isMobile }) {
   const [build, setBuild] = useState({ ...MAIN_SLOTS_INIT, ...PERIPHERAL_INIT });
   const [activeSlot, setActiveSlot] = useState(null);
   const [listPrices, setListPrices] = useState({});
   const [tab, setTab] = useState('build');
   const [expandedSaleId, setExpandedSaleId] = useState(null);
   const [peripheralsOpen, setPeripheralsOpen] = useState(false);
+  const [summaryOpen, setSummaryOpen] = useState(false);
 
   const inventory = state.inventory || {};
   const builtPCs = (state.builtPCs || []).filter(p => !p.sold);
@@ -386,12 +387,26 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
             fontFamily: 'inherit',
           }}>{t.label}</button>
         ))}
+        {tab === 'build' && (
+          <button
+            onClick={() => setSummaryOpen(v => !v)}
+            style={{
+              marginLeft: 'auto', padding: '6px 12px', border: '1px solid var(--color-border)',
+              borderRadius: '8px', background: summaryOpen ? 'var(--color-accent-soft)' : 'transparent',
+              color: summaryOpen ? 'var(--color-accent)' : 'var(--color-text-mute)',
+              fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap',
+              alignSelf: 'center', marginBottom: '4px', fontFamily: 'inherit',
+            }}
+          >
+            {summaryOpen ? '✕ Özet' : '📋 Özet'}
+          </button>
+        )}
       </div>
 
       {tab === 'build' && (
-        <div style={{ flex: 1, overflow: 'auto', display: 'flex', gap: '0', minHeight: 0 }}>
+        <div style={{ flex: 1, overflow: 'auto', display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '0', minHeight: 0 }}>
           {/* Left — slot selector */}
-          <div style={{ width: '260px', flexShrink: 0, borderRight: '1px solid var(--color-border)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          <div style={{ width: isMobile ? '100%' : '260px', flexShrink: 0, borderRight: isMobile ? 'none' : '1px solid var(--color-border)', borderBottom: isMobile ? '1px solid var(--color-border)' : 'none', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
             <div style={{ padding: '10px 14px', fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-mute)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '1px solid var(--color-border)' }}>
               Konfigürasyon
             </div>
@@ -451,6 +466,7 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
           </div>
 
           {/* Middle — product picker OR PC interior visual */}
+          {(!isMobile || activeSlot) && (
           <div style={{ flex: 1, overflow: 'auto', padding: '12px', minWidth: 0 }}>
             {activeSlot ? (
               <>
@@ -517,9 +533,10 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
               </div>
             )}
           </div>
+          )}
 
-          {/* Right — summary + build */}
-          <div style={{ width: '220px', flexShrink: 0, borderLeft: '1px solid var(--color-border)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          {/* Right — summary + build (collapsible) */}
+          {summaryOpen && <div style={{ width: isMobile ? '100%' : '220px', flexShrink: 0, borderLeft: isMobile ? 'none' : '1px solid var(--color-border)', borderTop: isMobile ? '1px solid var(--color-border)' : 'none', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
             <div style={{ padding: '10px 14px', fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-mute)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '1px solid var(--color-border)' }}>
               Özet
             </div>
@@ -600,7 +617,7 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
                 {canBuild ? '🔧 PC Topla →' : requiredFilled ? '⚠️ Uyumsuz' : 'Parçaları Seç'}
               </button>
             </div>
-          </div>
+          </div>}
         </div>
       )}
 

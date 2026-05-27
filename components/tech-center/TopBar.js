@@ -259,6 +259,9 @@ export default function TopBar({ state, firmaValue, onStartDay, onCloseDay, take
         />
       )}
 
+      <style>{`
+        @media (max-width: 767px) { .tc-topbar-brand { display: none !important; } }
+      `}</style>
       <div style={{
         background: 'var(--color-cream-card)',
         borderBottom: '1px solid var(--color-border)',
@@ -271,7 +274,7 @@ export default function TopBar({ state, firmaValue, onStartDay, onCloseDay, take
         zIndex: 40,
       }}>
         {/* Sol: Logo + Firma */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: '160px' }}>
+        <div className="tc-topbar-brand" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: '160px' }}>
           <div style={{
             width: '34px', height: '34px', borderRadius: '8px',
             background: logo.bg,

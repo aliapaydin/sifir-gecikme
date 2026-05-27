@@ -333,12 +333,33 @@ export default function Desktop({ state, firmaValue, ...actions }) {
     yorumlar: (state.reviews || []).filter(r => !r.read).length,
   };
 
-  // Load window memory from localStorage on mount
+  // Load window memory from localStorage on mount and restore previously open windows
   useEffect(() => {
     try {
       const raw = localStorage.getItem(WINDOW_MEMORY_KEY);
       if (raw) {
         windowMemoryRef.current = JSON.parse(raw);
+        const mobile = window.innerWidth < 768;
+        const toRestore = [];
+        Object.entries(windowMemoryRef.current).forEach(([appId, mem], i) => {
+          if (mem?.isOpen && DESKTOP_APPS.find(a => a.id === appId)) {
+            const defaultSize = WINDOW_FLOAT_DEFAULTS[appId] || DEFAULT_FLOAT_SIZE;
+            const z = ++zCounterRef.current;
+            toRestore.push({
+              id: `win_${appId}_${Date.now() + i}`,
+              appId,
+              minimized: false,
+              floating: mobile ? false : (mem.floating ?? true),
+              position: mem.position || { x: 60 + i * 24, y: 50 + i * 24 },
+              size: mem.size || defaultSize,
+              zIndex: z,
+            });
+          }
+        });
+        if (toRestore.length > 0) {
+          setOpenWindows(toRestore);
+          pendingActiveIdRef.current = toRestore[toRestore.length - 1].id;
+        }
       }
     } catch {}
   }, []);
@@ -384,6 +405,12 @@ export default function Desktop({ state, firmaValue, ...actions }) {
       const floating = !isMobile;
       return [...prev, { id, appId, minimized: false, floating, position, size, zIndex: z }];
     });
+    // Mark as open in memory so it can be restored after page reload
+    windowMemoryRef.current[appId] = {
+      ...(windowMemoryRef.current[appId] || {}),
+      isOpen: true,
+    };
+    saveWindowMemory();
     // Trigger splash screen for 1 second
     setSplashApps(prev => new Set([...prev, appId]));
     setTimeout(() => {
@@ -393,7 +420,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
         return next;
       });
     }, 1000);
-  }, [isMobile]);
+  }, [isMobile, saveWindowMemory]);
 
   const handleTaskbarAction = useCallback((winId, action) => {
     if (action === 'minimize') {
@@ -413,11 +440,13 @@ export default function Desktop({ state, firmaValue, ...actions }) {
   const closeWindow = useCallback((winId) => {
     setOpenWindows(prev => {
       const win = prev.find(w => w.id === winId);
-      if (win && (win.position || win.size)) {
+      if (win) {
         windowMemoryRef.current[win.appId] = {
+          ...(windowMemoryRef.current[win.appId] || {}),
           floating: win.floating,
           position: win.position,
           size: win.size,
+          isOpen: false,
         };
         saveWindowMemory();
       }
@@ -434,7 +463,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
         if (w.floating) {
           // Save last floating state before going full-screen
           if (w.position || w.size) {
-            windowMemoryRef.current[w.appId] = { floating: false, position: w.position, size: w.size };
+            windowMemoryRef.current[w.appId] = { ...(windowMemoryRef.current[w.appId] || {}), floating: false, position: w.position, size: w.size };
           }
           return { ...w, floating: false };
         }
@@ -496,6 +525,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
         const win = prev.find(w => w.id === winId);
         if (win && win.floating && (win.position || win.size)) {
           windowMemoryRef.current[win.appId] = {
+            ...(windowMemoryRef.current[win.appId] || {}),
             floating: true,
             position: win.position,
             size: win.size,

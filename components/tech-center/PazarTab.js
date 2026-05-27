@@ -10,8 +10,9 @@ function fmtMoney(n) {
   return '₺' + Math.round(n).toLocaleString('tr-TR');
 }
 
-export default function PazarTab({ state, orderProduct, setPriceAction, clearError, cancelOrderAction, removeFromShoppingListAction }) {
+export default function PazarTab({ state, orderProduct, setPriceAction, clearError, cancelOrderAction, removeFromShoppingListAction, isMobile }) {
   const [selectedCat, setSelectedCat] = useState('all');
+  const [searchText, setSearchText] = useState('');
   const [quantities, setQuantities] = useState({});
   const [supplierPref, setSupplierPref] = useState({});
   const [localPrices, setLocalPrices] = useState({});
@@ -24,9 +25,10 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
 
   const categories = ['all', ...unlockedCategories];
 
-  const filtered = selectedCat === 'all'
-    ? unlockedProducts
-    : unlockedProducts.filter(p => p.category === selectedCat);
+  const filtered = (selectedCat === 'all' ? unlockedProducts : unlockedProducts.filter(p => p.category === selectedCat))
+    .filter(p => !searchText.trim() ||
+      `${p.brand} ${p.name} ${p.specs}`.toLowerCase().includes(searchText.trim().toLowerCase())
+    );
 
   const grouped = {};
   for (const p of filtered) {
@@ -67,7 +69,7 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
   const hasShopping = shoppingList.length > 0;
 
   return (
-    <div style={{ display: 'flex', height: '100%', overflow: 'hidden' }}>
+    <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', height: '100%', overflow: 'hidden' }}>
       {/* Sol: Ana içerik */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem 1rem' }}>
       {orderError && (
@@ -106,6 +108,38 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
         <span style={{ fontWeight: 800, fontFamily: 'var(--font-mono)', color: cash < 5000 ? '#E24B4A' : '#1D9E75', fontSize: '1rem' }}>
           {fmtMoney(cash)}
         </span>
+      </div>
+
+      {/* Arama kutusu */}
+      <div style={{ position: 'relative', marginBottom: '0.875rem' }}>
+        <input
+          type="text"
+          placeholder="Ürün ara... (marka, model, özellik)"
+          value={searchText}
+          onChange={e => setSearchText(e.target.value)}
+          style={{
+            width: '100%',
+            padding: '8px 36px 8px 12px',
+            borderRadius: '8px',
+            border: '1px solid var(--color-border)',
+            background: 'var(--color-cream)',
+            color: 'var(--color-text)',
+            fontSize: '0.85rem',
+            outline: 'none',
+            boxSizing: 'border-box',
+          }}
+        />
+        {searchText && (
+          <button
+            onClick={() => setSearchText('')}
+            style={{
+              position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)',
+              background: 'none', border: 'none', cursor: 'pointer',
+              color: 'var(--color-text-mute)', fontSize: '1rem', lineHeight: 1,
+              padding: 0,
+            }}
+          >×</button>
+        )}
       </div>
 
       {/* Bekleyen siparişler - detaylı */}
@@ -231,7 +265,7 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
             <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: CATEGORY_COLORS[cat], display: 'inline-block' }} />
             {CATEGORY_LABELS[cat]}
           </h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '0.75rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(300px, 1fr))', gap: '0.75rem' }}>
             {products.map(product => {
               const effectivePrice = getEffectiveBuyPrice(product.id, activeEvents);
               const hasDiscount = effectivePrice !== product.buyPrice;
@@ -453,13 +487,15 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
       {/* Sağ: Alışveriş Listesi sidebar */}
       {hasShopping && (
         <div style={{
-          width: '230px',
+          width: isMobile ? '100%' : '230px',
           flexShrink: 0,
-          borderLeft: '1px solid var(--color-border)',
+          borderLeft: isMobile ? 'none' : '1px solid var(--color-border)',
+          borderTop: isMobile ? '1px solid var(--color-border)' : 'none',
           background: 'var(--color-cream-card)',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
+          maxHeight: isMobile ? '250px' : undefined,
         }}>
           {/* Header */}
           <div style={{
