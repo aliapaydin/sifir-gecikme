@@ -440,7 +440,7 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
       </div>
 
       {tab === 'build' && (
-        <div style={{ flex: 1, overflow: isMobile ? 'auto' : 'hidden', display: 'flex', flexDirection: isMobile ? 'column' : 'row', minHeight: 0 }}>
+        <div style={{ flex: 1, overflow: isMobile ? 'auto' : 'hidden', display: 'flex', flexDirection: isMobile ? 'column' : 'row', minHeight: 0, position: 'relative' }}>
           {/* Mobile: PC visual + özet toggle */}
           {isMobile && (
             <>
@@ -623,29 +623,49 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
           </div>
           )}
 
-          {/* Right: toggle tab + collapsible summary drawer (desktop only) */}
+          {/* Right: floating toggle tab + collapsible summary drawer (desktop only) */}
           {!isMobile && (
-            <div style={{ display: 'flex', flexShrink: 0 }}>
+            <div style={{
+              position: 'absolute', top: 0, right: 0, bottom: 0,
+              display: 'flex', flexDirection: 'row', zIndex: 10,
+              pointerEvents: 'none',
+            }}>
+              {/* Backdrop when open */}
+              {summaryOpen && (
+                <div
+                  onClick={() => setSummaryOpen(false)}
+                  style={{ position: 'fixed', inset: 0, zIndex: -1, pointerEvents: 'auto' }}
+                />
+              )}
+              {/* Floating toggle tab */}
               <button
                 onClick={() => setSummaryOpen(v => !v)}
                 title={summaryOpen ? 'Özeti Kapat' : 'Özeti Aç'}
                 style={{
-                  width: '22px', flexShrink: 0, padding: 0, cursor: 'pointer',
-                  borderLeft: '1px solid var(--color-border)', background: summaryOpen ? 'var(--color-accent-soft, #EEF2FF)' : 'var(--color-cream-card)',
-                  border: 'none', outline: 'none', borderLeft: '1px solid var(--color-border)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  alignSelf: 'center',
+                  width: '20px', height: '56px',
+                  borderRadius: '8px 0 0 8px',
+                  border: '1px solid var(--color-border)',
+                  borderRight: 'none',
+                  background: summaryOpen ? 'var(--color-accent-soft, #EEF2FF)' : 'var(--color-cream-card)',
                   color: summaryOpen ? 'var(--color-accent)' : 'var(--color-text-mute)',
-                  fontSize: '13px', transition: 'background 0.15s',
+                  cursor: 'pointer', fontSize: '13px',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  boxShadow: '-2px 0 8px rgba(0,0,0,0.08)',
+                  transition: 'background 0.15s, color 0.15s',
+                  pointerEvents: 'auto', flexShrink: 0,
                 }}
               >
                 {summaryOpen ? '›' : '‹'}
               </button>
+              {/* Sliding panel */}
               <div style={{
                 width: summaryOpen ? '220px' : '0px', flexShrink: 0,
                 overflow: 'hidden', transition: 'width 0.25s ease',
                 display: 'flex', flexDirection: 'column',
+                pointerEvents: summaryOpen ? 'auto' : 'none',
               }}>
-                <div style={{ width: '220px', display: 'flex', flexDirection: 'column', height: '100%', borderLeft: '1px solid var(--color-border)' }}>
+                <div style={{ width: '220px', display: 'flex', flexDirection: 'column', height: '100%', borderLeft: '1px solid var(--color-border)', background: 'var(--color-cream-card)' }}>
                   <div style={{ padding: '10px 14px', fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-mute)', textTransform: 'uppercase', letterSpacing: '0.06em', borderBottom: '1px solid var(--color-border)' }}>
                     Özet
                   </div>

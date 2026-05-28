@@ -16,6 +16,7 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
   const [quantities, setQuantities] = useState({});
   const [supplierPref, setSupplierPref] = useState({});
   const [localPrices, setLocalPrices] = useState({});
+  const [shoppingOpen, setShoppingOpen] = useState(false);
 
   if (!state) return null;
 
@@ -69,9 +70,9 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
   const hasShopping = shoppingList.length > 0;
 
   return (
-    <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', height: '100%', overflow: 'hidden' }}>
-      {/* Sol: Ana içerik */}
-      <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+    <div style={{ position: 'relative', height: '100%', overflow: 'hidden' }}>
+      {/* Ana içerik */}
+      <div style={{ height: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
         {/* Sticky header: nakit + arama + kategori */}
         <div style={{ flexShrink: 0, padding: '0.75rem 1rem 0.75rem', background: 'var(--color-cream)', borderBottom: '1px solid var(--color-border)' }}>
           {orderError && (
@@ -85,7 +86,7 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
             </div>
           )}
 
-          {/* Nakit + Arama — yan yana */}
+          {/* Nakit + Arama + Alışveriş Listesi butonu — yan yana */}
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             <div style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -119,6 +120,30 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
                 }}>×</button>
               )}
             </div>
+            {/* Alışveriş listesi toggle butonu */}
+            <button
+              onClick={() => setShoppingOpen(v => !v)}
+              style={{
+                flexShrink: 0, position: 'relative',
+                padding: '6px 10px', borderRadius: '8px', cursor: 'pointer',
+                border: `1px solid ${shoppingOpen ? 'var(--color-accent)' : hasShopping ? '#F59E0B88' : 'var(--color-border)'}`,
+                background: shoppingOpen ? 'var(--color-accent-soft, #EEF2FF)' : hasShopping ? '#FEF3C7' : 'var(--color-cream-card)',
+                color: shoppingOpen ? 'var(--color-accent)' : hasShopping ? '#92400E' : 'var(--color-text-mute)',
+                fontSize: '0.82rem', fontWeight: 600,
+                display: 'flex', alignItems: 'center', gap: '5px',
+                transition: 'all 0.15s',
+              }}
+            >
+              🛒
+              {shoppingActiveItems.length > 0 && (
+                <span style={{
+                  padding: '1px 5px', borderRadius: '999px',
+                  background: '#F59E0B', color: '#fff',
+                  fontSize: '0.68rem', fontWeight: 800, lineHeight: 1.4,
+                }}>{shoppingActiveItems.length}</span>
+              )}
+              <span style={{ fontSize: '0.75rem' }}>{shoppingOpen ? '›' : '‹'}</span>
+            </button>
           </div>
 
         </div>
@@ -463,20 +488,29 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
         </div>
       )}
         </div>{/* /scrollable */}
-      </div>{/* /sol panel */}
+      </div>{/* /ana içerik */}
 
-      {/* Sağ: Alışveriş Listesi sidebar */}
-      {hasShopping && (
+      {/* Alışveriş Listesi — sağdan kayan overlay panel */}
+      {shoppingOpen && (
+        <div
+          onClick={() => setShoppingOpen(false)}
+          style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.25)', zIndex: 19 }}
+        />
+      )}
+      <div style={{
+        position: 'absolute', top: 0, right: 0, bottom: 0,
+        width: shoppingOpen ? '240px' : '0px',
+        overflow: 'hidden',
+        transition: 'width 0.25s ease',
+        zIndex: 20,
+      }}>
         <div style={{
-          width: isMobile ? '100%' : '230px',
-          flexShrink: 0,
-          borderLeft: isMobile ? 'none' : '1px solid var(--color-border)',
-          borderTop: isMobile ? '1px solid var(--color-border)' : 'none',
+          width: '240px', height: '100%',
           background: 'var(--color-cream-card)',
+          borderLeft: '1px solid var(--color-border)',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
-          maxHeight: isMobile ? '250px' : undefined,
         }}>
           {/* Header */}
           <div style={{
@@ -489,12 +523,15 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
             <span>🛒</span> Alışveriş Listesi
             {shoppingActiveItems.length > 0 && (
               <span style={{
-                marginLeft: 'auto',
                 padding: '1px 7px', borderRadius: '999px',
                 background: '#FEF3C7', color: '#92400E',
                 fontSize: '0.72rem', fontWeight: 700,
               }}>{shoppingActiveItems.length}</span>
             )}
+            <button
+              onClick={() => setShoppingOpen(false)}
+              style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-mute)', fontSize: '1.1rem', lineHeight: 1, padding: '0 2px' }}
+            >×</button>
           </div>
 
           {/* Mevcut bakiye */}
@@ -599,7 +636,7 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
             )}
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
