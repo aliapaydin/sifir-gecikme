@@ -29,6 +29,7 @@ function Badge({ icon, value, color, tooltip, onClick, highlight }) {
   const [hover, setHover] = useState(false);
   return (
     <div
+      className="tc-badge"
       title={tooltip}
       onClick={onClick}
       onMouseEnter={() => setHover(true)}
@@ -260,9 +261,16 @@ export default function TopBar({ state, firmaValue, onStartDay, onCloseDay, take
       )}
 
       <style>{`
-        @media (max-width: 767px) { .tc-topbar-brand { display: none !important; } }
+        @media (max-width: 767px) {
+          .tc-topbar-brand { display: none !important; }
+          .tc-topbar-root { padding: 0.4rem 0.75rem !important; gap: 0.4rem !important; flex-wrap: nowrap !important; }
+          .tc-badge { padding: 3px 7px !important; font-size: 0.75rem !important; border-radius: 6px !important; }
+          .tc-stats { gap: 4px !important; flex-wrap: nowrap !important; justify-content: flex-start !important; }
+          .tc-topbar-btn { padding: 6px 12px !important; font-size: 0.8rem !important; border-radius: 8px !important; }
+          .tc-topbar-theme { width: 30px !important; height: 30px !important; font-size: 0.9rem !important; }
+        }
       `}</style>
-      <div style={{
+      <div className="tc-topbar-root" style={{
         background: 'var(--color-cream-card)',
         borderBottom: '1px solid var(--color-border)',
         padding: '0.625rem 1rem',
@@ -292,10 +300,10 @@ export default function TopBar({ state, firmaValue, onStartDay, onCloseDay, take
         </div>
 
         {/* Orta: Stats */}
-        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+        <div className="tc-stats" style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
           <Badge
             icon="📅"
-            value={`Gün ${state.currentDay}`}
+            value={state.currentDay}
             tooltip="Oyunun kaçıncı günündesin"
           />
           <Badge
@@ -332,29 +340,13 @@ export default function TopBar({ state, firmaValue, onStartDay, onCloseDay, take
             />
           )}
 
-          {/* Firma değeri + progress */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Badge
-              icon="🏆"
-              value={fmtMoney(firmaValue)}
-              color="var(--color-text-mute)"
-              tooltip="Firma değeri = Nakit + Stok değeri × 1.5 + Mağaza bonusu. Hedef: ₺1 Milyar"
-            />
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <div style={{ width: '80px', height: '6px', background: 'var(--color-border)', borderRadius: '999px', overflow: 'hidden' }}>
-                <div style={{
-                  height: '100%',
-                  width: `${progressPct}%`,
-                  background: progress >= 0.9 ? '#F59E0B' : 'var(--color-accent)',
-                  borderRadius: '999px',
-                  transition: 'width 0.3s',
-                }} />
-              </div>
-              <span style={{ fontSize: '0.7rem', color: 'var(--color-text-mute)', fontFamily: 'var(--font-mono)' }}>
-                {progressPct}%
-              </span>
-            </div>
-          </div>
+          {/* Firma değeri */}
+          <Badge
+            icon="🏆"
+            value={fmtMoney(firmaValue)}
+            color="var(--color-text-mute)"
+            tooltip="Firma değeri = Nakit + Stok değeri × 1.5 + Mağaza bonusu. Hedef: ₺1 Milyar"
+          />
         </div>
 
         {/* Aktif Olaylar */}
@@ -382,8 +374,9 @@ export default function TopBar({ state, firmaValue, onStartDay, onCloseDay, take
         )}
 
         {/* Sağ: Tema Toggle + Gün Butonu */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
           <button
+            className="tc-topbar-theme"
             onClick={toggleTheme}
             title={isLight ? 'Karanlık Moda Geç' : 'Aydınlık Moda Geç'}
             style={{
@@ -397,6 +390,7 @@ export default function TopBar({ state, firmaValue, onStartDay, onCloseDay, take
           </button>
           {canStart && (
             <button
+              className="tc-topbar-btn"
               onClick={onStartDay}
               style={{
                 padding: '8px 18px', borderRadius: '10px', border: 'none',
@@ -409,6 +403,7 @@ export default function TopBar({ state, firmaValue, onStartDay, onCloseDay, take
           )}
           {canClose && (
             <button
+              className="tc-topbar-btn"
               onClick={onCloseDay}
               style={{
                 padding: '8px 18px', borderRadius: '10px', border: 'none',
@@ -416,11 +411,11 @@ export default function TopBar({ state, firmaValue, onStartDay, onCloseDay, take
                 fontSize: '0.9rem', fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap',
               }}
             >
-              Günü Kapat ✓
+              Günsonu ✓
             </button>
           )}
           {!canStart && !canClose && (
-            <div style={{
+            <div className="tc-topbar-btn" style={{
               padding: '8px 18px', borderRadius: '10px',
               background: 'var(--color-cream)', border: '1px solid var(--color-border)',
               fontSize: '0.85rem', color: 'var(--color-text-mute)', whiteSpace: 'nowrap',
