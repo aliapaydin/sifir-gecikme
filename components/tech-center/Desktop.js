@@ -188,10 +188,7 @@ function WindowTitleBar({ app, onMinimize, onClose, onFloat, isFloating, isDragg
   );
 }
 
-function Taskbar({ openWindows, activeWindowId, onFocus, badges }) {
-  const router = useRouter();
-  const [confirmExit, setConfirmExit] = useState(false);
-
+function Taskbar({ openWindows, activeWindowId, onFocus, badges, onExitRequest }) {
   return (
     <div style={{
       height: '52px',
@@ -252,7 +249,7 @@ function Taskbar({ openWindows, activeWindowId, onFocus, badges }) {
       })}
 
       <button
-        onClick={() => setConfirmExit(true)}
+        onClick={() => onExitRequest()}
         title="Ana Sayfaya Dön"
         style={{
           position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)',
@@ -274,33 +271,6 @@ function Taskbar({ openWindows, activeWindowId, onFocus, badges }) {
         Kapat
       </button>
 
-      {/* Çıkış onayı */}
-      {confirmExit && (
-        <div style={{
-          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999,
-        }}>
-          <div style={{
-            background: 'var(--color-cream-card)', border: '1px solid var(--color-border)',
-            borderRadius: '16px', padding: '2rem', width: '100%', maxWidth: '320px',
-            textAlign: 'center', boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-          }}>
-            <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>🚪</div>
-            <div style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--color-text)', marginBottom: '0.5rem' }}>Oyundan çıkmak istediğine emin misin?</div>
-            <div style={{ fontSize: '0.82rem', color: 'var(--color-text-mute)', marginBottom: '1.5rem' }}>Oyun durumu kaydedilmiş olarak kalır.</div>
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <button
-                onClick={() => setConfirmExit(false)}
-                style={{ flex: 1, padding: '10px', borderRadius: '10px', border: '1px solid var(--color-border)', background: 'transparent', color: 'var(--color-text-mute)', fontSize: '0.9rem', cursor: 'pointer', fontWeight: 600 }}
-              >İptal</button>
-              <button
-                onClick={() => router.push('/v3')}
-                style={{ flex: 1, padding: '10px', borderRadius: '10px', border: 'none', background: '#E24B4A', color: '#fff', fontSize: '0.9rem', cursor: 'pointer', fontWeight: 700 }}
-              >Evet, Çık</button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
@@ -350,6 +320,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
   const [activeWindowId, setActiveWindowId] = useState(null);
   const [splashApps, setSplashApps] = useState(new Set());
   const [isMobile, setIsMobile] = useState(false);
+  const [confirmExit, setConfirmExit] = useState(false);
   const [wallpaperId, setWallpaperId] = useState(() => {
     if (typeof window === 'undefined') return 'default';
     return localStorage.getItem('tc_wallpaper') || 'default';
@@ -919,7 +890,42 @@ export default function Desktop({ state, firmaValue, ...actions }) {
         activeWindowId={activeWindowId}
         onFocus={handleTaskbarAction}
         badges={badges}
+        onExitRequest={() => setConfirmExit(true)}
       />
+
+      {/* Çıkış onayı — en üstte, her şeyin üzerinde */}
+      {confirmExit && (
+        <div style={{
+          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          zIndex: 99999,
+        }}>
+          <div style={{
+            background: 'var(--color-cream-card)', border: '1px solid var(--color-border)',
+            borderRadius: '16px', padding: '2rem', width: '100%', maxWidth: '320px',
+            textAlign: 'center', boxShadow: '0 24px 80px rgba(0,0,0,0.4)',
+            margin: '0 16px',
+          }}>
+            <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>🚪</div>
+            <div style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--color-text)', marginBottom: '0.5rem' }}>
+              Oyundan çıkmak istediğine emin misin?
+            </div>
+            <div style={{ fontSize: '0.82rem', color: 'var(--color-text-mute)', marginBottom: '1.5rem' }}>
+              Oyun durumu kaydedilmiş olarak kalır.
+            </div>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                onClick={() => setConfirmExit(false)}
+                style={{ flex: 1, padding: '10px', borderRadius: '10px', border: '1px solid var(--color-border)', background: 'transparent', color: 'var(--color-text-mute)', fontSize: '0.9rem', cursor: 'pointer', fontWeight: 600 }}
+              >İptal</button>
+              <button
+                onClick={() => { window.location.href = '/v3'; }}
+                style={{ flex: 1, padding: '10px', borderRadius: '10px', border: 'none', background: '#E24B4A', color: '#fff', fontSize: '0.9rem', cursor: 'pointer', fontWeight: 700 }}
+              >Evet, Çık</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

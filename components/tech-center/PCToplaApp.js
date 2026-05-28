@@ -450,16 +450,12 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
                   <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', textAlign: 'center' }}>Aşağıdan parça seçerek montajı başlat</div>
                 )}
               </div>
-              <div style={{ flexShrink: 0, padding: '7px 12px', borderBottom: '1px solid var(--color-border)', background: 'var(--color-cream-card)', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                <button
-                  onClick={() => setSummaryOpen(v => !v)}
-                  style={{ padding: '5px 12px', borderRadius: '7px', border: '1px solid var(--color-border)', background: summaryOpen ? 'var(--color-accent-soft, #EEF2FF)' : 'transparent', color: summaryOpen ? 'var(--color-accent)' : 'var(--color-text-mute)', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontFamily: 'inherit' }}
-                >
-                  📊 Özet {summaryOpen ? '›' : '‹'}
-                </button>
-                {score && <span style={{ fontSize: '0.72rem', fontWeight: 700, color: score.color, padding: '3px 8px', borderRadius: '6px', background: score.color + '22' }}>{score.text}</span>}
-                {issues.length > 0 && <span style={{ fontSize: '0.72rem', color: '#991B1B', padding: '3px 8px', borderRadius: '6px', background: '#FEE2E2' }}>⚠️ {issues.length} uyumsuzluk</span>}
-              </div>
+              {(score || issues.length > 0) && (
+                <div style={{ flexShrink: 0, padding: '7px 12px', borderBottom: '1px solid var(--color-border)', background: 'var(--color-cream-card)', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                  {score && <span style={{ fontSize: '0.72rem', fontWeight: 700, color: score.color, padding: '3px 8px', borderRadius: '6px', background: score.color + '22' }}>{score.text}</span>}
+                  {issues.length > 0 && <span style={{ fontSize: '0.72rem', color: '#991B1B', padding: '3px 8px', borderRadius: '6px', background: '#FEE2E2' }}>⚠️ {issues.length} uyumsuzluk</span>}
+                </div>
+              )}
             </>
           )}
           {/* Left — slot selector */}
@@ -959,6 +955,32 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
             </div>
           )}
         </div>
+      )}
+
+      {/* Mobile floating özet button */}
+      {isMobile && tab === 'build' && (
+        <button
+          onClick={() => setSummaryOpen(v => !v)}
+          title={summaryOpen ? 'Özeti Kapat' : 'Özeti Aç'}
+          style={{
+            position: 'absolute',
+            top: '54px',
+            right: summaryOpen ? '260px' : '0',
+            width: '32px', height: '32px',
+            borderRadius: '8px 0 0 8px',
+            border: '1px solid var(--color-border)',
+            borderRight: 'none',
+            background: summaryOpen ? 'var(--color-accent-soft, #EEF2FF)' : 'var(--color-cream-card)',
+            color: summaryOpen ? 'var(--color-accent)' : 'var(--color-text-mute)',
+            cursor: 'pointer', fontSize: '1rem',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '-2px 0 8px rgba(0,0,0,0.08)',
+            transition: 'right 0.25s ease, background 0.15s, color 0.15s',
+            zIndex: 101, flexShrink: 0,
+          }}
+        >
+          📊
+        </button>
       )}
 
       {/* Mobile summary overlay — sağdan kayan panel */}
