@@ -342,7 +342,8 @@ export default function Desktop({ state, firmaValue, ...actions }) {
   }, []);
 
   const badges = {
-    mail:     (state.customersToday || []).filter(c => !c.dealt).length,
+    mail:     (state.customersToday || []).filter(c => !c.dealt).length +
+              (state.systemMails || []).filter(m => !m.read).length,
     pctopla:  (state.pendingPCOrders || []).filter(o => !o.fulfilled).length,
     stok:     Object.values(state.inventory || {}).filter(q => q > 0).length,
     pazar:    (state.shoppingList || []).filter(i => !i.ordered).length,
@@ -609,7 +610,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
       cancelOrderAction, takeLoanAction,
       addToShoppingListAction, removeFromShoppingListAction,
       acceptPCOrderAction, fulfillPCOrderAction, clearLoanError,
-      markReviewsReadAction,
+      markReviewsReadAction, markSystemMailReadAction,
     } = actions;
 
     switch (appId) {
@@ -623,6 +624,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
           servicePrices={state.servicePrices}
           addToShoppingListAction={addToShoppingListAction}
           acceptPCOrderAction={acceptPCOrderAction}
+          markSystemMailReadAction={markSystemMailReadAction}
           isMobile={isMobile}
         />
       );

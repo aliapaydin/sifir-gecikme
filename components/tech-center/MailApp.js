@@ -951,16 +951,21 @@ function CustomerDetailPane({ customer, state, sellAction, skipAction, handleSer
   );
 }
 
-export default function MailApp({ state, sellAction, skipAction, handleServiceAction, delayCustomerAction, servicePrices, addToShoppingListAction, acceptPCOrderAction, isMobile }) {
+export default function MailApp({ state, sellAction, skipAction, handleServiceAction, delayCustomerAction, servicePrices, addToShoppingListAction, acceptPCOrderAction, markSystemMailReadAction, isMobile }) {
   const [selectedId, setSelectedId] = useState(null);
   const [successData, setSuccessData] = useState(null);
+  const [mailTab, setMailTab] = useState('customers');
+  const [selectedNotifId, setSelectedNotifId] = useState(null);
   // Tracks the previous selectedId to distinguish "user just acted" from "user navigated to dealt customer"
   const prevSelectedIdRef = useRef(null);
 
   const customers = state.customersToday || [];
+  const systemMails = [...(state.systemMails || [])].sort((a, b) => b.day - a.day);
   const unreadCount = customers.filter(c => !c.dealt).length;
+  const unreadNotifCount = systemMails.filter(m => !m.read).length;
 
   const selectedCustomer = customers.find(c => c.id === selectedId) || null;
+  const selectedNotif = systemMails.find(m => m.id === selectedNotifId) || null;
 
   // Auto-select first undealt customer if none selected
   useEffect(() => {
@@ -1005,112 +1010,169 @@ export default function MailApp({ state, sellAction, skipAction, handleServiceAc
           flexDirection: 'column',
           overflow: 'hidden',
         }}>
-          {/* Inbox header */}
-          <div style={{
-            padding: '0.875rem 1rem',
-            borderBottom: '1px solid var(--color-border)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            flexShrink: 0,
-          }}>
-            <span style={{ fontSize: '1rem' }}>📧</span>
-            <span style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--color-text)' }}>Gelen Kutusu</span>
-            {unreadCount > 0 && (
-              <span style={{
-                marginLeft: 'auto',
-                padding: '2px 8px', borderRadius: '999px',
-                background: 'var(--color-accent)',
-                color: '#fff', fontSize: '0.72rem', fontWeight: 700,
+          {/* Tab row */}
+          <div style={{ display: 'flex', borderBottom: '1px solid var(--color-border)', flexShrink: 0 }}>
+            {[
+              { id: 'customers', label: 'Müşteriler', badge: unreadCount },
+              { id: 'notifications', label: 'Bildirimler', badge: unreadNotifCount },
+            ].map(tab => (
+              <button key={tab.id} onClick={() => setMailTab(tab.id)} style={{
+                flex: 1, padding: '0.625rem 0.5rem', border: 'none', cursor: 'pointer',
+                background: mailTab === tab.id ? 'var(--color-cream)' : 'transparent',
+                borderBottom: mailTab === tab.id ? '2px solid var(--color-accent)' : '2px solid transparent',
+                color: mailTab === tab.id ? 'var(--color-accent)' : 'var(--color-text-mute)',
+                fontSize: '0.78rem', fontWeight: mailTab === tab.id ? 700 : 400,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px',
               }}>
-                {unreadCount}
-              </span>
-            )}
+                {tab.label}
+                {tab.badge > 0 && (
+                  <span style={{ padding: '1px 6px', borderRadius: '999px', background: 'var(--color-accent)', color: '#fff', fontSize: '0.65rem', fontWeight: 700 }}>
+                    {tab.badge}
+                  </span>
+                )}
+              </button>
+            ))}
           </div>
 
           {/* Customer list */}
-          <div style={{ flex: 1, overflowY: 'auto' }}>
-            {customers.length === 0 && (
-              <div style={{
-                padding: '2rem 1rem', textAlign: 'center',
-                color: 'var(--color-text-mute)', fontSize: '0.85rem',
-              }}>
-                Bugün müşteri yok
-              </div>
-            )}
-            {customers.map(customer => {
-              const isSelected = customer.id === selectedId;
-              const dotColor = getStatusDot(customer);
-              const subject = getSubjectLine(customer);
-              const typeColor = getCustomerTypeColor(customer.type);
-              const isPCOrder = customer.type === 'pc_order';
-
-              return (
-                <div
-                  key={customer.id}
-                  onClick={() => { setSelectedId(customer.id); }}
-                  style={{
-                    padding: '0.625rem 0.875rem',
-                    cursor: 'pointer',
+          {mailTab === 'customers' && (
+            <div style={{ flex: 1, overflowY: 'auto' }}>
+              {customers.length === 0 && (
+                <div style={{ padding: '2rem 1rem', textAlign: 'center', color: 'var(--color-text-mute)', fontSize: '0.85rem' }}>
+                  Bugün müşteri yok
+                </div>
+              )}
+              {customers.map(customer => {
+                const isSelected = customer.id === selectedId;
+                const dotColor = getStatusDot(customer);
+                const subject = getSubjectLine(customer);
+                const typeColor = getCustomerTypeColor(customer.type);
+                const isPCOrder = customer.type === 'pc_order';
+                return (
+                  <div key={customer.id} onClick={() => setSelectedId(customer.id)} style={{
+                    padding: '0.625rem 0.875rem', cursor: 'pointer',
                     borderBottom: '0.5px solid var(--color-border)',
                     background: isSelected ? 'var(--color-accent-soft, #EEF2FF)' : 'transparent',
                     borderLeft: isSelected ? `3px solid ${isPCOrder ? '#F59E0B' : 'var(--color-accent)'}` : '3px solid transparent',
-                    transition: 'background 0.1s',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.625rem',
-                  }}
-                >
-                  {/* Avatar */}
-                  <div style={{
-                    width: '34px', height: '34px', borderRadius: '50%',
-                    background: typeColor + '22', display: 'flex', alignItems: 'center',
-                    justifyContent: 'center', fontSize: '1.1rem', flexShrink: 0,
-                    position: 'relative',
+                    transition: 'background 0.1s', display: 'flex', alignItems: 'center', gap: '0.625rem',
                   }}>
-                    {isPCOrder ? '🖥️' : customer.avatar}
-                  </div>
-
-                  {/* Info */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <span style={{
-                        fontWeight: customer.dealt ? 400 : 700,
-                        fontSize: '0.82rem', color: 'var(--color-text)',
-                        overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                      }}>
-                        {customer.name}
-                      </span>
-                      <span style={{
-                        flexShrink: 0,
-                        padding: '1px 5px', borderRadius: '4px',
-                        background: typeColor + '22', color: typeColor,
-                        fontSize: '0.6rem', fontWeight: 700, lineHeight: 1.4,
-                      }}>
-                        {getCustomerTypeLabel(customer.type)}
-                      </span>
+                    <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: typeColor + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.1rem', flexShrink: 0 }}>
+                      {isPCOrder ? '🖥️' : customer.avatar}
                     </div>
-                    <div style={{
-                      fontSize: '0.72rem', color: 'var(--color-text-mute)',
-                      whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-                    }}>
-                      {subject}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <span style={{ fontWeight: customer.dealt ? 400 : 700, fontSize: '0.82rem', color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {customer.name}
+                        </span>
+                        <span style={{ flexShrink: 0, padding: '1px 5px', borderRadius: '4px', background: typeColor + '22', color: typeColor, fontSize: '0.6rem', fontWeight: 700, lineHeight: 1.4 }}>
+                          {getCustomerTypeLabel(customer.type)}
+                        </span>
+                      </div>
+                      <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {subject}
+                      </div>
                     </div>
+                    <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: dotColor, flexShrink: 0 }} />
                   </div>
+                );
+              })}
+            </div>
+          )}
 
-                  {/* Status dot */}
-                  <div style={{
-                    width: '8px', height: '8px', borderRadius: '50%',
-                    background: dotColor, flexShrink: 0,
-                  }} />
+          {/* Notifications list */}
+          {mailTab === 'notifications' && (
+            <div style={{ flex: 1, overflowY: 'auto' }}>
+              {systemMails.length === 0 && (
+                <div style={{ padding: '2rem 1rem', textAlign: 'center', color: 'var(--color-text-mute)', fontSize: '0.85rem' }}>
+                  Henüz bildirim yok
                 </div>
-              );
-            })}
-          </div>
+              )}
+              {systemMails.map(mail => {
+                const isSelected = mail.id === selectedNotifId;
+                const notifColor = mail.type === 'event'
+                  ? (mail.eventType === 'good' ? '#1D9E75' : mail.eventType === 'bad' ? '#E24B4A' : '#7F77DD')
+                  : mail.type === 'product_unlock' ? '#F59E0B'
+                  : mail.type === 'reviews' ? '#F59E0B'
+                  : '#6B7280';
+                return (
+                  <div key={mail.id} onClick={() => { setSelectedNotifId(mail.id); markSystemMailReadAction?.(mail.id); }} style={{
+                    padding: '0.625rem 0.875rem', cursor: 'pointer',
+                    borderBottom: '0.5px solid var(--color-border)',
+                    background: isSelected ? 'var(--color-accent-soft, #EEF2FF)' : 'transparent',
+                    borderLeft: isSelected ? `3px solid var(--color-accent)` : '3px solid transparent',
+                    display: 'flex', alignItems: 'center', gap: '0.625rem',
+                  }}>
+                    <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: notifColor + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', flexShrink: 0 }}>
+                      {mail.emoji}
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: '0.8rem', fontWeight: mail.read ? 400 : 700, color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {mail.subject}
+                      </div>
+                      <div style={{ fontSize: '0.7rem', color: 'var(--color-text-mute)' }}>{mail.from} · Gün {mail.day}</div>
+                    </div>
+                    {!mail.read && <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--color-accent)', flexShrink: 0 }} />}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Bottom/right panel — detail */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minHeight: 0 }}>
+          {mailTab === 'notifications' && selectedNotif ? (
+            <div style={{ flex: 1, background: 'var(--color-cream)', padding: '1.5rem', overflowY: 'auto' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1rem' }}>
+                <div style={{
+                  width: '48px', height: '48px', borderRadius: '50%', flexShrink: 0,
+                  background: selectedNotif.type === 'event'
+                    ? (selectedNotif.eventType === 'good' ? '#1D9E75' : selectedNotif.eventType === 'bad' ? '#E24B4A' : '#7F77DD') + '22'
+                    : '#F59E0B22',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem',
+                }}>
+                  {selectedNotif.emoji}
+                </div>
+                <div>
+                  <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--color-text)' }}>{selectedNotif.subject}</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--color-text-mute)', marginTop: '2px' }}>{selectedNotif.from} · Gün {selectedNotif.day}</div>
+                </div>
+              </div>
+              <div style={{ fontSize: '0.9rem', color: 'var(--color-text)', lineHeight: 1.6, marginBottom: '1rem' }}>
+                {selectedNotif.body}
+              </div>
+              {selectedNotif.type === 'product_unlock' && selectedNotif.productIds && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  {selectedNotif.productIds.map(pid => {
+                    const p = PRODUCTS[pid];
+                    if (!p) return null;
+                    return (
+                      <div key={pid} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 12px', borderRadius: '8px', background: 'var(--color-cream-card)', border: '0.5px solid var(--color-border)' }}>
+                        <span style={{ fontSize: '1.1rem' }}>{p.icon || '📦'}</span>
+                        <div>
+                          <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--color-text)' }}>{p.brand} {p.name}</div>
+                          <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)' }}>{p.specs}</div>
+                        </div>
+                        <div style={{ marginLeft: 'auto', fontSize: '0.82rem', fontFamily: 'var(--font-mono)', color: '#1D9E75', fontWeight: 700 }}>
+                          ₺{Math.round(p.buyPrice).toLocaleString('tr-TR')}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+              {selectedNotif.type === 'event' && (
+                <div style={{
+                  padding: '10px 14px', borderRadius: '8px', marginTop: '4px',
+                  background: selectedNotif.eventType === 'good' ? '#D1FAE5' : selectedNotif.eventType === 'bad' ? '#FEE2E2' : '#EDE9FE',
+                  border: `1px solid ${selectedNotif.eventType === 'good' ? '#6EE7B7' : selectedNotif.eventType === 'bad' ? '#FCA5A5' : '#C4B5FD'}`,
+                  fontSize: '0.85rem', color: selectedNotif.eventType === 'good' ? '#065F46' : selectedNotif.eventType === 'bad' ? '#991B1B' : '#5B21B6',
+                }}>
+                  {selectedNotif.eventType === 'good' ? '📈 İyi haber' : selectedNotif.eventType === 'bad' ? '⚠️ Dikkat' : '📊 Bilgi'} — {selectedNotif.endsOnDay ? `Gün ${selectedNotif.endsOnDay}'e kadar devam eder` : 'Tek seferlik'}
+                </div>
+              )}
+            </div>
+          ) : (
           <CustomerDetailPane
             key={selectedId}
             customer={selectedCustomer}
@@ -1124,6 +1186,7 @@ export default function MailApp({ state, sellAction, skipAction, handleServiceAc
             addToShoppingListAction={addToShoppingListAction}
             acceptPCOrderAction={acceptPCOrderAction}
           />
+          )}
         </div>
       </div>
     </>
