@@ -263,11 +263,13 @@ export default function TopBar({ state, firmaValue, onStartDay, onCloseDay, take
       <style>{`
         @media (max-width: 767px) {
           .tc-topbar-brand { display: none !important; }
-          .tc-topbar-root { padding: 0.4rem 0.75rem !important; gap: 0.4rem !important; flex-wrap: nowrap !important; }
+          .tc-topbar-root { padding: 5px 10px !important; gap: 4px 6px !important; flex-wrap: wrap !important; align-items: center !important; }
+          .tc-stats { order: 1; flex: 1 1 100% !important; flex-wrap: wrap !important; gap: 4px !important; justify-content: flex-start !important; }
+          .tc-topbar-events { order: 2; flex: 1 1 100% !important; }
+          .tc-topbar-actions { order: 3; margin-left: auto !important; }
           .tc-badge { padding: 3px 7px !important; font-size: 0.75rem !important; border-radius: 6px !important; }
-          .tc-stats { gap: 4px !important; flex-wrap: nowrap !important; justify-content: flex-start !important; }
-          .tc-topbar-btn { padding: 6px 12px !important; font-size: 0.8rem !important; border-radius: 8px !important; }
-          .tc-topbar-theme { width: 30px !important; height: 30px !important; font-size: 0.9rem !important; }
+          .tc-topbar-btn { padding: 5px 11px !important; font-size: 0.8rem !important; border-radius: 8px !important; }
+          .tc-topbar-theme { width: 28px !important; height: 28px !important; font-size: 0.9rem !important; }
         }
       `}</style>
       <div className="tc-topbar-root" style={{
@@ -351,7 +353,7 @@ export default function TopBar({ state, firmaValue, onStartDay, onCloseDay, take
 
         {/* Aktif Olaylar */}
         {state.activeEvents && state.activeEvents.length > 0 && (
-          <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+          <div className="tc-topbar-events" style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
             {state.activeEvents.map(ev => (
               <span
                 key={ev.id}
@@ -374,7 +376,7 @@ export default function TopBar({ state, firmaValue, onStartDay, onCloseDay, take
         )}
 
         {/* Sağ: Tema Toggle + Gün Butonu */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+        <div className="tc-topbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
           <button
             className="tc-topbar-theme"
             onClick={toggleTheme}
