@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import {
-  PRODUCTS, CATEGORY_LABELS, CATEGORY_COLORS, CATEGORY_ICONS, UNLOCK_CATEGORIES,
+  PRODUCTS, CATEGORY_LABELS, CATEGORY_COLORS, CATEGORY_ICONS,
 } from '@/lib/tech-center-data';
 import { getEffectiveBuyPrice } from '@/lib/tech-center-engine';
 
@@ -22,9 +22,17 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
 
   const { unlockedCategories = [], activeEvents = [], orderError, prices = {}, inventory = {}, pendingOrders = [], currentDay, shoppingList = [], cash = 0 } = state;
 
-  const unlockedProducts = Object.values(PRODUCTS).filter(p => unlockedCategories.includes(p.category));
+  const unlockedProducts = Object.values(PRODUCTS).filter(p =>
+    unlockedCategories.includes(p.category) && (p.unlockDay || 1) <= currentDay
+  );
 
-  const categories = ['all', ...unlockedCategories];
+  const availableCategories = [...new Set(unlockedProducts.map(p => p.category))];
+  const categories = ['all', ...availableCategories];
+
+  // Yakında açılacak ürünler (sonraki 4 gün içinde)
+  const upcomingProducts = Object.values(PRODUCTS)
+    .filter(p => (p.unlockDay || 1) > currentDay && (p.unlockDay || 1) <= currentDay + 4)
+    .sort((a, b) => (a.unlockDay || 1) - (b.unlockDay || 1));
 
   const filtered = (selectedCat === 'all' ? unlockedProducts : unlockedProducts.filter(p => p.category === selectedCat))
     .filter(p => !searchText.trim() ||
@@ -59,11 +67,6 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
       setLocalPrices(prev => { const n = {...prev}; delete n[productId]; return n; });
     }
   };
-
-  // Yakında kilidinden açılacak kategoriler
-  const lockedDays = Object.entries(UNLOCK_CATEGORIES)
-    .filter(([day, cats]) => parseInt(day) > currentDay)
-    .sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
 
   const shoppingActiveItems = shoppingList.filter(i => !i.ordered);
   const shoppingOrderedItems = shoppingList.filter(i => i.ordered);
@@ -457,33 +460,37 @@ export default function PazarTab({ state, orderProduct, setPriceAction, clearErr
         </div>
       ))}
 
-      {/* Yakında açılacaklar */}
-      {lockedDays.length > 0 && (
+      {/* Yakında açılacak ürünler */}
+      {upcomingProducts.length > 0 && (
         <div style={{
-          marginTop: '2rem',
+          marginTop: '1.5rem',
           padding: '1rem',
           background: 'var(--color-cream-card)',
           border: '1px solid var(--color-border)',
           borderRadius: '12px',
         }}>
-          <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--color-text-mute)', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-            🔒 Yakında Açılacak Kategoriler
+          <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-text-mute)', marginBottom: '0.625rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            🔒 Yakında Açılacak Ürünler
           </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-            {lockedDays.map(([day, cats]) =>
-              cats.map(cat => (
-                <div key={cat} style={{
-                  padding: '5px 14px',
-                  borderRadius: '999px',
-                  background: 'var(--color-cream)',
-                  border: '1px solid var(--color-border)',
-                  fontSize: '0.78rem',
-                  color: 'var(--color-text-mute)',
-                }}>
-                  🔒 {CATEGORY_LABELS[cat]} – Gün {day}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            {upcomingProducts.map(p => (
+              <div key={p.id} style={{
+                display: 'flex', alignItems: 'center', gap: '8px',
+                padding: '6px 10px', borderRadius: '8px',
+                background: 'var(--color-cream)',
+                border: '0.5px solid var(--color-border)',
+                opacity: 0.65,
+              }}>
+                <span style={{ fontSize: '1.1rem', filter: 'grayscale(1)' }}>{p.icon || CATEGORY_ICONS[p.category]}</span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 500, color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.brand} {p.name}</div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--color-text-mute)' }}>{CATEGORY_LABELS[p.category]}</div>
                 </div>
-              ))
-            )}
+                <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--color-text-mute)', background: 'var(--color-border)', borderRadius: '999px', padding: '2px 8px', whiteSpace: 'nowrap' }}>
+                  Gün {p.unlockDay}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       )}

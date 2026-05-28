@@ -251,7 +251,7 @@ function PCInteriorVisual({ build }) {
   );
 }
 
-export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fulfillPCOrderAction, isMobile }) {
+export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, listBuiltPCAction, fulfillPCOrderAction, isMobile }) {
   const [build, setBuild] = useState({ ...MAIN_SLOTS_INIT, ...PERIPHERAL_INIT });
   const [activeSlot, setActiveSlot] = useState(null);
   const [listPrices, setListPrices] = useState({});
@@ -763,34 +763,56 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
                 const caseProd = pc.components.case ? PRODUCTS[pc.components.case] : null;
                 const localPrice = listPrices[pc.id];
                 const displayPrice = localPrice !== undefined ? localPrice : pc.listPrice;
+                const daysUntilSale = pc.listed ? Math.max(0, pc.sellOnDay - (state.currentDay || 1)) : null;
 
                 return (
-                  <div key={pc.id} style={{ background: 'var(--color-cream-card)', border: '1px solid var(--color-border)', borderRadius: '12px', padding: '1rem', display: 'flex', gap: '12px' }}>
+                  <div key={pc.id} style={{
+                    background: 'var(--color-cream-card)',
+                    border: pc.listed ? '1px solid #22C55E55' : '1px solid var(--color-border)',
+                    borderRadius: '12px', padding: '1rem', display: 'flex', gap: '12px',
+                    opacity: pc.listed ? 0.85 : 1,
+                  }}>
                     <CaseVisual product={caseProd} size="md" />
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--color-text)', marginBottom: '4px' }}>
-                        Toplama PC #{pc.id.slice(-4)}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+                        <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--color-text)' }}>
+                          Toplama PC #{pc.id.slice(-4)}
+                        </div>
+                        {pc.listed && (
+                          <span style={{ fontSize: '0.68rem', fontWeight: 700, background: '#22C55E22', color: '#16A34A', padding: '2px 7px', borderRadius: '999px', border: '1px solid #22C55E55' }}>
+                            Satışta
+                          </span>
+                        )}
                       </div>
-                      <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', marginBottom: '8px' }}>
+                      <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', marginBottom: '6px' }}>
                         {caseProd?.brand} {caseProd?.name} · Gün {pc.builtDay}
                       </div>
-                      <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', marginBottom: '2px' }}>
+                      <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', marginBottom: '6px' }}>
                         Maliyet: <span style={{ fontFamily: 'var(--font-mono)', color: '#E24B4A', fontWeight: 600 }}>{fmtMoney(pc.totalCost)}</span>
                       </div>
-                      <div style={{ display: 'flex', gap: '6px', marginTop: '8px' }}>
-                        <input
-                          type="number"
-                          value={displayPrice}
-                          onChange={e => setListPrices(prev => ({ ...prev, [pc.id]: parseInt(e.target.value) || 0 }))}
-                          style={{ flex: 1, padding: '5px 8px', borderRadius: '6px', border: '1px solid var(--color-border)', background: 'var(--color-cream)', color: 'var(--color-text)', fontSize: '0.82rem', fontFamily: 'var(--font-mono)', outline: 'none', minWidth: 0 }}
-                        />
-                        <button
-                          onClick={() => sellBuiltPCAction(pc.id, displayPrice)}
-                          style={{ padding: '5px 10px', borderRadius: '6px', border: 'none', background: '#1D9E75', color: '#fff', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}
-                        >
-                          Sat
-                        </button>
-                      </div>
+                      {pc.listed ? (
+                        <div style={{ fontSize: '0.78rem', padding: '6px 10px', borderRadius: '8px', background: '#22C55E11', border: '1px solid #22C55E33' }}>
+                          <span style={{ color: '#16A34A', fontWeight: 600 }}>{fmtMoney(pc.listPrice)}</span>
+                          <span style={{ color: 'var(--color-text-mute)', marginLeft: '8px' }}>
+                            {daysUntilSale === 0 ? '• Bugün satılacak' : `• ${daysUntilSale} gün içinde satılacak`}
+                          </span>
+                        </div>
+                      ) : (
+                        <div style={{ display: 'flex', gap: '6px', marginTop: '4px' }}>
+                          <input
+                            type="number"
+                            value={displayPrice}
+                            onChange={e => setListPrices(prev => ({ ...prev, [pc.id]: parseInt(e.target.value) || 0 }))}
+                            style={{ flex: 1, padding: '5px 8px', borderRadius: '6px', border: '1px solid var(--color-border)', background: 'var(--color-cream)', color: 'var(--color-text)', fontSize: '0.82rem', fontFamily: 'var(--font-mono)', outline: 'none', minWidth: 0 }}
+                          />
+                          <button
+                            onClick={() => listBuiltPCAction(pc.id, displayPrice)}
+                            style={{ padding: '5px 10px', borderRadius: '6px', border: 'none', background: '#1D9E75', color: '#fff', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}
+                          >
+                            Satışa Koy
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 );
@@ -827,10 +849,10 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
                         <div style={{ fontWeight: 700, color: '#1D9E75', fontFamily: 'var(--font-mono)' }}>{fmtMoney(order.budget)}</div>
                       </div>
                     </div>
-                    {builtPCs.length > 0 ? (
+                    {builtPCs.filter(pc => !pc.listed).length > 0 ? (
                       <div>
                         <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', marginBottom: '6px', fontWeight: 600 }}>Atanabilir PC'ler:</div>
-                        {builtPCs.map(pc => {
+                        {builtPCs.filter(pc => !pc.listed).map(pc => {
                           const caseProd = pc.components.case ? PRODUCTS[pc.components.case] : null;
                           const overage = pc.listPrice > order.budget
                             ? (pc.listPrice - order.budget) / order.budget

@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useTechCenterState } from '@/lib/tech-center-state';
-import { WIN_TARGET, LOGOS, CITIES, STORE_LEVELS } from '@/lib/tech-center-data';
+import { WIN_TARGET, LOGOS, CITIES, STORE_LEVELS, PRODUCTS, CATEGORY_ICONS, CATEGORY_LABELS } from '@/lib/tech-center-data';
 import SetupScreen from './SetupScreen';
 import TopBar from './TopBar';
 import Desktop from './Desktop';
@@ -50,7 +50,7 @@ function Konfeti() {
 
 // Gün başı ekranı
 function DayNewScreen({ state, onStart }) {
-  const { currentDay, deliveredToday = [], activeEvents = [], newEventsToday = [], newUnlocksToday = [] } = state;
+  const { currentDay, deliveredToday = [], activeEvents = [], newEventsToday = [], newUnlocksToday = [], newProductUnlocksToday = [] } = state;
 
   useEffect(() => {
     playDayStart();
@@ -81,7 +81,35 @@ function DayNewScreen({ state, onStart }) {
           </h2>
         </div>
 
-        {/* Yeni unlock'lar */}
+        {/* Yeni ürün unlock'ları */}
+        {newProductUnlocksToday.length > 0 && (
+          <div style={{
+            padding: '0.875rem',
+            borderRadius: '10px',
+            background: '#FEF3C7',
+            border: '1px solid #F59E0B',
+            marginBottom: '1rem',
+          }}>
+            <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#92400E', marginBottom: '8px' }}>
+              🛍️ Yeni Ürünler Açıldı! ({newProductUnlocksToday.length} ürün)
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+              {newProductUnlocksToday.map(pid => {
+                const p = PRODUCTS[pid];
+                if (!p) return null;
+                return (
+                  <div key={pid} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: '#92400E' }}>
+                    <span>{p.icon || CATEGORY_ICONS[p.category]}</span>
+                    <span style={{ fontWeight: 600 }}>{p.brand} {p.name}</span>
+                    <span style={{ fontSize: '0.72rem', opacity: 0.7 }}>— {CATEGORY_LABELS[p.category]}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Yeni kategori unlock'ları */}
         {newUnlocksToday.length > 0 && (
           <div style={{
             padding: '1rem',
@@ -366,6 +394,25 @@ function DaySummaryModal({ state, onNext }) {
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* PC Satışları */}
+        {daySummary.pcSales && daySummary.pcSales.length > 0 && (
+          <div style={{ padding: '8px 12px', background: 'var(--color-cream)', borderRadius: '8px', border: '1px solid #22C55E44', marginBottom: '0.625rem' }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#22C55E', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              🖥️ Toplama PC Satışları ({daySummary.pcSales.length})
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '4px', fontSize: '0.7rem', fontWeight: 600, color: 'var(--color-text-mute)', marginBottom: '4px', textTransform: 'uppercase' }}>
+              <span>Maliyet</span><span style={{ textAlign: 'center' }}>Satış</span><span style={{ textAlign: 'right' }}>Kâr</span>
+            </div>
+            {daySummary.pcSales.map((s, i) => (
+              <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '4px', fontSize: '0.78rem', padding: '3px 0', borderTop: '0.5px solid var(--color-border)' }}>
+                <span style={{ fontFamily: 'var(--font-mono)', color: '#E24B4A' }}>{fmtMoney(s.cogs)}</span>
+                <span style={{ fontFamily: 'var(--font-mono)', color: '#1D9E75', textAlign: 'center' }}>{fmtMoney(s.revenue)}</span>
+                <span style={{ fontFamily: 'var(--font-mono)', color: s.profit >= 0 ? '#1D9E75' : '#E24B4A', textAlign: 'right', fontWeight: 700 }}>+{fmtMoney(s.profit)}</span>
+              </div>
+            ))}
           </div>
         )}
 

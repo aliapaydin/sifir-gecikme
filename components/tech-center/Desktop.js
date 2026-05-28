@@ -605,7 +605,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
       orderProduct, setPriceAction, clearError,
       sellSecondHandAction,
       upgradeStoreAction, hireStaffAction, fireStaffAction, setServicePriceAction, resetGame,
-      buildPCAction, sellBuiltPCAction,
+      buildPCAction, sellBuiltPCAction, listBuiltPCAction,
       cancelOrderAction, takeLoanAction,
       addToShoppingListAction, removeFromShoppingListAction,
       acceptPCOrderAction, fulfillPCOrderAction, clearLoanError,
@@ -668,6 +668,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
           state={state}
           buildPCAction={actions.buildPCAction}
           sellBuiltPCAction={actions.sellBuiltPCAction}
+          listBuiltPCAction={listBuiltPCAction}
           fulfillPCOrderAction={fulfillPCOrderAction}
           isMobile={isMobile}
         />
