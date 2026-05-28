@@ -230,124 +230,91 @@ function DaySummaryModal({ state, onNext }) {
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: 500,
-      padding: '1rem',
+      padding: '0.75rem',
       overflowY: 'auto',
     }}>
       <div style={{
         background: 'var(--color-cream-card)',
         border: '1px solid var(--color-border)',
-        borderRadius: '16px',
-        padding: '2rem',
+        borderRadius: '14px',
+        padding: '1.25rem',
         width: '100%',
-        maxWidth: '560px',
-        boxShadow: '0 20px 60px rgba(0,0,0,0.2)',
+        maxWidth: '460px',
+        boxShadow: '0 16px 48px rgba(0,0,0,0.2)',
         margin: 'auto',
       }}>
-        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-          <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🌙</div>
-          <h2 style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--color-text)', fontFamily: 'var(--font-serif)', margin: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '1rem' }}>
+          <span style={{ fontSize: '1.4rem' }}>🌙</span>
+          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--color-text)', fontFamily: 'var(--font-serif)', margin: 0 }}>
             Gün {daySummary.day} Özeti
           </h2>
         </div>
 
         {/* Finansal özet */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.5rem', marginBottom: '1.25rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '6px', marginBottom: '0.75rem' }}>
           {[
             { label: 'Gelir', value: fmtMoney(daySummary.revenue), color: '#1D9E75' },
             { label: 'COGS', value: fmtMoney(daySummary.cogs), color: '#E24B4A' },
             { label: 'Net Kâr', value: fmtMoney(daySummary.profit), color: daySummary.profit >= 0 ? '#1D9E75' : '#E24B4A' },
           ].map(item => (
             <div key={item.label} style={{
-              padding: '0.75rem',
+              padding: '6px 8px',
               background: 'var(--color-cream)',
               borderRadius: '8px',
               textAlign: 'center',
               border: '0.5px solid var(--color-border)',
             }}>
-              <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', marginBottom: '4px' }}>{item.label}</div>
-              <div style={{ fontSize: '0.95rem', fontWeight: 700, color: item.color, fontFamily: 'var(--font-mono)' }}>{item.value}</div>
+              <div style={{ fontSize: '0.68rem', color: 'var(--color-text-mute)', marginBottom: '2px' }}>{item.label}</div>
+              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: item.color, fontFamily: 'var(--font-mono)' }}>{item.value}</div>
             </div>
           ))}
         </div>
 
-        {/* Gider */}
-        <div style={{
-          padding: '0.5rem 0.75rem',
-          background: 'var(--color-cream)',
-          borderRadius: '8px',
-          marginBottom: '1rem',
-          fontSize: '0.8rem',
-          display: 'flex',
-          justifyContent: 'space-between',
-          color: 'var(--color-text-mute)',
-        }}>
-          <span>Sabit Giderler</span>
-          <span style={{ fontFamily: 'var(--font-mono)', color: '#E24B4A' }}>-{fmtMoney(daySummary.expenses)}</span>
-        </div>
-
-        {/* Müşteri istatistikleri */}
-        <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.25rem', justifyContent: 'center' }}>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-text)', fontFamily: 'var(--font-mono)' }}>
-              {daySummary.customerCount}
-            </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--color-text-mute)' }}>Müşteri</div>
+        {/* Gider + müşteri istatistikleri tek satır */}
+        <div style={{ display: 'flex', gap: '6px', marginBottom: '0.75rem', alignItems: 'stretch' }}>
+          <div style={{ flex: 1, padding: '6px 10px', background: 'var(--color-cream)', borderRadius: '8px', border: '0.5px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.78rem' }}>
+            <span style={{ color: 'var(--color-text-mute)' }}>Giderler</span>
+            <span style={{ fontFamily: 'var(--font-mono)', color: '#E24B4A', fontWeight: 600 }}>-{fmtMoney(daySummary.expenses)}</span>
           </div>
-          <div style={{ width: '1px', background: 'var(--color-border)' }} />
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1D9E75', fontFamily: 'var(--font-mono)' }}>
-              {daySummary.salesCount}
+          <div style={{ display: 'flex', gap: '12px', padding: '6px 12px', background: 'var(--color-cream)', borderRadius: '8px', border: '0.5px solid var(--color-border)', alignItems: 'center' }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--color-text)', fontFamily: 'var(--font-mono)' }}>
+                {daySummary.customerCount}
+              </div>
+              <div style={{ fontSize: '0.65rem', color: 'var(--color-text-mute)' }}>Müşteri</div>
             </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--color-text-mute)' }}>Satış</div>
-          </div>
-          <div style={{ width: '1px', background: 'var(--color-border)' }} />
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#7F77DD', fontFamily: 'var(--font-mono)' }}>
-              {daySummary.customerCount > 0 ? Math.round(daySummary.salesCount / daySummary.customerCount * 100) : 0}%
+            <div style={{ width: '1px', background: 'var(--color-border)', alignSelf: 'stretch' }} />
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: '#1D9E75', fontFamily: 'var(--font-mono)' }}>
+                {daySummary.salesCount}
+              </div>
+              <div style={{ fontSize: '0.65rem', color: 'var(--color-text-mute)' }}>Satış</div>
             </div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--color-text-mute)' }}>Dönüşüm</div>
+            <div style={{ width: '1px', background: 'var(--color-border)', alignSelf: 'stretch' }} />
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: '#7F77DD', fontFamily: 'var(--font-mono)' }}>
+                {daySummary.customerCount > 0 ? Math.round(daySummary.salesCount / daySummary.customerCount * 100) : 0}%
+              </div>
+              <div style={{ fontSize: '0.65rem', color: 'var(--color-text-mute)' }}>Dönüşüm</div>
+            </div>
           </div>
         </div>
 
         {/* Firma değeri */}
-        <div style={{
-          padding: '0.875rem',
-          background: 'var(--color-cream)',
-          borderRadius: '10px',
-          border: '0.5px solid var(--color-border)',
-          marginBottom: '1rem',
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '0.82rem' }}>
-            <span style={{ color: 'var(--color-text-mute)' }}>Firma Değeri</span>
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-              <span style={{ color: 'var(--color-text-mute)', fontFamily: 'var(--font-mono)' }}>{fmtMoney(daySummary.prevFirmaValue)}</span>
+        <div style={{ padding: '8px 12px', background: 'var(--color-cream)', borderRadius: '8px', border: '0.5px solid var(--color-border)', marginBottom: '0.75rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem' }}>
+            <span style={{ color: 'var(--color-text-mute)' }}>🏆 Firma Değeri</span>
+            <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+              <span style={{ color: 'var(--color-text-mute)', fontFamily: 'var(--font-mono)', fontSize: '0.75rem' }}>{fmtMoney(daySummary.prevFirmaValue)}</span>
               <span style={{ color: 'var(--color-text-mute)' }}>→</span>
               <span style={{ color: '#1D9E75', fontFamily: 'var(--font-mono)', fontWeight: 700 }}>{fmtMoney(daySummary.newFirmaValue)}</span>
             </div>
-          </div>
-          <div style={{ height: '8px', background: 'var(--color-border)', borderRadius: '999px', overflow: 'hidden' }}>
-            <div style={{
-              height: '100%',
-              width: `${progressPct}%`,
-              background: 'var(--color-accent)',
-              borderRadius: '999px',
-              transition: 'width 0.5s',
-            }} />
-          </div>
-          <div style={{ fontSize: '0.72rem', color: 'var(--color-text-mute)', marginTop: '4px', textAlign: 'right', fontFamily: 'var(--font-mono)' }}>
-            %{progressPct} / ₺1B hedef
           </div>
         </div>
 
         {/* Top products bar chart */}
         {topProducts.length > 0 && (
-          <div style={{
-            padding: '0.875rem',
-            background: 'var(--color-cream)',
-            borderRadius: '10px',
-            border: '0.5px solid var(--color-border)',
-            marginBottom: '1rem',
-          }}>
+          <div style={{ padding: '8px 12px', background: 'var(--color-cream)', borderRadius: '8px', border: '0.5px solid var(--color-border)', marginBottom: '0.625rem' }}>
             <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--color-text-mute)', marginBottom: '0.625rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
               📊 En Çok Satan Ürünler
             </div>
@@ -382,13 +349,7 @@ function DaySummaryModal({ state, onNext }) {
 
         {/* 3-day analysis report */}
         {show3DayReport && threeDayAnalysis && threeDayAnalysis.length > 0 && (
-          <div style={{
-            padding: '0.875rem',
-            background: 'var(--color-cream)',
-            borderRadius: '10px',
-            border: '1px solid #7F77DD44',
-            marginBottom: '1rem',
-          }}>
+          <div style={{ padding: '8px 12px', background: 'var(--color-cream)', borderRadius: '8px', border: '1px solid #7F77DD44', marginBottom: '0.625rem' }}>
             <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#7F77DD', marginBottom: '0.625rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
               📈 {daySummary.day - 2}–{daySummary.day}. Gün Analizi (3 Günlük)
             </div>
@@ -410,17 +371,7 @@ function DaySummaryModal({ state, onNext }) {
 
         <button
           onClick={onNext}
-          style={{
-            width: '100%',
-            padding: '0.875rem',
-            borderRadius: '12px',
-            border: 'none',
-            background: 'var(--color-accent)',
-            color: '#fff',
-            fontSize: '1rem',
-            fontWeight: 700,
-            cursor: 'pointer',
-          }}
+          style={{ width: '100%', padding: '0.75rem', borderRadius: '10px', border: 'none', background: 'var(--color-accent)', color: '#fff', fontSize: '0.95rem', fontWeight: 700, cursor: 'pointer', marginTop: '4px' }}
         >
           Sonraki Güne Geç →
         </button>

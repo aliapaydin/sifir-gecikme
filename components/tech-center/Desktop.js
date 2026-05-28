@@ -17,14 +17,27 @@ import { playClick } from '@/lib/tech-center-sounds';
 const WINDOW_MEMORY_KEY = 'tc_window_memory';
 
 const DESKTOP_APPS = [
-  { id: 'mail',    emoji: '📧', label: 'Mail',     color: '#3B82F6', bg: '#1d3461' },
-  { id: 'pazar',   emoji: '🛒', label: 'Pazar',    color: '#F59E0B', bg: '#3d2c0a' },
-  { id: 'stok',    emoji: '📦', label: 'Stok',     color: '#8B5CF6', bg: '#2d1f4a' },
-  { id: 'urunler', emoji: '📋', label: 'Ürünler',  color: '#10B981', bg: '#0a3025' },
-  { id: 'analiz',  emoji: '📊', label: 'Analiz',   color: '#0EA5E9', bg: '#0a2840' },
-  { id: 'yonetim', emoji: '⚙️',  label: 'Yönetim', color: '#94A3B8', bg: '#1a2030' },
-  { id: 'pctopla',  emoji: '🖥️',  label: 'PC Topla',  color: '#22C55E', bg: '#0a3018' },
-  { id: 'yorumlar', emoji: '⭐',  label: 'Yorumlar',  color: '#F59E0B', bg: '#3d2c0a' },
+  { id: 'mail',      emoji: '📧', label: 'Mail',        color: '#3B82F6', bg: '#1d3461' },
+  { id: 'pazar',     emoji: '🛒', label: 'Pazar',       color: '#F59E0B', bg: '#3d2c0a' },
+  { id: 'stok',      emoji: '📦', label: 'Stok',        color: '#8B5CF6', bg: '#2d1f4a' },
+  { id: 'urunler',   emoji: '📋', label: 'Ürünler',     color: '#10B981', bg: '#0a3025' },
+  { id: 'analiz',    emoji: '📊', label: 'Analiz',      color: '#0EA5E9', bg: '#0a2840' },
+  { id: 'yonetim',   emoji: '⚙️',  label: 'Yönetim',    color: '#94A3B8', bg: '#1a2030' },
+  { id: 'pctopla',   emoji: '🖥️',  label: 'PC Topla',   color: '#22C55E', bg: '#0a3018' },
+  { id: 'yorumlar',  emoji: '⭐',  label: 'Yorumlar',   color: '#F59E0B', bg: '#3d2c0a' },
+  { id: 'wallpaper', emoji: '🎨',  label: 'Duvar Kağıdı', color: '#EC4899', bg: '#3d0a2c' },
+];
+
+const WALLPAPERS = [
+  { id: 'default',  label: 'Lacivert',  css: 'linear-gradient(135deg, #0f2044 0%, #1a3a6b 40%, #0d2d5a 70%, #162040 100%)' },
+  { id: 'ocean',    label: 'Derin Deniz', css: 'linear-gradient(135deg, #071220 0%, #0a2442 40%, #0d3b6e 70%, #0a1628 100%)' },
+  { id: 'forest',   label: 'Orman',     css: 'linear-gradient(135deg, #0d3320 0%, #1a5c35 40%, #0d4527 70%, #0a2d1c 100%)' },
+  { id: 'sunset',   label: 'Gün Batımı', css: 'linear-gradient(135deg, #4a1942 0%, #8b1a4a 40%, #c0392b 60%, #e8a04a 100%)' },
+  { id: 'purple',   label: 'Mor Gece',  css: 'linear-gradient(135deg, #140829 0%, #2d1160 40%, #3d1f7a 70%, #1a0a3c 100%)' },
+  { id: 'charcoal', label: 'Antrasit',  css: 'linear-gradient(135deg, #111 0%, #222 40%, #1a1a1a 70%, #0d0d0d 100%)' },
+  { id: 'rose',     label: 'Gül',       css: 'linear-gradient(135deg, #f5e6e8 0%, #e8c8d0 40%, #f0d5db 70%, #f5eef0 100%)' },
+  { id: 'mint',     label: 'Nane',      css: 'linear-gradient(135deg, #e8f5f0 0%, #c8e8dc 40%, #d5f0e8 70%, #eaf7f2 100%)' },
+  { id: 'gold',     label: 'Altın',     css: 'linear-gradient(135deg, #2a1a00 0%, #4a2f00 40%, #6b4400 70%, #3d2500 100%)' },
 ];
 
 // Default floating sizes — wider apps get more room
@@ -78,10 +91,9 @@ function DesktopIcon({ app, onClick, badge }) {
       }}>
         {app.emoji}
       </div>
-      <span style={{
-        fontSize: '0.68rem', color: 'rgba(255,255,255,0.9)', textAlign: 'center',
-        lineHeight: 1.2, fontWeight: 500,
-        textShadow: '0 1px 4px rgba(0,0,0,0.6)',
+      <span className="tc-icon-label" style={{
+        fontSize: '0.68rem', textAlign: 'center',
+        lineHeight: 1.2, fontWeight: 600,
       }}>
         {app.label}
       </span>
@@ -178,6 +190,7 @@ function WindowTitleBar({ app, onMinimize, onClose, onFloat, isFloating, isDragg
 
 function Taskbar({ openWindows, activeWindowId, onFocus, badges }) {
   const router = useRouter();
+  const [confirmExit, setConfirmExit] = useState(false);
 
   return (
     <div style={{
@@ -239,7 +252,7 @@ function Taskbar({ openWindows, activeWindowId, onFocus, badges }) {
       })}
 
       <button
-        onClick={() => router.push('/v3')}
+        onClick={() => setConfirmExit(true)}
         title="Ana Sayfaya Dön"
         style={{
           position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)',
@@ -260,6 +273,34 @@ function Taskbar({ openWindows, activeWindowId, onFocus, badges }) {
         </svg>
         Kapat
       </button>
+
+      {/* Çıkış onayı */}
+      {confirmExit && (
+        <div style={{
+          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999,
+        }}>
+          <div style={{
+            background: 'var(--color-cream-card)', border: '1px solid var(--color-border)',
+            borderRadius: '16px', padding: '2rem', width: '100%', maxWidth: '320px',
+            textAlign: 'center', boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+          }}>
+            <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>🚪</div>
+            <div style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--color-text)', marginBottom: '0.5rem' }}>Oyundan çıkmak istediğine emin misin?</div>
+            <div style={{ fontSize: '0.82rem', color: 'var(--color-text-mute)', marginBottom: '1.5rem' }}>Oyun durumu kaydedilmiş olarak kalır.</div>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                onClick={() => setConfirmExit(false)}
+                style={{ flex: 1, padding: '10px', borderRadius: '10px', border: '1px solid var(--color-border)', background: 'transparent', color: 'var(--color-text-mute)', fontSize: '0.9rem', cursor: 'pointer', fontWeight: 600 }}
+              >İptal</button>
+              <button
+                onClick={() => router.push('/v3')}
+                style={{ flex: 1, padding: '10px', borderRadius: '10px', border: 'none', background: '#E24B4A', color: '#fff', fontSize: '0.9rem', cursor: 'pointer', fontWeight: 700 }}
+              >Evet, Çık</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -309,6 +350,10 @@ export default function Desktop({ state, firmaValue, ...actions }) {
   const [activeWindowId, setActiveWindowId] = useState(null);
   const [splashApps, setSplashApps] = useState(new Set());
   const [isMobile, setIsMobile] = useState(false);
+  const [wallpaperId, setWallpaperId] = useState(() => {
+    if (typeof window === 'undefined') return 'default';
+    return localStorage.getItem('tc_wallpaper') || 'default';
+  });
   const desktopRef = useRef(null);
   const dragRef = useRef(null);
   // Remembers last floating position + size + floating state per appId across open/close cycles
@@ -659,25 +704,62 @@ export default function Desktop({ state, firmaValue, ...actions }) {
       case 'yorumlar': return <YorumlarApp state={state} markReviewsReadAction={markReviewsReadAction} isMobile={isMobile} />;
       case 'hesapmak': return <Calculator />;
       case 'cizim': return <PaintApp />;
+      case 'wallpaper': return (
+        <div style={{ padding: '1.25rem', overflowY: 'auto', height: '100%' }}>
+          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-text-mute)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '1rem' }}>
+            🎨 Duvar Kağıdı Seç
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: '10px' }}>
+            {WALLPAPERS.map(wp => {
+              const isSelected = wallpaperId === wp.id;
+              return (
+                <div
+                  key={wp.id}
+                  onClick={() => { setWallpaperId(wp.id); localStorage.setItem('tc_wallpaper', wp.id); }}
+                  style={{
+                    cursor: 'pointer', borderRadius: '12px', overflow: 'hidden',
+                    border: isSelected ? '3px solid var(--color-accent)' : '2px solid var(--color-border)',
+                    boxShadow: isSelected ? '0 0 0 2px var(--color-accent)44' : 'none',
+                    transition: 'all 0.15s',
+                  }}
+                >
+                  <div style={{ height: '70px', background: wp.css }} />
+                  <div style={{
+                    padding: '5px 8px', fontSize: '0.72rem', fontWeight: isSelected ? 700 : 500,
+                    color: isSelected ? 'var(--color-accent)' : 'var(--color-text)',
+                    background: 'var(--color-cream-card)', textAlign: 'center',
+                  }}>{wp.label}</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
       default: return <div style={{ padding: '2rem', color: 'var(--color-text-mute)' }}>Uygulama bulunamadı</div>;
     }
   }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
+      {(() => {
+        const wp = WALLPAPERS.find(w => w.id === wallpaperId) || WALLPAPERS[0];
+        const isLightWp = ['rose', 'mint'].includes(wallpaperId);
+        return (
       <style>{`
-        .tc-wallpaper { background: linear-gradient(135deg, #0f2044 0%, #1a3a6b 40%, #0d2d5a 70%, #162040 100%); }
-        .v3-root.v3-light .tc-wallpaper { background: linear-gradient(135deg, #dde8f5 0%, #c8d8ee 40%, #d0e2f5 70%, #dce8f5 100%); }
-        .tc-wallpaper-grid { background-image: linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px); }
-        .v3-root.v3-light .tc-wallpaper-grid { background-image: linear-gradient(rgba(0,0,0,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.08) 1px, transparent 1px); }
+        .tc-wallpaper-grid { background-image: linear-gradient(${isLightWp ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.5)'} 1px, transparent 1px), linear-gradient(90deg, ${isLightWp ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.5)'} 1px, transparent 1px); }
+        .tc-icon-label { color: ${isLightWp ? 'rgba(0,0,0,0.75)' : 'rgba(255,255,255,0.92)'}; text-shadow: ${isLightWp ? '0 1px 3px rgba(255,255,255,0.6)' : '0 1px 4px rgba(0,0,0,0.7)'}; }
+        .tc-app-select-label { color: ${isLightWp ? 'rgba(0,0,0,0.45)' : 'rgba(255,255,255,0.5)'}; }
+        .v3-root.v3-light .tc-icon-label { color: rgba(0,0,0,0.75) !important; text-shadow: 0 1px 3px rgba(255,255,255,0.6) !important; }
+        .v3-root.v3-light .tc-app-select-label { color: rgba(0,0,0,0.45) !important; }
       `}</style>
+        );
+      })()}
       <div
         ref={desktopRef}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
-        className="tc-wallpaper"
-        style={{ flex: 1, position: 'relative', overflow: 'hidden' }}
+        style={{ flex: 1, position: 'relative', overflow: 'hidden', background: (WALLPAPERS.find(w => w.id === wallpaperId) || WALLPAPERS[0]).css }}
       >
         {/* Subtle grid pattern overlay */}
         <div className="tc-wallpaper-grid" style={{
@@ -695,7 +777,7 @@ export default function Desktop({ state, firmaValue, ...actions }) {
             padding: '20px', display: 'flex', flexWrap: 'wrap', gap: '4px', alignContent: 'flex-start',
           }}>
             {isMobile && (
-              <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', marginBottom: '8px', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+              <div className="tc-app-select-label" style={{ fontSize: '0.75rem', marginBottom: '8px', letterSpacing: '0.05em', textTransform: 'uppercase', fontWeight: 600 }}>
                 Uygulama Seç
               </div>
             )}

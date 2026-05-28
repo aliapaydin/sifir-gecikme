@@ -1015,7 +1015,7 @@ export default function MailApp({ state, sellAction, skipAction, handleServiceAc
             flexShrink: 0,
           }}>
             <span style={{ fontSize: '1rem' }}>📧</span>
-            <span style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--color-text)' }}>Gelen Kutu</span>
+            <span style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--color-text)' }}>Gelen Kutusu</span>
             {unreadCount > 0 && (
               <span style={{
                 marginLeft: 'auto',

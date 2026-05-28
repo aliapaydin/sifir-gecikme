@@ -175,8 +175,8 @@ function PCInteriorVisual({ build }) {
           {p ? (
             <>
               <div style={{ fontSize: '0.65rem', color: color, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{label}</div>
-              <div style={{ fontSize: '0.7rem', color: textOn, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {p.brand} {p.name}
+              <div style={{ fontSize: '0.65rem', color: textOn, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
+                {p.name}
               </div>
             </>
           ) : (
@@ -623,7 +623,7 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
           </div>
           )}
 
-          {/* Right: floating toggle tab + collapsible summary drawer (desktop only) */}
+          {/* Right: floating icon toggle + collapsible summary drawer (desktop only) */}
           {!isMobile && (
             <div style={{
               position: 'absolute', top: 0, right: 0, bottom: 0,
@@ -637,26 +637,26 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, fu
                   style={{ position: 'fixed', inset: 0, zIndex: -1, pointerEvents: 'auto' }}
                 />
               )}
-              {/* Floating toggle tab */}
+              {/* Floating icon button */}
               <button
                 onClick={() => setSummaryOpen(v => !v)}
                 title={summaryOpen ? 'Özeti Kapat' : 'Özeti Aç'}
                 style={{
-                  alignSelf: 'center',
-                  width: '20px', height: '56px',
+                  alignSelf: 'flex-start', marginTop: '10px',
+                  width: '32px', height: '32px',
                   borderRadius: '8px 0 0 8px',
                   border: '1px solid var(--color-border)',
                   borderRight: 'none',
                   background: summaryOpen ? 'var(--color-accent-soft, #EEF2FF)' : 'var(--color-cream-card)',
                   color: summaryOpen ? 'var(--color-accent)' : 'var(--color-text-mute)',
-                  cursor: 'pointer', fontSize: '13px',
+                  cursor: 'pointer', fontSize: '1rem',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   boxShadow: '-2px 0 8px rgba(0,0,0,0.08)',
                   transition: 'background 0.15s, color 0.15s',
                   pointerEvents: 'auto', flexShrink: 0,
                 }}
               >
-                {summaryOpen ? '›' : '‹'}
+                📊
               </button>
               {/* Sliding panel */}
               <div style={{

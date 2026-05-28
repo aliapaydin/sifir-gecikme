@@ -36,7 +36,7 @@ function SecondHandRow({ productId, qty, sellSecondHandAction }) {
   );
 }
 
-export default function StokTab({ state, setPriceAction, secondHandInventory, sellSecondHandAction }) {
+export default function StokTab({ state, setPriceAction, secondHandInventory, sellSecondHandAction, isMobile }) {
   if (!state) return null;
 
   const { inventory = {}, prices = {}, pendingOrders = [] } = state;
@@ -52,6 +52,12 @@ export default function StokTab({ state, setPriceAction, secondHandInventory, se
     .filter(item => item.product)
     .sort((a, b) => a.product.category.localeCompare(b.product.category));
 
+  const totalStockValue = stockedItems.reduce((s, item) => s + item.product.buyPrice * item.qty, 0);
+  const totalStockSaleValue = stockedItems.reduce((s, item) => {
+    const p = prices[item.id];
+    return s + (p ? p * item.qty : 0);
+  }, 0);
+
   const grouped = {};
   for (const item of stockedItems) {
     if (!grouped[item.product.category]) grouped[item.product.category] = [];
@@ -62,6 +68,38 @@ export default function StokTab({ state, setPriceAction, secondHandInventory, se
 
   return (
     <div style={{ padding: '1.5rem 1rem', maxWidth: '1000px', margin: '0 auto' }}>
+      {/* Toplam stok değeri */}
+      {totalStockValue > 0 && (
+        <div style={{
+          background: 'var(--color-cream-card)',
+          border: '1px solid var(--color-border)',
+          borderRadius: '12px',
+          padding: '0.75rem 1.25rem',
+          marginBottom: '1rem',
+          display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap',
+        }}>
+          <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--color-text-mute)', flex: 1 }}>💰 Toplam Stok Değeri</span>
+          <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: '0.7rem', color: 'var(--color-text-mute)' }}>Maliyet</div>
+              <div style={{ fontSize: '0.9rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: '#E24B4A' }}>{fmtMoney(totalStockValue)}</div>
+            </div>
+            {totalStockSaleValue > 0 && (
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '0.7rem', color: 'var(--color-text-mute)' }}>Satış Fiyatı</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: '#1D9E75' }}>{fmtMoney(totalStockSaleValue)}</div>
+              </div>
+            )}
+            {totalStockSaleValue > 0 && (
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '0.7rem', color: 'var(--color-text-mute)' }}>Potansiyel Kâr</div>
+                <div style={{ fontSize: '0.9rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: '#7F77DD' }}>{fmtMoney(totalStockSaleValue - totalStockValue)}</div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Depo kapasitesi */}
       <div style={{
         background: 'var(--color-cream-card)',
@@ -183,8 +221,8 @@ export default function StokTab({ state, setPriceAction, secondHandInventory, se
                 return (
                   <div key={item.id} style={{
                     display: 'grid',
-                    gridTemplateColumns: 'auto 1fr auto auto auto',
-                    gap: '1rem',
+                    gridTemplateColumns: isMobile ? 'auto 1fr auto' : 'auto 1fr auto auto auto',
+                    gap: isMobile ? '0.5rem' : '1rem',
                     padding: '0.875rem 1rem',
                     borderTop: idx === 0 ? 'none' : '0.5px solid var(--color-border)',
                     alignItems: 'center',
@@ -211,13 +249,15 @@ export default function StokTab({ state, setPriceAction, secondHandInventory, se
                       <div style={{ fontSize: '0.7rem', color: 'var(--color-text-mute)' }}>adet</div>
                     </div>
 
-                    {/* Stok değeri */}
+                    {/* Stok değeri — hidden on mobile */}
+                    {!isMobile && (
                     <div style={{ textAlign: 'right' }}>
                       <div style={{ fontSize: '0.85rem', fontFamily: 'var(--font-mono)', color: 'var(--color-text-mute)' }}>
                         {fmtMoney(stockValue)}
                       </div>
                       <div style={{ fontSize: '0.7rem', color: 'var(--color-text-mute)' }}>değer</div>
                     </div>
+                    )}
 
                     {/* Satış fiyatı */}
                     <div style={{ textAlign: 'right' }}>
@@ -226,9 +266,11 @@ export default function StokTab({ state, setPriceAction, secondHandInventory, se
                           <div style={{ fontSize: '0.85rem', fontWeight: 700, fontFamily: 'var(--font-mono)', color: '#1D9E75' }}>
                             {fmtMoney(currentPrice)}
                           </div>
+                          {!isMobile && (
                           <div style={{ fontSize: '0.7rem', color: parseFloat(margin) > 0 ? '#1D9E75' : '#E24B4A', fontFamily: 'var(--font-mono)' }}>
                             %{margin} marj
                           </div>
+                          )}
                         </div>
                       ) : (
                         <span style={{ fontSize: '0.75rem', color: '#e8a04a', fontWeight: 500 }}>
