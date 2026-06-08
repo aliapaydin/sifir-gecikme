@@ -9,7 +9,7 @@ export default function V3Footer() {
   const [user, setUser] = useState(undefined); // undefined = loading
 
   useEffect(() => {
-    fetch('/api/auth/me')
+    fetch('/api/v3/auth/me')
       .then(r => r.ok ? r.json() : null)
       .then(data => setUser(data?.user || null))
       .catch(() => setUser(null));
