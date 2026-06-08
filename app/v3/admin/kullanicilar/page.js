@@ -218,7 +218,7 @@ export default function KullanicilarPage() {
 
       <div className="ku-page">
         <div className="ku-header">
-          <Link href="/v3/admin" className="ku-back">← Admin</Link>
+          <Link href="/admin" className="ku-back">← Admin</Link>
           <h1 className="ku-title">Kullanıcılar</h1>
           <span style={{ fontSize: '13px', color: 'var(--v3-text-muted)' }}>
             {users.length} üye

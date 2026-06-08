@@ -29,15 +29,8 @@ const SLUG_TO_BADGE = {
   'kariyer':     'kariyer',
 };
 
-const V3_PAGES = ['/yazilar/', '/ogren/', '/python', '/sql', '/regex', '/ciz', '/nn',
-  '/hipotez', '/mulakat', '/kalori', '/tech-center', '/harita', '/milyon',
-  '/veri-setleri', '/proje', '/grafik', '/promilmetre', '/csv', '/renk', '/sinav'];
-
 function v3href(href) {
-  if (href.startsWith('/v3')) return href;
-  if (href.startsWith('http')) return href;
-  const shouldPrefix = V3_PAGES.some(p => href === p || href.startsWith(p));
-  return shouldPrefix ? `/v3${href}` : href;
+  return href;
 }
 
 const KATEGORILER = [
@@ -110,7 +103,7 @@ export default async function IceriklerPage({ searchParams }) {
           {KATEGORILER.map(k => (
             <Link
               key={k.key}
-              href={k.key ? `/v3/icerikler?tip=${k.key}` : '/v3/icerikler'}
+              href={k.key ? `/icerikler?tip=${k.key}` : '/icerikler'}
               className={`ic-tab${tip === k.key ? ' active' : ''}`}
             >
               {k.label}

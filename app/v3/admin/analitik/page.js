@@ -106,7 +106,7 @@ export default function AnalitikPage() {
 
       <div className="an-page">
         <div className="an-header">
-          <Link href="/v3/admin" className="an-back">← Admin</Link>
+          <Link href="/admin" className="an-back">← Admin</Link>
           <h1 className="an-title">Analitik</h1>
         </div>
 

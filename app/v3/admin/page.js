@@ -32,6 +32,12 @@ export default function AdminDashboard() {
   const [heroSaving, setHeroSaving] = useState(false);
   const [heroToast, setHeroToast] = useState(null);
 
+  const [bultenRecipients, setBultenRecipients] = useState('all');
+  const [bultenSubject, setBultenSubject] = useState('');
+  const [bultenSending, setBultenSending] = useState(false);
+  const [bultenResult, setBultenResult] = useState(null);
+  const [bultenCounts, setBultenCounts] = useState(null);
+
   useEffect(() => {
     fetch('/api/v3/admin/stats')
       .then(r => r.ok ? r.json() : Promise.reject(r.status))
@@ -39,11 +45,15 @@ export default function AdminDashboard() {
       .catch(e => setError(`Veriler alınamadı (${e})`))
       .finally(() => setLoading(false));
 
+    fetch('/api/v3/admin/newsletter')
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d) setBultenCounts(d); })
+      .catch(() => {});
+
     fetch('/api/v3/settings/hero')
       .then(r => r.ok ? r.json() : null)
       .then(s => {
         if (s) {
-          // Gerçek newline'ları input'ta göstermek için \n yazısına çevir
           setHeroForm({ ...s, title: s.title.replace(/\n/g, '\\n') });
           setHeroLoaded(true);
         }
@@ -51,11 +61,33 @@ export default function AdminDashboard() {
       .catch(() => {});
   }, []);
 
+  async function handleBultenSend() {
+    if (!window.confirm(`${bultenRecipients === 'all' ? bultenCounts?.allCount : bultenCounts?.supporterCount} kişiye bülten gönderilecek. Emin misin?`)) return;
+    setBultenSending(true);
+    setBultenResult(null);
+    try {
+      const res = await fetch('/api/v3/admin/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          recipients: bultenRecipients,
+          subject: bultenSubject || undefined,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) setBultenResult({ ok: false, msg: data.error || 'Hata oluştu.' });
+      else setBultenResult({ ok: true, msg: `✅ ${data.sent} kişiye gönderildi${data.failed > 0 ? `, ${data.failed} başarısız` : ''}.` });
+    } catch {
+      setBultenResult({ ok: false, msg: 'Bağlantı hatası.' });
+    } finally {
+      setBultenSending(false);
+    }
+  }
+
   async function handleHeroSave(e) {
     e.preventDefault();
     setHeroSaving(true);
     try {
-      // Literal \n → gerçek newline karakterine çevir
       const payload = {
         ...heroForm,
         title:    heroForm.title.replace(/\\n/g, '\n'),
@@ -220,7 +252,7 @@ export default function AdminDashboard() {
             <h1 className="admin-title" style={{ marginTop: '10px' }}>Dashboard</h1>
           </div>
           <Link
-            href="/v3"
+            href="/"
             style={{
               fontSize: '14px',
               color: 'var(--v3-text-muted)',
@@ -272,7 +304,7 @@ export default function AdminDashboard() {
           <div className="admin-section-title">Yönetim</div>
         </div>
         <div className="admin-nav-cards">
-          <Link href="/v3/admin/kullanicilar" className="admin-nav-card">
+          <Link href="/admin/kullanicilar" className="admin-nav-card">
             <div className="admin-nav-icon" style={{ background: 'rgba(99,102,241,0.1)' }}>
               👥
             </div>
@@ -301,7 +333,7 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <Link href="/v3/admin/analitik" className="admin-nav-card">
+          <Link href="/admin/analitik" className="admin-nav-card">
             <div className="admin-nav-icon" style={{ background: 'rgba(249,115,22,0.1)' }}>
               📊
             </div>
@@ -313,6 +345,73 @@ export default function AdminDashboard() {
               Görüntüle →
             </div>
           </Link>
+        </div>
+
+        {/* Bülten */}
+        <div style={{ marginTop: '48px', marginBottom: '12px' }}>
+          <div className="admin-section-title">📬 Bülten Gönder</div>
+        </div>
+        <div className="admin-settings-card">
+          <div style={{ fontSize: '15px', fontWeight: 700, color: 'var(--v3-text)', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            📨 E-posta Bülteni
+            {bultenCounts && (
+              <span style={{ fontSize: '12px', fontWeight: 500, color: 'var(--v3-text-faint)', marginLeft: '4px' }}>
+                ({bultenCounts.allCount} doğrulanmış üye · {bultenCounts.supporterCount} destekçi)
+              </span>
+            )}
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div>
+              <label className="admin-settings-label">Alıcılar</label>
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                {[
+                  { val: 'all', label: `Tüm üyeler${bultenCounts ? ` (${bultenCounts.allCount})` : ''}` },
+                  { val: 'supporters', label: `Yalnızca destekçiler${bultenCounts ? ` (${bultenCounts.supporterCount})` : ''}` },
+                ].map(opt => (
+                  <button key={opt.val} type="button"
+                    onClick={() => setBultenRecipients(opt.val)}
+                    style={{
+                      padding: '8px 16px', borderRadius: '8px', fontSize: '13px', fontWeight: 600,
+                      border: `1.5px solid ${bultenRecipients === opt.val ? '#6366f1' : 'var(--v3-border)'}`,
+                      background: bultenRecipients === opt.val ? 'rgba(99,102,241,0.12)' : 'var(--v3-surface2)',
+                      color: bultenRecipients === opt.val ? '#818cf8' : 'var(--v3-text-muted)',
+                      cursor: 'pointer', transition: 'all 0.15s',
+                    }}
+                  >{opt.label}</button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label className="admin-settings-label">Konu (boş bırakırsan otomatik)</label>
+              <input className="admin-settings-input" type="text"
+                placeholder="Sıfır Gecikme — Bu Ay Öne Çıkanlar"
+                value={bultenSubject}
+                onChange={e => setBultenSubject(e.target.value)}
+              />
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+              <button type="button" onClick={handleBultenSend} disabled={bultenSending}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '8px',
+                  padding: '10px 24px', borderRadius: '10px', fontSize: '14px', fontWeight: 700,
+                  background: 'linear-gradient(135deg, #f97316, #f43f5e)',
+                  color: '#fff', border: 'none', cursor: bultenSending ? 'not-allowed' : 'pointer',
+                  opacity: bultenSending ? 0.6 : 1, transition: 'opacity 0.15s',
+                }}
+              >
+                {bultenSending ? '⏳ Gönderiliyor…' : '📨 Bülteni Gönder'}
+              </button>
+              {bultenResult && (
+                <span style={{
+                  fontSize: '13px', fontWeight: 500,
+                  color: bultenResult.ok ? '#2dd4bf' : '#f87171',
+                }}>{bultenResult.msg}</span>
+              )}
+            </div>
+            <div style={{ padding: '12px 14px', borderRadius: '10px', background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.15)', fontSize: '12px', color: 'var(--v3-text-faint)', lineHeight: 1.7 }}>
+              Mail içeriğinde rastgele 5 makale yer alır. Her gönderimde farklı makaleler seçilir.
+            </div>
+          </div>
         </div>
 
         {/* Site Ayarları */}

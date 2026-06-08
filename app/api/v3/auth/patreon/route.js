@@ -5,7 +5,7 @@ import { getSession } from '../../../../../lib/v3/auth';
 export async function GET(request) {
   const session = await getSession(request);
   if (!session) {
-    return NextResponse.redirect(new URL('/v3/giris', request.url));
+    return NextResponse.redirect(new URL('/giris', request.url));
   }
 
   const state = randomBytes(16).toString('hex');

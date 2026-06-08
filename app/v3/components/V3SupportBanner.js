@@ -37,7 +37,7 @@ export default function V3SupportBanner() {
         }
         @media (max-width: 480px) { .v3-sbanner-cta { display: none; } }
       `}</style>
-      <Link href="/v3/destek" className="v3-sbanner">
+      <Link href="/destek" className="v3-sbanner">
         <span className="v3-sbanner-emoji">☕</span>
         <div className="v3-sbanner-text">
           <div className="v3-sbanner-title">Sıfır Gecikme'yi destekle</div>

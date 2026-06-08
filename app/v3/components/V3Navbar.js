@@ -5,26 +5,26 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
 const playgroundItems = [
-  { emoji: '🐍', label: 'Python Playground', href: '/v3/python' },
-  { emoji: '🗄️', label: 'SQL Playground',    href: '/v3/sql' },
-  { emoji: '🔍', label: 'Regex Tester',       href: '/v3/regex' },
-  { emoji: '✏️', label: 'Rakam Çiz',          href: '/v3/ciz' },
-  { emoji: '🧠', label: 'Sinir Ağı',          href: '/v3/nn' },
+  { emoji: '🐍', label: 'Python Playground', href: '/python' },
+  { emoji: '🗄️', label: 'SQL Playground',    href: '/sql' },
+  { emoji: '🔍', label: 'Regex Tester',       href: '/regex' },
+  { emoji: '✏️', label: 'Rakam Çiz',          href: '/ciz' },
+  { emoji: '🧠', label: 'Sinir Ağı',          href: '/nn' },
 ];
 
 const modulItems = [
-  { emoji: '🥗', label: 'Kalori Takip',      href: '/v3/kalori' },
-  { emoji: '🗂️', label: 'Veri Setleri',      href: '/v3/veri-setleri' },
-  { emoji: '🎤', label: 'Mülakat',           href: '/v3/mulakat' },
-  { emoji: '💰', label: 'Kim Milyoner?',     href: '/v3/milyon' },
-  { emoji: '🧪', label: 'Proje Lab',         href: '/v3/proje' },
-  { emoji: '📊', label: 'Bilgi Grafiği',     href: '/v3/grafik' },
-  { emoji: '🍺', label: 'Promilmetre',       href: '/v3/promilmetre' },
-  { emoji: '🖥️', label: 'Tech Center',       href: '/v3/tech-center' },
+  { emoji: '🥗', label: 'Kalori Takip',      href: '/kalori' },
+  { emoji: '🗂️', label: 'Veri Setleri',      href: '/veri-setleri' },
+  { emoji: '🎤', label: 'Mülakat',           href: '/mulakat' },
+  { emoji: '💰', label: 'Kim Milyoner?',     href: '/milyon' },
+  { emoji: '🧪', label: 'Proje Lab',         href: '/proje' },
+  { emoji: '📊', label: 'Bilgi Grafiği',     href: '/grafik' },
+  { emoji: '🍺', label: 'Promilmetre',       href: '/promilmetre' },
+  { emoji: '🖥️', label: 'Tech Center',       href: '/tech-center' },
 ];
 
 const navLinks = [
-  { href: '/v3/icerikler', label: 'İçerikler' },
+  { href: '/icerikler', label: 'İçerikler' },
 ];
 
 export default function V3Navbar() {
@@ -87,7 +87,7 @@ export default function V3Navbar() {
     setLoggingOut(true);
     try {
       await fetch('/api/v3/auth/logout', { method: 'POST' });
-      window.location.href = '/v3';
+      window.location.href = '/';
     } finally {
       setLoggingOut(false);
     }
@@ -95,7 +95,7 @@ export default function V3Navbar() {
 
   const isActive = (href) => pathname === href || pathname.startsWith(href + '/') || pathname.startsWith(href + '?');
 
-  if (pathname === '/v3/tech-center') return null;
+  if (pathname === '/tech-center') return null;
 
   return (
     <>
@@ -286,7 +286,7 @@ export default function V3Navbar() {
 
       <nav className="v3-nav">
         <div className="v3-nav-inner">
-          <Link href="/v3" className="v3-nav-logo">
+          <Link href="/" className="v3-nav-logo">
             <svg width="26" height="26" viewBox="0 0 28 28" fill="none">
               <defs>
                 <linearGradient id="logo-neural" x1="0" y1="0" x2="1" y2="1">
@@ -357,8 +357,8 @@ export default function V3Navbar() {
               )}
             </div>
 
-            <Link href="/v3/harita"
-              className={`v3-nav-link${isActive('/v3/harita') ? ' active' : ''}`}>
+            <Link href="/harita"
+              className={`v3-nav-link${isActive('/harita') ? ' active' : ''}`}>
               Haritam
             </Link>
           </div>
@@ -371,7 +371,7 @@ export default function V3Navbar() {
 
             {user ? (
               <>
-                <Link href="/v3/panel" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+                <Link href="/panel" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
                   <div className={`v3-avatar${user.isSupporter ? ' supporter' : ''}`} style={{ background: user.avatarColor || '#6366f1' }}>
                     {user.name.charAt(0).toUpperCase()}
                   </div>
@@ -382,10 +382,10 @@ export default function V3Navbar() {
                 </button>
               </>
             ) : (
-              <Link href="/v3/giris" className="v3-btn-login">Giriş</Link>
+              <Link href="/giris" className="v3-btn-login">Giriş</Link>
             )}
             {!user?.isSupporter && (
-              <Link href="/v3/destek" className="v3-btn-destek">
+              <Link href="/destek" className="v3-btn-destek">
                 ☕{!user && <span className="v3-btn-destek-text"> Destek Ol</span>}
               </Link>
             )}
@@ -454,8 +454,8 @@ export default function V3Navbar() {
 
         <div className="v3-mobile-divider" />
 
-        <Link href="/v3/harita"
-          className={`v3-mobile-link${isActive('/v3/harita') ? ' active' : ''}`}
+        <Link href="/harita"
+          className={`v3-mobile-link${isActive('/harita') ? ' active' : ''}`}
           onClick={() => setMenuOpen(false)}>
           🗺️ Haritam
         </Link>
@@ -463,15 +463,15 @@ export default function V3Navbar() {
         <div className="v3-mobile-divider" />
 
         {!user?.isSupporter && (
-          <Link href="/v3/destek" className="v3-mobile-link" onClick={() => setMenuOpen(false)}
+          <Link href="/destek" className="v3-mobile-link" onClick={() => setMenuOpen(false)}
             style={{ color: '#fb923c', fontWeight: 600 }}>
             ☕ Destek Ol
           </Link>
         )}
         {!user && (
           <>
-            <Link href="/v3/giris" className="v3-mobile-link" onClick={() => setMenuOpen(false)}>Giriş Yap</Link>
-            <Link href="/v3/kayit" className="v3-mobile-link" onClick={() => setMenuOpen(false)}>Kayıt Ol</Link>
+            <Link href="/giris" className="v3-mobile-link" onClick={() => setMenuOpen(false)}>Giriş Yap</Link>
+            <Link href="/kayit" className="v3-mobile-link" onClick={() => setMenuOpen(false)}>Kayıt Ol</Link>
           </>
         )}
       </div>

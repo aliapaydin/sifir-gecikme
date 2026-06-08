@@ -17,41 +17,31 @@ const HERO_DEFAULTS = {
   animation: '1',
 };
 
-const V3_PAGES = ['/yazilar/', '/ogren/', '/python', '/sql', '/regex', '/ciz', '/nn',
-  '/hipotez', '/mulakat', '/kalori', '/tech-center', '/harita', '/milyon',
-  '/veri-setleri', '/proje', '/grafik', '/promilmetre', '/csv', '/renk', '/sinav'];
-
-function v3href(href) {
-  if (href.startsWith('/v3') || href.startsWith('http')) return href;
-  const shouldPrefix = V3_PAGES.some(p => href === p || href.startsWith(p));
-  return shouldPrefix ? `/v3${href}` : href;
-}
-
 const kategoriler = [
-  { icon: '⚡', label: 'İnteraktif', desc: 'Deneye deneye öğren',    href: '/v3/icerikler?tip=interaktif', color: '#14b8a6' },
-  { icon: '📖', label: 'Rehber',     desc: 'Adım adım açıklamalar',  href: '/v3/icerikler?tip=rehber',    color: '#8b5cf6' },
-  { icon: '🔧', label: 'Araç',       desc: 'Hazır hesaplayıcılar',   href: '/v3/icerikler?tip=arac',      color: '#6366f1' },
-  { icon: '📊', label: 'Vaka',       desc: 'Gerçek veri analizleri', href: '/v3/icerikler?tip=vaka',      color: '#f97316' },
-  { icon: '💼', label: 'Kariyer',    desc: 'İş hayatına hazırlık',   href: '/v3/icerikler?tip=kariyer',   color: '#10b981' },
+  { icon: '⚡', label: 'İnteraktif', desc: 'Deneye deneye öğren',    href: '/icerikler?tip=interaktif', color: '#14b8a6' },
+  { icon: '📖', label: 'Rehber',     desc: 'Adım adım açıklamalar',  href: '/icerikler?tip=rehber',    color: '#8b5cf6' },
+  { icon: '🔧', label: 'Araç',       desc: 'Hazır hesaplayıcılar',   href: '/icerikler?tip=arac',      color: '#6366f1' },
+  { icon: '📊', label: 'Vaka',       desc: 'Gerçek veri analizleri', href: '/icerikler?tip=vaka',      color: '#f97316' },
+  { icon: '💼', label: 'Kariyer',    desc: 'İş hayatına hazırlık',   href: '/icerikler?tip=kariyer',   color: '#10b981' },
 ];
 
 const tools = [
-  { emoji: '🐍', title: 'Python Playground', desc: 'Tarayıcıda gerçek Python — Pyodide ile kurulum yok, anında çalıştır.', href: '/v3/python', accent: '#3b82f6', tag: 'Pyodide' },
-  { emoji: '🗄️', title: 'SQL Playground',    desc: '3 farklı veritabanı, şema gezgini ve sql.js motoru — tarayıcıda SQLite.', href: '/v3/sql',    accent: '#8b5cf6', tag: 'sql.js' },
-  { emoji: '🔍', title: 'Regex Tester',       desc: 'Türkçe açıklamalı regex playground — pattern yaz, anlık test et.', href: '/v3/regex',  accent: '#14b8a6', tag: 'Regex' },
-  { emoji: '✏️', title: 'Rakam Çiz',          desc: 'El yazısı rakam çiz, tarayıcıda CNN modelini eğit — TensorFlow.js.', href: '/v3/ciz',   accent: '#f59e0b', tag: 'CNN' },
-  { emoji: '🧪', title: 'Sinir Ağı',          desc: 'XOR/çember/spiral veri setleriyle karar sınırını gerçek zamanlı görselleştir.', href: '/v3/nn', accent: '#fb923c', tag: 'Neural Net' },
+  { emoji: '🐍', title: 'Python Playground', desc: 'Tarayıcıda gerçek Python — Pyodide ile kurulum yok, anında çalıştır.', href: '/python', accent: '#3b82f6', tag: 'Pyodide' },
+  { emoji: '🗄️', title: 'SQL Playground',    desc: '3 farklı veritabanı, şema gezgini ve sql.js motoru — tarayıcıda SQLite.', href: '/sql',    accent: '#8b5cf6', tag: 'sql.js' },
+  { emoji: '🔍', title: 'Regex Tester',       desc: 'Türkçe açıklamalı regex playground — pattern yaz, anlık test et.', href: '/regex',  accent: '#14b8a6', tag: 'Regex' },
+  { emoji: '✏️', title: 'Rakam Çiz',          desc: 'El yazısı rakam çiz, tarayıcıda CNN modelini eğit — TensorFlow.js.', href: '/ciz',   accent: '#f59e0b', tag: 'CNN' },
+  { emoji: '🧪', title: 'Sinir Ağı',          desc: 'XOR/çember/spiral veri setleriyle karar sınırını gerçek zamanlı görselleştir.', href: '/nn', accent: '#fb923c', tag: 'Neural Net' },
 ];
 
 const playground = [
-  { emoji: '📈', title: 'Linear Regression',    desc: 'Noktaları sürükle, regresyon çizgisi anlık güncellensin.',          href: '/v3/yazilar/linear-regression',  accent: '#14b8a6' },
-  { emoji: '⛰️', title: 'Gradient Descent',     desc: 'Top yuvarlama oyunu — öğrenme hızını sen belirle.',                 href: '/v3/yazilar/gradient-descent',   accent: '#818cf8' },
-  { emoji: '🔵', title: 'K-Means Kümeleme',     desc: "Centroid'lerin adım adım yer değiştirmesini izle.",                href: '/v3/yazilar/kmeans',             accent: '#a78bfa' },
-  { emoji: '🧠', title: 'Sinir Ağı',            desc: 'Katmanları, nöronları ve aktivasyonları görselleştir.',             href: '/v3/yazilar/sinir-agi',          accent: '#fb923c' },
-  { emoji: '📧', title: 'Lojistik Regresyon',   desc: 'Spam filtresini eğit — gradient descent canlı izle.',              href: '/v3/yazilar/lojistik-regresyon', accent: '#34d399' },
-  { emoji: '🎯', title: 'Confusion Matrix',     desc: 'Precision, recall ve F1 skorunu interaktif keşfet.',               href: '/v3/yazilar/confusion-matrix',   accent: '#fb7185' },
-  { emoji: '📐', title: 'A/B Test Hesaplayıcı', desc: 'p-değeri, güven aralığı ve etki büyüklüğünü anında hesapla.',      href: '/v3/yazilar/ab-test',            accent: '#fb923c' },
-  { emoji: '🧪', title: 'Hipotez Testi Seçici', desc: 'Verini anlat, doğru istatistiksel testi bul.',                     href: '/v3/hipotez',                    accent: '#818cf8' },
+  { emoji: '📈', title: 'Linear Regression',    desc: 'Noktaları sürükle, regresyon çizgisi anlık güncellensin.',          href: '/yazilar/linear-regression',  accent: '#14b8a6' },
+  { emoji: '⛰️', title: 'Gradient Descent',     desc: 'Top yuvarlama oyunu — öğrenme hızını sen belirle.',                 href: '/yazilar/gradient-descent',   accent: '#818cf8' },
+  { emoji: '🔵', title: 'K-Means Kümeleme',     desc: "Centroid'lerin adım adım yer değiştirmesini izle.",                href: '/yazilar/kmeans',             accent: '#a78bfa' },
+  { emoji: '🧠', title: 'Sinir Ağı',            desc: 'Katmanları, nöronları ve aktivasyonları görselleştir.',             href: '/yazilar/sinir-agi',          accent: '#fb923c' },
+  { emoji: '📧', title: 'Lojistik Regresyon',   desc: 'Spam filtresini eğit — gradient descent canlı izle.',              href: '/yazilar/lojistik-regresyon', accent: '#34d399' },
+  { emoji: '🎯', title: 'Confusion Matrix',     desc: 'Precision, recall ve F1 skorunu interaktif keşfet.',               href: '/yazilar/confusion-matrix',   accent: '#fb7185' },
+  { emoji: '📐', title: 'A/B Test Hesaplayıcı', desc: 'p-değeri, güven aralığı ve etki büyüklüğünü anında hesapla.',      href: '/yazilar/ab-test',            accent: '#fb923c' },
+  { emoji: '🧪', title: 'Hipotez Testi Seçici', desc: 'Verini anlat, doğru istatistiksel testi bul.',                     href: '/hipotez',                    accent: '#818cf8' },
 ];
 
 export default async function V3HomePage() {
@@ -224,7 +214,7 @@ export default async function V3HomePage() {
             <h1 className="v3-hero-title">{hero.title}</h1>
             <p className="v3-hero-sub">{hero.subtitle}</p>
             <div className="v3-hero-ctas">
-              <Link href="/v3/icerikler" className="v3-btn-primary">İçerikleri Keşfet →</Link>
+              <Link href="/icerikler" className="v3-btn-primary">İçerikleri Keşfet →</Link>
               <HeroRegisterBtn />
             </div>
           </div>

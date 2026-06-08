@@ -54,11 +54,11 @@ function PanelInner() {
     fetch('/api/v3/auth/me')
       .then(r => r.ok ? r.json() : null)
       .then(data => {
-        if (!data?.user) { router.push('/v3/giris?from=/v3/panel'); return; }
+        if (!data?.user) { router.push('/giris?from=/panel'); return; }
         setUser(data.user);
         setLoading(false);
       })
-      .catch(() => { router.push('/v3/giris'); });
+      .catch(() => { router.push('/giris'); });
   }, [router]);
 
   useEffect(() => {
@@ -243,7 +243,7 @@ function PanelInner() {
             </div>
           </div>
         ) : (
-          <Link href="/v3/destek" style={{ textDecoration: 'none', display: 'block', marginBottom: '16px' }}>
+          <Link href="/destek" style={{ textDecoration: 'none', display: 'block', marginBottom: '16px' }}>
             <div style={{
               display: 'flex', alignItems: 'center', gap: '20px',
               padding: '22px 28px', borderRadius: '20px',
@@ -461,7 +461,7 @@ function PanelInner() {
 
         {/* ── Admin Paneli Butonu ── */}
         {user.role === 'admin' && (
-          <Link href="/v3/admin" style={{ textDecoration: 'none', display: 'block', marginBottom: '16px' }}>
+          <Link href="/admin" style={{ textDecoration: 'none', display: 'block', marginBottom: '16px' }}>
             <div style={{
               display: 'flex', alignItems: 'center', gap: '20px',
               padding: '22px 28px', borderRadius: '20px',
@@ -496,11 +496,11 @@ function PanelInner() {
 
         {/* ── Hızlı Linkler ── */}
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-          <Link href="/v3/icerikler" style={{ fontSize: '13px', color: 'var(--v3-text-muted)', textDecoration: 'none' }}>← İçerikler</Link>
+          <Link href="/icerikler" style={{ fontSize: '13px', color: 'var(--v3-text-muted)', textDecoration: 'none' }}>← İçerikler</Link>
           <span style={{ color: 'var(--v3-border-bright)' }}>·</span>
-          <Link href="/v3/harita" style={{ fontSize: '13px', color: 'var(--v3-text-muted)', textDecoration: 'none' }}>Haritam</Link>
+          <Link href="/harita" style={{ fontSize: '13px', color: 'var(--v3-text-muted)', textDecoration: 'none' }}>Haritam</Link>
           <span style={{ color: 'var(--v3-border-bright)' }}>·</span>
-          <Link href="/v3/ogren" style={{ fontSize: '13px', color: 'var(--v3-text-muted)', textDecoration: 'none' }}>Öğren</Link>
+          <Link href="/ogren" style={{ fontSize: '13px', color: 'var(--v3-text-muted)', textDecoration: 'none' }}>Öğren</Link>
         </div>
 
       </div>

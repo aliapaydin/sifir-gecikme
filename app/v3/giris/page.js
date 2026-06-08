@@ -29,7 +29,7 @@ export default function GirisPage() {
         setError(data.error || 'Giriş yapılamadı.');
       } else {
         const params = new URLSearchParams(window.location.search);
-        window.location.href = params.get('from') || '/v3/panel';
+        window.location.href = params.get('from') || '/panel';
       }
     } catch {
       setError('Bağlantı hatası. Lütfen tekrar deneyin.');
@@ -187,11 +187,11 @@ export default function GirisPage() {
           </form>
 
           <div className="v3-auth-footer">
-            <Link href="/v3/sifremi-unuttum">Şifremi unuttum</Link>
+            <Link href="/sifremi-unuttum">Şifremi unuttum</Link>
           </div>
           <div className="v3-auth-footer" style={{ marginTop: '10px' }}>
             Hesabın yok mu?{' '}
-            <Link href="/v3/kayit">Kaydol</Link>
+            <Link href="/kayit">Kaydol</Link>
           </div>
         </div>
       </div>

@@ -60,8 +60,6 @@ export default function RootLayout({ children }) {
   return (
     <html lang="tr" suppressHydrationWarning className={`${inter.variable} ${lora.variable} ${jetbrains.variable}`}>
       <head>
-        {/* Tema sync — React hydrate'den ÖNCE çalışır, flash ve back-nav sorunlarını önler */}
-        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark');else if(t==='lacivert')document.documentElement.classList.add('lacivert');else if(t==='gece')document.documentElement.classList.add('gece');}catch(e){}})()` }} />
         <Script src="/muzik-player.js" strategy="afterInteractive" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#1D9E75" />

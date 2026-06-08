@@ -26,7 +26,7 @@ export default function KayitTamamPage() {
           }}>
             📌 Spam / Junk klasörünü de kontrol etmeyi unutma.
           </div>
-          <Link href="/v3/giris" style={{
+          <Link href="/giris" style={{
             display: 'inline-flex', alignItems: 'center', gap: '8px',
             padding: '12px 28px', borderRadius: '10px',
             background: 'var(--v3-surface2)', border: '1px solid var(--v3-border)',

@@ -19,7 +19,7 @@ function SifreSifirlaInner() {
         <p style={{ fontSize: '15px', color: 'var(--v3-text-muted)', marginBottom: '20px' }}>
           Geçersiz şifre sıfırlama linki.
         </p>
-        <Link href="/v3/sifremi-unuttum" style={{
+        <Link href="/sifremi-unuttum" style={{
           display: 'inline-block', padding: '11px 24px', borderRadius: '10px',
           background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', color: '#fff',
           fontSize: '14px', fontWeight: 600, textDecoration: 'none',
@@ -62,7 +62,7 @@ function SifreSifirlaInner() {
         <p style={{ fontSize: '14px', color: 'var(--v3-text-muted)', marginBottom: '24px' }}>
           Yeni şifrenle giriş yapabilirsin.
         </p>
-        <Link href="/v3/giris" style={{
+        <Link href="/giris" style={{
           display: 'inline-block', padding: '12px 28px', borderRadius: '10px',
           background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', color: '#fff',
           fontSize: '15px', fontWeight: 600, textDecoration: 'none',

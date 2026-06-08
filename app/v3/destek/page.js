@@ -168,11 +168,11 @@ export default function DestekPage() {
                   </div>
                 ) : (
                   <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                    <Link href="/v3/kayit" className="dst-step-btn"
+                    <Link href="/kayit" className="dst-step-btn"
                       style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', color: '#fff' }}>
                       Ücretsiz Kayıt Ol
                     </Link>
-                    <Link href="/v3/giris" className="dst-step-btn"
+                    <Link href="/giris" className="dst-step-btn"
                       style={{ background: 'var(--v3-surface2)', border: '1px solid var(--v3-border)', color: 'var(--v3-text-muted)' }}>
                       Zaten üyeyim
                     </Link>
@@ -204,7 +204,7 @@ export default function DestekPage() {
                 </a>
                 {loggedIn && user?.patreonLinkedAt && (
                   <div style={{ marginTop: '10px' }}>
-                    <Link href="/v3/panel" style={{ fontSize: '13px', color: '#2dd4bf', textDecoration: 'none' }}>
+                    <Link href="/panel" style={{ fontSize: '13px', color: '#2dd4bf', textDecoration: 'none' }}>
                       ✓ Patreon bağlı — Panelde görüntüle →
                     </Link>
                   </div>
