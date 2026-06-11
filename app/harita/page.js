@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { yazilar, getKategori } from '../../lib/icerikler';
+import { SYNC_READY_EVENT } from '../../lib/userSync';
 
 const icerikler = yazilar.map(y => ({ ...y, kategori: getKategori(y) }));
 import { dersler } from '../../lib/dersler';
@@ -300,6 +301,7 @@ export default function HaritaSayfasi() {
   const [tekrarlar, setTekrarlar] = useState([]);
 
   useEffect(() => {
+    function yukle() {
     try {
       const ziyaretler   = JSON.parse(localStorage.getItem('sz_ziyaretler') || '[]');
       const sqlSorgu     = Number(localStorage.getItem('sz_sql_sorgu') || 0);
@@ -422,6 +424,10 @@ export default function HaritaSayfasi() {
         ilkZiyaret, seri, sureDk, gunler, tcData,
       });
     } catch {}
+    }
+    yukle();
+    window.addEventListener(SYNC_READY_EVENT, yukle);
+    return () => window.removeEventListener(SYNC_READY_EVENT, yukle);
   }, []);
 
   if (!veri) return (

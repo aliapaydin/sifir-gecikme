@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { clearSyncedLocal } from '../../../lib/userSync';
 
 const playgroundItems = [
   { emoji: '🐍', label: 'Python Playground', href: '/python' },
@@ -87,6 +88,8 @@ export default function V3Navbar() {
     setLoggingOut(true);
     try {
       await fetch('/api/v3/auth/logout', { method: 'POST' });
+      // Paylaşılan cihazda hesaplar arası sızıntıyı önlemek için senkron veriyi temizle
+      clearSyncedLocal();
       window.location.href = '/';
     } finally {
       setLoggingOut(false);

@@ -4,6 +4,7 @@ import './globals.css';
 import ThemeSync from '../components/ThemeSync';
 import LayoutShell from '../components/LayoutShell';
 import ZiyaretTakip from '../components/ZiyaretTakip';
+import UserDataProvider from '../components/UserDataProvider';
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
@@ -85,9 +86,11 @@ export default function RootLayout({ children }) {
             }
           `}</Script>
           <ZiyaretTakip />
-          <LayoutShell>
-            {children}
-          </LayoutShell>
+          <UserDataProvider>
+            <LayoutShell>
+              {children}
+            </LayoutShell>
+          </UserDataProvider>
 <Analytics />
           <SpeedInsights />
         </body>

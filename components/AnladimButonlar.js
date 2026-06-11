@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import { SYNC_READY_EVENT } from '../lib/userSync';
 
 function toggle(key, href) {
   const arr = JSON.parse(localStorage.getItem(key) || '[]');
@@ -18,10 +19,15 @@ export default function AnladimButonlar() {
   const [tekrar, setTekrar] = useState(false);
 
   useEffect(() => {
-    const anladiArr = JSON.parse(localStorage.getItem('sz_anladi') || '[]');
-    const tekrarArr = JSON.parse(localStorage.getItem('sz_tekrar') || '[]');
-    setAnladi(anladiArr.includes(pathname));
-    setTekrar(tekrarArr.includes(pathname));
+    function yukle() {
+      const anladiArr = JSON.parse(localStorage.getItem('sz_anladi') || '[]');
+      const tekrarArr = JSON.parse(localStorage.getItem('sz_tekrar') || '[]');
+      setAnladi(anladiArr.includes(pathname));
+      setTekrar(tekrarArr.includes(pathname));
+    }
+    yukle();
+    window.addEventListener(SYNC_READY_EVENT, yukle);
+    return () => window.removeEventListener(SYNC_READY_EVENT, yukle);
   }, [pathname]);
 
   function handleAnladi() {

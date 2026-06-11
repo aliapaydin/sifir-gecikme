@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { SYNC_READY_EVENT } from '../../../lib/userSync';
 
 const ROLE_LABELS = {
   admin:     { label: 'Admin',      bg: 'rgba(249,115,22,0.12)',  color: '#fb923c', border: 'rgba(249,115,22,0.25)' },
@@ -62,13 +63,18 @@ function PanelInner() {
   }, [router]);
 
   useEffect(() => {
-    try {
-      const anladi   = JSON.parse(localStorage.getItem('sz_anladi') || '[]').length;
-      const tekrar   = JSON.parse(localStorage.getItem('sz_tekrar') || '[]').length;
-      const ziyaret  = JSON.parse(localStorage.getItem('sz_ziyaretler') || '[]').length;
-      const xp       = JSON.parse(localStorage.getItem('sz_ilerleme_v1') || '{}').toplamXP || 0;
-      setStats({ anladi, tekrar, xp, ziyaret });
-    } catch {}
+    function yukle() {
+      try {
+        const anladi   = JSON.parse(localStorage.getItem('sz_anladi') || '[]').length;
+        const tekrar   = JSON.parse(localStorage.getItem('sz_tekrar') || '[]').length;
+        const ziyaret  = JSON.parse(localStorage.getItem('sz_ziyaretler') || '[]').length;
+        const xp       = JSON.parse(localStorage.getItem('sz_ilerleme_v1') || '{}').toplamXP || 0;
+        setStats({ anladi, tekrar, xp, ziyaret });
+      } catch {}
+    }
+    yukle();
+    window.addEventListener(SYNC_READY_EVENT, yukle);
+    return () => window.removeEventListener(SYNC_READY_EVENT, yukle);
   }, []);
 
   async function handleChangePassword(e) {
