@@ -21,6 +21,7 @@ const modulItems = [
   { emoji: '📊', label: 'Bilgi Grafiği',     href: '/v3/grafik' },
   { emoji: '🍺', label: 'Promilmetre',       href: '/v3/promilmetre' },
   { emoji: '🖥️', label: 'Tech Center',       href: '/v3/tech-center' },
+  { emoji: '📈', label: 'İçerik Analizi',    href: '/v3/analiz' },
 ];
 
 const navLinks = [
