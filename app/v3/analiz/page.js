@@ -1,19 +1,17 @@
 import Link from 'next/link';
 import { yazilar } from '../../../lib/icerikler';
+import { sql, initDb } from '../../../lib/v3/db';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'İçerik Analizi' };
 
-// href → başlık haritası
 const titleMap = Object.fromEntries(yazilar.map(y => [y.href, y.baslik]));
 const badgeMap  = Object.fromEntries(yazilar.map(y => [y.href, y.badge]));
 
 function getTitle(href) {
   return titleMap[href] || href.split('/').filter(Boolean).pop();
 }
-function getBadge(href) {
-  return badgeMap[href] || null;
-}
+function getBadge(href) { return badgeMap[href] || null; }
 
 const BADGE_COLOR = {
   'interaktif':     { bg: 'rgba(20,184,166,0.12)',  color: '#2dd4bf' },
@@ -41,11 +39,7 @@ function RankList({ items, color, emptyMsg }) {
         const bc    = badge ? BADGE_COLOR[badge] : null;
         const pct   = Math.round((item.total / max) * 100);
         return (
-          <Link
-            key={item.href}
-            href={`/v3${item.href}`}
-            style={{ textDecoration: 'none', display: 'block' }}
-          >
+          <Link key={item.href} href={item.href} style={{ textDecoration: 'none', display: 'block' }}>
             <div style={{
               display: 'flex', alignItems: 'center', gap: '12px',
               padding: '10px 14px', borderRadius: '10px',
@@ -53,25 +47,19 @@ function RankList({ items, color, emptyMsg }) {
               background: 'var(--v3-surface)',
               transition: 'border-color 0.15s, transform 0.1s',
               position: 'relative', overflow: 'hidden',
-            }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--v3-border-bright)'; e.currentTarget.style.transform = 'translateX(2px)'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--v3-border)'; e.currentTarget.style.transform = 'none'; }}
-            >
-              {/* Progress bar arka plan */}
+            }}>
               <div style={{
                 position: 'absolute', left: 0, top: 0, bottom: 0,
                 width: `${pct}%`, background: color,
                 opacity: 0.07, borderRadius: '10px 0 0 10px',
-                transition: 'width 0.4s',
               }} />
-              {/* Sıra numarası */}
               <span style={{
-                fontSize: '13px', fontWeight: 700, color: i < 3 ? color.replace('0.07', '1') : 'var(--v3-text-faint)',
+                fontSize: '13px', fontWeight: 700,
+                color: i < 3 ? 'var(--v3-accent)' : 'var(--v3-text-faint)',
                 width: '20px', textAlign: 'center', flexShrink: 0, position: 'relative',
               }}>
                 {i < 3 ? ['🥇','🥈','🥉'][i] : `${i+1}`}
               </span>
-              {/* Başlık + badge */}
               <div style={{ flex: 1, minWidth: 0, position: 'relative' }}>
                 <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--v3-text)', lineHeight: 1.35,
                   overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
@@ -84,11 +72,7 @@ function RankList({ items, color, emptyMsg }) {
                   </span>
                 )}
               </div>
-              {/* Sayı */}
-              <span style={{
-                fontSize: '14px', fontWeight: 700, color: 'var(--v3-text)',
-                flexShrink: 0, position: 'relative',
-              }}>
+              <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--v3-text)', flexShrink: 0, position: 'relative' }}>
                 {fmtNum(item.total)}
               </span>
             </div>
@@ -116,27 +100,29 @@ function StatCard({ icon, label, value, sub, color }) {
   );
 }
 
-async function getData() {
-  try {
-    const base = process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : 'http://localhost:3000';
-    const res = await fetch(`${base}/api/v3/analytics`, { cache: 'no-store' });
-    if (!res.ok) return null;
-    return await res.json();
-  } catch {
-    return null;
-  }
-}
-
 export default async function AnalizPage() {
-  const data = await getData();
-
-  const s = data?.summary || {};
-  const weekly   = data?.weekly   || [];
-  const allTime  = data?.allTime  || [];
-  const topAnladi = data?.topAnladi || [];
-  const topTekrar = data?.topTekrar || [];
+  // Doğrudan DB sorgusu — self-fetch değil
+  let weekly = [], allTime = [], topAnladi = [], topTekrar = [], summary = {};
+  try {
+    await initDb();
+    const [w, a, anladi, tekrar, s] = await Promise.all([
+      sql`SELECT href, SUM(count)::int AS total FROM v3_content_views WHERE day >= CURRENT_DATE - INTERVAL '7 days' GROUP BY href ORDER BY total DESC LIMIT 15`,
+      sql`SELECT href, SUM(count)::int AS total FROM v3_content_views GROUP BY href ORDER BY total DESC LIMIT 15`,
+      sql`SELECT href, COUNT(*)::int AS total FROM v3_content_marks WHERE mark = 'anladi' GROUP BY href ORDER BY total DESC LIMIT 15`,
+      sql`SELECT href, COUNT(*)::int AS total FROM v3_content_marks WHERE mark = 'tekrar' GROUP BY href ORDER BY total DESC LIMIT 15`,
+      sql`SELECT
+        (SELECT COALESCE(SUM(count),0) FROM v3_content_views)::int                  AS total_views,
+        (SELECT COALESCE(SUM(count),0) FROM v3_content_views WHERE day >= CURRENT_DATE - INTERVAL '7 days')::int AS weekly_views,
+        (SELECT COUNT(DISTINCT href)   FROM v3_content_views)::int                  AS unique_content,
+        (SELECT COUNT(*)               FROM v3_content_marks WHERE mark='anladi')::int AS total_anladi,
+        (SELECT COUNT(*)               FROM v3_content_marks WHERE mark='tekrar')::int AS total_tekrar,
+        (SELECT COUNT(DISTINCT user_id)FROM v3_content_marks)::int                  AS active_users`,
+    ]);
+    weekly = w; allTime = a; topAnladi = anladi; topTekrar = tekrar;
+    summary = s[0] || {};
+  } catch (e) {
+    console.error('analiz page DB error:', e);
+  }
 
   return (
     <>
@@ -150,7 +136,6 @@ export default async function AnalizPage() {
         .analiz-section { background: var(--v3-surface); border: 1px solid var(--v3-border); border-radius: 16px; padding: 24px; }
         .analiz-sec-title { font-size: 16px; font-weight: 700; color: var(--v3-text); margin: 0 0 6px; display: flex; align-items: center; gap: 8px; }
         .analiz-sec-sub   { font-size: 12px; color: var(--v3-text-muted); margin: 0 0 18px; }
-        .analiz-updated   { font-size: 11px; color: var(--v3-text-faint); margin-top: 32px; text-align: right; }
         @media (max-width: 720px) {
           .analiz-page { padding: 32px 16px 60px; }
           .analiz-title { font-size: 24px; }
@@ -160,79 +145,44 @@ export default async function AnalizPage() {
 
       <div className="analiz-page">
         <div className="analiz-header">
-          <Link href="/v3" style={{ fontSize: '13px', color: 'var(--v3-text-muted)', textDecoration: 'none', display: 'inline-block', marginBottom: '16px' }}>
+          <Link href="/" style={{ fontSize: '13px', color: 'var(--v3-text-muted)', textDecoration: 'none', display: 'inline-block', marginBottom: '16px' }}>
             ← Ana Sayfa
           </Link>
           <h1 className="analiz-title">İçerik Analizi</h1>
           <p className="analiz-sub">En çok okunan, en çok işaretlenen — gerçek zamanlı içerik istatistikleri.</p>
         </div>
 
-        {/* Özet kartlar */}
         <div className="analiz-stats">
-          <StatCard icon="👁️" label="Toplam Görüntülenme" value={s.total_views} sub="Tüm zamanlar" color="#818cf8" />
-          <StatCard icon="📈" label="Bu Haftaki Görüntülenme" value={s.weekly_views} sub="Son 7 gün" color="#2dd4bf" />
-          <StatCard icon="📚" label="Takip Edilen İçerik" value={s.unique_content} sub={`/ ${yazilar.length} içerik`} color="#fb923c" />
-          <StatCard icon="✅" label="Anladım İşaretleme" value={s.total_anladi} sub="Toplam kullanıcı" color="#10b981" />
-          <StatCard icon="↩" label="Tekrar Bak İşaretleme" value={s.total_tekrar} sub="Toplam kullanıcı" color="#fbbf24" />
-          <StatCard icon="👤" label="Aktif Kullanıcı" value={s.active_users} sub="İşaretleme yapan" color="#a78bfa" />
+          <StatCard icon="👁️" label="Toplam Görüntülenme" value={summary.total_views} sub="Tüm zamanlar" color="#818cf8" />
+          <StatCard icon="📈" label="Bu Haftaki Görüntülenme" value={summary.weekly_views} sub="Son 7 gün" color="#2dd4bf" />
+          <StatCard icon="📚" label="Takip Edilen İçerik" value={summary.unique_content} sub={`/ ${yazilar.length} içerik`} color="#fb923c" />
+          <StatCard icon="✅" label="Anladım İşaretleme" value={summary.total_anladi} sub="Toplam kullanıcı" color="#10b981" />
+          <StatCard icon="↩" label="Tekrar Bak İşaretleme" value={summary.total_tekrar} sub="Toplam kullanıcı" color="#fbbf24" />
+          <StatCard icon="👤" label="Aktif Kullanıcı" value={summary.active_users} sub="İşaretleme yapan" color="#a78bfa" />
         </div>
 
-        {/* 4 analiz bölümü */}
         <div className="analiz-grid">
           <div className="analiz-section">
-            <h2 className="analiz-sec-title">
-              <span>🔥</span> Bu Hafta Trend
-            </h2>
+            <h2 className="analiz-sec-title"><span>🔥</span> Bu Hafta Trend</h2>
             <p className="analiz-sec-sub">Son 7 gündeki görüntülenme sayısına göre</p>
-            <RankList
-              items={weekly}
-              color="rgba(251,146,60,0.12)"
-              emptyMsg="Henüz bu hafta görüntülenme verisi yok."
-            />
+            <RankList items={weekly} color="rgba(251,146,60,0.12)" emptyMsg="Henüz bu hafta görüntülenme verisi yok." />
           </div>
-
           <div className="analiz-section">
-            <h2 className="analiz-sec-title">
-              <span>🏆</span> Tüm Zamanlar En Çok Okunan
-            </h2>
+            <h2 className="analiz-sec-title"><span>🏆</span> Tüm Zamanlar En Çok Okunan</h2>
             <p className="analiz-sec-sub">Toplam görüntülenme sayısına göre</p>
-            <RankList
-              items={allTime}
-              color="rgba(99,102,241,0.12)"
-              emptyMsg="Henüz görüntülenme verisi yok."
-            />
+            <RankList items={allTime} color="rgba(99,102,241,0.12)" emptyMsg="Henüz görüntülenme verisi yok." />
           </div>
-
           <div className="analiz-section">
-            <h2 className="analiz-sec-title">
-              <span>✅</span> En Çok "Anladım" Denen
-            </h2>
+            <h2 className="analiz-sec-title"><span>✅</span> En Çok "Anladım" Denen</h2>
             <p className="analiz-sec-sub">Kullanıcıların anladım olarak işaretlediği içerikler</p>
-            <RankList
-              items={topAnladi}
-              color="rgba(16,185,129,0.12)"
-              emptyMsg="Henüz anladım işaretlemesi yok."
-            />
+            <RankList items={topAnladi} color="rgba(16,185,129,0.12)" emptyMsg="Henüz anladım işaretlemesi yok." />
           </div>
-
           <div className="analiz-section">
-            <h2 className="analiz-sec-title">
-              <span>↩</span> En Çok "Tekrar Bak" Denen
-            </h2>
+            <h2 className="analiz-sec-title"><span>↩</span> En Çok "Tekrar Bak" Denen</h2>
             <p className="analiz-sec-sub">Kullanıcıların tekrar bakmak istediği içerikler</p>
-            <RankList
-              items={topTekrar}
-              color="rgba(251,191,36,0.12)"
-              emptyMsg="Henüz tekrar bak işaretlemesi yok."
-            />
+            <RankList items={topTekrar} color="rgba(251,191,36,0.12)" emptyMsg="Henüz tekrar bak işaretlemesi yok." />
           </div>
         </div>
-
-        {data?.generatedAt && (
-          <p className="analiz-updated">
-            Son güncelleme: {new Date(data.generatedAt).toLocaleString('tr-TR')}
-          </p>
-        )}
       </div>
     </>
   );
