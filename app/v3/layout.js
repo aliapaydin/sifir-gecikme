@@ -1,6 +1,7 @@
 import V3Navbar from './components/V3Navbar';
 import V3Footer from './components/V3Footer';
 import V3ThemeWrapper from './components/V3ThemeWrapper';
+import GirisBanner from '../../components/GirisBanner';
 
 export const metadata = {
   title: { default: 'Sıfır Gecikme', template: '%s — Sıfır Gecikme' },
@@ -132,6 +133,7 @@ export default function V3Layout({ children }) {
         .v3-root:not(.v3-light) .hover\:bg-gray-100:hover { background-color: rgba(255,255,255,0.08) !important; }
       `}</style>
       <V3ThemeWrapper>
+        <GirisBanner />
         <V3Navbar />
         <main style={{ minHeight: 'calc(100vh - 68px - 80px)' }}>
           {children}

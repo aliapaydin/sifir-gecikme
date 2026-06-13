@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import { SYNC_READY_EVENT } from '../lib/userSync';
 
 function toggle(key, href) {
   const arr = JSON.parse(localStorage.getItem(key) || '[]');
@@ -37,6 +38,7 @@ export default function AnladimButonlar() {
     fetch('/api/v3/auth/me').then(r => r.ok ? r.json() : null).then(d => {
       if (d?.user) setLoggedIn(true);
     }).catch(() => {});
+
   }, [pathname]);
 
   function handleAnladi() {

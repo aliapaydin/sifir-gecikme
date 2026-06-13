@@ -60,7 +60,7 @@ export default function SifremiUnuttumPage() {
                 Eğer bu e-posta bir hesaba kayıtlıysa, şifre sıfırlama linki gönderildi.
                 Spam klasörünü de kontrol et.
               </p>
-              <Link href="/v3/giris" style={{
+              <Link href="/giris" style={{
                 display: 'inline-block', padding: '11px 28px', borderRadius: '10px',
                 background: 'var(--v3-surface2)', border: '1px solid var(--v3-border)',
                 color: 'var(--v3-text)', fontSize: '14px', fontWeight: 600, textDecoration: 'none',
@@ -90,7 +90,7 @@ export default function SifremiUnuttumPage() {
                 </button>
               </form>
               <div className="v3-auth-footer">
-                <Link href="/v3/giris">← Giriş sayfasına dön</Link>
+                <Link href="/giris">← Giriş sayfasına dön</Link>
               </div>
             </>
           )}

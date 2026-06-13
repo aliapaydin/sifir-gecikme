@@ -54,6 +54,7 @@ export default function AdminDashboard() {
       .then(r => r.ok ? r.json() : null)
       .then(s => {
         if (s) {
+          // Gerçek newline'ları input'ta göstermek için \n yazısına çevir
           setHeroForm({ ...s, title: s.title.replace(/\n/g, '\\n') });
           setHeroLoaded(true);
         }
@@ -88,6 +89,7 @@ export default function AdminDashboard() {
     e.preventDefault();
     setHeroSaving(true);
     try {
+      // Literal \n → gerçek newline karakterine çevir
       const payload = {
         ...heroForm,
         title:    heroForm.title.replace(/\\n/g, '\n'),
@@ -252,7 +254,7 @@ export default function AdminDashboard() {
             <h1 className="admin-title" style={{ marginTop: '10px' }}>Dashboard</h1>
           </div>
           <Link
-            href="/"
+            href="/v3"
             style={{
               fontSize: '14px',
               color: 'var(--v3-text-muted)',
@@ -304,7 +306,7 @@ export default function AdminDashboard() {
           <div className="admin-section-title">Yönetim</div>
         </div>
         <div className="admin-nav-cards">
-          <Link href="/admin/kullanicilar" className="admin-nav-card">
+          <Link href="/v3/admin/kullanicilar" className="admin-nav-card">
             <div className="admin-nav-icon" style={{ background: 'rgba(99,102,241,0.1)' }}>
               👥
             </div>
@@ -333,7 +335,7 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <Link href="/admin/analitik" className="admin-nav-card">
+          <Link href="/v3/admin/analitik" className="admin-nav-card">
             <div className="admin-nav-icon" style={{ background: 'rgba(249,115,22,0.1)' }}>
               📊
             </div>
@@ -347,6 +349,10 @@ export default function AdminDashboard() {
           </Link>
         </div>
 
+        {/* Site Ayarları */}
+        <div style={{ marginTop: '48px', marginBottom: '12px' }}>
+          <div className="admin-section-title">Site Ayarları</div>
+        </div>
         {/* Bülten */}
         <div style={{ marginTop: '48px', marginBottom: '12px' }}>
           <div className="admin-section-title">📬 Bülten Gönder</div>
@@ -414,10 +420,7 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Site Ayarları */}
-        <div style={{ marginTop: '48px', marginBottom: '12px' }}>
-          <div className="admin-section-title">Site Ayarları</div>
-        </div>
+        {/* Hero Ayarları */}
         {heroLoaded && (
           <form onSubmit={handleHeroSave}>
             <div className="admin-settings-card">

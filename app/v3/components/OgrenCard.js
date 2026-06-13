@@ -70,7 +70,7 @@ export default function OgrenCard() {
           }} />
         </div>
 
-        <Link href="/v3/ogren" style={{
+        <Link href="/ogren" style={{
           display: 'inline-flex', alignItems: 'center', gap: '6px',
           padding: '8px 18px', borderRadius: '8px', fontSize: '13px', fontWeight: 600,
           background: 'linear-gradient(135deg, #14b8a6, #6366f1)', color: '#fff',

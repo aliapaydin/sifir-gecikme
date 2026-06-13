@@ -15,6 +15,6 @@ export default function HeroRegisterBtn() {
 
   if (user !== null) return null;
   return (
-    <Link href="/v3/kayit" className="v3-btn-secondary">Ücretsiz Kaydol</Link>
+    <Link href="/kayit" className="v3-btn-secondary">Ücretsiz Kaydol</Link>
   );
 }

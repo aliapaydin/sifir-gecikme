@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { SYNC_READY_EVENT } from '../../../lib/userSync';
 
 const ROLE_LABELS = {
   admin:     { label: 'Admin',      bg: 'rgba(249,115,22,0.12)',  color: '#fb923c', border: 'rgba(249,115,22,0.25)' },
@@ -54,21 +55,26 @@ function PanelInner() {
     fetch('/api/v3/auth/me')
       .then(r => r.ok ? r.json() : null)
       .then(data => {
-        if (!data?.user) { router.push('/v3/giris?from=/v3/panel'); return; }
+        if (!data?.user) { router.push('/giris?from=/panel'); return; }
         setUser(data.user);
         setLoading(false);
       })
-      .catch(() => { router.push('/v3/giris'); });
+      .catch(() => { router.push('/giris'); });
   }, [router]);
 
   useEffect(() => {
-    try {
-      const anladi   = JSON.parse(localStorage.getItem('sz_anladi') || '[]').length;
-      const tekrar   = JSON.parse(localStorage.getItem('sz_tekrar') || '[]').length;
-      const ziyaret  = JSON.parse(localStorage.getItem('sz_ziyaretler') || '[]').length;
-      const xp       = JSON.parse(localStorage.getItem('sz_ilerleme_v1') || '{}').toplamXP || 0;
-      setStats({ anladi, tekrar, xp, ziyaret });
-    } catch {}
+    function yukle() {
+      try {
+        const anladi   = JSON.parse(localStorage.getItem('sz_anladi') || '[]').length;
+        const tekrar   = JSON.parse(localStorage.getItem('sz_tekrar') || '[]').length;
+        const ziyaret  = JSON.parse(localStorage.getItem('sz_ziyaretler') || '[]').length;
+        const xp       = JSON.parse(localStorage.getItem('sz_ilerleme_v1') || '{}').toplamXP || 0;
+        setStats({ anladi, tekrar, xp, ziyaret });
+      } catch {}
+    }
+    yukle();
+    window.addEventListener(SYNC_READY_EVENT, yukle);
+    return () => window.removeEventListener(SYNC_READY_EVENT, yukle);
   }, []);
 
   async function handleChangePassword(e) {
@@ -243,7 +249,7 @@ function PanelInner() {
             </div>
           </div>
         ) : (
-          <Link href="/v3/destek" style={{ textDecoration: 'none', display: 'block', marginBottom: '16px' }}>
+          <Link href="/destek" style={{ textDecoration: 'none', display: 'block', marginBottom: '16px' }}>
             <div style={{
               display: 'flex', alignItems: 'center', gap: '20px',
               padding: '22px 28px', borderRadius: '20px',
@@ -461,7 +467,7 @@ function PanelInner() {
 
         {/* ── Admin Paneli Butonu ── */}
         {user.role === 'admin' && (
-          <Link href="/v3/admin" style={{ textDecoration: 'none', display: 'block', marginBottom: '16px' }}>
+          <Link href="/admin" style={{ textDecoration: 'none', display: 'block', marginBottom: '16px' }}>
             <div style={{
               display: 'flex', alignItems: 'center', gap: '20px',
               padding: '22px 28px', borderRadius: '20px',
@@ -496,11 +502,11 @@ function PanelInner() {
 
         {/* ── Hızlı Linkler ── */}
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-          <Link href="/v3/icerikler" style={{ fontSize: '13px', color: 'var(--v3-text-muted)', textDecoration: 'none' }}>← İçerikler</Link>
+          <Link href="/icerikler" style={{ fontSize: '13px', color: 'var(--v3-text-muted)', textDecoration: 'none' }}>← İçerikler</Link>
           <span style={{ color: 'var(--v3-border-bright)' }}>·</span>
-          <Link href="/v3/harita" style={{ fontSize: '13px', color: 'var(--v3-text-muted)', textDecoration: 'none' }}>Haritam</Link>
+          <Link href="/harita" style={{ fontSize: '13px', color: 'var(--v3-text-muted)', textDecoration: 'none' }}>Haritam</Link>
           <span style={{ color: 'var(--v3-border-bright)' }}>·</span>
-          <Link href="/v3/ogren" style={{ fontSize: '13px', color: 'var(--v3-text-muted)', textDecoration: 'none' }}>Öğren</Link>
+          <Link href="/ogren" style={{ fontSize: '13px', color: 'var(--v3-text-muted)', textDecoration: 'none' }}>Öğren</Link>
         </div>
 
       </div>

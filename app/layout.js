@@ -4,6 +4,7 @@ import './globals.css';
 import ThemeSync from '../components/ThemeSync';
 import LayoutShell from '../components/LayoutShell';
 import ZiyaretTakip from '../components/ZiyaretTakip';
+import UserDataProvider from '../components/UserDataProvider';
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
@@ -60,8 +61,6 @@ export default function RootLayout({ children }) {
   return (
     <html lang="tr" suppressHydrationWarning className={`${inter.variable} ${lora.variable} ${jetbrains.variable}`}>
       <head>
-        {/* Tema sync — React hydrate'den ÖNCE çalışır, flash ve back-nav sorunlarını önler */}
-        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark');else if(t==='lacivert')document.documentElement.classList.add('lacivert');else if(t==='gece')document.documentElement.classList.add('gece');}catch(e){}})()` }} />
         <Script src="/muzik-player.js" strategy="afterInteractive" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#1D9E75" />
@@ -87,9 +86,11 @@ export default function RootLayout({ children }) {
             }
           `}</Script>
           <ZiyaretTakip />
-          <LayoutShell>
-            {children}
-          </LayoutShell>
+          <UserDataProvider>
+            <LayoutShell>
+              {children}
+            </LayoutShell>
+          </UserDataProvider>
 <Analytics />
           <SpeedInsights />
         </body>

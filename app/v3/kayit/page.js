@@ -28,7 +28,7 @@ export default function KayitPage() {
       if (!res.ok) {
         setError(data.error || 'Kayıt olunamadı.');
       } else {
-        window.location.href = '/v3/kayit-tamam';
+        window.location.href = '/kayit-tamam';
       }
     } catch {
       setError('Bağlantı hatası. Lütfen tekrar deneyin.');
@@ -202,7 +202,7 @@ export default function KayitPage() {
 
           <div className="v3-auth-footer">
             Zaten hesabın var mı?{' '}
-            <Link href="/v3/giris">Giriş yap</Link>
+            <Link href="/giris">Giriş yap</Link>
           </div>
         </div>
       </div>

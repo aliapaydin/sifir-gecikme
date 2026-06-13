@@ -6,8 +6,8 @@ export const metadata = { title: 'Admin Panel' };
 export default async function AdminLayout({ children }) {
   const session = await getSession();
 
-  if (!session) redirect('/v3/giris');
-  if (session.role !== 'admin') redirect('/v3');
+  if (!session) redirect('/giris');
+  if (session.role !== 'admin') redirect('/');
 
   return children;
 }

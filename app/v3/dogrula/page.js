@@ -25,14 +25,14 @@ function DogrulaInner() {
           {ERROR_MESSAGES[error] || 'Bilinmeyen bir hata oluştu.'}
         </p>
         <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Link href="/v3/giris" style={{
+          <Link href="/giris" style={{
             padding: '11px 22px', borderRadius: '10px',
             background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', color: '#fff',
             fontSize: '14px', fontWeight: 600, textDecoration: 'none',
           }}>
             Giriş Yap
           </Link>
-          <Link href="/v3/kayit" style={{
+          <Link href="/kayit" style={{
             padding: '11px 22px', borderRadius: '10px',
             background: 'var(--v3-surface2)', border: '1px solid var(--v3-border)',
             color: 'var(--v3-text)', fontSize: '14px', fontWeight: 600, textDecoration: 'none',

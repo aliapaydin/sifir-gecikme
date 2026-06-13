@@ -23,13 +23,8 @@ function getBadgeStyle(badge) {
   };
 }
 
-const V3_PAGES = ['/yazilar/', '/ogren/', '/python', '/sql', '/regex', '/ciz', '/nn',
-  '/hipotez', '/mulakat', '/kalori', '/tech-center', '/harita', '/milyon',
-  '/veri-setleri', '/proje', '/grafik', '/promilmetre', '/csv', '/renk', '/sinav'];
-
 function v3href(href) {
-  if (!href || href.startsWith('http') || href.startsWith('/v3')) return href;
-  return V3_PAGES.some(p => href === p || href.startsWith(p)) ? '/v3' + href : href;
+  return href;
 }
 
 function pickRandom(arr, n) {
@@ -42,7 +37,7 @@ function pickRandom(arr, n) {
 }
 
 export default function V3FeaturedSection() {
-  const [items, setItems] = useState(() => pickRandom(yazilar, 12));
+  const [items, setItems] = useState(() => yazilar.slice(0, 12));
   const [spinning, setSpinning] = useState(false);
   const { marks } = useContentMarks();
 
@@ -126,7 +121,7 @@ export default function V3FeaturedSection() {
       </div>
 
       <div style={{ textAlign: 'center', marginTop: '32px' }}>
-        <Link href="/v3/icerikler" className="v3-btn-secondary">Tüm içerikleri gör →</Link>
+        <Link href="/icerikler" className="v3-btn-secondary">Tüm içerikleri gör →</Link>
       </div>
     </div>
   );
