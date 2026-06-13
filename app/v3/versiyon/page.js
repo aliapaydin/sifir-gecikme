@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-const CURRENT_VERSION = 'v3.5.0';
+const CURRENT_VERSION = 'v4.0.0';
 
 const tipRenk = {
   yeni:        { bg: 'rgba(99,102,241,0.12)',  text: '#818cf8', label: 'YENİ' },
@@ -77,6 +77,22 @@ function GrupItem({ o }) {
 }
 
 const versiyonlar = [
+  {
+    versiyon: 'v4.0.0',
+    tarih: '13 Haziran 2026',
+    baslik: 'Bulut Senkronizasyonu & v4 Güncellemesi',
+    ozellikler: [
+      { tip: 'yeni', metin: 'Tech Center oyun ilerlemesi artık Neon DB\'ye senkronize — farklı cihazlarda oynamaya devam et, ilerleme kaybolmaz' },
+      { tip: 'yeni', metin: 'AI Tutor konuşma geçmişi kullanıcı bazlı SQL\'de saklanıyor; tarayıcı geçmişi silinse bile konuşmalar korunuyor' },
+      { tip: 'yeni', metin: '"Anladım" ve "Tekrar Bak" içerik işaretlemeleri veritabanına kaydediliyor — tüm cihazlarda senkron' },
+      { tip: 'yeni', metin: 'Haritam sayfasında "Anladım" ve "Tekrar Bak" listeleri açılıp kapanabilir (accordion) olarak gösteriliyor' },
+      { tip: 'yeni', metin: 'İçerik kartlarına (haritam, içerikler, anasayfa) işaret durumu badge\'leri eklendi; "tekrar bak" olanlar öne çıkıyor' },
+      { tip: 'yeni', metin: 'Kalori, Mülakat, Kim Milyoner istatistikleri veritabanına senkronize ediliyor' },
+      { tip: 'yeni', metin: 'Anasayfa araç/playground/içerik kartlarına her birine özgü, hafif transparan data temalı SVG arkaplanlar eklendi (bar chart, scatter, area chart, heatmap, sinyal dalgası vb.)' },
+      { tip: 'iyileştirme', metin: 'AI Tutor UI tamamen yenilendi: yeni avatar, sohbet balonları, typing animasyonu ve "☁ Senkron" göstergesi' },
+      { tip: 'iyileştirme', metin: 'Navbar: yeni data chart SVG logosu, 68px yükseklik, geliştirilmiş dropdown stilleri, "Kayıt Ol" butonu eklendi' },
+    ],
+  },
   {
     versiyon: 'v3.5.0',
     tarih: '27 Mayıs 2026',

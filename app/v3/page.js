@@ -10,6 +10,7 @@ import TechCenterCard from './components/TechCenterCard';
 import V3EmbeddedTutor from './components/V3EmbeddedTutor';
 import StatsBar from './components/StatsBar';
 import V3FeaturedSection from './components/V3FeaturedSection';
+import DataCardBg from './components/DataCardBg';
 
 const HERO_DEFAULTS = {
   title: 'Veriyi Anla,\nKararını Ver',
@@ -255,13 +256,14 @@ export default async function V3HomePage() {
         <div className="tool-grid">
           {tools.map(tool => (
             <Link key={tool.href} href={tool.href} className="tool-card"
-              style={{ background: `linear-gradient(135deg, ${tool.accent}0f, ${tool.accent}04)` }}>
-              <div className="tool-card-top">
+              style={{ background: `linear-gradient(135deg, ${tool.accent}0f, ${tool.accent}04)`, position: 'relative', overflow: 'hidden' }}>
+              <DataCardBg href={tool.href} opacity={0.07} color={tool.accent} />
+              <div className="tool-card-top" style={{ position: 'relative' }}>
                 <span className="tool-card-emoji">{tool.emoji}</span>
                 <span className="tool-card-title">{tool.title}</span>
               </div>
-              <p className="tool-card-desc">{tool.desc}</p>
-              <div className="tool-card-footer">
+              <p className="tool-card-desc" style={{ position: 'relative' }}>{tool.desc}</p>
+              <div className="tool-card-footer" style={{ position: 'relative' }}>
                 <span className="tool-card-tag" style={{ background: `${tool.accent}18`, color: tool.accent }}>{tool.tag}</span>
                 <span className="tool-card-run" style={{ color: tool.accent }}>Aç →</span>
               </div>
@@ -277,11 +279,12 @@ export default async function V3HomePage() {
         <div className="pg-grid">
           {playground.map(item => (
             <Link key={item.href} href={item.href} className="pg-card"
-              style={{ background: `linear-gradient(135deg, ${item.accent}14, ${item.accent}05)` }}>
-              <div className="pg-emoji-wrap" style={{ background: `${item.accent}18` }}>{item.emoji}</div>
-              <h3 className="pg-title">{item.title}</h3>
-              <p className="pg-desc">{item.desc}</p>
-              <div className="pg-cta" style={{ color: item.accent }}>Dene →</div>
+              style={{ background: `linear-gradient(135deg, ${item.accent}14, ${item.accent}05)`, position: 'relative', overflow: 'hidden' }}>
+              <DataCardBg href={item.href} opacity={0.08} color={item.accent} />
+              <div className="pg-emoji-wrap" style={{ background: `${item.accent}18`, position: 'relative' }}>{item.emoji}</div>
+              <h3 className="pg-title" style={{ position: 'relative' }}>{item.title}</h3>
+              <p className="pg-desc" style={{ position: 'relative' }}>{item.desc}</p>
+              <div className="pg-cta" style={{ color: item.accent, position: 'relative' }}>Dene →</div>
             </Link>
           ))}
         </div>

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { yazilar } from '../../../lib/icerikler';
+import IcerikGridWithMarks from './IcerikGridWithMarks';
 
 export const metadata = { title: 'İçerikler' };
 
@@ -120,16 +121,7 @@ export default async function IceriklerPage({ searchParams }) {
 
         <div className="ic-count">{filtered.length} içerik</div>
 
-        <div className="ic-grid">
-          {filtered.map(yazi => (
-            <Link key={yazi.href} href={v3href(yazi.href)} className="ic-card">
-              <div><span style={badgeStyle(yazi.badge)}>{yazi.badge}</span></div>
-              <h2 className="ic-card-title">{yazi.baslik}</h2>
-              <p className="ic-card-desc">{yazi.ozet}</p>
-              <p className="ic-card-meta">{yazi.meta}</p>
-            </Link>
-          ))}
-        </div>
+        <IcerikGridWithMarks yazilar={filtered} />
       </div>
     </>
   );

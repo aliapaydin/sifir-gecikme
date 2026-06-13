@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react';
 import Link from 'next/link';
 import { yazilar } from '../../../lib/icerikler';
 import { useContentMarks } from '../../../lib/useContentMarks';
+import DataCardBg from './DataCardBg';
 
 const BADGE_COLORS = {
   'interaktif':     { bg: 'rgba(20,184,166,0.12)',  color: '#2dd4bf', border: 'rgba(20,184,166,0.2)' },
@@ -106,17 +107,19 @@ export default function V3FeaturedSection() {
           const mark   = marks[yazi.href];
           return (
             <Link key={yazi.href} href={v3href(yazi.href)} className="v3-card" style={{
+              position: 'relative', overflow: 'hidden',
               borderColor: mark === 'tekrar' ? 'rgba(251,191,36,0.25)' : mark === 'anladi' ? 'rgba(16,185,129,0.2)' : undefined,
               background: mark === 'tekrar' ? 'rgba(251,191,36,0.04)' : undefined,
             }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', marginBottom: '6px' }}>
+              <DataCardBg href={yazi.href} opacity={0.06} />
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'flex-start', gap: '6px', marginBottom: '6px' }}>
                 {badge && <span style={getBadgeStyle(badge)}>{badge}</span>}
                 {mark === 'anladi' && <span className="v3-mark-badge v3-mark-anladi">✓ Anladım</span>}
                 {mark === 'tekrar' && <span className="v3-mark-badge v3-mark-tekrar">↩ Tekrar</span>}
               </div>
-              <h3 className="v3-card-title">{yazi.baslik}</h3>
-              <p className="v3-card-desc">{yazi.ozet}</p>
-              <p className="v3-card-meta">{yazi.meta}</p>
+              <h3 className="v3-card-title" style={{ position: 'relative' }}>{yazi.baslik}</h3>
+              <p className="v3-card-desc" style={{ position: 'relative' }}>{yazi.ozet}</p>
+              <p className="v3-card-meta" style={{ position: 'relative' }}>{yazi.meta}</p>
             </Link>
           );
         })}

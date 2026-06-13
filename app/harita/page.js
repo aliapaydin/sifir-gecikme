@@ -301,6 +301,8 @@ export default function HaritaSayfasi() {
   const tekrarListesi = Object.entries(marks).filter(([,v]) => v === 'tekrar').map(([k]) => k);
   const anladiSayi = anladilar.length;
   const tekrarSayi = tekrarListesi.length;
+  const [anladiAcik, setAnladiAcik] = useState(false);
+  const [tekrarAcik, setTekrarAcik] = useState(true);
 
   useEffect(() => {
     try {
@@ -491,72 +493,113 @@ export default function HaritaSayfasi() {
             <span style={{ fontSize: '18px' }}>📊</span>
             <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>Öğrenme Durumu</h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '10px', marginBottom: tekrarSayi > 0 ? '20px' : 0 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '10px' }}>
+            {/* Anladım accordion */}
             <div style={{
-              background: 'var(--color-correct-bg)', border: '0.5px solid var(--color-border)',
-              borderRadius: '12px', padding: '16px 20px',
-              display: 'flex', flexDirection: 'column', gap: '4px',
+              background: 'var(--color-correct-bg)', border: '0.5px solid var(--color-correct-border)',
+              borderRadius: '12px', overflow: 'hidden',
             }}>
-              <div style={{ fontSize: '26px', fontWeight: 700, color: 'var(--color-correct-text)', lineHeight: 1 }}>{anladiSayi}</div>
-              <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-correct-text)' }}>Anladım</div>
-              <div style={{ fontSize: '11px', color: 'var(--color-correct-text)', opacity: 0.75 }}>Anladım olarak işaretlediklerim</div>
+              <button
+                onClick={() => setAnladiAcik(v => !v)}
+                style={{
+                  width: '100%', padding: '16px 20px', background: 'transparent',
+                  border: 'none', cursor: anladiSayi > 0 ? 'pointer' : 'default',
+                  display: 'flex', flexDirection: 'column', gap: '4px', textAlign: 'left',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '26px', fontWeight: 700, color: 'var(--color-correct-text)', lineHeight: 1 }}>{anladiSayi}</span>
+                  {anladiSayi > 0 && (
+                    <span style={{ marginLeft: 'auto', fontSize: '12px', color: 'var(--color-correct-text)', opacity: 0.7, transform: anladiAcik ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▼</span>
+                  )}
+                </div>
+                <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-correct-text)' }}>Anladım</div>
+                <div style={{ fontSize: '11px', color: 'var(--color-correct-text)', opacity: 0.7 }}>
+                  {anladiSayi > 0 ? (anladiAcik ? 'Listeyi kapat' : 'Listeyi gör') : 'Henüz işaretleme yok'}
+                </div>
+              </button>
+              {anladiAcik && anladiSayi > 0 && (
+                <div style={{
+                  borderTop: '0.5px solid var(--color-correct-border)',
+                  padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '6px',
+                  maxHeight: '280px', overflowY: 'auto',
+                }}>
+                  {anladilar.map(href => {
+                    const icerik = icerikler.find(i => i.href === href);
+                    const baslik = icerik?.baslik || href.split('/').filter(Boolean).pop();
+                    return (
+                      <a key={href} href={href} style={{
+                        fontSize: '12px', fontWeight: 500, padding: '6px 10px',
+                        borderRadius: '8px', background: 'rgba(16,185,129,0.1)',
+                        color: 'var(--color-correct-text)', textDecoration: 'none',
+                        display: 'flex', alignItems: 'center', gap: '6px',
+                        transition: 'background 0.12s',
+                      }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(16,185,129,0.2)'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'rgba(16,185,129,0.1)'}
+                      >
+                        <span style={{ fontSize: '11px' }}>✓</span>
+                        <span style={{ flex: 1, lineHeight: 1.3 }}>{baslik}</span>
+                      </a>
+                    );
+                  })}
+                </div>
+              )}
             </div>
+
+            {/* Tekrar Bak accordion */}
             <div style={{
-              background: 'var(--color-amber-bg)', border: '0.5px solid var(--color-border)',
-              borderRadius: '12px', padding: '16px 20px',
-              display: 'flex', flexDirection: 'column', gap: '4px',
+              background: 'var(--color-amber-bg)', border: '0.5px solid rgba(251,191,36,0.3)',
+              borderRadius: '12px', overflow: 'hidden',
             }}>
-              <div style={{ fontSize: '26px', fontWeight: 700, color: 'var(--color-amber-text)', lineHeight: 1 }}>{tekrarSayi}</div>
-              <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-amber-text)' }}>Tekrar Bak</div>
-              <div style={{ fontSize: '11px', color: 'var(--color-amber-text)', opacity: 0.75 }}>Tekrar bakacaklarım</div>
+              <button
+                onClick={() => setTekrarAcik(v => !v)}
+                style={{
+                  width: '100%', padding: '16px 20px', background: 'transparent',
+                  border: 'none', cursor: tekrarSayi > 0 ? 'pointer' : 'default',
+                  display: 'flex', flexDirection: 'column', gap: '4px', textAlign: 'left',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '26px', fontWeight: 700, color: 'var(--color-amber-text)', lineHeight: 1 }}>{tekrarSayi}</span>
+                  {tekrarSayi > 0 && (
+                    <span style={{ marginLeft: 'auto', fontSize: '12px', color: 'var(--color-amber-text)', opacity: 0.7, transform: tekrarAcik ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▼</span>
+                  )}
+                </div>
+                <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-amber-text)' }}>Tekrar Bak</div>
+                <div style={{ fontSize: '11px', color: 'var(--color-amber-text)', opacity: 0.7 }}>
+                  {tekrarSayi > 0 ? (tekrarAcik ? 'Listeyi kapat' : 'Listeyi gör') : 'Henüz işaretleme yok'}
+                </div>
+              </button>
+              {tekrarAcik && tekrarSayi > 0 && (
+                <div style={{
+                  borderTop: '0.5px solid rgba(251,191,36,0.25)',
+                  padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '6px',
+                  maxHeight: '280px', overflowY: 'auto',
+                }}>
+                  {tekrarListesi.map(href => {
+                    const icerik = icerikler.find(i => i.href === href);
+                    const baslik = icerik?.baslik || href.split('/').filter(Boolean).pop();
+                    return (
+                      <a key={href} href={href} style={{
+                        fontSize: '12px', fontWeight: 500, padding: '6px 10px',
+                        borderRadius: '8px', background: 'rgba(251,191,36,0.12)',
+                        color: 'var(--color-amber-text)', textDecoration: 'none',
+                        display: 'flex', alignItems: 'center', gap: '6px',
+                        transition: 'background 0.12s',
+                      }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(251,191,36,0.22)'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'rgba(251,191,36,0.12)'}
+                      >
+                        <span style={{ fontSize: '11px' }}>↩</span>
+                        <span style={{ flex: 1, lineHeight: 1.3 }}>{baslik}</span>
+                      </a>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
-          {anladiSayi > 0 && (
-            <div style={{ marginTop: '16px' }}>
-              <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-correct-text)', opacity: 0.8, marginBottom: '8px' }}>Anladım işaretlediklerin:</div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                {anladilar.map(href => {
-                  const icerik = icerikler.find(i => i.href === href);
-                  const slug = icerik?.baslik || href.split('/').filter(Boolean).pop();
-                  return (
-                    <a key={href} href={href} style={{
-                      fontSize: '11px', fontWeight: 600,
-                      padding: '3px 10px', borderRadius: '999px',
-                      background: 'var(--color-correct-bg)',
-                      color: 'var(--color-correct-text)',
-                      border: '0.5px solid var(--color-correct-border)',
-                      textDecoration: 'none',
-                    }}>
-                      ✓ {slug}
-                    </a>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-          {tekrarSayi > 0 && (
-            <div style={{ marginTop: '16px' }}>
-              <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-amber-text)', opacity: 0.8, marginBottom: '8px' }}>Tekrar bakacakların:</div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                {tekrarListesi.map(href => {
-                  const icerik = icerikler.find(i => i.href === href);
-                  const slug = icerik?.baslik || href.split('/').filter(Boolean).pop();
-                  return (
-                    <a key={href} href={href} style={{
-                      fontSize: '11px', fontWeight: 600,
-                      padding: '3px 10px', borderRadius: '999px',
-                      background: 'var(--color-amber-bg)',
-                      color: 'var(--color-amber-text)',
-                      border: '0.5px solid var(--color-amber-text)',
-                      textDecoration: 'none',
-                    }}>
-                      ↩ {slug}
-                    </a>
-                  );
-                })}
-              </div>
-            </div>
-          )}
         </div>
 
         {/* ─── SERTİFİKA YOLU ─── */}
