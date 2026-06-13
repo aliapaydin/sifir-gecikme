@@ -11,17 +11,32 @@ function toggle(key, href) {
   return idx === -1;
 }
 
+async function syncMarkToDB(href, mark) {
+  try {
+    await fetch('/api/v3/marks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ href, mark: mark || null }),
+    });
+  } catch {}
+}
+
 export default function AnladimButonlar() {
   const rawPathname = usePathname();
   const pathname = rawPathname?.startsWith('/v3/') ? rawPathname.slice(3) : rawPathname;
   const [anladi, setAnladi] = useState(false);
   const [tekrar, setTekrar] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
     const anladiArr = JSON.parse(localStorage.getItem('sz_anladi') || '[]');
     const tekrarArr = JSON.parse(localStorage.getItem('sz_tekrar') || '[]');
     setAnladi(anladiArr.includes(pathname));
     setTekrar(tekrarArr.includes(pathname));
+    // Giriş durumunu kontrol et
+    fetch('/api/v3/auth/me').then(r => r.ok ? r.json() : null).then(d => {
+      if (d?.user) setLoggedIn(true);
+    }).catch(() => {});
   }, [pathname]);
 
   function handleAnladi() {
@@ -31,6 +46,14 @@ export default function AnladimButonlar() {
       toggle('sz_tekrar', pathname);
       setTekrar(false);
     }
+    // sz_durum da güncelle
+    try {
+      const durum = JSON.parse(localStorage.getItem('sz_durum') || '{}');
+      if (next) { durum[pathname] = 'anladi'; delete durum[pathname.replace('anladi','tekrar')]; }
+      else delete durum[pathname];
+      localStorage.setItem('sz_durum', JSON.stringify(durum));
+    } catch {}
+    if (loggedIn) syncMarkToDB(pathname, next ? 'anladi' : null);
   }
 
   function handleTekrar() {
@@ -40,6 +63,13 @@ export default function AnladimButonlar() {
       toggle('sz_anladi', pathname);
       setAnladi(false);
     }
+    try {
+      const durum = JSON.parse(localStorage.getItem('sz_durum') || '{}');
+      if (next) durum[pathname] = 'tekrar';
+      else delete durum[pathname];
+      localStorage.setItem('sz_durum', JSON.stringify(durum));
+    } catch {}
+    if (loggedIn) syncMarkToDB(pathname, next ? 'tekrar' : null);
   }
 
   return (

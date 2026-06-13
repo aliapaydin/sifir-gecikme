@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import Link from 'next/link';
 import { yazilar } from '../../../lib/icerikler';
+import { useContentMarks } from '../../../lib/useContentMarks';
 
 const BADGE_COLORS = {
   'interaktif':     { bg: 'rgba(20,184,166,0.12)',  color: '#2dd4bf', border: 'rgba(20,184,166,0.2)' },
@@ -42,6 +43,17 @@ function pickRandom(arr, n) {
 export default function V3FeaturedSection() {
   const [items, setItems] = useState(() => pickRandom(yazilar, 12));
   const [spinning, setSpinning] = useState(false);
+  const { marks } = useContentMarks();
+
+  // Tekrar bak olanları öne al
+  const tekrarlar = Object.entries(marks).filter(([,v]) => v === 'tekrar').map(([k]) => k);
+  const sortedItems = tekrarlar.length > 0
+    ? [...items].sort((a, b) => {
+        const aT = tekrarlar.includes(a.href) ? -1 : 0;
+        const bT = tekrarlar.includes(b.href) ? -1 : 0;
+        return aT - bT;
+      })
+    : items;
 
   const shuffle = useCallback(() => {
     setSpinning(true);
@@ -62,11 +74,24 @@ export default function V3FeaturedSection() {
         .feat-shuffle-btn:hover { background: rgba(99,102,241,0.18); border-color: rgba(99,102,241,0.4); }
         .feat-shuffle-icon { display: inline-block; transition: transform 0.4s; }
         .feat-shuffle-icon.spin { transform: rotate(180deg); }
+        .v3-mark-badge {
+          font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 999px;
+          margin-left: auto; white-space: nowrap; flex-shrink: 0;
+        }
+        .v3-mark-anladi { background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.25); }
+        .v3-mark-tekrar { background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
       `}</style>
 
       <div className="feat-header">
         <div>
-          <h2 className="v3-section-title" style={{ marginBottom: 0 }}>Öne Çıkan İçerikler</h2>
+          <h2 className="v3-section-title" style={{ marginBottom: 0 }}>
+            Öne Çıkan İçerikler
+            {tekrarlar.length > 0 && (
+              <span style={{ fontSize: '12px', fontWeight: 500, color: '#fbbf24', marginLeft: '10px' }}>
+                ↩ {tekrarlar.length} tekrar bak
+              </span>
+            )}
+          </h2>
           <p className="v3-section-sub" style={{ marginBottom: 0, marginTop: 4 }}>Rastgele seçildi — dene, öğren, anla.</p>
         </div>
         <button className="feat-shuffle-btn" onClick={shuffle}>
@@ -76,15 +101,23 @@ export default function V3FeaturedSection() {
       </div>
 
       <div className="v3-grid" style={{ marginTop: 24 }}>
-        {items.map(yazi => {
-          const badge = yazi.badge || yazi.kategori;
+        {sortedItems.map(yazi => {
+          const badge  = yazi.badge || yazi.kategori;
+          const mark   = marks[yazi.href];
           return (
-          <Link key={yazi.href} href={v3href(yazi.href)} className="v3-card">
-            <div>{badge && <span style={getBadgeStyle(badge)}>{badge}</span>}</div>
-            <h3 className="v3-card-title">{yazi.baslik}</h3>
-            <p className="v3-card-desc">{yazi.ozet}</p>
-            <p className="v3-card-meta">{yazi.meta}</p>
-          </Link>
+            <Link key={yazi.href} href={v3href(yazi.href)} className="v3-card" style={{
+              borderColor: mark === 'tekrar' ? 'rgba(251,191,36,0.25)' : mark === 'anladi' ? 'rgba(16,185,129,0.2)' : undefined,
+              background: mark === 'tekrar' ? 'rgba(251,191,36,0.04)' : undefined,
+            }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '6px', marginBottom: '6px' }}>
+                {badge && <span style={getBadgeStyle(badge)}>{badge}</span>}
+                {mark === 'anladi' && <span className="v3-mark-badge v3-mark-anladi">✓ Anladım</span>}
+                {mark === 'tekrar' && <span className="v3-mark-badge v3-mark-tekrar">↩ Tekrar</span>}
+              </div>
+              <h3 className="v3-card-title">{yazi.baslik}</h3>
+              <p className="v3-card-desc">{yazi.ozet}</p>
+              <p className="v3-card-meta">{yazi.meta}</p>
+            </Link>
           );
         })}
       </div>

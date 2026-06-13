@@ -352,6 +352,8 @@ function kaydetOyunSonu(kazanim, soruSayisi) {
     if (kazanim > maxK) localStorage.setItem('sz_milyon_max_kazanim', String(kazanim));
     const toplamS = Number(localStorage.getItem('sz_milyon_toplam_soru') || 0);
     localStorage.setItem('sz_milyon_toplam_soru', String(toplamS + soruSayisi));
+    // DB sync
+    import('../../lib/syncStats').then(({ syncStatsToDB }) => syncStatsToDB()).catch(() => {});
   } catch {}
 }
 

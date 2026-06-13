@@ -377,6 +377,7 @@ export default function Mulakat() {
       localStorage.setItem('sz_mulakat_soru', String(prev + toplam));
       const prevB = Number(localStorage.getItem('sz_mulakat_biliyorum') || 0);
       localStorage.setItem('sz_mulakat_biliyorum', String(prevB + biliyorum));
+      import('../../lib/syncStats').then(({ syncStatsToDB }) => syncStatsToDB()).catch(() => {});
     } catch {}
   }, [bitti]);
 

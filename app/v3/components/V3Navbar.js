@@ -101,77 +101,81 @@ export default function V3Navbar() {
     <>
       <style>{`
         .v3-nav {
-          background: rgba(8,12,20,0.88);
-          backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-          position: sticky; top: 0; z-index: 100; height: 64px;
-          border-bottom: 1px solid rgba(255,255,255,0.06);
+          background: rgba(6,9,16,0.92);
+          backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+          position: sticky; top: 0; z-index: 100; height: 68px;
+          border-bottom: 1px solid rgba(255,255,255,0.07);
           transition: background 0.3s, border-color 0.3s;
+          box-shadow: 0 1px 0 rgba(99,102,241,0.08);
         }
         .v3-light .v3-nav {
-          background: rgba(248,250,252,0.92);
+          background: rgba(248,250,252,0.95);
           border-bottom-color: #e2e8f0;
+          box-shadow: 0 1px 0 rgba(99,102,241,0.06), 0 4px 12px rgba(0,0,0,0.04);
         }
         .v3-nav-inner {
-          max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 100%;
-          display: flex; align-items: center; justify-content: space-between; gap: 24px;
+          max-width: 1280px; margin: 0 auto; padding: 0 28px; height: 100%;
+          display: flex; align-items: center; justify-content: space-between; gap: 20px;
         }
         .v3-nav-logo {
-          font-size: 17px; font-weight: 700; letter-spacing: -0.3px;
-          background: linear-gradient(135deg, #6366f1, #8b5cf6, #14b8a6);
+          font-size: 16px; font-weight: 800; letter-spacing: -0.4px;
+          background: linear-gradient(135deg, #818cf8 0%, #a78bfa 50%, #2dd4bf 100%);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-          display: flex; align-items: center; gap: 7px; flex-shrink: 0; text-decoration: none;
+          display: flex; align-items: center; gap: 9px; flex-shrink: 0; text-decoration: none;
         }
-        .v3-nav-links { display: flex; align-items: center; gap: 2px; }
+        .v3-nav-links { display: flex; align-items: center; gap: 1px; }
         .v3-nav-link {
-          padding: 6px 13px; border-radius: 8px; font-size: 14px; font-weight: 500;
+          padding: 6px 12px; border-radius: 8px; font-size: 13.5px; font-weight: 500;
           color: var(--v3-text-muted); transition: color 0.15s, background 0.15s;
           text-decoration: none; cursor: pointer; background: none; border: none; font-family: inherit;
+          position: relative;
         }
-        .v3-nav-link:hover { color: var(--v3-text); background: rgba(255,255,255,0.06); }
-        .v3-nav-link.active { color: var(--v3-text); background: rgba(99,102,241,0.12); }
+        .v3-nav-link:hover { color: var(--v3-text); background: rgba(255,255,255,0.05); }
+        .v3-nav-link.active { color: var(--v3-text); background: rgba(99,102,241,0.12); color: #a5b4fc; }
         .v3-light .v3-nav-link:hover { background: rgba(0,0,0,0.05); }
-        .v3-light .v3-nav-link.active { background: rgba(99,102,241,0.1); }
+        .v3-light .v3-nav-link.active { background: rgba(99,102,241,0.1); color: #4f46e5; }
 
-        /* Playground dropdown */
+        /* Dropdown wrapper */
         .v3-pg-wrap { position: relative; }
         .v3-pg-btn {
           display: flex; align-items: center; gap: 5px;
-          padding: 6px 13px; border-radius: 8px; font-size: 14px; font-weight: 500;
+          padding: 6px 12px; border-radius: 8px; font-size: 13.5px; font-weight: 500;
           color: var(--v3-text-muted); transition: color 0.15s, background 0.15s;
           cursor: pointer; background: none; border: none; font-family: inherit;
         }
-        .v3-pg-btn:hover, .v3-pg-btn.open { color: var(--v3-text); background: rgba(255,255,255,0.06); }
+        .v3-pg-btn:hover, .v3-pg-btn.open { color: var(--v3-text); background: rgba(255,255,255,0.05); }
         .v3-light .v3-pg-btn:hover, .v3-light .v3-pg-btn.open { background: rgba(0,0,0,0.05); }
-        .v3-pg-arrow { font-size: 10px; transition: transform 0.2s; opacity: 0.6; }
+        .v3-pg-arrow { font-size: 9px; transition: transform 0.2s; opacity: 0.5; }
         .v3-pg-btn.open .v3-pg-arrow { transform: rotate(180deg); }
         .v3-dropdown {
-          position: absolute; top: calc(100% + 8px); left: 0;
-          background: #0d1421; border: 1px solid rgba(255,255,255,0.1);
-          border-radius: 14px; padding: 8px; min-width: 220px;
-          box-shadow: 0 16px 48px rgba(0,0,0,0.5);
-          animation: v3-fade-in 0.15s ease;
+          position: absolute; top: calc(100% + 10px); left: 0;
+          background: rgba(10,14,24,0.98); border: 1px solid rgba(99,102,241,0.15);
+          border-radius: 16px; padding: 6px; min-width: 230px;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+          animation: v3-fade-in 0.14s ease;
           z-index: 200;
+          backdrop-filter: blur(20px);
         }
         .v3-light .v3-dropdown {
-          background: #ffffff; border-color: #e2e8f0;
-          box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+          background: rgba(255,255,255,0.98); border-color: #e2e8f0;
+          box-shadow: 0 8px 40px rgba(0,0,0,0.14);
         }
         @keyframes v3-fade-in {
-          from { opacity: 0; transform: translateY(-6px); }
-          to   { opacity: 1; transform: translateY(0); }
+          from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
         }
         .v3-dd-item {
           display: flex; align-items: center; gap: 10px;
-          padding: 10px 12px; border-radius: 9px; font-size: 14px;
+          padding: 9px 12px; border-radius: 10px; font-size: 13.5px;
           color: var(--v3-text-muted); text-decoration: none;
-          transition: background 0.12s, color 0.12s;
+          transition: background 0.1s, color 0.1s;
         }
-        .v3-dd-item:hover { background: rgba(255,255,255,0.07); color: var(--v3-text); }
+        .v3-dd-item:hover { background: rgba(99,102,241,0.1); color: var(--v3-text); }
         .v3-light .v3-dd-item:hover { background: #f1f5f9; color: #0f172a; }
-        .v3-dd-emoji { font-size: 16px; width: 24px; text-align: center; flex-shrink: 0; }
+        .v3-dd-emoji { font-size: 15px; width: 22px; text-align: center; flex-shrink: 0; }
 
         /* Sağ taraf */
-        .v3-nav-right { display: flex; align-items: center; gap: 8px; }
+        .v3-nav-right { display: flex; align-items: center; gap: 6px; }
         .v3-dev-link {
           font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 6px;
           background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2);
@@ -180,47 +184,57 @@ export default function V3Navbar() {
         }
         .v3-dev-link:hover { background: rgba(99,102,241,0.2); }
         .v3-theme-btn {
-          width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center;
+          width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center;
           justify-content: center; font-size: 15px; cursor: pointer;
-          background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-          transition: background 0.15s; flex-shrink: 0;
+          background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09);
+          transition: background 0.15s, border-color 0.15s; flex-shrink: 0;
         }
-        .v3-theme-btn:hover { background: rgba(255,255,255,0.1); }
-        .v3-light .v3-theme-btn { background: rgba(0,0,0,0.05); border-color: #e2e8f0; }
+        .v3-theme-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.15); }
+        .v3-light .v3-theme-btn { background: rgba(0,0,0,0.04); border-color: #e2e8f0; }
         .v3-btn-login {
-          padding: 7px 18px; border-radius: 8px; font-size: 14px; font-weight: 500;
-          background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3);
-          color: #818cf8; cursor: pointer; transition: background 0.15s; text-decoration: none;
+          padding: 7px 16px; border-radius: 9px; font-size: 13.5px; font-weight: 600;
+          background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.25);
+          color: #a5b4fc; cursor: pointer; transition: background 0.15s, border-color 0.15s;
+          text-decoration: none;
         }
-        .v3-btn-login:hover { background: rgba(99,102,241,0.25); }
+        .v3-btn-login:hover { background: rgba(99,102,241,0.22); border-color: rgba(99,102,241,0.4); }
+        .v3-btn-kayit {
+          padding: 7px 16px; border-radius: 9px; font-size: 13.5px; font-weight: 600;
+          background: linear-gradient(135deg, #6366f1, #8b5cf6);
+          color: #fff; text-decoration: none; white-space: nowrap;
+          transition: opacity 0.15s; box-shadow: 0 2px 10px rgba(99,102,241,0.3);
+        }
+        .v3-btn-kayit:hover { opacity: 0.88; }
         .v3-btn-destek {
-          padding: 7px 16px; border-radius: 8px; font-size: 13px; font-weight: 700;
+          padding: 7px 15px; border-radius: 9px; font-size: 13px; font-weight: 700;
           background: linear-gradient(135deg, #f96854, #f43f5e);
           color: #fff; text-decoration: none; white-space: nowrap;
           transition: opacity 0.15s; display: flex; align-items: center; gap: 5px;
+          box-shadow: 0 2px 10px rgba(249,104,84,0.3);
         }
         .v3-btn-destek:hover { opacity: 0.85; }
         .v3-btn-destek-text { display: inline; }
-        @media (max-width: 768px) {
+        @media (max-width: 860px) {
           .v3-btn-destek { padding: 7px 9px; }
           .v3-btn-destek-text { display: none; }
+          .v3-btn-kayit { display: none; }
         }
         .v3-avatar {
-          width: 32px; height: 32px; border-radius: 50%;
+          width: 34px; height: 34px; border-radius: 10px;
           display: flex; align-items: center; justify-content: center;
           font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0; cursor: default;
           transition: box-shadow 0.2s;
         }
         .v3-avatar.supporter {
-          box-shadow: 0 0 0 2px #fbbf24, 0 0 0 4px rgba(251,191,36,0.25), 0 0 12px rgba(251,191,36,0.2);
+          box-shadow: 0 0 0 2px #fbbf24, 0 0 0 4px rgba(251,191,36,0.2), 0 0 14px rgba(251,191,36,0.2);
         }
-        .v3-user-name { font-size: 14px; font-weight: 500; color: var(--v3-text); }
+        .v3-user-name { font-size: 13.5px; font-weight: 600; color: var(--v3-text); }
         .v3-btn-logout {
-          padding: 5px 12px; border-radius: 6px; font-size: 13px;
+          padding: 5px 11px; border-radius: 7px; font-size: 13px;
           background: transparent; border: 1px solid var(--v3-border-bright);
-          color: var(--v3-text-muted); cursor: pointer; transition: color 0.15s;
+          color: var(--v3-text-muted); cursor: pointer; transition: color 0.15s, border-color 0.15s;
         }
-        .v3-btn-logout:hover { color: var(--v3-text); }
+        .v3-btn-logout:hover { color: var(--v3-text); border-color: rgba(255,255,255,0.2); }
         .v3-admin-link {
           padding: 5px 10px; border-radius: 6px; font-size: 12px; font-weight: 600;
           background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.25);
@@ -229,11 +243,12 @@ export default function V3Navbar() {
         .v3-hamburger {
           display: none; background: transparent;
           border: 1px solid var(--v3-border-bright); color: var(--v3-text-muted);
-          border-radius: 6px; padding: 6px 10px; font-size: 18px; cursor: pointer;
+          border-radius: 8px; padding: 6px 10px; font-size: 18px; cursor: pointer;
         }
         .v3-mobile-menu {
-          display: none; position: fixed; top: 64px; left: 0; right: 0; bottom: 0;
-          background: #0d1421;
+          display: none; position: fixed; top: 68px; left: 0; right: 0; bottom: 0;
+          background: rgba(6,9,16,0.98);
+          backdrop-filter: blur(20px);
           padding: 12px 20px 32px;
           z-index: 101; overflow-y: scroll; -webkit-overflow-scrolling: touch;
         }
@@ -287,22 +302,29 @@ export default function V3Navbar() {
       <nav className="v3-nav">
         <div className="v3-nav-inner">
           <Link href="/v3" className="v3-nav-logo">
-            <svg width="26" height="26" viewBox="0 0 28 28" fill="none">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
               <defs>
-                <linearGradient id="logo-neural" x1="0" y1="0" x2="1" y2="1">
+                <linearGradient id="sg-g" x1="0" y1="0" x2="1" y2="1">
                   <stop offset="0%" stopColor="#6366f1"/>
-                  <stop offset="100%" stopColor="#8b5cf6"/>
+                  <stop offset="55%" stopColor="#8b5cf6"/>
+                  <stop offset="100%" stopColor="#14b8a6"/>
+                </linearGradient>
+                <linearGradient id="sg-bar" x1="0" y1="1" x2="0" y2="0">
+                  <stop offset="0%" stopColor="#6366f1" stopOpacity="0.7"/>
+                  <stop offset="100%" stopColor="#14b8a6"/>
                 </linearGradient>
               </defs>
-              <rect width="28" height="28" rx="7" fill="url(#logo-neural)" opacity="0.15"/>
-              <line x1="7" y1="21" x2="14" y2="8" stroke="url(#logo-neural)" strokeWidth="1.5" opacity="0.6"/>
-              <line x1="7" y1="21" x2="21" y2="18" stroke="url(#logo-neural)" strokeWidth="1.5" opacity="0.6"/>
-              <line x1="14" y1="8" x2="21" y2="18" stroke="url(#logo-neural)" strokeWidth="1.5" opacity="0.6"/>
-              <line x1="14" y1="8" x2="14" y2="18" stroke="url(#logo-neural)" strokeWidth="1.5" opacity="0.4"/>
-              <circle cx="7" cy="21" r="3" fill="url(#logo-neural)"/>
-              <circle cx="14" cy="8" r="3.5" fill="url(#logo-neural)"/>
-              <circle cx="21" cy="18" r="3" fill="url(#logo-neural)"/>
-              <circle cx="14" cy="18" r="2" fill="url(#logo-neural)" opacity="0.7"/>
+              <rect width="32" height="32" rx="9" fill="url(#sg-g)" opacity="0.14"/>
+              <rect width="32" height="32" rx="9" stroke="url(#sg-g)" strokeWidth="1.2" fill="none" opacity="0.35"/>
+              <rect x="5"  y="21" width="3.2" height="7" rx="1.4" fill="#6366f1" opacity="0.55"/>
+              <rect x="9.8" y="15" width="3.2" height="13" rx="1.4" fill="#7c6cf1" opacity="0.75"/>
+              <rect x="14.6" y="8" width="3.2" height="20" rx="1.4" fill="url(#sg-bar)"/>
+              <rect x="19.4" y="12" width="3.2" height="16" rx="1.4" fill="#14b8a6" opacity="0.8"/>
+              <rect x="24.2" y="18" width="2.8" height="10" rx="1.4" fill="#14b8a6" opacity="0.55"/>
+              <polyline points="6.6,21 11.4,14 16.2,7.5 21,11.5 25.6,17.5"
+                stroke="url(#sg-g)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.9"/>
+              <circle cx="16.2" cy="7.5" r="2.4" fill="white" opacity="0.95"/>
+              <circle cx="16.2" cy="7.5" r="1.2" fill="url(#sg-g)"/>
             </svg>
             Sıfır Gecikme
           </Link>
@@ -382,7 +404,10 @@ export default function V3Navbar() {
                 </button>
               </>
             ) : (
-              <Link href="/v3/giris" className="v3-btn-login">Giriş</Link>
+              <>
+                <Link href="/v3/giris" className="v3-btn-login">Giriş</Link>
+                <Link href="/v3/kayit" className="v3-btn-kayit">Kayıt Ol</Link>
+              </>
             )}
             {!user?.isSupporter && (
               <Link href="/v3/destek" className="v3-btn-destek">

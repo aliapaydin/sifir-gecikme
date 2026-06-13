@@ -3,7 +3,7 @@ import V3Footer from './components/V3Footer';
 import V3ThemeWrapper from './components/V3ThemeWrapper';
 
 export const metadata = {
-  title: { default: 'Sıfır Gecikme v3', template: '%s — Sıfır Gecikme v3' },
+  title: { default: 'Sıfır Gecikme', template: '%s — Sıfır Gecikme' },
   description: 'Veri bilimi, makine öğrenmesi ve istatistik üzerine interaktif Türkçe içerikler.',
 };
 
@@ -133,7 +133,7 @@ export default function V3Layout({ children }) {
       `}</style>
       <V3ThemeWrapper>
         <V3Navbar />
-        <main style={{ minHeight: 'calc(100vh - 64px - 80px)' }}>
+        <main style={{ minHeight: 'calc(100vh - 68px - 80px)' }}>
           {children}
         </main>
         <V3Footer />

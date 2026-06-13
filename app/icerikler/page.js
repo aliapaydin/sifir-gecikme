@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { yazilar, getKategori } from '../../lib/icerikler';
 import IcerikIcon from '../../components/IcerikIcon';
+import { useContentMarks } from '../../lib/useContentMarks';
 
 const TABS = [
   { id: 'tumu', label: 'Tümü' },
@@ -15,26 +16,15 @@ const TABS = [
 export default function IceriklerPage() {
   const [aktifTab, setAktifTab] = useState('tumu');
   const [ziyaretler, setZiyaretler] = useState([]);
-  const [anladilar, setAnladilar] = useState([]);
-  const [tekrarlar, setTekrarlar] = useState([]);
+  const { marks } = useContentMarks();
+
+  const anladilar = Object.entries(marks).filter(([,v]) => v === 'anladi').map(([k]) => k);
+  const tekrarlar  = Object.entries(marks).filter(([,v]) => v === 'tekrar').map(([k]) => k);
 
   useEffect(() => {
     try {
       const z = JSON.parse(localStorage.getItem('sz_ziyaretler') || '[]');
       setZiyaretler(Array.isArray(z) ? z : []);
-    } catch {}
-    try {
-      const durumlar = JSON.parse(localStorage.getItem('sz_durum') || '{}');
-      const newAnladi = JSON.parse(localStorage.getItem('sz_anladi') || '[]');
-      const newTekrar = JSON.parse(localStorage.getItem('sz_tekrar') || '[]');
-      const aSet = new Set(newAnladi);
-      const tSet = new Set(newTekrar);
-      Object.entries(durumlar).forEach(([href, durum]) => {
-        if (durum === 'anladi') aSet.add(href);
-        else if (durum === 'tekrar') tSet.add(href);
-      });
-      setAnladilar([...aSet]);
-      setTekrarlar([...tSet]);
     } catch {}
   }, []);
 

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { yazilar, getKategori } from '../../lib/icerikler';
+import { useContentMarks } from '../../lib/useContentMarks';
 
 const icerikler = yazilar.map(y => ({ ...y, kategori: getKategori(y) }));
 import { dersler } from '../../lib/dersler';
@@ -295,9 +296,11 @@ function ModulKart({ icon, label, href, ziyaret, detaylar }) {
 export default function HaritaSayfasi() {
   const [veri, setVeri] = useState(null);
   const [aktifFiltre, setAktifFiltre] = useState('tumu');
-  const [anladiSayi, setAnladiSayi] = useState(0);
-  const [tekrarSayi, setTekrarSayi] = useState(0);
-  const [tekrarlar, setTekrarlar] = useState([]);
+  const { marks } = useContentMarks();
+  const anladilar = Object.entries(marks).filter(([,v]) => v === 'anladi').map(([k]) => k);
+  const tekrarListesi = Object.entries(marks).filter(([,v]) => v === 'tekrar').map(([k]) => k);
+  const anladiSayi = anladilar.length;
+  const tekrarSayi = tekrarListesi.length;
 
   useEffect(() => {
     try {
@@ -357,18 +360,7 @@ export default function HaritaSayfasi() {
         } catch {}
       }
 
-      const durumObj = JSON.parse(localStorage.getItem('sz_durum') || '{}');
-      const anladiSet = new Set([
-        ...Object.entries(durumObj).filter(([,v]) => v === 'anladi').map(([k]) => k),
-        ...JSON.parse(localStorage.getItem('sz_anladi') || '[]'),
-      ]);
-      const tekrarSet = new Set([
-        ...Object.entries(durumObj).filter(([,v]) => v === 'tekrar').map(([k]) => k),
-        ...JSON.parse(localStorage.getItem('sz_tekrar') || '[]'),
-      ]);
-      setAnladiSayi(anladiSet.size);
-      setTekrarSayi(tekrarSet.size);
-      setTekrarlar([...tekrarSet]);
+      // marks hook'undan alınıyor — burada sadece diğer veriler yüklenir
 
       // Profil hero verileri
       const ilkZiyaret = localStorage.getItem('sz_ilk_ziyaret') || null;
@@ -519,22 +511,46 @@ export default function HaritaSayfasi() {
               <div style={{ fontSize: '11px', color: 'var(--color-amber-text)', opacity: 0.75 }}>Tekrar bakacaklarım</div>
             </div>
           </div>
-          {tekrarSayi > 0 && (
-            <div>
-              <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-text-mute)', marginBottom: '10px' }}>Tekrar bakacakların:</div>
+          {anladiSayi > 0 && (
+            <div style={{ marginTop: '16px' }}>
+              <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-correct-text)', opacity: 0.8, marginBottom: '8px' }}>Anladım işaretlediklerin:</div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                {tekrarlar.map(href => {
-                  const slug = href.split('/').filter(Boolean).pop();
+                {anladilar.map(href => {
+                  const icerik = icerikler.find(i => i.href === href);
+                  const slug = icerik?.baslik || href.split('/').filter(Boolean).pop();
+                  return (
+                    <a key={href} href={href} style={{
+                      fontSize: '11px', fontWeight: 600,
+                      padding: '3px 10px', borderRadius: '999px',
+                      background: 'var(--color-correct-bg)',
+                      color: 'var(--color-correct-text)',
+                      border: '0.5px solid var(--color-correct-border)',
+                      textDecoration: 'none',
+                    }}>
+                      ✓ {slug}
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+          {tekrarSayi > 0 && (
+            <div style={{ marginTop: '16px' }}>
+              <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-amber-text)', opacity: 0.8, marginBottom: '8px' }}>Tekrar bakacakların:</div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                {tekrarListesi.map(href => {
+                  const icerik = icerikler.find(i => i.href === href);
+                  const slug = icerik?.baslik || href.split('/').filter(Boolean).pop();
                   return (
                     <a key={href} href={href} style={{
                       fontSize: '11px', fontWeight: 600,
                       padding: '3px 10px', borderRadius: '999px',
                       background: 'var(--color-amber-bg)',
                       color: 'var(--color-amber-text)',
-                      border: '0.5px solid var(--color-border)',
+                      border: '0.5px solid var(--color-amber-text)',
                       textDecoration: 'none',
                     }}>
-                      {slug}
+                      ↩ {slug}
                     </a>
                   );
                 })}
@@ -834,45 +850,54 @@ export default function HaritaSayfasi() {
           {/* İçerik grid */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '8px' }}>
             {filtrelenmisIcerikler.map(icerik => {
-              const ziyaret = ziyaretler.includes(icerik.href);
+              const ziyaret  = ziyaretler.includes(icerik.href);
+              const markDurum = marks[icerik.href];
+              const isAnladi  = markDurum === 'anladi';
+              const isTekrar  = markDurum === 'tekrar';
               const renk = kategoriRenk[icerik.kategori] || '#888';
+              const borderColor = isAnladi ? 'var(--color-correct-border)' : isTekrar ? 'rgba(251,191,36,0.4)' : ziyaret ? renk + '60' : 'var(--color-border)';
+              const bgColor     = isAnladi ? 'var(--color-correct-bg)' : isTekrar ? 'var(--color-amber-bg)' : ziyaret ? renk + '0A' : 'var(--color-cream-card)';
               return (
                 <a key={icerik.href} href={icerik.href} style={{ textDecoration: 'none', color: 'inherit' }}>
                   <div style={{
                     display: 'flex', alignItems: 'flex-start', gap: '10px',
                     padding: '12px 14px', borderRadius: '10px',
-                    border: `0.5px solid ${ziyaret ? renk + '60' : 'var(--color-border)'}`,
-                    background: ziyaret ? renk + '0A' : 'var(--color-cream-card)',
+                    border: `0.5px solid ${borderColor}`,
+                    background: bgColor,
                     transition: 'transform 0.15s, border-color 0.15s',
                     position: 'relative',
                   }}
                     onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-1px)'}
                     onMouseLeave={e => e.currentTarget.style.transform = 'none'}
                   >
-                    {/* Ziyaret durumu */}
+                    {/* Durum göstergesi */}
                     <div style={{
                       flexShrink: 0, width: '18px', height: '18px', borderRadius: '50%',
-                      background: ziyaret ? renk : 'var(--color-border)',
+                      background: isAnladi ? 'var(--color-correct-text)' : isTekrar ? 'var(--color-amber-text)' : ziyaret ? renk : 'var(--color-border)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       marginTop: '2px',
                     }}>
-                      {ziyaret && <span style={{ color: '#fff', fontSize: '10px', fontWeight: 700 }}>✓</span>}
+                      {isAnladi && <span style={{ color: '#fff', fontSize: '10px', fontWeight: 700 }}>✓</span>}
+                      {isTekrar && <span style={{ color: '#fff', fontSize: '10px', fontWeight: 700 }}>↩</span>}
+                      {!isAnladi && !isTekrar && ziyaret && <span style={{ color: '#fff', fontSize: '10px', fontWeight: 700 }}>✓</span>}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <p style={{
                         fontSize: '13px', fontWeight: 500, lineHeight: '1.4',
-                        color: ziyaret ? 'var(--color-text)' : 'var(--color-text-soft)',
+                        color: ziyaret || isAnladi || isTekrar ? 'var(--color-text)' : 'var(--color-text-soft)',
                         margin: '0 0 4px', overflow: 'hidden',
                         display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
                       }}>
                         {icerik.baslik}
                       </p>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
                         <span style={{
                           fontSize: '10px', padding: '1px 6px', borderRadius: '999px',
                           background: renk + '20', color: renk, fontWeight: 600,
                         }}>{icerik.kategori}</span>
-                        {!ziyaret && <span style={{ fontSize: '10px', color: 'var(--color-text-faint)' }}>{icerik.meta}</span>}
+                        {isAnladi && <span style={{ fontSize: '10px', color: 'var(--color-correct-text)', fontWeight: 600 }}>Anladım</span>}
+                        {isTekrar && <span style={{ fontSize: '10px', color: 'var(--color-amber-text)', fontWeight: 600 }}>Tekrar Bak</span>}
+                        {!ziyaret && !isAnladi && !isTekrar && <span style={{ fontSize: '10px', color: 'var(--color-text-faint)' }}>{icerik.meta}</span>}
                       </div>
                     </div>
                   </div>

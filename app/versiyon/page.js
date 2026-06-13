@@ -8,6 +8,22 @@ export const metadata = {
 
 const versiyonlar = [
   {
+    versiyon: 'v4.0.0',
+    tarih: '13 Haziran 2026',
+    baslik: 'Bulut Senkronizasyonu & v4 Güncellemesi',
+    tip: 'feature',
+    ozellikler: [
+      { tip: 'yeni', metin: 'Tech Center oyun ilerlemesi Neon DB\'ye senkronize edildi — farklı cihazlardan oynamaya devam' },
+      { tip: 'yeni', metin: 'AI Tutor konuşma geçmişi kullanıcı bazlı SQL\'de saklanıyor; tarayıcı geçmişi silinse bile korunuyor' },
+      { tip: 'yeni', metin: '"Anladım" ve "Tekrar Bak" içerik işaretlemeleri DB\'ye kaydediliyor — giriş yapılan tüm cihazlarda senkron' },
+      { tip: 'yeni', metin: 'Haritam sayfası — Anladım işaretlediklerim + Tekrar Bak listesi öğrenme durumu bölümünde görünür' },
+      { tip: 'yeni', metin: 'İçerik kartlarına (haritam, içerikler, anasayfa) işaret durumu badge\'leri eklendi; tekrar bakmam gerekenler öne çıkıyor' },
+      { tip: 'yeni', metin: 'Kalori, Mülakat, Kim Milyoner, Promilmetre istatistikleri DB\'ye sync ediliyor' },
+      { tip: 'iyileştirme', metin: 'AI Tutor UI revize — yeni avatar, mesaj baloncukları, typing animasyonu ve bulut sync göstergesi' },
+      { tip: 'iyileştirme', metin: 'Anasayfada "Tekrar Bak" işaretli içerikler öne alınıyor' },
+    ],
+  },
+  {
     versiyon: 'v2.3.0',
     tarih: '24 Mayıs 2026',
     baslik: 'Patreon Destekçi Sistemi',
