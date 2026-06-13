@@ -143,8 +143,14 @@ export default async function V3HomePage() {
           font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px;
           background: rgba(99,102,241,0.15); color: #818cf8; flex-shrink: 0;
         }
-        @media (max-width: 900px) { .v3-analiz-card { display: none; } }
-        @media (max-width: 768px) { .v3-hero-inner { flex-direction: column; align-items: flex-start; } }
+        @media (max-width: 900px) {
+          .v3-hero-inner { flex-direction: column; align-items: stretch; }
+          .v3-analiz-card { width: 100%; flex-shrink: unset; }
+        }
+        @media (max-width: 600px) {
+          .v3-analiz-stat-row { grid-template-columns: 1fr 1fr 1fr; }
+          .v3-analiz-stat-val { font-size: 15px; }
+        }
         .v3-hero-title {
           font-size: clamp(30px, 4.5vw, 52px); font-weight: 800;
           line-height: 1.12; letter-spacing: -1.2px; margin: 0 0 16px;
