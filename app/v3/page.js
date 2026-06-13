@@ -56,16 +56,29 @@ const playground = [
 ];
 
 export default async function V3HomePage() {
-  // Hero ayarlarını server-side çek — flash olmaz
+  // Hero ayarları + analiz özeti server-side
   let hero = { ...HERO_DEFAULTS };
+  let analiz = null;
   try {
     await initDb();
-    const rows = await sql`SELECT key, value FROM v3_settings WHERE key IN ('hero_title', 'hero_subtitle', 'hero_animation')`;
+    const [settings, weeklyRows, anladiCount, tekrarCount, viewCount] = await Promise.all([
+      sql`SELECT key, value FROM v3_settings WHERE key IN ('hero_title', 'hero_subtitle', 'hero_animation')`,
+      sql`SELECT href, SUM(count)::int AS total FROM v3_content_views WHERE day >= CURRENT_DATE - INTERVAL '7 days' GROUP BY href ORDER BY total DESC LIMIT 3`,
+      sql`SELECT COUNT(*)::int AS n FROM v3_content_marks WHERE mark = 'anladi'`,
+      sql`SELECT COUNT(*)::int AS n FROM v3_content_marks WHERE mark = 'tekrar'`,
+      sql`SELECT COALESCE(SUM(count),0)::int AS n FROM v3_content_views WHERE day >= CURRENT_DATE - INTERVAL '7 days'`,
+    ]);
     const map = {};
-    for (const r of rows) map[r.key] = r.value;
+    for (const r of settings) map[r.key] = r.value;
     if (map.hero_title)     hero.title     = map.hero_title;
     if (map.hero_subtitle)  hero.subtitle  = map.hero_subtitle;
     if (map.hero_animation) hero.animation = map.hero_animation;
+    analiz = {
+      weekly: weeklyRows,
+      anladiCount: anladiCount[0]?.n || 0,
+      tekrarCount: tekrarCount[0]?.n || 0,
+      weeklyViews: viewCount[0]?.n || 0,
+    };
   } catch {}
 
   return (
@@ -85,10 +98,63 @@ export default async function V3HomePage() {
           pointer-events: none; opacity: 0.3; overflow: hidden;
         }
         .v3-hero-inner {
-          max-width: 1100px; margin: 0 auto;
+          max-width: 1200px; margin: 0 auto;
           position: relative; z-index: 2;
+          display: flex; align-items: center; justify-content: space-between; gap: 32px;
         }
-        .v3-hero-text { max-width: 620px; }
+        .v3-hero-text { flex: 1; max-width: 560px; }
+        /* Analiz kartı */
+        .v3-analiz-card {
+          flex-shrink: 0; width: 320px;
+          background: rgba(13,20,33,0.72);
+          border: 1px solid rgba(99,102,241,0.2);
+          border-radius: 20px; padding: 20px;
+          backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+          box-shadow: 0 24px 64px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.04);
+          text-decoration: none; color: inherit;
+          transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+          display: block;
+        }
+        .v3-analiz-card:hover {
+          border-color: rgba(99,102,241,0.4);
+          box-shadow: 0 28px 72px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
+          transform: translateY(-2px);
+        }
+        .v3-light .v3-analiz-card {
+          background: rgba(255,255,255,0.85);
+          border-color: rgba(99,102,241,0.15);
+          box-shadow: 0 16px 48px rgba(0,0,0,0.12), 0 0 0 1px rgba(99,102,241,0.08);
+        }
+        .v3-analiz-card-head {
+          display: flex; align-items: center; justify-content: space-between;
+          margin-bottom: 14px;
+        }
+        .v3-analiz-card-title { font-size: 13px; font-weight: 700; color: var(--v3-text); }
+        .v3-analiz-card-link  { font-size: 11px; color: #818cf8; font-weight: 600; }
+        .v3-analiz-stat-row {
+          display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 14px;
+        }
+        .v3-analiz-stat {
+          background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+          border-radius: 10px; padding: 10px 8px; text-align: center;
+        }
+        .v3-light .v3-analiz-stat { background: rgba(99,102,241,0.05); border-color: rgba(99,102,241,0.1); }
+        .v3-analiz-stat-val { font-size: 18px; font-weight: 800; color: var(--v3-text); line-height: 1; }
+        .v3-analiz-stat-lbl { font-size: 10px; color: var(--v3-text-muted); margin-top: 3px; }
+        .v3-analiz-trending  { display: flex; flex-direction: column; gap: 6px; }
+        .v3-analiz-trend-item {
+          display: flex; align-items: center; gap: 8px;
+          padding: 6px 8px; border-radius: 8px;
+          background: rgba(255,255,255,0.03); font-size: 11.5px;
+          color: var(--v3-text-muted); line-height: 1.3;
+        }
+        .v3-light .v3-analiz-trend-item { background: rgba(99,102,241,0.04); }
+        .v3-analiz-trend-badge {
+          font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px;
+          background: rgba(99,102,241,0.15); color: #818cf8; flex-shrink: 0;
+        }
+        @media (max-width: 900px) { .v3-analiz-card { display: none; } }
+        @media (max-width: 768px) { .v3-hero-inner { flex-direction: column; align-items: flex-start; } }
         .v3-hero-title {
           font-size: clamp(30px, 4.5vw, 52px); font-weight: 800;
           line-height: 1.12; letter-spacing: -1.2px; margin: 0 0 16px;
@@ -229,6 +295,57 @@ export default async function V3HomePage() {
               <HeroRegisterBtn />
             </div>
           </div>
+
+          {/* Analiz özet kartı — yalnızca desktop */}
+          <Link href="/v3/analiz" className="v3-analiz-card">
+            <div className="v3-analiz-card-head">
+              <span className="v3-analiz-card-title">📈 İçerik Analizi</span>
+              <span className="v3-analiz-card-link">Tümünü gör →</span>
+            </div>
+            <div className="v3-analiz-stat-row">
+              <div className="v3-analiz-stat">
+                <div className="v3-analiz-stat-val" style={{ color: '#818cf8' }}>
+                  {analiz?.weeklyViews ?? '—'}
+                </div>
+                <div className="v3-analiz-stat-lbl">Bu hafta</div>
+              </div>
+              <div className="v3-analiz-stat">
+                <div className="v3-analiz-stat-val" style={{ color: '#10b981' }}>
+                  {analiz?.anladiCount ?? '—'}
+                </div>
+                <div className="v3-analiz-stat-lbl">Anladım</div>
+              </div>
+              <div className="v3-analiz-stat">
+                <div className="v3-analiz-stat-val" style={{ color: '#fbbf24' }}>
+                  {analiz?.tekrarCount ?? '—'}
+                </div>
+                <div className="v3-analiz-stat-lbl">Tekrar Bak</div>
+              </div>
+            </div>
+            <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--v3-text-muted)', marginBottom: '8px' }}>
+              🔥 Bu Hafta Trend
+            </div>
+            <div className="v3-analiz-trending">
+              {analiz?.weekly?.length > 0 ? analiz.weekly.map((item, i) => {
+                const slug = item.href.split('/').filter(Boolean).pop();
+                return (
+                  <div key={item.href} className="v3-analiz-trend-item">
+                    <span style={{ fontSize: '13px', flexShrink: 0 }}>
+                      {['🥇','🥈','🥉'][i] || `${i+1}.`}
+                    </span>
+                    <span style={{ flex: 1, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+                      {slug}
+                    </span>
+                    <span className="v3-analiz-trend-badge">{item.total}</span>
+                  </div>
+                );
+              }) : (
+                <div className="v3-analiz-trend-item" style={{ justifyContent: 'center', color: 'var(--v3-text-faint)' }}>
+                  Veri biriktirilmekte...
+                </div>
+              )}
+            </div>
+          </Link>
         </div>
       </section>
 

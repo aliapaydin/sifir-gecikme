@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useContentMarks } from '../../../lib/useContentMarks';
+import DataCardBg from '../components/DataCardBg';
 
 const V3_PAGES = ['/yazilar/', '/ogren/', '/python', '/sql', '/regex', '/ciz', '/nn',
   '/hipotez', '/mulakat', '/kalori', '/tech-center', '/harita', '/milyon',
@@ -21,6 +22,11 @@ const BADGE_COLORS = {
   'kariyer':         { bg: 'rgba(16,185,129,0.12)',  color: '#34d399', border: 'rgba(16,185,129,0.2)' },
 };
 
+const BADGE_ACCENT = {
+  'interaktif': '#2dd4bf', 'rehber': '#a78bfa', 'araç': '#818cf8',
+  'vaka çalışması': '#fb923c', 'kariyer': '#34d399',
+};
+
 function badgeStyle(badge) {
   const c = BADGE_COLORS[badge] || BADGE_COLORS['rehber'];
   return {
@@ -36,9 +42,10 @@ export default function IcerikGridWithMarks({ yazilar }) {
   return (
     <div className="ic-grid">
       {yazilar.map(yazi => {
-        const mark = marks[yazi.href];
+        const mark     = marks[yazi.href];
         const isAnladi = mark === 'anladi';
         const isTekrar = mark === 'tekrar';
+        const accent   = BADGE_ACCENT[yazi.badge] || '#818cf8';
 
         return (
           <Link
@@ -46,6 +53,7 @@ export default function IcerikGridWithMarks({ yazilar }) {
             href={v3href(yazi.href)}
             className="ic-card"
             style={{
+              position: 'relative', overflow: 'hidden',
               borderColor: isAnladi
                 ? 'rgba(16,185,129,0.3)'
                 : isTekrar
@@ -58,7 +66,8 @@ export default function IcerikGridWithMarks({ yazilar }) {
                 : undefined,
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
+            <DataCardBg href={yazi.href} opacity={0.08} color={accent} />
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
               <span style={badgeStyle(yazi.badge)}>{yazi.badge}</span>
               {isAnladi && (
                 <span style={{
@@ -75,9 +84,9 @@ export default function IcerikGridWithMarks({ yazilar }) {
                 }}>↩ Tekrar</span>
               )}
             </div>
-            <h2 className="ic-card-title">{yazi.baslik}</h2>
-            <p className="ic-card-desc">{yazi.ozet}</p>
-            <p className="ic-card-meta">{yazi.meta}</p>
+            <h2 className="ic-card-title" style={{ position: 'relative' }}>{yazi.baslik}</h2>
+            <p className="ic-card-desc" style={{ position: 'relative' }}>{yazi.ozet}</p>
+            <p className="ic-card-meta" style={{ position: 'relative' }}>{yazi.meta}</p>
           </Link>
         );
       })}

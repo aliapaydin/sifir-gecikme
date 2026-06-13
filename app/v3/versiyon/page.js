@@ -91,6 +91,11 @@ const versiyonlar = [
       { tip: 'yeni', metin: 'Anasayfa araç/playground/içerik kartlarına her birine özgü, hafif transparan data temalı SVG arkaplanlar eklendi (bar chart, scatter, area chart, heatmap, sinyal dalgası vb.)' },
       { tip: 'iyileştirme', metin: 'AI Tutor UI tamamen yenilendi: yeni avatar, sohbet balonları, typing animasyonu ve "☁ Senkron" göstergesi' },
       { tip: 'iyileştirme', metin: 'Navbar: yeni data chart SVG logosu, 68px yükseklik, geliştirilmiş dropdown stilleri, "Kayıt Ol" butonu eklendi' },
+      { tip: 'yeni', metin: 'İçerik analizi sayfası (/v3/analiz): bu hafta trend, tüm zamanlar en çok okunan, en çok Anladım/Tekrar Bak işaretlenen — 🥇🥈🥉 sıralamalı leaderboard + 6 özet istatistik' },
+      { tip: 'yeni', metin: 'Görüntülenme takibi: her yazı açıldığında session başına bir kez DB\'ye anonim view kaydediliyor (v3_content_views tablosu, günlük granülarite)' },
+      { tip: 'yeni', metin: 'Hero\'ya analiz önizleme kartı eklendi — bu hafta görüntülenme sayısı, Anladım/Tekrar sayıları ve top 3 trend içerik canlı gösteriliyor' },
+      { tip: 'iyileştirme', metin: 'www.sifirgecikme.com artık /v3 URL\'sine redirect yapmıyor, doğrudan v3 anasayfası gösteriliyor (beforeFiles rewrite)' },
+      { tip: 'iyileştirme', metin: 'İçerikler ve haritam sayfası kartlarına data temalı transparan SVG arka planlar eklendi (bar chart, scatter, area chart, network vb.)' },
     ],
   },
   {
