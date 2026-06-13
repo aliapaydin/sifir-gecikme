@@ -1,10 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async rewrites() {
-    return [
-      // / → /v3 içeriği gösterilir, URL olduğu gibi kalır
-      { source: '/', destination: '/v3' },
-    ];
+    return {
+      // beforeFiles: dosya sistemi kontrolünden ÖNCE çalışır.
+      // app/page.js var olsa bile / → /v3 rewrite'ı önce ateşlenir.
+      beforeFiles: [
+        { source: '/', destination: '/v3' },
+      ],
+    };
   },
 };
 
