@@ -1,5 +1,4 @@
-import { redirect } from 'next/navigation';
-
+// Bu route artık kullanılmıyor — next.config.mjs'deki rewrite / → /v3 hallediyor
 export default function Home() {
-  redirect('/v3');
+  return null;
 }

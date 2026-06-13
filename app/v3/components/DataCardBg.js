@@ -132,11 +132,15 @@ function patternIndex(seed) {
   return h % PATTERNS.length;
 }
 
-export default function DataCardBg({ href, opacity = 0.07, color = 'currentColor' }) {
+export default function DataCardBg({ href, opacity = 0.05, color = 'currentColor' }) {
   const idx = patternIndex(href || '');
   const PatternFn = PATTERNS[idx];
   return (
-    <span style={{ position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: 'inherit', pointerEvents: 'none', color }}>
+    <span style={{
+      position: 'absolute', inset: 0, overflow: 'hidden',
+      borderRadius: 'inherit', pointerEvents: 'none', color,
+      filter: 'blur(0.6px)',
+    }}>
       <PatternFn op={opacity} />
     </span>
   );

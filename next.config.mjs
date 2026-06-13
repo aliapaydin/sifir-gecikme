@@ -1,12 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async redirects() {
+  async rewrites() {
     return [
-      {
-        source: '/',
-        destination: '/v3',
-        permanent: true,
-      },
+      // / → /v3 içeriği gösterilir, URL olduğu gibi kalır
+      { source: '/', destination: '/v3' },
     ];
   },
 };

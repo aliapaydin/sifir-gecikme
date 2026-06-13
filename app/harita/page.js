@@ -302,7 +302,7 @@ export default function HaritaSayfasi() {
   const anladiSayi = anladilar.length;
   const tekrarSayi = tekrarListesi.length;
   const [anladiAcik, setAnladiAcik] = useState(false);
-  const [tekrarAcik, setTekrarAcik] = useState(true);
+  const [tekrarAcik, setTekrarAcik] = useState(false);
 
   useEffect(() => {
     try {
@@ -493,7 +493,7 @@ export default function HaritaSayfasi() {
             <span style={{ fontSize: '18px' }}>📊</span>
             <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>Öğrenme Durumu</h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '10px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             {/* Anladım accordion */}
             <div style={{
               background: 'var(--color-correct-bg)', border: '0.5px solid var(--color-correct-border)',
