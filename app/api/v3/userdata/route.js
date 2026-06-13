@@ -44,3 +44,6 @@ export async function PUT(request) {
     return NextResponse.json({ error: 'Sunucu hatası.' }, { status: 500 });
   }
 }
+
+// POST: sendBeacon için (beforeunload'da kullanılır, PUT ile aynı)
+export { PUT as POST };
