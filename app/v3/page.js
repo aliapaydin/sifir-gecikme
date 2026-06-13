@@ -257,7 +257,7 @@ export default async function V3HomePage() {
           {tools.map(tool => (
             <Link key={tool.href} href={tool.href} className="tool-card"
               style={{ background: `linear-gradient(135deg, ${tool.accent}0f, ${tool.accent}04)`, position: 'relative', overflow: 'hidden' }}>
-              <DataCardBg href={tool.href} opacity={0.04} color={tool.accent} />
+              <DataCardBg href={tool.href} opacity={0.09} color={tool.accent} />
               <div className="tool-card-top" style={{ position: 'relative' }}>
                 <span className="tool-card-emoji">{tool.emoji}</span>
                 <span className="tool-card-title">{tool.title}</span>
@@ -280,7 +280,7 @@ export default async function V3HomePage() {
           {playground.map(item => (
             <Link key={item.href} href={item.href} className="pg-card"
               style={{ background: `linear-gradient(135deg, ${item.accent}14, ${item.accent}05)`, position: 'relative', overflow: 'hidden' }}>
-              <DataCardBg href={item.href} opacity={0.045} color={item.accent} />
+              <DataCardBg href={item.href} opacity={0.09} color={item.accent} />
               <div className="pg-emoji-wrap" style={{ background: `${item.accent}18`, position: 'relative' }}>{item.emoji}</div>
               <h3 className="pg-title" style={{ position: 'relative' }}>{item.title}</h3>
               <p className="pg-desc" style={{ position: 'relative' }}>{item.desc}</p>
