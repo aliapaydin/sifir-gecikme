@@ -608,12 +608,28 @@ export default function PCToplaApp({ state, buildPCAction, sellBuiltPCAction, li
                 )}
               </>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '16px', gap: '16px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '16px', gap: '12px' }}>
                 <PCInteriorVisual build={build} />
                 <div style={{ fontSize: '0.78rem', color: 'var(--color-text-mute)', textAlign: 'center' }}>
                   {!build.case && '← Başlamak için Kasa seç'}
                   {build.case && !requiredFilled && '← Tüm gerekli slotları doldur'}
                 </div>
+                {/* Build butonu — özet panele ek olarak buraya da */}
+                <button
+                  onClick={handleBuild}
+                  disabled={!canBuild}
+                  style={{
+                    padding: '10px 28px', borderRadius: '10px', border: 'none',
+                    background: canBuild ? '#1D9E75' : 'var(--color-border)',
+                    color: canBuild ? '#fff' : 'var(--color-text-mute)',
+                    fontSize: '0.88rem', fontWeight: 700,
+                    cursor: canBuild ? 'pointer' : 'not-allowed',
+                    transition: 'all 0.15s',
+                    display: requiredFilled ? 'block' : 'none',
+                  }}
+                >
+                  {canBuild ? '🔧 PC Topla →' : '⚠️ Uyumsuz Parçalar'}
+                </button>
               </div>
             )}
           </div>

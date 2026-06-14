@@ -66,7 +66,7 @@ export default function IcerikGridWithMarks({ yazilar }) {
                 : undefined,
             }}
           >
-            <DataCardBg href={yazi.href} opacity={0.08} color={accent} />
+            <DataCardBg href={yazi.href} opacity={0.18} color={accent} />
             <div style={{ position: 'relative', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
               <span style={badgeStyle(yazi.badge)}>{yazi.badge}</span>
               {isAnladi && (

@@ -106,7 +106,7 @@ export default function V3FeaturedSection() {
               borderColor: mark === 'tekrar' ? 'rgba(251,191,36,0.25)' : mark === 'anladi' ? 'rgba(16,185,129,0.2)' : undefined,
               background: mark === 'tekrar' ? 'rgba(251,191,36,0.04)' : undefined,
             }}>
-              <DataCardBg href={yazi.href} opacity={0.08} />
+              <DataCardBg href={yazi.href} opacity={0.18} />
               <div style={{ position: 'relative', display: 'flex', alignItems: 'flex-start', gap: '6px', marginBottom: '6px' }}>
                 {badge && <span style={getBadgeStyle(badge)}>{badge}</span>}
                 {mark === 'anladi' && <span className="v3-mark-badge v3-mark-anladi">✓ Anladım</span>}

@@ -678,7 +678,7 @@ export default function GameApp() {
   }
 
   return (
-    <div style={{ height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column', background: 'var(--color-cream)' }}>
+    <div style={{ height: '100%', overflow: 'hidden', display: 'flex', flexDirection: 'column', background: 'var(--color-cream)' }}>
       <TopBar state={state} firmaValue={firmaValue} onStartDay={startDay} onCloseDay={closeDay} takeLoanAction={takeLoanAction} clearCancelNotif={clearCancelNotif} />
       <Desktop
         state={state}

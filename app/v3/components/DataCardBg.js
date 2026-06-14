@@ -139,14 +139,14 @@ function patternIndex(seed) {
   return h % PATTERNS.length;
 }
 
-export default function DataCardBg({ href, opacity = 0.08, color = 'currentColor' }) {
+export default function DataCardBg({ href, opacity = 0.18, color = 'currentColor' }) {
   const idx = patternIndex(href || '');
   const Pattern = PATTERNS[idx];
   return (
     <span style={{
       position: 'absolute', inset: 0, overflow: 'hidden',
       borderRadius: 'inherit', pointerEvents: 'none',
-      color, opacity, filter: 'blur(2.5px)',
+      color, opacity, filter: 'blur(0.8px)',
     }}>
       <Pattern />
     </span>

@@ -39,7 +39,7 @@ export default function V3Navbar() {
   const [modOpen, setModOpen]           = useState(false);
   const [modMobileOpen, setModMobileOpen] = useState(false);
   const [loggingOut, setLoggingOut]   = useState(false);
-  const [isLight, setIsLight]         = useState(false);
+  const [themeMode, setThemeMode] = useState('dark'); // 'dark' | 'light' | 'system'
   const pgRef  = useRef(null);
   const modRef = useRef(null);
 
@@ -51,8 +51,8 @@ export default function V3Navbar() {
   }, [pathname]);
 
   useEffect(() => {
-    const saved = localStorage.getItem('v3_theme');
-    setIsLight(saved === 'light');
+    const saved = localStorage.getItem('v3_theme') || 'dark';
+    setThemeMode(saved);
   }, []);
 
   // Dışarı tıklayınca dropdown kapat
@@ -75,15 +75,32 @@ export default function V3Navbar() {
     return () => { document.body.style.overflow = ''; };
   }, [menuOpen]);
 
-  function toggleTheme() {
+  function applyThemeMode(mode) {
     const root = document.getElementById('v3-root');
-    const next = !isLight;
-    if (root) {
-      root.classList.toggle('v3-light', next);
+    if (!root) return;
+    if (mode === 'light') {
+      root.classList.add('v3-light');
+    } else if (mode === 'dark') {
+      root.classList.remove('v3-light');
+    } else {
+      // system
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (prefersDark) root.classList.remove('v3-light');
+      else root.classList.add('v3-light');
     }
-    localStorage.setItem('v3_theme', next ? 'light' : 'dark');
-    setIsLight(next);
   }
+
+  function toggleTheme() {
+    // dark → light → system → dark → ...
+    const cycle = { dark: 'light', light: 'system', system: 'dark' };
+    const next = cycle[themeMode] || 'dark';
+    applyThemeMode(next);
+    localStorage.setItem('v3_theme', next);
+    setThemeMode(next);
+  }
+
+  const themeIcon = themeMode === 'light' ? '🌙' : themeMode === 'system' ? '💻' : '☀️';
+  const themeTitle = themeMode === 'light' ? 'Koyu temaya geç' : themeMode === 'system' ? 'Koyu temaya geç' : 'Sistem temasına geç';
 
   async function handleLogout() {
     setLoggingOut(true);
@@ -391,8 +408,8 @@ export default function V3Navbar() {
 
           <div className="v3-nav-right">
             {/* Tema toggle */}
-            <button className="v3-theme-btn" onClick={toggleTheme} title={isLight ? 'Koyu tema' : 'Açık tema'}>
-              {isLight ? '🌙' : '☀️'}
+            <button className="v3-theme-btn" onClick={toggleTheme} title={themeTitle}>
+              {themeIcon}
             </button>
 
             {user ? (
