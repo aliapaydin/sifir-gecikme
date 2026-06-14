@@ -264,9 +264,17 @@ export default function TopBar({ state, firmaValue, onStartDay, onCloseDay, take
         @media (max-width: 767px) {
           .tc-topbar-brand { display: none !important; }
           .tc-topbar-root { padding: 5px 10px !important; gap: 4px 6px !important; flex-wrap: wrap !important; align-items: center !important; }
-          .tc-stats { order: 1; flex: 1 1 100% !important; flex-wrap: wrap !important; gap: 4px !important; justify-content: flex-start !important; }
-          .tc-topbar-events { order: 2; flex: 0 1 auto !important; }
-          .tc-topbar-actions { order: 2; margin-left: auto !important; }
+
+          /* Satır 1: stat rozatları — tam genişlik */
+          .tc-stats { order: 1; flex: 1 1 100% !important; flex-wrap: nowrap !important; gap: 4px !important; justify-content: flex-start !important; overflow-x: auto !important; scrollbar-width: none !important; }
+          .tc-stats::-webkit-scrollbar { display: none !important; }
+          /* Firma değeri rozeti mobilde gizle (ikincil bilgi, satırı taşırıyor) */
+          .tc-firma-val { display: none !important; }
+
+          /* Satır 2: olaylar (solda) + aksiyonlar (sağda) */
+          .tc-topbar-events { order: 2; flex: 1 1 auto !important; }
+          .tc-topbar-actions { order: 2; margin-left: auto !important; flex-shrink: 0 !important; }
+
           .tc-badge { padding: 3px 7px !important; font-size: 0.75rem !important; border-radius: 6px !important; }
           .tc-topbar-btn { padding: 5px 11px !important; font-size: 0.8rem !important; border-radius: 8px !important; }
           .tc-topbar-theme { width: 28px !important; height: 28px !important; font-size: 0.9rem !important; }
@@ -342,13 +350,15 @@ export default function TopBar({ state, firmaValue, onStartDay, onCloseDay, take
             />
           )}
 
-          {/* Firma değeri */}
-          <Badge
-            icon="🏆"
-            value={fmtMoney(firmaValue)}
-            color="var(--color-text-mute)"
-            tooltip="Firma değeri = Nakit + Stok değeri × 1.5 + Mağaza bonusu. Hedef: ₺1 Milyar"
-          />
+          {/* Firma değeri — mobilde gizlenir (tc-firma-val) */}
+          <div className="tc-firma-val" style={{ display: 'contents' }}>
+            <Badge
+              icon="🏆"
+              value={fmtMoney(firmaValue)}
+              color="var(--color-text-mute)"
+              tooltip="Firma değeri = Nakit + Stok değeri × 1.5 + Mağaza bonusu. Hedef: ₺1 Milyar"
+            />
+          </div>
         </div>
 
         {/* Aktif Olaylar */}
