@@ -22,6 +22,7 @@ export async function GET() {
         lifetimeCents: session.lifetimeCents,
         patreonLinkedAt: session.patreonLinkedAt,
         patreonName: session.patreonName,
+        theme: session.theme,
       },
     });
   } catch (err) {

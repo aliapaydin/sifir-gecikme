@@ -42,11 +42,22 @@ export default function V3Navbar() {
   const [themeMode, setThemeMode] = useState('dark'); // 'dark' | 'light' | 'system'
   const pgRef  = useRef(null);
   const modRef = useRef(null);
+  const themeHydratedRef = useRef(false);
 
   useEffect(() => {
     fetch('/api/v3/auth/me')
       .then(r => r.ok ? r.json() : null)
-      .then(data => { if (data?.user) setUser(data.user); })
+      .then(data => {
+        if (!data?.user) return;
+        setUser(data.user);
+        // Giriş yapan kullanıcının SQL'de kayıtlı tema tercihini ilk yüklemede uygula
+        if (!themeHydratedRef.current && ['light', 'dark', 'system'].includes(data.user.theme)) {
+          themeHydratedRef.current = true;
+          applyThemeMode(data.user.theme);
+          localStorage.setItem('v3_theme', data.user.theme);
+          setThemeMode(data.user.theme);
+        }
+      })
       .catch(() => {});
   }, [pathname]);
 
@@ -94,6 +105,14 @@ export default function V3Navbar() {
     applyThemeMode(mode);
     localStorage.setItem('v3_theme', mode);
     setThemeMode(mode);
+    // Giriş yapılmışsa tercihi SQL'e kaydet — diğer cihazlarda da gelsin
+    if (user) {
+      fetch('/api/v3/theme', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ theme: mode }),
+      }).catch(() => {});
+    }
   }
 
   // Sistem teması seçiliyken OS değişimini canlı takip et
