@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { sql, initDb } from '../../../../lib/v3/db';
 import { getSession } from '../../../../lib/v3/auth';
 
-const MAX_MESSAGES = 60;
+const MAX_MESSAGES = 20;
 
 // GET: Son mesajları getir
 export async function GET(request) {
@@ -10,12 +10,16 @@ export async function GET(request) {
   if (!session) return NextResponse.json({ messages: [] });
 
   await initDb();
+  // En yeni MAX_MESSAGES mesajı al, sonra kronolojik sırala
   const rows = await sql`
-    SELECT role, content, created_at
-    FROM v3_tutor_messages
-    WHERE user_id = ${session.userId}
+    SELECT role, content, created_at FROM (
+      SELECT role, content, created_at
+      FROM v3_tutor_messages
+      WHERE user_id = ${session.userId}
+      ORDER BY created_at DESC
+      LIMIT ${MAX_MESSAGES}
+    ) sub
     ORDER BY created_at ASC
-    LIMIT ${MAX_MESSAGES}
   `;
   return NextResponse.json({ messages: rows.map(r => ({ role: r.role, content: r.content })) });
 }

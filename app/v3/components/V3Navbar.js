@@ -90,17 +90,27 @@ export default function V3Navbar() {
     }
   }
 
-  function toggleTheme() {
-    // dark → light → system → dark → ...
-    const cycle = { dark: 'light', light: 'system', system: 'dark' };
-    const next = cycle[themeMode] || 'dark';
-    applyThemeMode(next);
-    localStorage.setItem('v3_theme', next);
-    setThemeMode(next);
+  function setTheme(mode) {
+    applyThemeMode(mode);
+    localStorage.setItem('v3_theme', mode);
+    setThemeMode(mode);
   }
 
-  const themeIcon = themeMode === 'light' ? '🌙' : themeMode === 'system' ? '💻' : '☀️';
-  const themeTitle = themeMode === 'light' ? 'Koyu temaya geç' : themeMode === 'system' ? 'Koyu temaya geç' : 'Sistem temasına geç';
+  // Sistem teması seçiliyken OS değişimini canlı takip et
+  useEffect(() => {
+    if (themeMode !== 'system') return;
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const onChange = () => applyThemeMode('system');
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, [themeMode]);
+
+  const THEMES = [
+    { id: 'light',  icon: '☀️', label: 'Açık tema' },
+    { id: 'dark',   icon: '🌙', label: 'Koyu tema' },
+    { id: 'system', oto: true,  label: 'Sistem (otomatik)' },
+  ];
+  const themeIndex = Math.max(0, THEMES.findIndex(t => t.id === themeMode));
 
   async function handleLogout() {
     setLoggingOut(true);
@@ -204,14 +214,28 @@ export default function V3Navbar() {
           transition: background 0.15s;
         }
         .v3-dev-link:hover { background: rgba(99,102,241,0.2); }
-        .v3-theme-btn {
-          width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center;
-          justify-content: center; font-size: 15px; cursor: pointer;
+        .v3-theme-seg {
+          position: relative; display: inline-flex; align-items: center;
+          padding: 3px; border-radius: 10px; flex-shrink: 0;
           background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09);
-          transition: background 0.15s, border-color 0.15s; flex-shrink: 0;
         }
-        .v3-theme-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.15); }
-        .v3-light .v3-theme-btn { background: rgba(0,0,0,0.04); border-color: #e2e8f0; }
+        .v3-light .v3-theme-seg { background: rgba(0,0,0,0.04); border-color: #e2e8f0; }
+        .v3-theme-seg-pill {
+          position: absolute; top: 3px; left: 3px; width: 32px; height: 28px;
+          border-radius: 7px; background: rgba(99,102,241,0.28);
+          border: 1px solid rgba(99,102,241,0.45);
+          transition: transform 0.22s cubic-bezier(.4,0,.2,1); pointer-events: none;
+        }
+        .v3-theme-seg-btn {
+          position: relative; z-index: 1; width: 32px; height: 28px; padding: 0;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 14px; line-height: 1; cursor: pointer;
+          background: transparent; border: none; color: var(--v3-text-muted);
+          transition: color 0.15s;
+        }
+        .v3-theme-seg-btn:hover { color: var(--v3-text); }
+        .v3-theme-seg-btn.active { color: var(--v3-text); }
+        .v3-theme-seg-btn .oto { font-size: 9px; font-weight: 800; letter-spacing: 0.5px; }
         .v3-btn-login {
           padding: 7px 16px; border-radius: 9px; font-size: 13.5px; font-weight: 600;
           background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.25);
@@ -407,10 +431,23 @@ export default function V3Navbar() {
           </div>
 
           <div className="v3-nav-right">
-            {/* Tema toggle */}
-            <button className="v3-theme-btn" onClick={toggleTheme} title={themeTitle}>
-              {themeIcon}
-            </button>
+            {/* Tema seçici — 3'lü segment switch */}
+            <div className="v3-theme-seg" role="radiogroup" aria-label="Tema seçimi">
+              <span className="v3-theme-seg-pill" style={{ transform: `translateX(${themeIndex * 32}px)` }} />
+              {THEMES.map(t => (
+                <button
+                  key={t.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={themeMode === t.id}
+                  className={`v3-theme-seg-btn${themeMode === t.id ? ' active' : ''}`}
+                  onClick={() => setTheme(t.id)}
+                  title={t.label}
+                >
+                  {t.oto ? <span className="oto">OTO</span> : t.icon}
+                </button>
+              ))}
+            </div>
 
             {user ? (
               <>
