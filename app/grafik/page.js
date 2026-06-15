@@ -55,6 +55,7 @@ const MANUAL_META = {
   '/yazilar/banka-fraud':          { kategori: 'analiz',     seviye: 2, x: 700, y: 555 },
   '/yazilar/sepet-terki':          { kategori: 'analiz',     seviye: 2, x: 580, y: 640 },
   '/yazilar/sosyal-medya-turkiye': { kategori: 'analiz',     seviye: 2, x: 710, y: 640 },
+  '/yazilar/doviz-altin-tahmini':  { kategori: 'analiz',     seviye: 2, x: 840, y: 640 },
   // Veri
   '/yazilar/pandas-referans':      { kategori: 'veri',       seviye: 1, x: 820, y: 370 },
   // Kariyer
@@ -117,6 +118,9 @@ const EDGES = [
   ['ab-test',              'sepet-terki'],
   ['deprem-analizi',       'sosyal-medya-turkiye'],
   ['spotify-turkiye',      'sosyal-medya-turkiye'],
+  ['linear-regression',    'doviz-altin-tahmini'],
+  ['feature-engineering',  'doviz-altin-tahmini'],
+  ['izmir-kira-analizi',   'doviz-altin-tahmini'],
   // Veri
   ['pandas-7-sey',         'pandas-referans'],
   ['veri-temizleme',       'pandas-referans'],
