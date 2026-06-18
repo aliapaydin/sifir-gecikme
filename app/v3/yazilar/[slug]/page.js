@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 // Tüm yazılar önceden oluşturulur
 export function generateStaticParams() {
   return [
-    'doviz-altin-tahmini', 'sql-join-gorsellestirici',
+    'bootstrap-ornekleme', 'doviz-altin-tahmini', 'sql-join-gorsellestirici',
     'ab-test', 'anscombe', 'banka-fraud', 'bezier', 'bi-karsilastirma',
     'bias-variance', 'churn-tahmini', 'cloud-rehberi', 'cohort-analizi',
     'confusion-matrix', 'databricks-rehberi', 'dbt-nedir', 'decision-tree',

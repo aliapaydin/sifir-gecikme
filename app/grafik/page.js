@@ -31,6 +31,7 @@ const MANUAL_META = {
   '/yazilar/merkezi-limit-teoremi': { kategori: 'istatistik', seviye: 1, x: 450, y: 80  },
   '/yazilar/sample-size':           { kategori: 'istatistik', seviye: 1, x: 560, y: 80  },
   '/yazilar/ab-test':               { kategori: 'istatistik', seviye: 2, x: 510, y: 180 },
+  '/yazilar/bootstrap-ornekleme':   { kategori: 'istatistik', seviye: 2, x: 390, y: 220 },
   '/yazilar/anscombe':              { kategori: 'istatistik', seviye: 1, x: 640, y: 80  },
   '/yazilar/z-skor':                { kategori: 'istatistik', seviye: 1, x: 390, y: 130 },
   '/yazilar/bezier':                { kategori: 'istatistik', seviye: 2, x: 640, y: 165 },
@@ -89,10 +90,12 @@ const EDGES = [
   ['lojistik-regresyon',   'bias-variance'],
   // İstatistik
   ['merkezi-limit-teoremi','ab-test'],
+  ['merkezi-limit-teoremi','bootstrap-ornekleme'],
   ['sample-size',          'ab-test'],
   ['ab-test',              'cohort-analizi'],
   ['z-skor',               'merkezi-limit-teoremi'],
   ['z-skor',               'ab-test'],
+  ['bootstrap-ornekleme',  'ab-test'],
   ['bezier',               'anscombe'],
   // Veri
   ['pandas-7-sey',         'veri-temizleme'],
