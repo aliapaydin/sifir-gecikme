@@ -445,6 +445,19 @@ export default function IcerikIcon({ type }) {
         <circle cx="16" cy="22" r="1" fill="#fff"/>
       </svg>
     ),
+    'veri-siteleri': (
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <rect width="32" height="32" rx="8" fill="#E1F5EE"/>
+        <circle cx="16" cy="16" r="8" stroke="#1D9E75" strokeWidth="1.5" fill="none"/>
+        <line x1="16" y1="8" x2="16" y2="24" stroke="#1D9E75" strokeWidth="1" opacity="0.6"/>
+        <path d="M8 16 Q12 12 16 16 Q20 20 24 16" stroke="#1D9E75" strokeWidth="1" fill="none" opacity="0.6"/>
+        <path d="M8.5 12 Q12 10 16 12 Q20 14 23.5 12" stroke="#1D9E75" strokeWidth="1" fill="none" opacity="0.4"/>
+        <path d="M8.5 20 Q12 22 16 20 Q20 18 23.5 20" stroke="#1D9E75" strokeWidth="1" fill="none" opacity="0.4"/>
+        <circle cx="22" cy="10" r="3.5" fill="#0F6E56"/>
+        <line x1="21" y1="10" x2="23" y2="10" stroke="#fff" strokeWidth="1" strokeLinecap="round"/>
+        <line x1="22" y1="9" x2="22" y2="11" stroke="#fff" strokeWidth="1" strokeLinecap="round"/>
+      </svg>
+    ),
   };
   return icons[type] || null;
 }

@@ -43,6 +43,7 @@ export default function sitemap() {
     { url: '/ogren/numpy', priority: 0.8, changeFrequency: 'monthly' },
     { url: '/ogren/pandas', priority: 0.8, changeFrequency: 'monthly' },
     { url: '/ogren/istatistik-ml', priority: 0.8, changeFrequency: 'monthly' },
+    { url: '/yazilar/veri-bilimi-siteleri', priority: 0.9, changeFrequency: 'monthly' },
     { url: '/versiyon', priority: 0.5, changeFrequency: 'monthly' },
   ];
 

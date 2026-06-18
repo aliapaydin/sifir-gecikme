@@ -67,6 +67,7 @@ const MANUAL_META = {
   '/yazilar/linkedin-profili':      { kategori: 'kariyer',    seviye: 2, x: 450, y: 30  },
   '/yazilar/ilk-90-gun':            { kategori: 'kariyer',    seviye: 1, x: 80,  y: 170 },
   '/yazilar/mulakat-sql':           { kategori: 'kariyer',    seviye: 2, x: 330, y: 155 },
+  '/yazilar/veri-bilimi-siteleri':  { kategori: 'kariyer',    seviye: 1, x: 200, y: 170 },
 };
 
 // Yazilar'da olmayan ama kendine ait sayfası bulunan ekstra node'lar
@@ -138,6 +139,8 @@ const EDGES = [
   ['ilk-90-gun',           'rol-farklari'],
   ['mulakat-sql',          'sql-temelleri'],
   ['mulakat-sql',          'portfolyo'],
+  ['yol-haritasi',         'veri-bilimi-siteleri'],
+  ['veri-bilimi-siteleri', 'portfolyo'],
 ];
 
 // ─── RENK & ETİKET ───────────────────────────────────────────────────────────
