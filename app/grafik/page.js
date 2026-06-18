@@ -35,6 +35,7 @@ const MANUAL_META = {
   '/yazilar/z-skor':                { kategori: 'istatistik', seviye: 1, x: 390, y: 130 },
   '/yazilar/bezier':                { kategori: 'istatistik', seviye: 2, x: 640, y: 165 },
   // Veri
+  '/yazilar/sql-join-gorsellestirici': { kategori: 'veri',    seviye: 2, x: 700, y: 60  },
   '/yazilar/sql-temelleri':         { kategori: 'veri',       seviye: 1, x: 700, y: 150 },
   '/yazilar/pandas-7-sey':          { kategori: 'veri',       seviye: 1, x: 700, y: 260 },
   '/yazilar/veri-temizleme':        { kategori: 'veri',       seviye: 1, x: 700, y: 370 },
@@ -97,6 +98,8 @@ const EDGES = [
   ['pandas-7-sey',         'veri-temizleme'],
   ['veri-temizleme',       'feature-engineering'],
   ['feature-engineering',  'linear-regression'],
+  ['sql-temelleri',        'sql-join-gorsellestirici'],
+  ['sql-join-gorsellestirici', 'mulakat-sql'],
   ['sql-temelleri',        'etl-nedir'],
   ['etl-nedir',            'dbt-nedir'],
   ['sql-temelleri',        'cohort-analizi'],
