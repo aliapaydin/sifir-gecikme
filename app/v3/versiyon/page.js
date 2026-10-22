@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-
-const CURRENT_VERSION = 'v4.1.0';
+import { CURRENT_VERSION } from '../../../lib/versiyon';
 
 const tipRenk = {
   yeni:        { bg: 'rgba(99,102,241,0.12)',  text: '#818cf8', label: 'YENİ' },
@@ -77,6 +76,18 @@ function GrupItem({ o }) {
 }
 
 const versiyonlar = [
+  {
+    versiyon: 'v4.2.0',
+    tarih: '22 Ekim 2026',
+    baslik: 'Yapay Zeka Ofisi — Görsel Güncelleme',
+    ozellikler: [
+      { tip: 'yeni', metin: 'Anasayfada Yapay Zeka Ofisi kartı en üst konuma taşındı — StatsBar\'ın hemen altında, ilk içerik bölümü olarak' },
+      { tip: 'yeni', metin: 'Anasayfa promo kartına banner görsel eklendi (/yzo/banner.png) — tam genişlikte, 240px yüksekliğinde' },
+      { tip: 'yeni', metin: 'Promo karta istatistik kutucukları eklendi: 7 Ajan, 0 TL Aylık Maliyet, %100 Yerel' },
+      { tip: 'yeni', metin: 'Yapay Zeka Ofisi detay sayfasına ekran görüntüleri galerisi eklendi — piksel ofis, ekip toplantısı ve Telegram arayüzü' },
+      { tip: 'düzeltme', metin: 'Footer versiyon numarası artık lib/versiyon.js\'den dinamik olarak okunuyor; hardcoded değer kaldırıldı' },
+    ],
+  },
   {
     versiyon: 'v4.1.0',
     tarih: '22 Ekim 2026',

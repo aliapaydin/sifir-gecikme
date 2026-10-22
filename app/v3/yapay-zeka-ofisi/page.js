@@ -574,6 +574,67 @@ export default function YapayZekaOfisiPage() {
           </div>
         </div>
 
+        {/* Ekran Görüntüleri */}
+        <div className="yzo-section">
+          <div className="yzo-section-head">
+            <h2 className="yzo-section-title">🖥️ Ekran Görüntüleri</h2>
+            <p className="yzo-section-sub">Sistemin gerçek görünümü — demo modunda çalışırken.</p>
+          </div>
+          <style>{`
+            .yzo-screenshots { display: flex; flex-direction: column; gap: 32px; }
+            .yzo-shot {
+              border-radius: 18px; overflow: hidden;
+              border: 1px solid var(--v3-border);
+              background: var(--v3-surface);
+              transition: box-shadow 0.2s;
+            }
+            .yzo-shot:hover { box-shadow: 0 16px 48px rgba(0,0,0,0.3); }
+            .yzo-shot img {
+              width: 100%; display: block;
+              border-bottom: 1px solid var(--v3-border);
+            }
+            .yzo-shot-cap {
+              padding: 16px 20px;
+              display: flex; align-items: center; gap: 10px;
+            }
+            .yzo-shot-cap-icon { font-size: 20px; flex-shrink: 0; }
+            .yzo-shot-cap-text { font-size: 14px; color: var(--v3-text-muted); line-height: 1.5; }
+            .yzo-shot-cap-title { font-size: 15px; font-weight: 700; color: var(--v3-text); margin-bottom: 3px; }
+          `}</style>
+          <div className="yzo-screenshots">
+            <div className="yzo-shot">
+              <img src="/yzo/ekran-ofis.png" alt="Pixel ofis ana ekranı — 7 ajan masalarında" loading="lazy" />
+              <div className="yzo-shot-cap">
+                <span className="yzo-shot-cap-icon">🏢</span>
+                <div>
+                  <div className="yzo-shot-cap-title">Piksel Ofis — Ana Ekran</div>
+                  <div className="yzo-shot-cap-text">HTML Canvas ile oluşturulan ofis g&#246;r&#252;n&#252;m&#252;. Her ajan kendi masas&#305;nda; toplant&#305; odas&#305; ve sunucu odas&#305; ayr&#305; ayr&#305; g&#246;r&#252;l&#252;yor.</div>
+                </div>
+              </div>
+            </div>
+            <div className="yzo-shot">
+              <img src="/yzo/ekran-ekip.png" alt="Ekip toplantısı — ajanlar karar tartışıyor" loading="lazy" />
+              <div className="yzo-shot-cap">
+                <span className="yzo-shot-cap-icon">💬</span>
+                <div>
+                  <div className="yzo-shot-cap-title">Ekip Toplant&#305;s&#305;</div>
+                  <div className="yzo-shot-cap-text">3 saatte bir otomatik ekip toplant&#305;s&#305;. Sekreter kararlar&#305; ve aksiyonlar&#305; Telegram&#39;a &#246;zet olarak g&#246;nderir.</div>
+                </div>
+              </div>
+            </div>
+            <div className="yzo-shot">
+              <img src="/yzo/ekran-telefon.png" alt="Telegram arayüzü — Yapay Zeka Ofisi bildirimleri" loading="lazy" />
+              <div className="yzo-shot-cap">
+                <span className="yzo-shot-cap-icon">📱</span>
+                <div>
+                  <div className="yzo-shot-cap-title">Telegram Aray&#252;z&#252;</div>
+                  <div className="yzo-shot-cap-text">T&#252;m bildirimler, kararlar ve etkile&#351;imler Telegram &#252;zerinden. Tek tukla g&#246;rev onayla, &#246;neri iste ya da haber al.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Öğrendiklerimiz */}
         <div className="yzo-section">
           <div className="yzo-section-head">

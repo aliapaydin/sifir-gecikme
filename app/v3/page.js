@@ -348,6 +348,130 @@ export default async function V3HomePage() {
       {/* Stats */}
       <StatsBar />
 
+      {/* Yapay Zeka Ofisi — EN ÜST PROMO */}
+      <div className="v3-section" style={{ paddingTop: '32px', paddingBottom: '32px' }}>
+        <style>{`
+          .yzo-promo-card {
+            display: block; text-decoration: none; color: inherit;
+            position: relative; overflow: hidden; border-radius: 24px;
+            border: 1px solid rgba(99,102,241,0.35);
+            background: linear-gradient(135deg, rgba(15,20,40,0.95) 0%, rgba(30,15,50,0.95) 100%);
+            transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+          }
+          .yzo-promo-card:hover {
+            border-color: rgba(99,102,241,0.65);
+            transform: translateY(-3px);
+            box-shadow: 0 24px 72px rgba(0,0,0,0.4), 0 0 60px rgba(99,102,241,0.12);
+          }
+          .v3-light .yzo-promo-card {
+            background: linear-gradient(135deg, rgba(238,242,255,0.97) 0%, rgba(245,243,255,0.97) 100%);
+            border-color: rgba(99,102,241,0.25);
+          }
+          .yzo-promo-banner {
+            width: 100%; height: 240px; object-fit: cover;
+            display: block; border-radius: 24px 24px 0 0;
+            border-bottom: 1px solid rgba(99,102,241,0.2);
+          }
+          @media (max-width: 700px) {
+            .yzo-promo-banner { height: 160px; }
+          }
+          .yzo-promo-body {
+            padding: 32px 36px 36px;
+            display: flex; align-items: flex-start; justify-content: space-between;
+            gap: 32px; flex-wrap: wrap;
+          }
+          @media (max-width: 700px) {
+            .yzo-promo-body { padding: 24px 20px 28px; }
+          }
+          .yzo-promo-badge {
+            display: inline-block; padding: 3px 12px; border-radius: 999px; margin-bottom: 14px;
+            background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3);
+            font-size: 11px; font-weight: 700; color: #818cf8; letter-spacing: 0.06em; text-transform: uppercase;
+          }
+          .v3-light .yzo-promo-badge { background: rgba(99,102,241,0.1); color: #4f46e5; border-color: rgba(99,102,241,0.2); }
+          .yzo-promo-title {
+            font-size: clamp(24px,4vw,36px); font-weight: 800; margin: 0 0 12px;
+            letter-spacing: -0.7px;
+            background: linear-gradient(135deg, #f1f5f9 0%, #c7d2fe 45%, #5eead4 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+          }
+          .v3-light .yzo-promo-title {
+            background: linear-gradient(135deg, #1e293b 0%, #4f46e5 50%, #0d9488 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+          }
+          .yzo-promo-sub {
+            font-size: 15px; color: var(--v3-text-muted); margin: 0 0 22px;
+            line-height: 1.7; max-width: 520px;
+          }
+          .yzo-promo-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+          .yzo-promo-tag {
+            padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600;
+            background: rgba(99,102,241,0.1); color: #818cf8;
+            border: 1px solid rgba(99,102,241,0.2);
+          }
+          .v3-light .yzo-promo-tag { background: rgba(99,102,241,0.08); color: #4f46e5; border-color: rgba(99,102,241,0.2); }
+          .yzo-promo-cta {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 24px; border-radius: 12px; font-size: 15px; font-weight: 700;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff;
+            box-shadow: 0 4px 20px rgba(99,102,241,0.35);
+          }
+          .yzo-promo-stats {
+            display: flex; flex-direction: column; gap: 14px; align-items: flex-end;
+            min-width: 140px;
+          }
+          .yzo-promo-stat {
+            text-align: center; padding: 14px 20px; border-radius: 14px;
+            background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.18);
+            min-width: 120px;
+          }
+          .v3-light .yzo-promo-stat { background: rgba(99,102,241,0.06); border-color: rgba(99,102,241,0.15); }
+          .yzo-promo-stat-val {
+            font-size: 26px; font-weight: 800; letter-spacing: -0.5px; color: #818cf8;
+          }
+          .v3-light .yzo-promo-stat-val { color: #4f46e5; }
+          .yzo-promo-stat-lbl { font-size: 11px; color: var(--v3-text-muted); margin-top: 2px; font-weight: 600; }
+          @media (max-width: 700px) {
+            .yzo-promo-stats { flex-direction: row; align-items: center; width: 100%; }
+            .yzo-promo-stat { flex: 1; min-width: unset; }
+          }
+        `}</style>
+        <Link href="/yapay-zeka-ofisi" className="yzo-promo-card">
+          <img src="/yzo/banner.png" alt="Yapay Zeka Ofisi" className="yzo-promo-banner" />
+          <div className="yzo-promo-body">
+            <div style={{ flex: 1, minWidth: '260px' }}>
+              <div className="yzo-promo-badge">&#x1F4A1; KiSiSEL AI PROJESi</div>
+              <h2 className="yzo-promo-title">Yapay Zeka Ofisi</h2>
+              <p className="yzo-promo-sub">
+                Raspberry Pi 5 &#252;zerinde tamamen yerel 7 ajanl&#305; ofis asistan&#305;.
+                Bulut yok, abonelik yok, veri d&#305;&#351;ar&#305; &#231;&#305;km&#305;yor.
+                Ayl&#305;k ek maliyet: 0 TL.
+              </p>
+              <div className="yzo-promo-tags">
+                {['Gemma 3 12B', 'Raspberry Pi 5', 'Tailscale', 'Telegram', 'Pixel Ofis', '7 Ajan'].map(t => (
+                  <span key={t} className="yzo-promo-tag">{t}</span>
+                ))}
+              </div>
+              <span className="yzo-promo-cta">Projeyi &#304;ncele &#8594;</span>
+            </div>
+            <div className="yzo-promo-stats">
+              <div className="yzo-promo-stat">
+                <div className="yzo-promo-stat-val">7</div>
+                <div className="yzo-promo-stat-lbl">Ajan</div>
+              </div>
+              <div className="yzo-promo-stat">
+                <div className="yzo-promo-stat-val">0&#8202;TL</div>
+                <div className="yzo-promo-stat-lbl">Ayl&#305;k Maliyet</div>
+              </div>
+              <div className="yzo-promo-stat">
+                <div className="yzo-promo-stat-val">%100</div>
+                <div className="yzo-promo-stat-lbl">Yerel</div>
+              </div>
+            </div>
+          </div>
+        </Link>
+      </div>
+
       {/* Öğren Progress — client (localStorage) */}
       <div className="v3-section" style={{ paddingBottom: '32px' }}>
         <h2 className="v3-section-title">📚 İnteraktif Öğrenme</h2>
@@ -428,10 +552,10 @@ export default async function V3HomePage() {
         </div>
       </div>
 
-      {/* Yapay Zeka Ofisi promo */}
-      <div className="v3-section" style={{ paddingTop: 0, paddingBottom: '32px' }}>
+      {/* Yapay Zeka Ofisi promo — KALDIRILDI, üstte gösteriliyor */}
+      {false && <div className="v3-section" style={{ paddingTop: 0, paddingBottom: '32px' }}>
         <style>{`
-          .yzo-promo-card {
+          .yzo-promo-card-old {
             display: block; text-decoration: none; color: inherit;
             position: relative; overflow: hidden; border-radius: 20px;
             border: 1px solid rgba(99,102,241,0.3);
@@ -517,7 +641,7 @@ export default async function V3HomePage() {
             </div>
           </div>
         </Link>
-      </div>
+      </div>}
     </>
   );
 }
