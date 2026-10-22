@@ -427,6 +427,97 @@ export default async function V3HomePage() {
           ))}
         </div>
       </div>
+
+      {/* Yapay Zeka Ofisi promo */}
+      <div className="v3-section" style={{ paddingTop: 0, paddingBottom: '32px' }}>
+        <style>{`
+          .yzo-promo-card {
+            display: block; text-decoration: none; color: inherit;
+            position: relative; overflow: hidden; border-radius: 20px;
+            border: 1px solid rgba(99,102,241,0.3);
+            background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(20,184,166,0.07) 100%);
+            padding: 32px 36px;
+            transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+          }
+          .yzo-promo-card:hover {
+            border-color: rgba(99,102,241,0.55);
+            transform: translateY(-2px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+          }
+          .yzo-promo-inner {
+            position: relative; z-index: 1;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 32px; flex-wrap: wrap;
+          }
+          .yzo-promo-badge {
+            display: inline-block; padding: 3px 12px; border-radius: 999px; margin-bottom: 16px;
+            background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.25);
+            font-size: 11px; font-weight: 700; color: #818cf8; letter-spacing: 0.05em;
+          }
+          .yzo-promo-title {
+            font-size: clamp(22px,3.5vw,32px); font-weight: 800; margin: 0 0 10px;
+            letter-spacing: -0.6px;
+            background: linear-gradient(135deg, #f1f5f9 0%, #c7d2fe 50%, #5eead4 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+          }
+          .v3-light .yzo-promo-title {
+            background: linear-gradient(135deg, #1e293b 0%, #4f46e5 50%, #0d9488 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+          }
+          .yzo-promo-sub {
+            font-size: 14px; color: var(--v3-text-muted); margin: 0 0 20px;
+            line-height: 1.65; max-width: 480px;
+          }
+          .yzo-promo-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+          .yzo-promo-tag {
+            padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 600;
+            background: rgba(99,102,241,0.1); color: #818cf8;
+            border: 1px solid rgba(99,102,241,0.2);
+          }
+          .yzo-promo-emojis {
+            display: grid; grid-template-columns: repeat(4, 44px); gap: 8px; margin-bottom: 12px;
+          }
+          .yzo-promo-emoji-box {
+            width: 44px; height: 44px; border-radius: 12px;
+            background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.2);
+            display: flex; align-items: center; justify-content: center; font-size: 20px;
+          }
+          .yzo-promo-cta {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 700;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff;
+          }
+          @media (max-width: 700px) {
+            .yzo-promo-card { padding: 24px 20px; }
+          }
+        `}</style>
+        <Link href="/yapay-zeka-ofisi" className="yzo-promo-card">
+          <div className="yzo-promo-inner">
+            <div style={{ flex: 1, minWidth: '260px' }}>
+              <div className="yzo-promo-badge">KisiSEL AI PROJESI</div>
+              <h2 className="yzo-promo-title">Yapay Zeka Ofisi</h2>
+              <p className="yzo-promo-sub">
+                Raspberry Pi 5 üzerinde tamamen yerel 7 ajanlı ofis asistanı.
+                Bulut yok, abonelik yok, veri dışarı çıkmıyor. Aylık ek maliyet: 0 TL.
+              </p>
+              <div className="yzo-promo-tags">
+                {['Gemma 3 12B', 'Raspberry Pi 5', 'Tailscale', 'Telegram', 'Pixel Ofis'].map(t => (
+                  <span key={t} className="yzo-promo-tag">{t}</span>
+                ))}
+              </div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+              <div className="yzo-promo-emojis">
+                {['\u{1F4EC}', '\u{1F4C5}', '\u{1F4CB}', '\u{1F4F0}', '\u{270D}', '\u{1F50D}', '\u{1F6E1}'].map((e, i) => (
+                  <div key={i} className="yzo-promo-emoji-box">{e}</div>
+                ))}
+                <div className="yzo-promo-emoji-box" style={{ opacity: 0 }} />
+              </div>
+              <span className="yzo-promo-cta">Projeyi Incele</span>
+            </div>
+          </div>
+        </Link>
+      </div>
     </>
   );
 }
