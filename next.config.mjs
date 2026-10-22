@@ -52,6 +52,7 @@ const nextConfig = {
         { source: '/admin', destination: '/v3/admin' },
         { source: '/admin/:path*', destination: '/v3/admin/:path*' },
         { source: '/analiz', destination: '/v3/analiz' },
+        { source: '/yapay-zeka-ofisi', destination: '/v3/yapay-zeka-ofisi' },
       ],
     };
   },

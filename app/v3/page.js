@@ -406,6 +406,91 @@ export default async function V3HomePage() {
       {/* Öne çıkan içerikler */}
       <V3FeaturedSection />
 
+      {/* Yapay Zeka Ofisi — proje tanıtım kartı */}
+      <div className="v3-section" style={{ paddingTop: 0, paddingBottom: '32px' }}>
+        <Link href="/yapay-zeka-ofisi" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+          <div style={{
+            position: 'relative', overflow: 'hidden', borderRadius: '20px',
+            border: '1px solid rgba(99,102,241,0.3)',
+            background: 'linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(20,184,166,0.07) 100%)',
+            padding: '32px 36px',
+            transition: 'border-color 0.2s, transform 0.2s, box-shadow 0.2s',
+          }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(99,102,241,0.55)'; e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.boxShadow='0 20px 60px rgba(0,0,0,0.3)'; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor='rgba(99,102,241,0.3)'; e.currentTarget.style.transform=''; e.currentTarget.style.boxShadow=''; }}
+          >
+            {/* Arkaplan dekor */}
+            <div style={{
+              position: 'absolute', right: '-20px', top: '-20px',
+              width: '280px', height: '280px', borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%)',
+              pointerEvents: 'none',
+            }} />
+            <div style={{
+              position: 'absolute', left: '60%', bottom: '-40px',
+              width: '200px', height: '200px', borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(20,184,166,0.1) 0%, transparent 70%)',
+              pointerEvents: 'none',
+            }} />
+
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '32px', flexWrap: 'wrap' }}>
+              <div style={{ flex: 1, minWidth: '260px' }}>
+                <div style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '6px',
+                  padding: '3px 12px', borderRadius: '999px', marginBottom: '16px',
+                  background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.25)',
+                  fontSize: '11px', fontWeight: 700, color: '#818cf8', letterSpacing: '0.05em',
+                }}>
+                  🤖 KİŞİSEL AI PROJESİ
+                </div>
+                <h2 style={{
+                  fontSize: 'clamp(22px,3.5vw,32px)', fontWeight: 800, margin: '0 0 10px',
+                  letterSpacing: '-0.6px',
+                  background: 'linear-gradient(135deg, #f1f5f9 0%, #c7d2fe 50%, #5eead4 100%)',
+                  WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+                }}>
+                  Yapay Zeka Ofisi
+                </h2>
+                <p style={{ fontSize: '14px', color: 'var(--v3-text-muted)', margin: '0 0 20px', lineHeight: 1.65, maxWidth: '480px' }}>
+                  Raspberry Pi 5 üzerinde tamamen yerel 7 ajanlı ofis asistanı. Bulut yok, abonelik yok,
+                  veri dışarı çıkmıyor. Aylık ek maliyet: <strong style={{ color: '#10b981' }}>0 TL.</strong>
+                </p>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  {['Gemma 3 12B', 'Raspberry Pi 5', 'Tailscale', 'Telegram', 'Pixel Ofis'].map(t => (
+                    <span key={t} style={{
+                      padding: '3px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: 600,
+                      background: 'rgba(99,102,241,0.1)', color: '#818cf8',
+                      border: '1px solid rgba(99,102,241,0.2)',
+                    }}>{t}</span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Sağ: ajan mini grid + CTA */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-end' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 44px)', gap: '8px' }}>
+                  {['📬', '📅', '📋', '📰', '✍️', '🔍', '🛡️', ''].map((e, i) => e ? (
+                    <div key={i} style={{
+                      width: '44px', height: '44px', borderRadius: '12px',
+                      background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.2)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px',
+                    }}>{e}</div>
+                  ) : <div key={i} />)}
+                </div>
+                <span style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '6px',
+                  padding: '10px 20px', borderRadius: '10px', fontSize: '14px', fontWeight: 700,
+                  background: 'linear-gradient(135deg,#6366f1,#8b5cf6)',
+                  color: '#fff',
+                }}>
+                  Projeyi İncele →
+                </span>
+              </div>
+            </div>
+          </div>
+        </Link>
+      </div>
+
       {/* AI Tutor — client */}
       <div className="v3-section" style={{ paddingTop: 0 }}>
         <h2 className="v3-section-title">🤖 AI Tutor</h2>

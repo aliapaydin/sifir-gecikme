@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-const CURRENT_VERSION = 'v4.0.1';
+const CURRENT_VERSION = 'v4.1.0';
 
 const tipRenk = {
   yeni:        { bg: 'rgba(99,102,241,0.12)',  text: '#818cf8', label: 'YENİ' },
@@ -77,6 +77,16 @@ function GrupItem({ o }) {
 }
 
 const versiyonlar = [
+  {
+    versiyon: 'v4.1.0',
+    tarih: '22 Ekim 2026',
+    baslik: 'Yapay Zeka Ofisi Proje Sayfası',
+    ozellikler: [
+      { tip: 'yeni', metin: 'Yapay Zeka Ofisi proje sayfası eklendi (/yapay-zeka-ofisi) — 7 ajan, mimari, hibrit yerel model, güvenlik ilkeleri ve adım adım yolculuk' },
+      { tip: 'yeni', metin: 'Anasayfaya Yapay Zeka Ofisi tanıtım kartı eklendi — gradient arka plan, ajan emoji grid ve proje sayfasına bağlantı' },
+      { tip: 'yeni', metin: 'next.config.mjs\'e /yapay-zeka-ofisi → /v3/yapay-zeka-ofisi rewrite eklendi' },
+    ],
+  },
   {
     versiyon: 'v4.0.1',
     tarih: '22 Ekim 2026',
