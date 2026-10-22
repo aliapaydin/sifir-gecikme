@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { CURRENT_VERSION } from '../../../lib/versiyon';
 import { usePathname } from 'next/navigation';
 
 export default function V3Footer() {
@@ -100,7 +101,7 @@ export default function V3Footer() {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
               <span className="v3-footer-brand">Sıfır Gecikme</span>
-<Link href="/versiyon" className="v3-footer-version">v4.0.0</Link>
+<Link href="/versiyon" className="v3-footer-version">{CURRENT_VERSION}</Link>
             </div>
             <div className="v3-footer-copy">© 2026 Ali Apaydın. Tüm hakları saklıdır.</div>
           </div>
