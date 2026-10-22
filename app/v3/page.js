@@ -368,9 +368,14 @@ export default async function V3HomePage() {
             border-color: rgba(99,102,241,0.25);
           }
           .yzo-promo-banner {
-            width: 100%; height: 240px; object-fit: cover;
+            width: 100%; height: 220px;
             display: block; border-radius: 24px 24px 0 0;
             border-bottom: 1px solid rgba(99,102,241,0.2);
+            position: relative; overflow: hidden;
+            background: linear-gradient(135deg, #0a0f1e 0%, #11062a 50%, #060d1f 100%);
+          }
+          .v3-light .yzo-promo-banner {
+            background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 50%, #ecfdf5 100%);
           }
           @media (max-width: 700px) {
             .yzo-promo-banner { height: 160px; }
@@ -437,7 +442,160 @@ export default async function V3HomePage() {
           }
         `}</style>
         <Link href="/yapay-zeka-ofisi" className="yzo-promo-card">
-          <img src="/yzo/banner.png" alt="Yapay Zeka Ofisi" className="yzo-promo-banner" />
+          {/* SVG pixel-ofis banner — inline, kesme yok */}
+          <div className="yzo-promo-banner">
+            <svg viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg"
+              style={{ width: '100%', height: '100%', display: 'block' }}
+              preserveAspectRatio="xMidYMid slice">
+              <defs>
+                <radialGradient id="yzo-bg-glow" cx="50%" cy="60%" r="60%">
+                  <stop offset="0%" stopColor="#312e81" stopOpacity="0.6"/>
+                  <stop offset="100%" stopColor="#000000" stopOpacity="0"/>
+                </radialGradient>
+                <radialGradient id="yzo-pi-glow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor="#6366f1" stopOpacity="0.5"/>
+                  <stop offset="100%" stopColor="#6366f1" stopOpacity="0"/>
+                </radialGradient>
+                <filter id="yzo-blur">
+                  <feGaussianBlur stdDeviation="2.5"/>
+                </filter>
+                <filter id="yzo-glow-sm">
+                  <feGaussianBlur stdDeviation="4" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+
+              {/* Arka plan gradyanları */}
+              <rect width="900" height="220" fill="url(#yzo-bg-glow)"/>
+              <circle cx="160" cy="110" r="130" fill="rgba(99,102,241,0.07)"/>
+              <circle cx="750" cy="90" r="100" fill="rgba(20,184,166,0.06)"/>
+
+              {/* Grid çizgileri */}
+              {[0,60,120,180,240,300,360,420,480,540,600,660,720,780,840,900].map(x => (
+                <line key={x} x1={x} y1="0" x2={x} y2="220" stroke="rgba(99,102,241,0.07)" strokeWidth="1"/>
+              ))}
+              {[0,40,80,120,160,200].map(y => (
+                <line key={y} x1="0" y1={y} x2="900" y2={y} stroke="rgba(99,102,241,0.07)" strokeWidth="1"/>
+              ))}
+
+              {/* === MASA 1 — Postacı (sol) === */}
+              <rect x="40" y="80" width="80" height="50" rx="4" fill="rgba(99,102,241,0.15)" stroke="rgba(99,102,241,0.4)" strokeWidth="1"/>
+              <rect x="48" y="88" width="64" height="34" rx="2" fill="rgba(10,15,35,0.7)" stroke="rgba(99,102,241,0.25)" strokeWidth="0.5"/>
+              <rect x="52" y="92" width="56" height="4" rx="1" fill="rgba(99,102,241,0.5)"/>
+              <rect x="52" y="99" width="40" height="3" rx="1" fill="rgba(99,102,241,0.3)"/>
+              <rect x="52" y="105" width="48" height="3" rx="1" fill="rgba(99,102,241,0.3)"/>
+              <rect x="52" y="111" width="32" height="3" rx="1" fill="rgba(99,102,241,0.2)"/>
+              {/* Ajan avatarı */}
+              <circle cx="80" cy="72" r="10" fill="rgba(99,102,241,0.2)" stroke="rgba(99,102,241,0.5)" strokeWidth="1.5"/>
+              <text x="80" y="76" textAnchor="middle" fontSize="11" fill="white">📬</text>
+              <text x="80" y="148" textAnchor="middle" fontSize="8" fill="rgba(99,102,241,0.8)" fontFamily="monospace">Postacı</text>
+
+              {/* === MASA 2 — Takvimci === */}
+              <rect x="155" y="75" width="80" height="55" rx="4" fill="rgba(139,92,246,0.12)" stroke="rgba(139,92,246,0.35)" strokeWidth="1"/>
+              <rect x="163" y="83" width="64" height="38" rx="2" fill="rgba(10,15,35,0.7)" stroke="rgba(139,92,246,0.2)" strokeWidth="0.5"/>
+              {/* Takvim grid */}
+              {[0,1,2,3,4,5,6].map(i => [0,1,2,3].map(j => (
+                <rect key={`${i}-${j}`} x={166+i*8} y={87+j*8} width="6" height="6" rx="1"
+                  fill={i===2&&j===1 ? "rgba(139,92,246,0.8)" : "rgba(139,92,246,0.15)"}
+                  stroke="rgba(139,92,246,0.2)" strokeWidth="0.5"/>
+              )))}
+              <circle cx="195" cy="67" r="10" fill="rgba(139,92,246,0.2)" stroke="rgba(139,92,246,0.5)" strokeWidth="1.5"/>
+              <text x="195" y="71" textAnchor="middle" fontSize="11" fill="white">📅</text>
+              <text x="195" y="148" textAnchor="middle" fontSize="8" fill="rgba(139,92,246,0.8)" fontFamily="monospace">Takvimci</text>
+
+              {/* === MASA 3 — Sekreter === */}
+              <rect x="270" y="78" width="80" height="52" rx="4" fill="rgba(20,184,166,0.1)" stroke="rgba(20,184,166,0.35)" strokeWidth="1"/>
+              <rect x="278" y="86" width="64" height="36" rx="2" fill="rgba(10,15,35,0.7)" stroke="rgba(20,184,166,0.2)" strokeWidth="0.5"/>
+              <rect x="282" y="90" width="56" height="3" rx="1" fill="rgba(20,184,166,0.5)"/>
+              <rect x="282" y="96" width="44" height="3" rx="1" fill="rgba(20,184,166,0.3)"/>
+              <rect x="282" y="102" width="50" height="3" rx="1" fill="rgba(20,184,166,0.3)"/>
+              <rect x="282" y="108" width="36" height="3" rx="1" fill="rgba(20,184,166,0.2)"/>
+              <rect x="282" y="114" width="48" height="3" rx="1" fill="rgba(20,184,166,0.2)"/>
+              <circle cx="310" cy="70" r="10" fill="rgba(20,184,166,0.2)" stroke="rgba(20,184,166,0.5)" strokeWidth="1.5"/>
+              <text x="310" y="74" textAnchor="middle" fontSize="11" fill="white">📋</text>
+              <text x="310" y="148" textAnchor="middle" fontSize="8" fill="rgba(20,184,166,0.8)" fontFamily="monospace">Sekreter</text>
+
+              {/* === TOPLANTI ODASI (merkez) === */}
+              <rect x="390" y="55" width="120" height="110" rx="8" fill="rgba(99,102,241,0.05)" stroke="rgba(99,102,241,0.25)" strokeWidth="1.5" strokeDasharray="4 2"/>
+              <text x="450" y="75" textAnchor="middle" fontSize="8" fill="rgba(99,102,241,0.5)" fontFamily="monospace" letterSpacing="1">TOPLANTI ODASI</text>
+              {/* Yuvarlak masa */}
+              <ellipse cx="450" cy="120" rx="36" ry="22" fill="rgba(99,102,241,0.1)" stroke="rgba(99,102,241,0.3)" strokeWidth="1"/>
+              {/* Küçük sandalyeler */}
+              {[
+                [450, 92, '📬'], [480, 108, '📅'], [476, 138, '📋'],
+                [450, 148, '📰'], [420, 138, '✍️'], [418, 108, '🔍']
+              ].map(([cx, cy, em], i) => (
+                <g key={i}>
+                  <circle cx={cx} cy={cy} r="8" fill="rgba(99,102,241,0.15)" stroke="rgba(99,102,241,0.35)" strokeWidth="1"/>
+                  <text x={cx} y={cy+3.5} textAnchor="middle" fontSize="8" fill="white">{em}</text>
+                </g>
+              ))}
+              {/* Bekçi ayrıda */}
+              <circle cx="450" cy="120" r="7" fill="rgba(16,185,129,0.2)" stroke="rgba(16,185,129,0.5)" strokeWidth="1"/>
+              <text x="450" y="123.5" textAnchor="middle" fontSize="7" fill="white">🛡️</text>
+
+              {/* === MASA 4 — Haberci === */}
+              <rect x="555" y="75" width="80" height="52" rx="4" fill="rgba(249,115,22,0.1)" stroke="rgba(249,115,22,0.35)" strokeWidth="1"/>
+              <rect x="563" y="83" width="64" height="36" rx="2" fill="rgba(10,15,35,0.7)" stroke="rgba(249,115,22,0.2)" strokeWidth="0.5"/>
+              {[0,1,2,3,4].map(i => (
+                <rect key={i} x="567" y={87+i*6} width={i%2===0 ? 56 : 44} height="4" rx="1"
+                  fill={i===0 ? "rgba(249,115,22,0.6)" : "rgba(249,115,22,0.25)"}/>
+              ))}
+              <circle cx="595" cy="67" r="10" fill="rgba(249,115,22,0.2)" stroke="rgba(249,115,22,0.5)" strokeWidth="1.5"/>
+              <text x="595" y="71" textAnchor="middle" fontSize="11" fill="white">📰</text>
+              <text x="595" y="145" textAnchor="middle" fontSize="8" fill="rgba(249,115,22,0.8)" fontFamily="monospace">Haberci</text>
+
+              {/* === MASA 5 — Yazar === */}
+              <rect x="670" y="80" width="80" height="50" rx="4" fill="rgba(236,72,153,0.1)" stroke="rgba(236,72,153,0.35)" strokeWidth="1"/>
+              <rect x="678" y="88" width="64" height="34" rx="2" fill="rgba(10,15,35,0.7)" stroke="rgba(236,72,153,0.2)" strokeWidth="0.5"/>
+              <rect x="682" y="92" width="50" height="3" rx="1" fill="rgba(236,72,153,0.5)"/>
+              <rect x="682" y="98" width="56" height="3" rx="1" fill="rgba(236,72,153,0.3)"/>
+              <rect x="682" y="104" width="40" height="3" rx="1" fill="rgba(236,72,153,0.3)"/>
+              <rect x="682" y="110" width="52" height="3" rx="1" fill="rgba(236,72,153,0.2)"/>
+              {/* imleç */}
+              <rect x="735" y="110" width="2" height="8" rx="1" fill="rgba(236,72,153,0.8)"/>
+              <circle cx="710" cy="72" r="10" fill="rgba(236,72,153,0.2)" stroke="rgba(236,72,153,0.5)" strokeWidth="1.5"/>
+              <text x="710" y="76" textAnchor="middle" fontSize="11" fill="white">✍️</text>
+              <text x="710" y="148" textAnchor="middle" fontSize="8" fill="rgba(236,72,153,0.8)" fontFamily="monospace">Yazar</text>
+
+              {/* === SUNUCU ODASI (sağ) === */}
+              <rect x="795" y="60" width="90" height="100" rx="6" fill="rgba(16,185,129,0.06)" stroke="rgba(16,185,129,0.3)" strokeWidth="1.5"/>
+              <text x="840" y="78" textAnchor="middle" fontSize="7" fill="rgba(16,185,129,0.5)" fontFamily="monospace" letterSpacing="0.5">SUNUCU</text>
+              {/* Raspberry Pi kutusu */}
+              <rect x="810" y="85" width="60" height="36" rx="4" fill="rgba(16,185,129,0.12)" stroke="rgba(16,185,129,0.4)" strokeWidth="1"/>
+              <rect x="814" y="89" width="52" height="24" rx="2" fill="rgba(10,15,35,0.8)"/>
+              <text x="840" y="104" textAnchor="middle" fontSize="7" fill="rgba(16,185,129,0.9)" fontFamily="monospace">Pi 5 · 8GB</text>
+              {/* LED ışıkları */}
+              {[0,1,2].map(i => (
+                <circle key={i} cx={818+i*8} cy={130} r="2.5"
+                  fill={i===0 ? "#10b981" : i===1 ? "#fbbf24" : "rgba(99,102,241,0.6)"}/>
+              ))}
+              <circle cx="840" cy="148" r="10" fill="rgba(16,185,129,0.2)" stroke="rgba(16,185,129,0.5)" strokeWidth="1.5"/>
+              <text x="840" y="152" textAnchor="middle" fontSize="11" fill="white">🛡️</text>
+              <text x="840" y="168" textAnchor="middle" fontSize="7" fill="rgba(16,185,129,0.8)" fontFamily="monospace">Bekçi</text>
+
+              {/* === Telegram baloncukları (sağ alt) === */}
+              <rect x="40" y="165" width="160" height="20" rx="10" fill="rgba(99,102,241,0.12)" stroke="rgba(99,102,241,0.25)" strokeWidth="0.5"/>
+              <text x="120" y="179" textAnchor="middle" fontSize="8.5" fill="rgba(200,210,255,0.8)" fontFamily="monospace">📬 3 yeni mail önemlendi</text>
+
+              <rect x="230" y="165" width="170" height="20" rx="10" fill="rgba(20,184,166,0.1)" stroke="rgba(20,184,166,0.25)" strokeWidth="0.5"/>
+              <text x="315" y="179" textAnchor="middle" fontSize="8.5" fill="rgba(180,240,230,0.8)" fontFamily="monospace">📅 Toplantı 15 dk sonra</text>
+
+              <rect x="420" y="165" width="180" height="20" rx="10" fill="rgba(249,115,22,0.1)" stroke="rgba(249,115,22,0.25)" strokeWidth="0.5"/>
+              <text x="510" y="179" textAnchor="middle" fontSize="8.5" fill="rgba(255,210,170,0.8)" fontFamily="monospace">📰 Sabah özeti hazır</text>
+
+              <rect x="620" y="165" width="170" height="20" rx="10" fill="rgba(16,185,129,0.1)" stroke="rgba(16,185,129,0.25)" strokeWidth="0.5"/>
+              <text x="705" y="179" textAnchor="middle" fontSize="8.5" fill="rgba(170,240,210,0.8)" fontFamily="monospace">🛡️ Pi: ✓ PC: ✓ Net: ✓</text>
+
+              {/* Bağlantı çizgileri */}
+              <line x1="140" y1="115" x2="390" y2="120" stroke="rgba(99,102,241,0.15)" strokeWidth="1" strokeDasharray="4 3"/>
+              <line x1="255" y1="110" x2="390" y2="115" stroke="rgba(139,92,246,0.15)" strokeWidth="1" strokeDasharray="4 3"/>
+              <line x1="350" y1="110" x2="390" y2="115" stroke="rgba(20,184,166,0.15)" strokeWidth="1" strokeDasharray="4 3"/>
+              <line x1="510" y1="110" x2="550" y2="115" stroke="rgba(249,115,22,0.15)" strokeWidth="1" strokeDasharray="4 3"/>
+              <line x1="635" y1="105" x2="670" y2="105" stroke="rgba(236,72,153,0.15)" strokeWidth="1" strokeDasharray="4 3"/>
+              <line x1="750" y1="110" x2="795" y2="110" stroke="rgba(16,185,129,0.15)" strokeWidth="1" strokeDasharray="4 3"/>
+            </svg>
+          </div>
           <div className="yzo-promo-body">
             <div style={{ flex: 1, minWidth: '260px' }}>
               <div className="yzo-promo-badge">&#x1F4A1; KiSiSEL AI PROJESi</div>
