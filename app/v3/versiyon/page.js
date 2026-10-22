@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-const CURRENT_VERSION = 'v4.0.0';
+const CURRENT_VERSION = 'v4.0.1';
 
 const tipRenk = {
   yeni:        { bg: 'rgba(99,102,241,0.12)',  text: '#818cf8', label: 'YENİ' },
@@ -77,6 +77,14 @@ function GrupItem({ o }) {
 }
 
 const versiyonlar = [
+  {
+    versiyon: 'v4.0.1',
+    tarih: '22 Ekim 2026',
+    baslik: 'Yapılandırma & Uyarı Düzeltmeleri',
+    ozellikler: [
+      { tip: 'düzeltme', metin: 'Turbopack root dizini next.config.mjs\'e eklendi — "multiple lockfiles" uyarısı giderildi' },
+    ],
+  },
   {
     versiyon: 'v4.0.0',
     tarih: '13 Haziran 2026',
