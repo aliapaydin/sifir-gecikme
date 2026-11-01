@@ -333,6 +333,19 @@ export default function AdminDashboard() {
             </div>
           </div>
 
+          <Link href="/admin/camdock" className="admin-nav-card">
+            <div className="admin-nav-icon" style={{ background: 'rgba(47,123,255,0.1)' }}>
+              🪟
+            </div>
+            <div className="admin-nav-label">Cam Dock</div>
+            <div className="admin-nav-desc">
+              Aktif kurulumlar, sürümler, ülkeler, widget kullanımı, kaldırılanlar (anonim).
+            </div>
+            <div style={{ fontSize: '13px', color: '#60a5fa', fontWeight: 600 }}>
+              Görüntüle →
+            </div>
+          </Link>
+
           <Link href="/admin/analitik" className="admin-nav-card">
             <div className="admin-nav-icon" style={{ background: 'rgba(249,115,22,0.1)' }}>
               📊
