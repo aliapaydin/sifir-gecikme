@@ -77,6 +77,17 @@ function GrupItem({ o }) {
 
 const versiyonlar = [
   {
+    versiyon: 'v4.3.1',
+    tarih: '2 Kasım 2026',
+    baslik: 'Vurgu Rengi Hesaba Kaydediliyor',
+    ozellikler: [
+      { tip: 'yeni', metin: 'Giriş yapan kullanıcının vurgu rengi veritabanına kaydediliyor; hangi cihazdan girersen gir kendi rengin geliyor' },
+      { tip: 'yeni', metin: 'Hesabında henüz renk yoksa, giriş yaptığın tarayıcıdaki seçim hesabına aktarılıyor' },
+      { tip: 'iyileştirme', metin: 'Girişsiz kullanımda renk tarayıcıda saklanmaya devam ediyor; çıkış yapınca girişten önceki renk geri geliyor' },
+      { tip: 'iyileştirme', metin: 'Özel renk seçerken art arda istek atılmıyor; seçim bitince tek seferde kaydediliyor' },
+    ],
+  },
+  {
     versiyon: 'v4.3.0',
     tarih: '2 Kasım 2026',
     baslik: 'Grafit + Zümrüt Tema ve Vurgu Rengi Seçici',

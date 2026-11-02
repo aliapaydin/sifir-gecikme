@@ -23,6 +23,7 @@ export async function GET() {
         patreonLinkedAt: session.patreonLinkedAt,
         patreonName: session.patreonName,
         theme: session.theme,
+        accent: session.accent,
       },
     });
   } catch (err) {

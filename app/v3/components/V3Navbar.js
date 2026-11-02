@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { clearSyncedLocal } from '../../../lib/userSync';
-import { ACCENT_PRESETS, DEFAULT_ACCENT, applyAccent, getSavedAccent, saveAccent, resolveAccentHex } from '../../../lib/v3/accent';
+import { ACCENT_PRESETS, DEFAULT_ACCENT, ACCENT_GUEST_KEY, applyAccent, getSavedAccent, saveAccent, resolveAccentHex, isValidAccent } from '../../../lib/v3/accent';
 
 const playgroundItems = [
   { emoji: '🐍', label: 'Python Playground', href: '/python' },
@@ -47,6 +47,8 @@ export default function V3Navbar() {
   const [accent, setAccent] = useState(DEFAULT_ACCENT);
   const [accOpen, setAccOpen] = useState(false);
   const accRef = useRef(null);
+  const accentHydratedRef = useRef(false);
+  const accentSaveTimer = useRef(null);
 
   useEffect(() => {
     fetch('/api/v3/auth/me')
@@ -61,6 +63,24 @@ export default function V3Navbar() {
           localStorage.setItem('v3_theme', data.user.theme);
           setThemeMode(data.user.theme);
         }
+        // Vurgu rengi: hesapta kayıtlıysa onu kullan, değilse bu tarayıcıdaki seçimi hesaba aktar
+        if (!accentHydratedRef.current) {
+          accentHydratedRef.current = true;
+          const local = getSavedAccent();
+          try {
+            // Girişten önceki (misafir) seçimi sakla; çıkışta geri yüklenecek
+            if (localStorage.getItem(ACCENT_GUEST_KEY) === null) localStorage.setItem(ACCENT_GUEST_KEY, local);
+          } catch {}
+          if (isValidAccent(data.user.accent)) {
+            if (data.user.accent !== local) {
+              applyAccent(data.user.accent);
+              saveAccent(data.user.accent);
+            }
+            setAccent(data.user.accent);
+          } else if (local !== DEFAULT_ACCENT) {
+            persistAccent(local);
+          }
+        }
       })
       .catch(() => {});
   }, [pathname]);
@@ -71,10 +91,24 @@ export default function V3Navbar() {
     setAccent(getSavedAccent());
   }, []);
 
+  // Hesaba kaydet (renk paletinde sürüklerken art arda istek atmamak için kısa gecikmeli)
+  function persistAccent(choice) {
+    clearTimeout(accentSaveTimer.current);
+    accentSaveTimer.current = setTimeout(() => {
+      fetch('/api/v3/accent', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ accent: choice }),
+      }).catch(() => {});
+    }, 500);
+  }
+
   function pickAccent(choice) {
-    applyAccent(choice);
-    saveAccent(choice);
-    setAccent(choice || DEFAULT_ACCENT);
+    const c = choice || DEFAULT_ACCENT;
+    applyAccent(c);
+    saveAccent(c);
+    setAccent(c);
+    if (user) persistAccent(c);
   }
   const accentHex = resolveAccentHex(accent) || '#10b981';
   const isCustomAccent = !ACCENT_PRESETS.some(p => p.id === accent);
@@ -151,6 +185,14 @@ export default function V3Navbar() {
       await fetch('/api/v3/auth/logout', { method: 'POST' });
       // Paylaşılan cihazda hesaplar arası sızıntıyı önlemek için senkron veriyi temizle
       clearSyncedLocal();
+      // Vurgu rengi: girişten önceki misafir seçimine dön
+      try {
+        const guest = localStorage.getItem(ACCENT_GUEST_KEY);
+        if (guest !== null) {
+          saveAccent(guest);
+          localStorage.removeItem(ACCENT_GUEST_KEY);
+        }
+      } catch {}
       window.location.href = '/';
     } finally {
       setLoggingOut(false);
