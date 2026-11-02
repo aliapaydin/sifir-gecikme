@@ -1,6 +1,10 @@
 'use client';
 
 import { useEffect } from 'react';
+import { accentBootScript, applyAccent, getSavedAccent } from '../../../lib/v3/accent';
+
+// Sayfa boyanmadan önce tema sınıfını ve vurgu rengini uygular (renk "yanıp sönmesin" diye)
+const BOOT = accentBootScript();
 
 function applyTheme(mode) {
   const root = document.getElementById('v3-root');
@@ -19,8 +23,10 @@ function applyTheme(mode) {
 
 export default function V3ThemeWrapper({ children }) {
   useEffect(() => {
-    const saved = localStorage.getItem('v3_theme') || 'dark';
+    let saved = 'dark';
+    try { saved = localStorage.getItem('v3_theme') || 'dark'; } catch {}
     applyTheme(saved);
+    applyAccent(getSavedAccent());
 
     // Sistem teması takip et
     if (saved === 'system') {
@@ -32,7 +38,8 @@ export default function V3ThemeWrapper({ children }) {
   }, []);
 
   return (
-    <div id="v3-root" className="v3-root">
+    <div id="v3-root" className="v3-root" suppressHydrationWarning>
+      <script dangerouslySetInnerHTML={{ __html: BOOT }} />
       {children}
     </div>
   );

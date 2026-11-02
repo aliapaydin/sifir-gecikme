@@ -34,17 +34,17 @@ export default function SifremiUnuttumPage() {
       <style>{`
         .v3-auth-page { min-height: calc(100vh - 144px); display: flex; align-items: center; justify-content: center; padding: 40px 24px; }
         .v3-auth-card { width: 100%; max-width: 420px; background: var(--v3-surface); border: 1px solid var(--v3-border); border-radius: 20px; padding: 40px; }
-        .v3-auth-logo { text-align: center; font-size: 28px; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(135deg,#6366f1,#8b5cf6,#14b8a6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; }
+        .v3-auth-logo { text-align: center; font-size: 28px; font-weight: 800; letter-spacing: -0.5px; background: var(--v3-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; }
         .v3-auth-title { text-align: center; font-size: 16px; color: var(--v3-text-muted); margin: 0 0 28px; }
         .v3-field { display: flex; flex-direction: column; gap: 6px; }
         .v3-label { font-size: 13px; font-weight: 500; color: var(--v3-text-muted); }
         .v3-input { padding: 11px 14px; border-radius: 8px; background: var(--v3-bg); border: 1px solid var(--v3-border-bright); color: var(--v3-text); font-size: 15px; outline: none; transition: border-color 0.15s; width: 100%; }
-        .v3-input:focus { border-color: rgba(99,102,241,0.5); }
+        .v3-input:focus { border-color: rgba(var(--v3-accent-rgb),0.5); }
         .v3-error { padding: 10px 14px; border-radius: 8px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); color: #fca5a5; font-size: 13px; }
-        .v3-auth-submit { padding: 13px; border-radius: 10px; background: linear-gradient(135deg,#6366f1,#8b5cf6); color: #fff; font-size: 15px; font-weight: 600; border: none; cursor: pointer; transition: opacity 0.15s; width: 100%; margin-top: 8px; }
+        .v3-auth-submit { padding: 13px; border-radius: 10px; background: var(--v3-accent); color: var(--v3-on-accent); font-size: 15px; font-weight: 600; border: none; cursor: pointer; transition: opacity 0.15s; width: 100%; margin-top: 8px; }
         .v3-auth-submit:disabled { opacity: 0.6; cursor: not-allowed; }
         .v3-auth-footer { text-align: center; font-size: 14px; color: var(--v3-text-muted); margin-top: 20px; }
-        .v3-auth-footer a { color: #818cf8; font-weight: 500; }
+        .v3-auth-footer a { color: var(--v3-accent-text); font-weight: 500; }
       `}</style>
       <div className="v3-auth-page">
         <div className="v3-auth-card">

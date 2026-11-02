@@ -21,7 +21,7 @@ function SifreSifirlaInner() {
         </p>
         <Link href="/sifremi-unuttum" style={{
           display: 'inline-block', padding: '11px 24px', borderRadius: '10px',
-          background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', color: '#fff',
+          background: 'var(--v3-accent)', color: 'var(--v3-on-accent)',
           fontSize: '14px', fontWeight: 600, textDecoration: 'none',
         }}>
           Yeni Link İste
@@ -64,7 +64,7 @@ function SifreSifirlaInner() {
         </p>
         <Link href="/giris" style={{
           display: 'inline-block', padding: '12px 28px', borderRadius: '10px',
-          background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', color: '#fff',
+          background: 'var(--v3-accent)', color: 'var(--v3-on-accent)',
           fontSize: '15px', fontWeight: 600, textDecoration: 'none',
         }}>
           Giriş Yap
@@ -75,7 +75,7 @@ function SifreSifirlaInner() {
 
   return (
     <>
-      <div style={{ textAlign: 'center', fontSize: '28px', fontWeight: 800, letterSpacing: '-0.5px', background: 'linear-gradient(135deg,#6366f1,#8b5cf6,#14b8a6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', marginBottom: '8px' }}>
+      <div style={{ textAlign: 'center', fontSize: '28px', fontWeight: 800, letterSpacing: '-0.5px', background: 'var(--v3-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', marginBottom: '8px' }}>
         ◈ Sıfır Gecikme v3
       </div>
       <p style={{ textAlign: 'center', fontSize: '16px', color: 'var(--v3-text-muted)', margin: '0 0 28px' }}>
@@ -104,8 +104,8 @@ function SifreSifirlaInner() {
           </div>
         )}
         <button type="submit" disabled={loading} style={{
-          padding: '13px', borderRadius: '10px', background: 'linear-gradient(135deg,#6366f1,#8b5cf6)',
-          color: '#fff', fontSize: '15px', fontWeight: 600, border: 'none', cursor: 'pointer',
+          padding: '13px', borderRadius: '10px', background: 'var(--v3-accent)',
+          color: 'var(--v3-on-accent)', fontSize: '15px', fontWeight: 600, border: 'none', cursor: 'pointer',
           opacity: loading ? 0.6 : 1, marginTop: '4px',
         }}>
           {loading ? 'Kaydediliyor…' : 'Şifremi Güncelle'}

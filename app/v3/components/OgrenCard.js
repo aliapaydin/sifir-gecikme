@@ -31,14 +31,14 @@ export default function OgrenCard() {
   return (
     <div style={{
       borderRadius: '20px', border: '1px solid rgba(20,184,166,0.25)',
-      background: 'linear-gradient(135deg, rgba(20,184,166,0.06) 0%, rgba(99,102,241,0.06) 100%)',
+      background: 'linear-gradient(135deg, rgba(20,184,166,0.06) 0%, rgba(var(--v3-accent-rgb),0.06) 100%)',
       padding: '28px 32px', display: 'flex', gap: '32px', alignItems: 'center', flexWrap: 'wrap',
     }}>
       <div style={{ flex: 1, minWidth: '220px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
           <div style={{
             width: '40px', height: '40px', borderRadius: '12px', flexShrink: 0,
-            background: 'linear-gradient(135deg, #14b8a6, #6366f1)',
+            background: 'var(--v3-gradient)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px',
           }}>📚</div>
           <div>
@@ -53,7 +53,7 @@ export default function OgrenCard() {
             <div style={{ fontSize: '11px', color: 'var(--v3-text-muted)' }}>/ {toplamDers} ders</div>
           </div>
           <div>
-            <div style={{ fontSize: '22px', fontWeight: 800, color: '#818cf8' }}>{toplamXP}</div>
+            <div style={{ fontSize: '22px', fontWeight: 800, color: 'var(--v3-accent-text)' }}>{toplamXP}</div>
             <div style={{ fontSize: '11px', color: 'var(--v3-text-muted)' }}>XP kazanıldı</div>
           </div>
           <div>
@@ -65,7 +65,7 @@ export default function OgrenCard() {
         <div style={{ background: 'rgba(255,255,255,0.06)', borderRadius: '8px', height: '6px', marginBottom: '16px', overflow: 'hidden' }}>
           <div style={{
             height: '100%', width: `${yuzde}%`, borderRadius: '8px',
-            background: 'linear-gradient(90deg, #14b8a6, #6366f1)',
+            background: 'var(--v3-gradient)',
             transition: 'width 0.6s ease',
           }} />
         </div>
@@ -73,7 +73,7 @@ export default function OgrenCard() {
         <Link href="/ogren" style={{
           display: 'inline-flex', alignItems: 'center', gap: '6px',
           padding: '8px 18px', borderRadius: '8px', fontSize: '13px', fontWeight: 600,
-          background: 'linear-gradient(135deg, #14b8a6, #6366f1)', color: '#fff',
+          background: 'var(--v3-gradient)', color: 'var(--v3-on-accent)',
           textDecoration: 'none', transition: 'opacity 0.15s',
         }}>
           {tamamlananSayi === 0 ? 'Öğrenmeye Başla →' : devamEden ? 'Devam Et →' : 'İlerle →'}

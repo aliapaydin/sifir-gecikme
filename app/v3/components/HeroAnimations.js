@@ -9,7 +9,7 @@ function NeuralNetAnim() {
       <style>{`
         @keyframes ha-pulse { 0%,100%{opacity:.35;transform:scale(1)} 50%{opacity:1;transform:scale(1.18)} }
         @keyframes ha-flow { 0%{stroke-dashoffset:120} 100%{stroke-dashoffset:0} }
-        @keyframes ha-glow { 0%,100%{filter:drop-shadow(0 0 6px #6366f188)} 50%{filter:drop-shadow(0 0 14px #6366f1cc)} }
+        @keyframes ha-glow { 0%,100%{filter:drop-shadow(0 0 6px rgba(var(--v3-accent-rgb),0.53))} 50%{filter:drop-shadow(0 0 14px rgba(var(--v3-accent-rgb),0.8))} }
         .ha-nn-wrap { width:100%;height:100%;display:flex;align-items:center;justify-content:center; }
         .ha-nn-wrap svg { animation: ha-glow 3s ease-in-out infinite; }
       `}</style>
@@ -18,13 +18,13 @@ function NeuralNetAnim() {
           {/* Layer 1 — 3 nodes */}
           {[40,100,160].map((y, i) => (
             <circle key={`l1-${i}`} cx="50" cy={y} r="14"
-              fill="#6366f1" opacity="0.9"
+              fill="var(--v3-accent)" opacity="0.9"
               style={{ animation: `ha-pulse ${1.4 + i * 0.3}s ease-in-out infinite` }} />
           ))}
           {/* Layer 2 — 4 nodes */}
           {[30,80,130,170].map((y, i) => (
             <circle key={`l2-${i}`} cx="130" cy={y} r="14"
-              fill="#8b5cf6" opacity="0.85"
+              fill="var(--v3-accent-text)" opacity="0.85"
               style={{ animation: `ha-pulse ${1.2 + i * 0.25}s ease-in-out infinite`, animationDelay: `${i * 0.15}s` }} />
           ))}
           {/* Layer 3 — 2 nodes */}
@@ -37,7 +37,7 @@ function NeuralNetAnim() {
           {[40,100,160].flatMap((y1, i) =>
             [30,80,130,170].map((y2, j) => (
               <line key={`e1-${i}-${j}`} x1="64" y1={y1} x2="116" y2={y2}
-                stroke="#6366f1" strokeWidth="1.2" opacity="0.28"
+                stroke="var(--v3-accent)" strokeWidth="1.2" opacity="0.28"
                 strokeDasharray="8 4"
                 style={{ animation: `ha-flow ${1.8 + (i + j) * 0.2}s linear infinite`, animationDelay: `${(i * 4 + j) * 0.08}s` }} />
             ))
@@ -46,14 +46,14 @@ function NeuralNetAnim() {
           {[30,80,130,170].flatMap((y1, i) =>
             [70,130].map((y2, j) => (
               <line key={`e2-${i}-${j}`} x1="144" y1={y1} x2="196" y2={y2}
-                stroke="#8b5cf6" strokeWidth="1.2" opacity="0.28"
+                stroke="var(--v3-accent-text)" strokeWidth="1.2" opacity="0.28"
                 strokeDasharray="8 4"
                 style={{ animation: `ha-flow ${1.6 + (i + j) * 0.22}s linear infinite`, animationDelay: `${(i * 2 + j) * 0.1}s` }} />
             ))
           )}
           {/* Labels */}
-          <text x="50" y="190" textAnchor="middle" fontSize="9" fill="#6366f188">Girdi</text>
-          <text x="130" y="190" textAnchor="middle" fontSize="9" fill="#8b5cf688">Gizli</text>
+          <text x="50" y="190" textAnchor="middle" fontSize="9" fill="rgba(var(--v3-accent-rgb),0.53)">Girdi</text>
+          <text x="130" y="190" textAnchor="middle" fontSize="9" fill="rgba(var(--v3-accent-rgb),0.53)">Gizli</text>
           <text x="210" y="160" textAnchor="middle" fontSize="9" fill="#14b8a688">Çıktı</text>
         </svg>
       </div>
@@ -175,7 +175,7 @@ function DataStreamAnim() {
           <div key={i} className="ha-stream-line"
             style={{
               top: 0,
-              color: i % 3 === 0 ? '#a5b4fc' : i % 3 === 1 ? '#5eead4' : '#fca5a5',
+              color: i % 3 === 0 ? 'var(--v3-accent-text)' : i % 3 === 1 ? '#5eead4' : '#fca5a5',
               opacity: l.opacity,
               animation: `ha-stream ${l.speed} linear ${l.delay} infinite`,
             }}>
@@ -219,10 +219,10 @@ function SineWaveAnim() {
           <line x1="0" y1={cy} x2={W} y2={cy} stroke="rgba(255,255,255,0.1)" strokeWidth="1" strokeDasharray="4 4" />
 
           {/* Wave 3 — background */}
-          <path d={buildPath(1.2)} stroke="#6366f1" strokeWidth="1.5" opacity="0.3"
+          <path d={buildPath(1.2)} stroke="var(--v3-accent)" strokeWidth="1.5" opacity="0.3"
             strokeDasharray="600" style={{ animation: 'ha-wave3 3.2s linear infinite' }} />
           {/* Wave 2 */}
-          <path d={buildPath(0.6)} stroke="#8b5cf6" strokeWidth="2" opacity="0.55"
+          <path d={buildPath(0.6)} stroke="var(--v3-accent-text)" strokeWidth="2" opacity="0.55"
             strokeDasharray="420" style={{ animation: 'ha-wave2 2.6s linear infinite' }} />
           {/* Wave 1 — main */}
           <path d={buildPath(0)} stroke="#14b8a6" strokeWidth="2.5" opacity="0.9"

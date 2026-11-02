@@ -38,7 +38,7 @@ export default function GirisBanner() {
     <div style={{
       display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px',
       padding: '8px 16px', fontSize: '13px', lineHeight: 1.4,
-      background: 'linear-gradient(135deg, rgba(99,102,241,0.16), rgba(20,184,166,0.12))',
+      background: 'linear-gradient(135deg, rgba(var(--v3-accent-rgb),0.16), rgba(20,184,166,0.12))',
       borderBottom: '1px solid var(--v3-border-bright)',
       color: 'var(--v3-text)', position: 'relative', flexWrap: 'wrap', textAlign: 'center',
     }}>
@@ -47,7 +47,7 @@ export default function GirisBanner() {
       </span>
       <Link href="/giris" style={{
         flexShrink: 0, padding: '4px 14px', borderRadius: '7px', fontSize: '12px', fontWeight: 700,
-        background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', color: '#fff', textDecoration: 'none',
+        background: 'var(--v3-accent)', color: 'var(--v3-on-accent)', textDecoration: 'none',
       }}>
         Giriş Yap
       </Link>

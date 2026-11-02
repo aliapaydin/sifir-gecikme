@@ -7,7 +7,7 @@ import { SYNC_READY_EVENT } from '../../../lib/userSync';
 
 const ROLE_LABELS = {
   admin:     { label: 'Admin',      bg: 'rgba(249,115,22,0.12)',  color: '#fb923c', border: 'rgba(249,115,22,0.25)' },
-  moderator: { label: 'Moderatör',  bg: 'rgba(99,102,241,0.12)',  color: '#818cf8', border: 'rgba(99,102,241,0.25)' },
+  moderator: { label: 'Moderatör',  bg: 'rgba(var(--v3-accent-rgb),0.12)',  color: 'var(--v3-accent-text)', border: 'rgba(var(--v3-accent-rgb),0.25)' },
   user:      { label: 'Üye',        bg: 'rgba(20,184,166,0.12)',  color: '#2dd4bf', border: 'rgba(20,184,166,0.25)' },
 };
 
@@ -326,7 +326,7 @@ function PanelInner() {
               <div className="pnl-stat-lbl">Tekrar Bak</div>
             </div>
             <div className="pnl-stat">
-              <div className="pnl-stat-val" style={{ color: '#818cf8' }}>{stats.ziyaret}</div>
+              <div className="pnl-stat-val" style={{ color: 'var(--v3-accent-text)' }}>{stats.ziyaret}</div>
               <div className="pnl-stat-lbl">Ziyaret</div>
             </div>
             <div className="pnl-stat">
@@ -382,7 +382,7 @@ function PanelInner() {
               )}
               <div style={{ display: 'flex', gap: '10px' }}>
                 <button type="submit" className="pnl-btn" disabled={pwLoading}
-                  style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', color: '#fff' }}>
+                  style={{ background: 'var(--v3-accent)', color: 'var(--v3-on-accent)' }}>
                   {pwLoading ? 'Kaydediliyor…' : '🔒 Şifremi Güncelle'}
                 </button>
                 <button type="button" className="pnl-btn" onClick={() => { setPwOpen(false); setPwError(''); setPwForm({ current: '', next: '', confirm: '' }); }}
@@ -471,18 +471,18 @@ function PanelInner() {
             <div style={{
               display: 'flex', alignItems: 'center', gap: '20px',
               padding: '22px 28px', borderRadius: '20px',
-              background: 'linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.08))',
-              border: '1px solid rgba(99,102,241,0.3)',
+              background: 'linear-gradient(135deg, rgba(var(--v3-accent-rgb),0.12), rgba(139,92,246,0.08))',
+              border: '1px solid rgba(var(--v3-accent-rgb),0.3)',
               cursor: 'pointer', transition: 'border-color 0.15s',
             }}>
               <div style={{
                 width: '48px', height: '48px', borderRadius: '14px', flexShrink: 0,
-                background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                background: 'var(--v3-accent)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '22px', boxShadow: '0 4px 16px rgba(99,102,241,0.35)',
+                fontSize: '22px', boxShadow: '0 4px 16px rgba(var(--v3-accent-rgb),0.35)',
               }}>⚙</div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: '15px', fontWeight: 800, color: '#818cf8', marginBottom: '4px' }}>
+                <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--v3-accent-text)', marginBottom: '4px' }}>
                   Admin Paneli
                 </div>
                 <div style={{ fontSize: '13px', color: 'var(--v3-text-muted)', lineHeight: 1.5 }}>
@@ -491,8 +491,8 @@ function PanelInner() {
               </div>
               <div style={{
                 flexShrink: 0, padding: '8px 16px', borderRadius: '10px',
-                background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)',
-                color: '#818cf8', fontSize: '13px', fontWeight: 700,
+                background: 'rgba(var(--v3-accent-rgb),0.15)', border: '1px solid rgba(var(--v3-accent-rgb),0.3)',
+                color: 'var(--v3-accent-text)', fontSize: '13px', fontWeight: 700,
               }}>
                 Yönet →
               </div>

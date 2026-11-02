@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { clearSyncedLocal } from '../../../lib/userSync';
+import { ACCENT_PRESETS, DEFAULT_ACCENT, applyAccent, getSavedAccent, saveAccent, resolveAccentHex } from '../../../lib/v3/accent';
 
 const playgroundItems = [
   { emoji: '🐍', label: 'Python Playground', href: '/python' },
@@ -43,6 +44,9 @@ export default function V3Navbar() {
   const pgRef  = useRef(null);
   const modRef = useRef(null);
   const themeHydratedRef = useRef(false);
+  const [accent, setAccent] = useState(DEFAULT_ACCENT);
+  const [accOpen, setAccOpen] = useState(false);
+  const accRef = useRef(null);
 
   useEffect(() => {
     fetch('/api/v3/auth/me')
@@ -64,13 +68,23 @@ export default function V3Navbar() {
   useEffect(() => {
     const saved = localStorage.getItem('v3_theme') || 'dark';
     setThemeMode(saved);
+    setAccent(getSavedAccent());
   }, []);
+
+  function pickAccent(choice) {
+    applyAccent(choice);
+    saveAccent(choice);
+    setAccent(choice || DEFAULT_ACCENT);
+  }
+  const accentHex = resolveAccentHex(accent) || '#10b981';
+  const isCustomAccent = !ACCENT_PRESETS.some(p => p.id === accent);
 
   // Dışarı tıklayınca dropdown kapat
   useEffect(() => {
     function onOutside(e) {
       if (pgRef.current && !pgRef.current.contains(e.target)) setPgOpen(false);
       if (modRef.current && !modRef.current.contains(e.target)) setModOpen(false);
+      if (accRef.current && !accRef.current.contains(e.target)) setAccOpen(false);
     }
     document.addEventListener('mousedown', onOutside);
     return () => document.removeEventListener('mousedown', onOutside);
@@ -151,17 +165,16 @@ export default function V3Navbar() {
     <>
       <style>{`
         .v3-nav {
-          background: rgba(6,9,16,0.92);
-          backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+          background: var(--v3-nav-bg);
+          backdrop-filter: blur(24px) saturate(1.4); -webkit-backdrop-filter: blur(24px) saturate(1.4);
           position: sticky; top: 0; z-index: 100; height: 68px;
-          border-bottom: 1px solid rgba(255,255,255,0.07);
+          border-bottom: 1px solid var(--v3-border);
           transition: background 0.3s, border-color 0.3s;
-          box-shadow: 0 1px 0 rgba(99,102,241,0.08);
         }
         .v3-light .v3-nav {
           background: rgba(248,250,252,0.95);
           border-bottom-color: #e2e8f0;
-          box-shadow: 0 1px 0 rgba(99,102,241,0.06), 0 4px 12px rgba(0,0,0,0.04);
+          box-shadow: 0 1px 0 rgba(var(--v3-accent-rgb),0.06), 0 4px 12px rgba(0,0,0,0.04);
         }
         .v3-nav-inner {
           max-width: 1280px; margin: 0 auto; padding: 0 28px; height: 100%;
@@ -169,7 +182,7 @@ export default function V3Navbar() {
         }
         .v3-nav-logo {
           font-size: 16px; font-weight: 800; letter-spacing: -0.4px;
-          background: linear-gradient(135deg, #818cf8 0%, #a78bfa 50%, #2dd4bf 100%);
+          background: var(--v3-gradient);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
           display: flex; align-items: center; gap: 9px; flex-shrink: 0; text-decoration: none;
         }
@@ -181,9 +194,9 @@ export default function V3Navbar() {
           position: relative;
         }
         .v3-nav-link:hover { color: var(--v3-text); background: rgba(255,255,255,0.05); }
-        .v3-nav-link.active { color: var(--v3-text); background: rgba(99,102,241,0.12); color: #a5b4fc; }
+        .v3-nav-link.active { color: var(--v3-text); background: rgba(var(--v3-accent-rgb),0.12); color: var(--v3-accent-text); }
         .v3-light .v3-nav-link:hover { background: rgba(0,0,0,0.05); }
-        .v3-light .v3-nav-link.active { background: rgba(99,102,241,0.1); color: #4f46e5; }
+        .v3-light .v3-nav-link.active { background: rgba(var(--v3-accent-rgb),0.1); color: var(--v3-accent); }
 
         /* Dropdown wrapper */
         .v3-pg-wrap { position: relative; }
@@ -199,7 +212,7 @@ export default function V3Navbar() {
         .v3-pg-btn.open .v3-pg-arrow { transform: rotate(180deg); }
         .v3-dropdown {
           position: absolute; top: calc(100% + 10px); left: 0;
-          background: rgba(10,14,24,0.98); border: 1px solid rgba(99,102,241,0.15);
+          background: rgba(10,14,24,0.98); border: 1px solid rgba(var(--v3-accent-rgb),0.15);
           border-radius: 16px; padding: 6px; min-width: 230px;
           box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
           animation: v3-fade-in 0.14s ease;
@@ -220,7 +233,7 @@ export default function V3Navbar() {
           color: var(--v3-text-muted); text-decoration: none;
           transition: background 0.1s, color 0.1s;
         }
-        .v3-dd-item:hover { background: rgba(99,102,241,0.1); color: var(--v3-text); }
+        .v3-dd-item:hover { background: rgba(var(--v3-accent-rgb),0.1); color: var(--v3-text); }
         .v3-light .v3-dd-item:hover { background: #f1f5f9; color: #0f172a; }
         .v3-dd-emoji { font-size: 15px; width: 22px; text-align: center; flex-shrink: 0; }
 
@@ -228,11 +241,11 @@ export default function V3Navbar() {
         .v3-nav-right { display: flex; align-items: center; gap: 6px; }
         .v3-dev-link {
           font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 6px;
-          background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2);
-          color: #818cf8; text-decoration: none; white-space: nowrap;
+          background: rgba(var(--v3-accent-rgb),0.1); border: 1px solid rgba(var(--v3-accent-rgb),0.2);
+          color: var(--v3-accent-text); text-decoration: none; white-space: nowrap;
           transition: background 0.15s;
         }
-        .v3-dev-link:hover { background: rgba(99,102,241,0.2); }
+        .v3-dev-link:hover { background: rgba(var(--v3-accent-rgb),0.2); }
         .v3-theme-seg {
           position: relative; display: inline-flex; align-items: center;
           padding: 3px; border-radius: 10px; flex-shrink: 0;
@@ -241,8 +254,8 @@ export default function V3Navbar() {
         .v3-light .v3-theme-seg { background: rgba(0,0,0,0.04); border-color: #e2e8f0; }
         .v3-theme-seg-pill {
           position: absolute; top: 3px; left: 3px; width: 32px; height: 28px;
-          border-radius: 7px; background: rgba(99,102,241,0.28);
-          border: 1px solid rgba(99,102,241,0.45);
+          border-radius: 7px; background: rgba(var(--v3-accent-rgb),0.28);
+          border: 1px solid rgba(var(--v3-accent-rgb),0.45);
           transition: transform 0.22s cubic-bezier(.4,0,.2,1); pointer-events: none;
         }
         .v3-theme-seg-btn {
@@ -257,16 +270,16 @@ export default function V3Navbar() {
         .v3-theme-seg-btn .oto { font-size: 9px; font-weight: 800; letter-spacing: 0.5px; }
         .v3-btn-login {
           padding: 7px 16px; border-radius: 9px; font-size: 13.5px; font-weight: 600;
-          background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.25);
-          color: #a5b4fc; cursor: pointer; transition: background 0.15s, border-color 0.15s;
+          background: rgba(var(--v3-accent-rgb),0.12); border: 1px solid rgba(var(--v3-accent-rgb),0.25);
+          color: var(--v3-accent-text); cursor: pointer; transition: background 0.15s, border-color 0.15s;
           text-decoration: none;
         }
-        .v3-btn-login:hover { background: rgba(99,102,241,0.22); border-color: rgba(99,102,241,0.4); }
+        .v3-btn-login:hover { background: rgba(var(--v3-accent-rgb),0.22); border-color: rgba(var(--v3-accent-rgb),0.4); }
         .v3-btn-kayit {
           padding: 7px 16px; border-radius: 9px; font-size: 13.5px; font-weight: 600;
-          background: linear-gradient(135deg, #6366f1, #8b5cf6);
-          color: #fff; text-decoration: none; white-space: nowrap;
-          transition: opacity 0.15s; box-shadow: 0 2px 10px rgba(99,102,241,0.3);
+          background: var(--v3-accent);
+          color: var(--v3-on-accent); text-decoration: none; white-space: nowrap;
+          transition: opacity 0.15s; box-shadow: 0 2px 10px rgba(var(--v3-accent-rgb),0.3);
         }
         .v3-btn-kayit:hover { opacity: 0.88; }
         .v3-btn-destek {
@@ -311,7 +324,7 @@ export default function V3Navbar() {
         }
         .v3-mobile-menu {
           display: none; position: fixed; top: 68px; left: 0; right: 0; bottom: 0;
-          background: rgba(6,9,16,0.98);
+          background: rgba(var(--v3-bg-rgb),0.98);
           backdrop-filter: blur(20px);
           padding: 12px 20px 32px;
           z-index: 101; overflow-y: scroll; -webkit-overflow-scrolling: touch;
@@ -355,7 +368,69 @@ export default function V3Navbar() {
           height: 1px; background: rgba(255,255,255,0.06); margin: 4px 0;
         }
         .v3-light .v3-mobile-divider { background: #e2e8f0; }
+        /* Vurgu rengi seçici */
+        .v3-acc-wrap { position: relative; flex-shrink: 0; }
+        .v3-acc-btn {
+          width: 34px; height: 34px; border-radius: 10px; padding: 0; cursor: pointer;
+          display: flex; align-items: center; justify-content: center;
+          background: var(--v3-surface); border: 1px solid var(--v3-border);
+          transition: border-color 0.15s;
+        }
+        .v3-acc-btn:hover, .v3-acc-btn.open { border-color: var(--v3-accent-line); }
+        .v3-acc-dot {
+          width: 16px; height: 16px; border-radius: 50%;
+          background: conic-gradient(var(--v3-accent) 0 50%, var(--v3-accent-text) 50% 100%);
+          box-shadow: 0 0 0 2px var(--v3-surface), 0 0 0 3px var(--v3-accent-line);
+        }
+        .v3-acc-pop {
+          position: absolute; top: calc(100% + 10px); right: 0; width: 248px; z-index: 300;
+          background: var(--v3-surface); border: 1px solid var(--v3-border-bright);
+          border-radius: var(--v3-radius); box-shadow: var(--v3-shadow-hover); padding: 14px;
+        }
+        .v3-acc-title { font-size: 12px; font-weight: 700; color: var(--v3-text); margin: 0 0 2px; }
+        .v3-acc-sub { font-size: 11.5px; color: var(--v3-text-muted); margin: 0 0 12px; }
+        .v3-acc-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+        .v3-acc-sw {
+          aspect-ratio: 1; border-radius: 50%; border: 0; cursor: pointer; padding: 0;
+          position: relative; transition: transform 0.12s;
+        }
+        .v3-acc-sw:hover { transform: scale(1.08); }
+        .v3-acc-sw.active { box-shadow: 0 0 0 2px var(--v3-surface), 0 0 0 4px var(--v3-text); }
+        .v3-acc-names { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-top: 5px; }
+        .v3-acc-names span { font-size: 9.5px; color: var(--v3-text-faint); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .v3-acc-custom {
+          display: flex; align-items: center; gap: 10px; margin-top: 12px; padding: 8px 10px;
+          border-radius: var(--v3-radius-sm); background: var(--v3-surface2); border: 1px solid var(--v3-border);
+          cursor: pointer; font-size: 12.5px; font-weight: 600; color: var(--v3-text);
+        }
+        .v3-acc-custom.active { border-color: var(--v3-accent-line); }
+        .v3-acc-custom input[type=color] {
+          width: 26px; height: 26px; padding: 0; border: 1px solid var(--v3-border-bright); border-radius: 7px;
+          background: none; cursor: pointer; flex-shrink: 0;
+        }
+        .v3-acc-custom input[type=color]::-webkit-color-swatch-wrapper { padding: 2px; }
+        .v3-acc-custom input[type=color]::-webkit-color-swatch { border: 0; border-radius: 5px; }
+        .v3-acc-custom small { margin-left: auto; font-family: ui-monospace, monospace; font-size: 11px; color: var(--v3-text-muted); font-weight: 500; }
+        .v3-acc-reset {
+          margin-top: 10px; width: 100%; padding: 7px; border-radius: var(--v3-radius-sm);
+          background: transparent; border: 1px solid var(--v3-border); color: var(--v3-text-muted);
+          font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit;
+        }
+        .v3-acc-reset:hover { color: var(--v3-text); border-color: var(--v3-border-bright); }
+        .v3-acc-preview { display: flex; gap: 6px; margin-top: 12px; }
+        .v3-acc-preview span { flex: 1; text-align: center; font-size: 11px; font-weight: 700; padding: 6px 0; border-radius: 8px; }
+        .v3-mobile-acc { display: flex; align-items: center; gap: 8px; padding: 10px 12px; flex-wrap: wrap; }
+        .v3-mobile-acc > span { font-size: 14px; color: var(--v3-text-muted); margin-right: auto; white-space: nowrap; }
+        .v3-mobile-acc .v3-acc-sw { width: 24px; }
+        .v3-mobile-acc input[type=color] { width: 24px; height: 24px; padding: 0; border: 1px solid var(--v3-border-bright); border-radius: 50%; background: none; overflow: hidden; }
+        @media (max-width: 480px) {
+          .v3-nav-inner { padding: 0 14px; gap: 10px; }
+          .v3-btn-login { display: none; }
+          .v3-btn-destek-text { display: none; }
+          .v3-btn-destek { padding: 7px 10px; }
+        }
         @media (max-width: 768px) {
+          .v3-acc-wrap { display: none; }
           .v3-nav-links { display: none; }
           .v3-hamburger { display: flex; align-items: center; }
           .v3-user-name { display: none; }
@@ -369,22 +444,21 @@ export default function V3Navbar() {
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
               <defs>
                 <linearGradient id="sg-g" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#6366f1"/>
-                  <stop offset="55%" stopColor="#8b5cf6"/>
-                  <stop offset="100%" stopColor="#14b8a6"/>
+                  <stop offset="0%" style={{ stopColor: 'var(--v3-accent)' }}/>
+                  <stop offset="100%" style={{ stopColor: 'var(--v3-accent-text)' }}/>
                 </linearGradient>
                 <linearGradient id="sg-bar" x1="0" y1="1" x2="0" y2="0">
-                  <stop offset="0%" stopColor="#6366f1" stopOpacity="0.7"/>
-                  <stop offset="100%" stopColor="#14b8a6"/>
+                  <stop offset="0%" style={{ stopColor: 'var(--v3-accent)', stopOpacity: 0.7 }}/>
+                  <stop offset="100%" style={{ stopColor: 'var(--v3-accent-text)' }}/>
                 </linearGradient>
               </defs>
               <rect width="32" height="32" rx="9" fill="url(#sg-g)" opacity="0.14"/>
               <rect width="32" height="32" rx="9" stroke="url(#sg-g)" strokeWidth="1.2" fill="none" opacity="0.35"/>
-              <rect x="5"  y="21" width="3.2" height="7" rx="1.4" fill="#6366f1" opacity="0.55"/>
-              <rect x="9.8" y="15" width="3.2" height="13" rx="1.4" fill="#7c6cf1" opacity="0.75"/>
+              <rect x="5"  y="21" width="3.2" height="7" rx="1.4" style={{ fill: 'var(--v3-accent)' }} opacity="0.55"/>
+              <rect x="9.8" y="15" width="3.2" height="13" rx="1.4" style={{ fill: 'var(--v3-accent)' }} opacity="0.75"/>
               <rect x="14.6" y="8" width="3.2" height="20" rx="1.4" fill="url(#sg-bar)"/>
-              <rect x="19.4" y="12" width="3.2" height="16" rx="1.4" fill="#14b8a6" opacity="0.8"/>
-              <rect x="24.2" y="18" width="2.8" height="10" rx="1.4" fill="#14b8a6" opacity="0.55"/>
+              <rect x="19.4" y="12" width="3.2" height="16" rx="1.4" style={{ fill: 'var(--v3-accent-text)' }} opacity="0.8"/>
+              <rect x="24.2" y="18" width="2.8" height="10" rx="1.4" style={{ fill: 'var(--v3-accent-text)' }} opacity="0.55"/>
               <polyline points="6.6,21 11.4,14 16.2,7.5 21,11.5 25.6,17.5"
                 stroke="url(#sg-g)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.9"/>
               <circle cx="16.2" cy="7.5" r="2.4" fill="white" opacity="0.95"/>
@@ -466,6 +540,64 @@ export default function V3Navbar() {
                   {t.oto ? <span className="oto">OTO</span> : t.icon}
                 </button>
               ))}
+            </div>
+
+            {/* Vurgu rengi seçici */}
+            <div className="v3-acc-wrap" ref={accRef}>
+              <button
+                type="button"
+                className={`v3-acc-btn${accOpen ? ' open' : ''}`}
+                onClick={() => setAccOpen(o => !o)}
+                aria-label="Vurgu rengini değiştir"
+                aria-expanded={accOpen}
+                title="Vurgu rengi"
+              >
+                <span className="v3-acc-dot" />
+              </button>
+              {accOpen && (
+                <div className="v3-acc-pop" role="dialog" aria-label="Vurgu rengi">
+                  <p className="v3-acc-title">Vurgu rengi</p>
+                  <p className="v3-acc-sub">Butonlar, bağlantılar ve logo bu rengi alır.</p>
+                  <div className="v3-acc-grid" role="radiogroup" aria-label="Hazır renkler">
+                    {ACCENT_PRESETS.map(p => (
+                      <button
+                        key={p.id}
+                        type="button"
+                        role="radio"
+                        aria-checked={accent === p.id}
+                        aria-label={p.label}
+                        title={p.label}
+                        className={`v3-acc-sw${accent === p.id ? ' active' : ''}`}
+                        style={{ background: p.hex }}
+                        onClick={() => pickAccent(p.id)}
+                      />
+                    ))}
+                  </div>
+                  <div className="v3-acc-names" aria-hidden="true">
+                    {ACCENT_PRESETS.map(p => <span key={p.id}>{p.label}</span>)}
+                  </div>
+                  <label className={`v3-acc-custom${isCustomAccent ? ' active' : ''}`} htmlFor="v3-acc-color">
+                    <input
+                      id="v3-acc-color"
+                      type="color"
+                      value={accentHex}
+                      onChange={e => pickAccent(e.target.value)}
+                    />
+                    Özel renk seç
+                    <small>{accentHex}</small>
+                  </label>
+                  <div className="v3-acc-preview" aria-hidden="true">
+                    <span style={{ background: 'var(--v3-accent)', color: 'var(--v3-on-accent)' }}>Buton</span>
+                    <span style={{ background: 'var(--v3-accent-soft)', color: 'var(--v3-accent-text)' }}>Etiket</span>
+                    <span style={{ border: '1px solid var(--v3-accent-line)', color: 'var(--v3-accent-text)' }}>Bağlantı</span>
+                  </div>
+                  {accent !== DEFAULT_ACCENT && (
+                    <button type="button" className="v3-acc-reset" onClick={() => pickAccent(DEFAULT_ACCENT)}>
+                      Varsayılana dön (Zümrüt)
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
 
             {user ? (
@@ -561,6 +693,25 @@ export default function V3Navbar() {
           onClick={() => setMenuOpen(false)}>
           🗺️ Haritam
         </Link>
+
+        <div className="v3-mobile-divider" />
+
+        <div className="v3-mobile-acc" role="radiogroup" aria-label="Vurgu rengi">
+          <span>Vurgu rengi</span>
+          {ACCENT_PRESETS.map(p => (
+            <button
+              key={p.id}
+              type="button"
+              role="radio"
+              aria-checked={accent === p.id}
+              aria-label={p.label}
+              className={`v3-acc-sw${accent === p.id ? ' active' : ''}`}
+              style={{ background: p.hex }}
+              onClick={() => pickAccent(p.id)}
+            />
+          ))}
+          <input type="color" aria-label="Özel renk seç" value={accentHex} onChange={e => pickAccent(e.target.value)} />
+        </div>
 
         <div className="v3-mobile-divider" />
 

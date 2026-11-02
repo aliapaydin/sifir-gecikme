@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { CURRENT_VERSION } from '../../../lib/versiyon';
 
 const tipRenk = {
-  yeni:        { bg: 'rgba(99,102,241,0.12)',  text: '#818cf8', label: 'YENİ' },
+  yeni:        { bg: 'rgba(var(--v3-accent-rgb),0.12)',  text: 'var(--v3-accent-text)', label: 'YENİ' },
   düzeltme:    { bg: 'rgba(251,191,36,0.12)',  text: '#fbbf24', label: 'DÜZELTMESİ' },
   iyileştirme: { bg: 'rgba(20,184,166,0.12)',  text: '#2dd4bf', label: 'İYİLEŞTİRME' },
 };
@@ -37,13 +37,13 @@ function GrupItem({ o }) {
         style={{
           width: '100%', display: 'flex', alignItems: 'center', gap: '10px',
           padding: '10px 14px',
-          background: acik ? 'rgba(99,102,241,0.08)' : 'var(--v3-surface)',
+          background: acik ? 'rgba(var(--v3-accent-rgb),0.08)' : 'var(--v3-surface)',
           border: 'none', cursor: 'pointer', textAlign: 'left',
           transition: 'background 0.15s',
         }}
       >
         <span style={{ fontSize: '1rem' }}>{o.icon}</span>
-        <span style={{ flex: 1, fontSize: '13px', fontWeight: 700, color: acik ? '#818cf8' : 'var(--v3-text)' }}>
+        <span style={{ flex: 1, fontSize: '13px', fontWeight: 700, color: acik ? 'var(--v3-accent-text)' : 'var(--v3-text)' }}>
           {o.label}
         </span>
         <span style={{
@@ -76,6 +76,21 @@ function GrupItem({ o }) {
 }
 
 const versiyonlar = [
+  {
+    versiyon: 'v4.3.0',
+    tarih: '2 Kasım 2026',
+    baslik: 'Grafit + Zümrüt Tema ve Vurgu Rengi Seçici',
+    ozellikler: [
+      { tip: 'yeni', metin: 'Navbar\'a vurgu rengi seçici eklendi: 6 hazır renk (Zümrüt, İndigo, Okyanus, Kehribar, Mercan, Lavanta) ve istediğin herhangi bir özel renk. Seçim tarayıcıda saklanır, mobil menüde de var' },
+      { tip: 'yeni', metin: 'Seçilen renkten açık ve koyu tema için okunabilir tonlar otomatik türetilir; buton yazısı rengi de kontrasta göre seçilir' },
+      { tip: 'iyileştirme', metin: 'Yeni renk paleti: koyu temada nötr grafit, açık temada temiz beyaz; varsayılan vurgu zümrüt yeşili' },
+      { tip: 'iyileştirme', metin: 'İkincil ve soluk metinler erişilebilirlik standardına (AA) çekildi; koyu temada açıklama yazıları artık çok daha okunur' },
+      { tip: 'iyileştirme', metin: 'Onest yazı tipi, tek köşe ölçeği (16/12/10px), yumuşak katmanlı gölgeler ve zıplamayan sakin hover efektleri' },
+      { tip: 'iyileştirme', metin: 'Butonlarda gradyan yerine düz vurgu rengi; logo ve başlıklar seçilen rengi takip eder' },
+      { tip: 'düzeltme', metin: 'Sayfa yenilendiğinde tema/renk yanıp sönmesi giderildi; tema ve renk sayfa çizilmeden uygulanıyor' },
+      { tip: 'düzeltme', metin: 'Dar ekranlarda navbar\'ın taşması ve "0 TL" istatistiğinin iki satıra bölünmesi düzeltildi' },
+    ],
+  },
   {
     versiyon: 'v4.2.0',
     tarih: '22 Ekim 2026',
@@ -254,8 +269,8 @@ export default function V3VersiyonPage() {
         .v3-ver-badge-current {
           padding: 4px 12px;
           border-radius: 999px;
-          background: linear-gradient(135deg, #6366f1, #8b5cf6);
-          color: #fff;
+          background: var(--v3-accent);
+          color: var(--v3-on-accent);
           font-size: 13px;
           font-weight: 700;
           font-family: monospace;
@@ -332,8 +347,8 @@ export default function V3VersiyonPage() {
         .v3-ver-badge-latest {
           padding: 2px 8px;
           border-radius: 999px;
-          background: linear-gradient(135deg, #6366f1, #8b5cf6);
-          color: #fff;
+          background: var(--v3-accent);
+          color: var(--v3-on-accent);
           font-size: 10px;
           font-weight: 700;
           letter-spacing: 0.05em;
@@ -423,7 +438,7 @@ export default function V3VersiyonPage() {
             </p>
             <div className="v3-ver-stats">
               {[
-                { label: `${versiyonlar.length} sürüm`, color: '#818cf8' },
+                { label: `${versiyonlar.length} sürüm`, color: 'var(--v3-accent-text)' },
                 { label: 'v2 geçmişi korunuyor', color: 'var(--v3-text-muted)' },
                 { label: 'Türkçe & ücretsiz', color: 'var(--v3-text-muted)' },
               ].map(b => (
@@ -437,8 +452,8 @@ export default function V3VersiyonPage() {
               <div key={v.versiyon} className="v3-timeline-item">
                 <div className="v3-timeline-rail">
                   <div className="v3-timeline-dot" style={{
-                    background: idx === 0 ? '#6366f1' : 'var(--v3-border)',
-                    border: `2px solid ${idx === 0 ? '#6366f1' : 'var(--v3-border)'}`,
+                    background: idx === 0 ? 'var(--v3-accent)' : 'var(--v3-border)',
+                    border: `2px solid ${idx === 0 ? 'var(--v3-accent)' : 'var(--v3-border)'}`,
                   }} />
                   {idx < versiyonlar.length - 1 && <div className="v3-timeline-line" />}
                 </div>

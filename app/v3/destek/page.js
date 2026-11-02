@@ -59,7 +59,7 @@ export default function DestekPage() {
           background: var(--v3-surface); border: 1px solid var(--v3-border);
           transition: border-color 0.15s;
         }
-        .dst-avantaj-card:hover { border-color: rgba(99,102,241,0.3); }
+        .dst-avantaj-card:hover { border-color: rgba(var(--v3-accent-rgb),0.3); }
         .dst-avantaj-emoji { font-size: 22px; flex-shrink: 0; margin-top: 1px; }
         .dst-avantaj-label { font-size: 14px; font-weight: 700; color: var(--v3-text); margin-bottom: 3px; }
         .dst-avantaj-detay { font-size: 13px; color: var(--v3-text-muted); line-height: 1.55; }
@@ -76,7 +76,7 @@ export default function DestekPage() {
           font-size: 13px; font-weight: 800;
         }
         .dst-step-num.done { background: rgba(20,184,166,0.15); color: #2dd4bf; border: 1px solid rgba(20,184,166,0.3); }
-        .dst-step-num.active { background: linear-gradient(135deg,#6366f1,#8b5cf6); color: #fff; }
+        .dst-step-num.active { background: var(--v3-accent); color: var(--v3-on-accent); }
         .dst-step-num.pending { background: var(--v3-surface2); color: var(--v3-text-faint); border: 1px solid var(--v3-border); }
         .dst-step-body { flex: 1; }
         .dst-step-title { font-size: 15px; font-weight: 700; color: var(--v3-text); margin-bottom: 4px; }
@@ -103,11 +103,11 @@ export default function DestekPage() {
         .dst-masraf-label { font-size: 14px; font-weight: 600; color: var(--v3-text); }
         .dst-masraf-detay { font-size: 12px; color: var(--v3-text-muted); margin-top: 1px; }
         .dst-masraf-bar-wrap { margin-top: 6px; height: 4px; background: var(--v3-border); border-radius: 2px; overflow: hidden; }
-        .dst-masraf-bar { height: 100%; border-radius: 2px; background: linear-gradient(90deg,#6366f1,#8b5cf6); }
+        .dst-masraf-bar { height: 100%; border-radius: 2px; background: var(--v3-accent); }
 
         .dst-thanks {
           text-align: center; padding: 28px; border-radius: 16px;
-          background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.15);
+          background: rgba(var(--v3-accent-rgb),0.06); border: 1px solid rgba(var(--v3-accent-rgb),0.15);
         }
         .dst-thanks p { font-size: 14px; color: var(--v3-text-muted); line-height: 1.7; margin: 0; }
 
@@ -169,7 +169,7 @@ export default function DestekPage() {
                 ) : (
                   <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                     <Link href="/kayit" className="dst-step-btn"
-                      style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', color: '#fff' }}>
+                      style={{ background: 'var(--v3-accent)', color: 'var(--v3-on-accent)' }}>
                       Ücretsiz Kayıt Ol
                     </Link>
                     <Link href="/giris" className="dst-step-btn"
@@ -211,7 +211,7 @@ export default function DestekPage() {
                 )}
                 {loggedIn && !user?.patreonLinkedAt && (
                   <div style={{ marginTop: '10px' }}>
-                    <a href="/api/v3/auth/patreon" style={{ fontSize: '13px', color: '#818cf8', textDecoration: 'none' }}>
+                    <a href="/api/v3/auth/patreon" style={{ fontSize: '13px', color: 'var(--v3-accent-text)', textDecoration: 'none' }}>
                       Zaten destekçiyim → Patreon hesabını bağla
                     </a>
                   </div>

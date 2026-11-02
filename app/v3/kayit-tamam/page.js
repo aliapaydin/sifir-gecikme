@@ -20,9 +20,9 @@ export default function KayitTamamPage() {
             Lütfen gelen kutunu kontrol et.
           </p>
           <div style={{
-            background: 'rgba(99,102,241,0.08)', border: '1px solid rgba(99,102,241,0.2)',
+            background: 'rgba(var(--v3-accent-rgb),0.08)', border: '1px solid rgba(var(--v3-accent-rgb),0.2)',
             borderRadius: '12px', padding: '14px 20px',
-            fontSize: '13px', color: '#818cf8', lineHeight: 1.6, marginBottom: '28px',
+            fontSize: '13px', color: 'var(--v3-accent-text)', lineHeight: 1.6, marginBottom: '28px',
           }}>
             📌 Spam / Junk klasörünü de kontrol etmeyi unutma.
           </div>

@@ -80,7 +80,7 @@ export default async function V3HomePage() {
         }
         .v3-hero-bg {
           position: absolute; inset: 0; z-index: 1;
-          background: radial-gradient(ellipse at 30% 50%, rgba(99,102,241,0.18) 0%, transparent 70%);
+          background: radial-gradient(ellipse at 30% 50%, rgba(var(--v3-accent-rgb),0.18) 0%, transparent 70%);
           pointer-events: none;
         }
         .v3-hero-anim-bg {
@@ -96,31 +96,31 @@ export default async function V3HomePage() {
         /* Analiz kartı */
         .v3-analiz-card {
           flex-shrink: 0; width: 320px;
-          background: rgba(13,20,33,0.72);
-          border: 1px solid rgba(99,102,241,0.2);
+          background: rgba(var(--v3-surface-rgb),0.72);
+          border: 1px solid rgba(var(--v3-accent-rgb),0.2);
           border-radius: 20px; padding: 20px;
           backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-          box-shadow: 0 24px 64px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.04);
+          box-shadow: var(--v3-shadow-card);
           text-decoration: none; color: inherit;
           transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
           display: block;
         }
         .v3-analiz-card:hover {
-          border-color: rgba(99,102,241,0.4);
+          border-color: rgba(var(--v3-accent-rgb),0.4);
           box-shadow: 0 28px 72px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
           transform: translateY(-2px);
         }
         .v3-light .v3-analiz-card {
           background: rgba(255,255,255,0.85);
-          border-color: rgba(99,102,241,0.15);
-          box-shadow: 0 16px 48px rgba(0,0,0,0.12), 0 0 0 1px rgba(99,102,241,0.08);
+          border-color: rgba(var(--v3-accent-rgb),0.15);
+          box-shadow: 0 16px 48px rgba(0,0,0,0.12), 0 0 0 1px rgba(var(--v3-accent-rgb),0.08);
         }
         .v3-analiz-card-head {
           display: flex; align-items: center; justify-content: space-between;
           margin-bottom: 14px;
         }
         .v3-analiz-card-title { font-size: 13px; font-weight: 700; color: var(--v3-text); }
-        .v3-analiz-card-link  { font-size: 11px; color: #818cf8; font-weight: 600; }
+        .v3-analiz-card-link  { font-size: 11px; color: var(--v3-accent-text); font-weight: 600; }
         .v3-analiz-stat-row {
           display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 14px;
         }
@@ -128,7 +128,7 @@ export default async function V3HomePage() {
           background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
           border-radius: 10px; padding: 10px 8px; text-align: center;
         }
-        .v3-light .v3-analiz-stat { background: rgba(99,102,241,0.05); border-color: rgba(99,102,241,0.1); }
+        .v3-light .v3-analiz-stat { background: rgba(var(--v3-accent-rgb),0.05); border-color: rgba(var(--v3-accent-rgb),0.1); }
         .v3-analiz-stat-val { font-size: 18px; font-weight: 800; color: var(--v3-text); line-height: 1; }
         .v3-analiz-stat-lbl { font-size: 10px; color: var(--v3-text-muted); margin-top: 3px; }
         .v3-analiz-trending  { display: flex; flex-direction: column; gap: 6px; }
@@ -138,10 +138,10 @@ export default async function V3HomePage() {
           background: rgba(255,255,255,0.03); font-size: 11.5px;
           color: var(--v3-text-muted); line-height: 1.3;
         }
-        .v3-light .v3-analiz-trend-item { background: rgba(99,102,241,0.04); }
+        .v3-light .v3-analiz-trend-item { background: rgba(var(--v3-accent-rgb),0.04); }
         .v3-analiz-trend-badge {
           font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px;
-          background: rgba(99,102,241,0.15); color: #818cf8; flex-shrink: 0;
+          background: rgba(var(--v3-accent-rgb),0.15); color: var(--v3-accent-text); flex-shrink: 0;
         }
         @media (max-width: 900px) {
           .v3-hero-inner { flex-direction: column; align-items: stretch; }
@@ -154,12 +154,12 @@ export default async function V3HomePage() {
         .v3-hero-title {
           font-size: clamp(30px, 4.5vw, 52px); font-weight: 800;
           line-height: 1.12; letter-spacing: -1.2px; margin: 0 0 16px;
-          background: linear-gradient(135deg, #f1f5f9 0%, #c7d2fe 50%, #a5f3fc 100%);
+          background: linear-gradient(135deg, #f1f5f9 0%, var(--v3-accent-text) 50%, #a5f3fc 100%);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
           white-space: pre-line;
         }
         .v3-light .v3-hero-title {
-          background: linear-gradient(135deg, #1e293b 0%, #4f46e5 50%, #0d9488 100%);
+          background: var(--v3-gradient);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
         .v3-hero-sub {
@@ -171,8 +171,8 @@ export default async function V3HomePage() {
         .v3-btn-primary {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 13px 28px; border-radius: 10px; font-size: 15px; font-weight: 600;
-          background: linear-gradient(135deg, #6366f1, #8b5cf6);
-          color: #fff; border: none; cursor: pointer;
+          background: var(--v3-accent);
+          color: var(--v3-on-accent); border: none; cursor: pointer;
           transition: opacity 0.15s, transform 0.15s; text-decoration: none;
         }
         .v3-btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
@@ -300,7 +300,7 @@ export default async function V3HomePage() {
             </div>
             <div className="v3-analiz-stat-row">
               <div className="v3-analiz-stat">
-                <div className="v3-analiz-stat-val" style={{ color: '#818cf8' }}>
+                <div className="v3-analiz-stat-val" style={{ color: 'var(--v3-accent-text)' }}>
                   {analiz?.weeklyViews ?? '—'}
                 </div>
                 <div className="v3-analiz-stat-lbl">Bu hafta</div>
@@ -353,29 +353,26 @@ export default async function V3HomePage() {
         <style>{`
           .yzo-promo-card {
             display: block; text-decoration: none; color: inherit;
-            position: relative; overflow: hidden; border-radius: 24px;
-            border: 1px solid rgba(99,102,241,0.35);
-            background: linear-gradient(135deg, rgba(15,20,40,0.95) 0%, rgba(30,15,50,0.95) 100%);
+            position: relative; overflow: hidden; border-radius: var(--v3-radius);
+            border: 1px solid rgba(var(--v3-accent-rgb),0.35);
+            background: var(--v3-surface);
             transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
           }
           .yzo-promo-card:hover {
-            border-color: rgba(99,102,241,0.65);
+            border-color: rgba(var(--v3-accent-rgb),0.65);
             transform: translateY(-3px);
-            box-shadow: 0 24px 72px rgba(0,0,0,0.4), 0 0 60px rgba(99,102,241,0.12);
+            box-shadow: 0 24px 72px rgba(0,0,0,0.4), 0 0 60px rgba(var(--v3-accent-rgb),0.12);
           }
           .v3-light .yzo-promo-card {
-            background: linear-gradient(135deg, rgba(238,242,255,0.97) 0%, rgba(245,243,255,0.97) 100%);
-            border-color: rgba(99,102,241,0.25);
+            background: var(--v3-surface);
+            border-color: rgba(var(--v3-accent-rgb),0.25);
           }
           .yzo-promo-banner {
             width: 100%; height: 220px;
-            display: block; border-radius: 24px 24px 0 0;
-            border-bottom: 1px solid rgba(99,102,241,0.2);
+            display: block; border-radius: var(--v3-radius) var(--v3-radius) 0 0;
+            border-bottom: 1px solid rgba(var(--v3-accent-rgb),0.2);
             position: relative; overflow: hidden;
-            background: linear-gradient(135deg, #0a0f1e 0%, #11062a 50%, #060d1f 100%);
-          }
-          .v3-light .yzo-promo-banner {
-            background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 50%, #ecfdf5 100%);
+            background: linear-gradient(135deg, #0e1012 0%, #121417 55%, #0c0d10 100%);
           }
           @media (max-width: 700px) {
             .yzo-promo-banner { height: 160px; }
@@ -390,18 +387,18 @@ export default async function V3HomePage() {
           }
           .yzo-promo-badge {
             display: inline-block; padding: 3px 12px; border-radius: 999px; margin-bottom: 14px;
-            background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3);
-            font-size: 11px; font-weight: 700; color: #818cf8; letter-spacing: 0.06em; text-transform: uppercase;
+            background: rgba(var(--v3-accent-rgb),0.15); border: 1px solid rgba(var(--v3-accent-rgb),0.3);
+            font-size: 11px; font-weight: 700; color: var(--v3-accent-text); letter-spacing: 0.06em; text-transform: uppercase;
           }
-          .v3-light .yzo-promo-badge { background: rgba(99,102,241,0.1); color: #4f46e5; border-color: rgba(99,102,241,0.2); }
+          .v3-light .yzo-promo-badge { background: rgba(var(--v3-accent-rgb),0.1); color: var(--v3-accent); border-color: rgba(var(--v3-accent-rgb),0.2); }
           .yzo-promo-title {
             font-size: clamp(24px,4vw,36px); font-weight: 800; margin: 0 0 12px;
             letter-spacing: -0.7px;
-            background: linear-gradient(135deg, #f1f5f9 0%, #c7d2fe 45%, #5eead4 100%);
+            background: linear-gradient(135deg, #f1f5f9 0%, var(--v3-accent-text) 45%, var(--v3-accent) 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
           }
           .v3-light .yzo-promo-title {
-            background: linear-gradient(135deg, #1e293b 0%, #4f46e5 50%, #0d9488 100%);
+            background: var(--v3-gradient);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
           }
           .yzo-promo-sub {
@@ -411,15 +408,15 @@ export default async function V3HomePage() {
           .yzo-promo-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
           .yzo-promo-tag {
             padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600;
-            background: rgba(99,102,241,0.1); color: #818cf8;
-            border: 1px solid rgba(99,102,241,0.2);
+            background: rgba(var(--v3-accent-rgb),0.1); color: var(--v3-accent-text);
+            border: 1px solid rgba(var(--v3-accent-rgb),0.2);
           }
-          .v3-light .yzo-promo-tag { background: rgba(99,102,241,0.08); color: #4f46e5; border-color: rgba(99,102,241,0.2); }
+          .v3-light .yzo-promo-tag { background: rgba(var(--v3-accent-rgb),0.08); color: var(--v3-accent); border-color: rgba(var(--v3-accent-rgb),0.2); }
           .yzo-promo-cta {
             display: inline-flex; align-items: center; gap: 8px;
             padding: 12px 24px; border-radius: 12px; font-size: 15px; font-weight: 700;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff;
-            box-shadow: 0 4px 20px rgba(99,102,241,0.35);
+            background: var(--v3-accent); color: var(--v3-on-accent);
+            box-shadow: 0 4px 20px rgba(var(--v3-accent-rgb),0.35);
           }
           .yzo-promo-stats {
             display: flex; flex-direction: column; gap: 14px; align-items: flex-end;
@@ -427,14 +424,14 @@ export default async function V3HomePage() {
           }
           .yzo-promo-stat {
             text-align: center; padding: 14px 20px; border-radius: 14px;
-            background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.18);
+            background: rgba(var(--v3-accent-rgb),0.08); border: 1px solid rgba(var(--v3-accent-rgb),0.18);
             min-width: 120px;
           }
-          .v3-light .yzo-promo-stat { background: rgba(99,102,241,0.06); border-color: rgba(99,102,241,0.15); }
+          .v3-light .yzo-promo-stat { background: rgba(var(--v3-accent-rgb),0.06); border-color: rgba(var(--v3-accent-rgb),0.15); }
           .yzo-promo-stat-val {
-            font-size: 26px; font-weight: 800; letter-spacing: -0.5px; color: #818cf8;
+            font-size: 26px; font-weight: 800; letter-spacing: -0.5px; color: var(--v3-accent-text); white-space: nowrap;
           }
-          .v3-light .yzo-promo-stat-val { color: #4f46e5; }
+          .v3-light .yzo-promo-stat-val { color: var(--v3-accent); }
           .yzo-promo-stat-lbl { font-size: 11px; color: var(--v3-text-muted); margin-top: 2px; font-weight: 600; }
           @media (max-width: 700px) {
             .yzo-promo-stats { flex-direction: row; align-items: center; width: 100%; }
@@ -453,8 +450,8 @@ export default async function V3HomePage() {
                   <stop offset="100%" stopColor="#000000" stopOpacity="0"/>
                 </radialGradient>
                 <radialGradient id="yzo-pi-glow" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="#6366f1" stopOpacity="0.5"/>
-                  <stop offset="100%" stopColor="#6366f1" stopOpacity="0"/>
+                  <stop offset="0%" stopColor="var(--v3-accent)" stopOpacity="0.5"/>
+                  <stop offset="100%" stopColor="var(--v3-accent)" stopOpacity="0"/>
                 </radialGradient>
                 <filter id="yzo-blur">
                   <feGaussianBlur stdDeviation="2.5"/>
@@ -467,28 +464,28 @@ export default async function V3HomePage() {
 
               {/* Arka plan gradyanları */}
               <rect width="900" height="220" fill="url(#yzo-bg-glow)"/>
-              <circle cx="160" cy="110" r="130" fill="rgba(99,102,241,0.07)"/>
+              <circle cx="160" cy="110" r="130" fill="rgba(var(--v3-accent-rgb),0.07)"/>
               <circle cx="750" cy="90" r="100" fill="rgba(20,184,166,0.06)"/>
 
               {/* Grid çizgileri */}
               {[0,60,120,180,240,300,360,420,480,540,600,660,720,780,840,900].map(x => (
-                <line key={x} x1={x} y1="0" x2={x} y2="220" stroke="rgba(99,102,241,0.07)" strokeWidth="1"/>
+                <line key={x} x1={x} y1="0" x2={x} y2="220" stroke="rgba(var(--v3-accent-rgb),0.07)" strokeWidth="1"/>
               ))}
               {[0,40,80,120,160,200].map(y => (
-                <line key={y} x1="0" y1={y} x2="900" y2={y} stroke="rgba(99,102,241,0.07)" strokeWidth="1"/>
+                <line key={y} x1="0" y1={y} x2="900" y2={y} stroke="rgba(var(--v3-accent-rgb),0.07)" strokeWidth="1"/>
               ))}
 
               {/* === MASA 1 — Postacı (sol) === */}
-              <rect x="40" y="80" width="80" height="50" rx="4" fill="rgba(99,102,241,0.15)" stroke="rgba(99,102,241,0.4)" strokeWidth="1"/>
-              <rect x="48" y="88" width="64" height="34" rx="2" fill="rgba(10,15,35,0.7)" stroke="rgba(99,102,241,0.25)" strokeWidth="0.5"/>
-              <rect x="52" y="92" width="56" height="4" rx="1" fill="rgba(99,102,241,0.5)"/>
-              <rect x="52" y="99" width="40" height="3" rx="1" fill="rgba(99,102,241,0.3)"/>
-              <rect x="52" y="105" width="48" height="3" rx="1" fill="rgba(99,102,241,0.3)"/>
-              <rect x="52" y="111" width="32" height="3" rx="1" fill="rgba(99,102,241,0.2)"/>
+              <rect x="40" y="80" width="80" height="50" rx="4" fill="rgba(var(--v3-accent-rgb),0.15)" stroke="rgba(var(--v3-accent-rgb),0.4)" strokeWidth="1"/>
+              <rect x="48" y="88" width="64" height="34" rx="2" fill="rgba(10,15,35,0.7)" stroke="rgba(var(--v3-accent-rgb),0.25)" strokeWidth="0.5"/>
+              <rect x="52" y="92" width="56" height="4" rx="1" fill="rgba(var(--v3-accent-rgb),0.5)"/>
+              <rect x="52" y="99" width="40" height="3" rx="1" fill="rgba(var(--v3-accent-rgb),0.3)"/>
+              <rect x="52" y="105" width="48" height="3" rx="1" fill="rgba(var(--v3-accent-rgb),0.3)"/>
+              <rect x="52" y="111" width="32" height="3" rx="1" fill="rgba(var(--v3-accent-rgb),0.2)"/>
               {/* Ajan avatarı */}
-              <circle cx="80" cy="72" r="10" fill="rgba(99,102,241,0.2)" stroke="rgba(99,102,241,0.5)" strokeWidth="1.5"/>
+              <circle cx="80" cy="72" r="10" fill="rgba(var(--v3-accent-rgb),0.2)" stroke="rgba(var(--v3-accent-rgb),0.5)" strokeWidth="1.5"/>
               <text x="80" y="76" textAnchor="middle" fontSize="11" fill="white">📬</text>
-              <text x="80" y="148" textAnchor="middle" fontSize="8" fill="rgba(99,102,241,0.8)" fontFamily="monospace">Postacı</text>
+              <text x="80" y="148" textAnchor="middle" fontSize="8" fill="rgba(var(--v3-accent-rgb),0.8)" fontFamily="monospace">Postacı</text>
 
               {/* === MASA 2 — Takvimci === */}
               <rect x="155" y="75" width="80" height="55" rx="4" fill="rgba(139,92,246,0.12)" stroke="rgba(139,92,246,0.35)" strokeWidth="1"/>
@@ -516,17 +513,17 @@ export default async function V3HomePage() {
               <text x="310" y="148" textAnchor="middle" fontSize="8" fill="rgba(20,184,166,0.8)" fontFamily="monospace">Sekreter</text>
 
               {/* === TOPLANTI ODASI (merkez) === */}
-              <rect x="390" y="55" width="120" height="110" rx="8" fill="rgba(99,102,241,0.05)" stroke="rgba(99,102,241,0.25)" strokeWidth="1.5" strokeDasharray="4 2"/>
-              <text x="450" y="75" textAnchor="middle" fontSize="8" fill="rgba(99,102,241,0.5)" fontFamily="monospace" letterSpacing="1">TOPLANTI ODASI</text>
+              <rect x="390" y="55" width="120" height="110" rx="8" fill="rgba(var(--v3-accent-rgb),0.05)" stroke="rgba(var(--v3-accent-rgb),0.25)" strokeWidth="1.5" strokeDasharray="4 2"/>
+              <text x="450" y="75" textAnchor="middle" fontSize="8" fill="rgba(var(--v3-accent-rgb),0.5)" fontFamily="monospace" letterSpacing="1">TOPLANTI ODASI</text>
               {/* Yuvarlak masa */}
-              <ellipse cx="450" cy="120" rx="36" ry="22" fill="rgba(99,102,241,0.1)" stroke="rgba(99,102,241,0.3)" strokeWidth="1"/>
+              <ellipse cx="450" cy="120" rx="36" ry="22" fill="rgba(var(--v3-accent-rgb),0.1)" stroke="rgba(var(--v3-accent-rgb),0.3)" strokeWidth="1"/>
               {/* Küçük sandalyeler */}
               {[
                 [450, 92, '📬'], [480, 108, '📅'], [476, 138, '📋'],
                 [450, 148, '📰'], [420, 138, '✍️'], [418, 108, '🔍']
               ].map(([cx, cy, em], i) => (
                 <g key={i}>
-                  <circle cx={cx} cy={cy} r="8" fill="rgba(99,102,241,0.15)" stroke="rgba(99,102,241,0.35)" strokeWidth="1"/>
+                  <circle cx={cx} cy={cy} r="8" fill="rgba(var(--v3-accent-rgb),0.15)" stroke="rgba(var(--v3-accent-rgb),0.35)" strokeWidth="1"/>
                   <text x={cx} y={cy+3.5} textAnchor="middle" fontSize="8" fill="white">{em}</text>
                 </g>
               ))}
@@ -568,14 +565,14 @@ export default async function V3HomePage() {
               {/* LED ışıkları */}
               {[0,1,2].map(i => (
                 <circle key={i} cx={818+i*8} cy={130} r="2.5"
-                  fill={i===0 ? "#10b981" : i===1 ? "#fbbf24" : "rgba(99,102,241,0.6)"}/>
+                  fill={i===0 ? "#10b981" : i===1 ? "#fbbf24" : "rgba(var(--v3-accent-rgb),0.6)"}/>
               ))}
               <circle cx="840" cy="148" r="10" fill="rgba(16,185,129,0.2)" stroke="rgba(16,185,129,0.5)" strokeWidth="1.5"/>
               <text x="840" y="152" textAnchor="middle" fontSize="11" fill="white">🛡️</text>
               <text x="840" y="168" textAnchor="middle" fontSize="7" fill="rgba(16,185,129,0.8)" fontFamily="monospace">Bekçi</text>
 
               {/* === Telegram baloncukları (sağ alt) === */}
-              <rect x="40" y="165" width="160" height="20" rx="10" fill="rgba(99,102,241,0.12)" stroke="rgba(99,102,241,0.25)" strokeWidth="0.5"/>
+              <rect x="40" y="165" width="160" height="20" rx="10" fill="rgba(var(--v3-accent-rgb),0.12)" stroke="rgba(var(--v3-accent-rgb),0.25)" strokeWidth="0.5"/>
               <text x="120" y="179" textAnchor="middle" fontSize="8.5" fill="rgba(200,210,255,0.8)" fontFamily="monospace">📬 3 yeni mail önemlendi</text>
 
               <rect x="230" y="165" width="170" height="20" rx="10" fill="rgba(20,184,166,0.1)" stroke="rgba(20,184,166,0.25)" strokeWidth="0.5"/>
@@ -588,7 +585,7 @@ export default async function V3HomePage() {
               <text x="705" y="179" textAnchor="middle" fontSize="8.5" fill="rgba(170,240,210,0.8)" fontFamily="monospace">🛡️ Pi: ✓ PC: ✓ Net: ✓</text>
 
               {/* Bağlantı çizgileri */}
-              <line x1="140" y1="115" x2="390" y2="120" stroke="rgba(99,102,241,0.15)" strokeWidth="1" strokeDasharray="4 3"/>
+              <line x1="140" y1="115" x2="390" y2="120" stroke="rgba(var(--v3-accent-rgb),0.15)" strokeWidth="1" strokeDasharray="4 3"/>
               <line x1="255" y1="110" x2="390" y2="115" stroke="rgba(139,92,246,0.15)" strokeWidth="1" strokeDasharray="4 3"/>
               <line x1="350" y1="110" x2="390" y2="115" stroke="rgba(20,184,166,0.15)" strokeWidth="1" strokeDasharray="4 3"/>
               <line x1="510" y1="110" x2="550" y2="115" stroke="rgba(249,115,22,0.15)" strokeWidth="1" strokeDasharray="4 3"/>
@@ -710,96 +707,6 @@ export default async function V3HomePage() {
         </div>
       </div>
 
-      {/* Yapay Zeka Ofisi promo — KALDIRILDI, üstte gösteriliyor */}
-      {false && <div className="v3-section" style={{ paddingTop: 0, paddingBottom: '32px' }}>
-        <style>{`
-          .yzo-promo-card-old {
-            display: block; text-decoration: none; color: inherit;
-            position: relative; overflow: hidden; border-radius: 20px;
-            border: 1px solid rgba(99,102,241,0.3);
-            background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(20,184,166,0.07) 100%);
-            padding: 32px 36px;
-            transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
-          }
-          .yzo-promo-card:hover {
-            border-color: rgba(99,102,241,0.55);
-            transform: translateY(-2px);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-          }
-          .yzo-promo-inner {
-            position: relative; z-index: 1;
-            display: flex; align-items: center; justify-content: space-between;
-            gap: 32px; flex-wrap: wrap;
-          }
-          .yzo-promo-badge {
-            display: inline-block; padding: 3px 12px; border-radius: 999px; margin-bottom: 16px;
-            background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.25);
-            font-size: 11px; font-weight: 700; color: #818cf8; letter-spacing: 0.05em;
-          }
-          .yzo-promo-title {
-            font-size: clamp(22px,3.5vw,32px); font-weight: 800; margin: 0 0 10px;
-            letter-spacing: -0.6px;
-            background: linear-gradient(135deg, #f1f5f9 0%, #c7d2fe 50%, #5eead4 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-          }
-          .v3-light .yzo-promo-title {
-            background: linear-gradient(135deg, #1e293b 0%, #4f46e5 50%, #0d9488 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-          }
-          .yzo-promo-sub {
-            font-size: 14px; color: var(--v3-text-muted); margin: 0 0 20px;
-            line-height: 1.65; max-width: 480px;
-          }
-          .yzo-promo-tags { display: flex; gap: 8px; flex-wrap: wrap; }
-          .yzo-promo-tag {
-            padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 600;
-            background: rgba(99,102,241,0.1); color: #818cf8;
-            border: 1px solid rgba(99,102,241,0.2);
-          }
-          .yzo-promo-emojis {
-            display: grid; grid-template-columns: repeat(4, 44px); gap: 8px; margin-bottom: 12px;
-          }
-          .yzo-promo-emoji-box {
-            width: 44px; height: 44px; border-radius: 12px;
-            background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.2);
-            display: flex; align-items: center; justify-content: center; font-size: 20px;
-          }
-          .yzo-promo-cta {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 700;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff;
-          }
-          @media (max-width: 700px) {
-            .yzo-promo-card { padding: 24px 20px; }
-          }
-        `}</style>
-        <Link href="/yapay-zeka-ofisi" className="yzo-promo-card">
-          <div className="yzo-promo-inner">
-            <div style={{ flex: 1, minWidth: '260px' }}>
-              <div className="yzo-promo-badge">KisiSEL AI PROJESI</div>
-              <h2 className="yzo-promo-title">Yapay Zeka Ofisi</h2>
-              <p className="yzo-promo-sub">
-                Raspberry Pi 5 üzerinde tamamen yerel 7 ajanlı ofis asistanı.
-                Bulut yok, abonelik yok, veri dışarı çıkmıyor. Aylık ek maliyet: 0 TL.
-              </p>
-              <div className="yzo-promo-tags">
-                {['Gemma 3 12B', 'Raspberry Pi 5', 'Tailscale', 'Telegram', 'Pixel Ofis'].map(t => (
-                  <span key={t} className="yzo-promo-tag">{t}</span>
-                ))}
-              </div>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-              <div className="yzo-promo-emojis">
-                {['\u{1F4EC}', '\u{1F4C5}', '\u{1F4CB}', '\u{1F4F0}', '\u{270D}', '\u{1F50D}', '\u{1F6E1}'].map((e, i) => (
-                  <div key={i} className="yzo-promo-emoji-box">{e}</div>
-                ))}
-                <div className="yzo-promo-emoji-box" style={{ opacity: 0 }} />
-              </div>
-              <span className="yzo-promo-cta">Projeyi Incele</span>
-            </div>
-          </div>
-        </Link>
-      </div>}
     </>
   );
 }

@@ -12,90 +12,116 @@ export default function V3Layout({ children }) {
   return (
     <>
       <style>{`
-        /* ── Koyu tema (varsayılan) ── */
+        /* ── Koyu tema (varsayılan) · Grafit + Zümrüt ── */
         .v3-root {
           min-height: 100vh;
           background: var(--v3-bg);
           color: var(--v3-text);
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-          --v3-bg:           #080c14;
-          --v3-surface:      #0d1421;
-          --v3-surface2:     #111827;
-          --v3-border:       rgba(255,255,255,0.06);
-          --v3-border-bright:rgba(255,255,255,0.12);
-          --v3-text:         #f1f5f9;
-          --v3-text-muted:   #64748b;
-          --v3-text-faint:   #334155;
-          --v3-accent:       #6366f1;
-          --v3-accent2:      #8b5cf6;
-          --v3-teal:         #14b8a6;
-          --v3-coral:        #f97316;
-          --v3-green:        #10b981;
-          --v3-gradient:     linear-gradient(135deg, #6366f1, #8b5cf6, #14b8a6);
+          font-family: 'Onest', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          letter-spacing: -0.005em;
+          -webkit-font-smoothing: antialiased;
+          color-scheme: dark;
+
+          --v3-bg:           #0c0d0f;
+          --v3-bg-rgb:       12,13,15;
+          --v3-surface:      #141518;
+          --v3-surface-rgb:  20,21,24;
+          --v3-surface2:     #1b1c20;
+          --v3-border:       rgba(255,255,255,0.08);
+          --v3-border-bright:rgba(255,255,255,0.15);
+          --v3-text:         #ededee;
+          --v3-text-muted:   #a1a1aa;
+          --v3-text-faint:   #73737d;
+
+          /* Vurgu rengi — renk seçiciden gelen --acc-* değişkenleri yoksa zümrüt */
+          --v3-accent:       var(--acc-d, #2fd3a7);
+          --v3-accent-rgb:   var(--acc-d-rgb, 47,211,167);
+          --v3-accent-text:  var(--acc-d-text, #5ee3be);
+          --v3-on-accent:    var(--acc-d-on, #04140f);
+          --v3-accent2:      #b8a4ff;
+          --v3-teal:         #2dd4bf;
+          --v3-coral:        #fb923c;
+          --v3-green:        #34d399;
+
+          --v3-radius:       16px;
+          --v3-radius-md:    12px;
+          --v3-radius-sm:    10px;
+          --v3-shadow-card:  inset 0 1px 0 rgba(255,255,255,0.04), 0 10px 28px rgba(0,0,0,0.45);
+          --v3-shadow-hover: inset 0 1px 0 rgba(255,255,255,0.05), 0 14px 36px rgba(0,0,0,0.5);
+          --v3-nav-bg:       rgba(12,13,15,0.82);
 
           /* Eski site değişkenleri — koyu */
-          --color-cream:       #0d1421;
-          --color-bg:          #0d1421;
-          --color-cream-rgb:   13,20,33;
-          --color-cream-card:  #111827;
-          --color-cream-card2: #1a2332;
-          --color-border:      rgba(255,255,255,0.08);
+          --color-cream:       #141518;
+          --color-bg:          #141518;
+          --color-cream-rgb:   20,21,24;
+          --color-cream-card:  #1b1c20;
+          --color-cream-card2: #222328;
+          --color-border:      rgba(255,255,255,0.09);
           --color-border-light:rgba(255,255,255,0.05);
-          --color-text:        #e2e8f0;
-          --color-text-soft:   #94a3b8;
-          --color-text-mute:   #64748b;
-          --color-text-faint:  rgba(100,116,139,0.5);
-          --color-heading:     #f1f5f9;
-          --color-accent-soft: rgba(29,158,117,0.15);
+          --color-text:        #e4e4e7;
+          --color-text-soft:   #a1a1aa;
+          --color-text-mute:   #8b8b94;
+          --color-text-faint:  #73737d;
+          --color-heading:     #f4f4f5;
+          --color-accent:      var(--v3-accent);
+          --color-accent-soft: rgba(var(--v3-accent-rgb),0.14);
+          --color-accent-text: var(--v3-accent-text);
           --color-amber-bg:    rgba(251,191,36,0.1);
           --color-amber-text:  #fbbf24;
-          --color-purple-bg:   rgba(139,92,246,0.1);
-          --color-purple-text: #a78bfa;
+          --color-purple-bg:   rgba(184,164,255,0.1);
+          --color-purple-text: #b8a4ff;
           --color-highlight:   rgba(251,191,36,0.08);
-          --color-correct-bg:  rgba(16,185,129,0.1);
-          --color-correct-border: rgba(16,185,129,0.25);
-          --color-correct-text:   #34d399;
-          --color-correct-icon:   #34d399;
-          --color-wrong-bg:    rgba(239,68,68,0.1);
-          --color-wrong-border:rgba(239,68,68,0.25);
+          --color-correct-bg:  rgba(52,211,153,0.1);
+          --color-correct-border: rgba(52,211,153,0.28);
+          --color-correct-text:   #4ade80;
+          --color-correct-icon:   #4ade80;
+          --color-wrong-bg:    rgba(248,113,113,0.1);
+          --color-wrong-border:rgba(248,113,113,0.28);
           --color-wrong-text:  #f87171;
           --color-wrong-icon:  #f87171;
-          --shadow-card:       0 2px 16px rgba(0,0,0,0.4);
+          --shadow-card:       var(--v3-shadow-card);
         }
 
         /* ── Açık tema ── */
         .v3-root.v3-light {
-          --v3-bg:           #f0f4f8;
+          color-scheme: light;
+          --v3-bg:           #fafafa;
+          --v3-bg-rgb:       250,250,250;
           --v3-surface:      #ffffff;
-          --v3-surface2:     #f8fafc;
-          --v3-border:       #e2e8f0;
-          --v3-border-bright:#cbd5e1;
-          --v3-text:         #0f172a;
-          --v3-text-muted:   #475569;
-          --v3-text-faint:   #94a3b8;
-          --v3-accent:       #4f46e5;
-          --v3-accent2:      #7c3aed;
+          --v3-surface-rgb:  255,255,255;
+          --v3-surface2:     #f4f4f5;
+          --v3-border:       #e4e4e7;
+          --v3-border-bright:#d4d4d8;
+          --v3-text:         #18181b;
+          --v3-text-muted:   #52525b;
+          --v3-text-faint:   #7e7e88;
+
+          --v3-accent:       var(--acc-l, #047857);
+          --v3-accent-rgb:   var(--acc-l-rgb, 4,120,87);
+          --v3-accent-text:  var(--acc-l-text, #047857);
+          --v3-on-accent:    var(--acc-l-on, #ffffff);
+          --v3-accent2:      #6d28d9;
           --v3-teal:         #0d9488;
           --v3-coral:        #ea580c;
           --v3-green:        #059669;
-          --v3-gradient:     linear-gradient(135deg, #4f46e5, #7c3aed, #0d9488);
+
+          --v3-shadow-card:  0 1px 2px rgba(0,0,0,0.04), 0 8px 20px rgba(0,0,0,0.05);
+          --v3-shadow-hover: 0 1px 2px rgba(0,0,0,0.05), 0 12px 28px rgba(0,0,0,0.08);
+          --v3-nav-bg:       rgba(255,255,255,0.85);
 
           /* Eski site değişkenleri — açık */
-          --color-cream:       #f8fafc;
-          --color-bg:          #f0f4f8;
-          --color-cream-rgb:   240,244,248;
+          --color-cream:       #ffffff;
+          --color-bg:          #fafafa;
+          --color-cream-rgb:   250,250,250;
           --color-cream-card:  #ffffff;
-          --color-cream-card2: #f1f5f9;
-          --color-border:      #e2e8f0;
-          --color-border-light:#f1f5f9;
-          --color-text:        #1e293b;
-          --color-text-soft:   #475569;
-          --color-text-mute:   #64748b;
-          --color-text-faint:  #94a3b8;
-          --color-heading:     #0f172a;
-          --color-accent:      #4f46e5;
-          --color-accent-soft: rgba(79,70,229,0.08);
-          --color-accent-text: #4f46e5;
+          --color-cream-card2: #f4f4f5;
+          --color-border:      #e4e4e7;
+          --color-border-light:#f4f4f5;
+          --color-text:        #27272a;
+          --color-text-soft:   #52525b;
+          --color-text-mute:   #63636d;
+          --color-text-faint:  #7e7e88;
+          --color-heading:     #18181b;
           --color-amber-bg:    #fef3c7;
           --color-amber-text:  #92400e;
           --color-purple-bg:   #ede9fe;
@@ -109,29 +135,64 @@ export default function V3Layout({ children }) {
           --color-wrong-border:#fca5a5;
           --color-wrong-text:  #dc2626;
           --color-wrong-icon:  #ef4444;
-          --shadow-card:       0 2px 12px rgba(0,0,0,0.08);
+        }
+
+        /* Türetilen değişkenler: her iki temada da son değerlerden hesaplanır */
+        .v3-root, .v3-root.v3-light {
+          --v3-accent-soft:  rgba(var(--v3-accent-rgb),0.12);
+          --v3-accent-line:  rgba(var(--v3-accent-rgb),0.28);
+          --v3-gradient:     linear-gradient(90deg, var(--v3-accent), var(--v3-accent-text));
+        }
+
+        .v3-root ::selection { background: rgba(var(--v3-accent-rgb),0.28); }
+        .v3-root :focus-visible { outline: 2px solid var(--v3-accent); outline-offset: 2px; border-radius: 4px; }
+        .v3-root h1, .v3-root h2, .v3-root h3 { letter-spacing: -0.02em; text-wrap: balance; }
+
+        /* ── Modern katman: tek köşe ölçeği, yumuşak gölge, sakin hover ── */
+        .v3-root :is(.v3-card, .pg-card, .tool-card, .v3-cat-card, .v3-analiz-card, .yzo-promo-card, .feat-card, .og-card, .tc-card) {
+          border-radius: var(--v3-radius);
+          box-shadow: var(--v3-shadow-card);
+          transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+        }
+        .v3-root :is(.v3-card, .pg-card, .tool-card, .v3-cat-card, .v3-analiz-card, .yzo-promo-card, .feat-card, .og-card, .tc-card):hover {
+          transform: none;
+          border-color: var(--v3-accent-line);
+          box-shadow: var(--v3-shadow-hover);
+        }
+        .v3-root :is(.v3-btn-primary, .v3-btn-secondary, .v3-btn-kayit, .v3-btn-login, .yzo-promo-cta) {
+          border-radius: var(--v3-radius-sm);
+        }
+        .v3-root .v3-btn-primary:hover { transform: none; opacity: 1; filter: brightness(1.08); }
+        .v3-root .v3-btn-secondary { background: var(--v3-surface); }
+        .v3-root .v3-btn-secondary:hover { background: var(--v3-surface2); border-color: var(--v3-accent-line); }
+        .v3-root .v3-btn-kayit { background: var(--v3-accent); color: var(--v3-on-accent); box-shadow: none; }
+        .v3-root .v3-stats-bar { background: var(--v3-surface); }
+        @media (prefers-reduced-motion: reduce) {
+          .v3-root *, .v3-root *::before, .v3-root *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
         }
 
         .v3-root * { box-sizing: border-box; }
         .v3-root a { color: inherit; text-decoration: none; }
 
         /* Tailwind utility sınıflarını koyu temaya override et */
-        .v3-root:not(.v3-light) .bg-white      { background-color: #111827 !important; }
-        .v3-root:not(.v3-light) .bg-gray-50    { background-color: #1a2332 !important; }
-        .v3-root:not(.v3-light) .bg-gray-100   { background-color: #1e293b !important; }
+        .v3-root:not(.v3-light) .bg-white      { background-color: #1b1c20 !important; }
+        .v3-root:not(.v3-light) .bg-gray-50    { background-color: #222328 !important; }
+        .v3-root:not(.v3-light) .bg-gray-100   { background-color: #27272a !important; }
         .v3-root:not(.v3-light) .bg-green-50   { background-color: rgba(16,185,129,0.1) !important; }
         .v3-root:not(.v3-light) .bg-red-50     { background-color: rgba(239,68,68,0.1) !important; }
-        .v3-root:not(.v3-light) .border-gray-200 { border-color: rgba(255,255,255,0.08) !important; }
-        .v3-root:not(.v3-light) .border-gray-300 { border-color: rgba(255,255,255,0.12) !important; }
-        .v3-root:not(.v3-light) .text-gray-500 { color: #64748b !important; }
-        .v3-root:not(.v3-light) .text-gray-600 { color: #94a3b8 !important; }
-        .v3-root:not(.v3-light) .text-gray-700 { color: #cbd5e1 !important; }
-        .v3-root:not(.v3-light) .text-gray-900 { color: #f1f5f9 !important; }
+        .v3-root:not(.v3-light) .border-gray-200 { border-color: rgba(255,255,255,0.09) !important; }
+        .v3-root:not(.v3-light) .border-gray-300 { border-color: rgba(255,255,255,0.15) !important; }
+        .v3-root:not(.v3-light) .text-gray-500 { color: #a1a1aa !important; }
+        .v3-root:not(.v3-light) .text-gray-600 { color: #b4b4bb !important; }
+        .v3-root:not(.v3-light) .text-gray-700 { color: #d4d4d8 !important; }
+        .v3-root:not(.v3-light) .text-gray-900 { color: #f4f4f5 !important; }
         .v3-root:not(.v3-light) .text-green-800 { color: #34d399 !important; }
         .v3-root:not(.v3-light) .text-red-800  { color: #f87171 !important; }
         .v3-root:not(.v3-light) .hover\:bg-gray-50:hover { background-color: rgba(255,255,255,0.06) !important; }
-        .v3-root:not(.v3-light) .hover\:bg-gray-100:hover { background-color: rgba(255,255,255,0.08) !important; }
+        .v3-root:not(.v3-light) .hover\:bg-gray-100:hover { background-color: rgba(255,255,255,0.09) !important; }
       `}</style>
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800;900&display=swap" precedence="default" />
       <V3ThemeWrapper>
         <GirisBanner />
         <V3Navbar />

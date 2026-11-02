@@ -47,11 +47,11 @@ export default function TechCenterCard() {
         .tc-title {
           font-size: clamp(26px, 4vw, 38px); font-weight: 900; margin: 0 0 12px;
           letter-spacing: -0.8px; line-height: 1.1;
-          background: linear-gradient(135deg, #f1f5f9 0%, #c7d2fe 60%, #a5b4fc 100%);
+          background: linear-gradient(135deg, #f1f5f9 0%, var(--v3-accent-text) 60%, var(--v3-accent-text) 100%);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
         .v3-light .tc-title {
-          background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 60%, #6366f1 100%);
+          background: var(--v3-accent);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
         .tc-desc { font-size: 15px; color: rgba(203,213,225,0.8); margin: 0 0 24px; line-height: 1.6; max-width: 440px; }
@@ -60,14 +60,14 @@ export default function TechCenterCard() {
           padding: 8px 16px; border-radius: 10px;
           background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
         }
-        .v3-light .tc-stat-chip { background: rgba(99,102,241,0.08); border-color: rgba(99,102,241,0.18); }
+        .v3-light .tc-stat-chip { background: rgba(var(--v3-accent-rgb),0.08); border-color: rgba(var(--v3-accent-rgb),0.18); }
         .tc-stat-label { font-size: 10px; color: rgba(203,213,225,0.5); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
         .v3-light .tc-stat-label { color: rgba(30,27,75,0.45); }
       `}</style>
       <div className="tc-card">
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: 'radial-gradient(ellipse at 30% 50%, rgba(99,102,241,0.18) 0%, transparent 60%), radial-gradient(ellipse at 70% 20%, rgba(139,92,246,0.12) 0%, transparent 50%)',
+          background: 'radial-gradient(ellipse at 30% 50%, rgba(var(--v3-accent-rgb),0.18) 0%, transparent 60%), radial-gradient(ellipse at 70% 20%, rgba(139,92,246,0.12) 0%, transparent 50%)',
         }} />
         <div className="tc-grid-overlay" />
 
@@ -108,13 +108,13 @@ export default function TechCenterCard() {
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '8px',
                 padding: '12px 24px', borderRadius: '10px', fontWeight: 700, fontSize: '15px',
-                background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-                color: '#fff', textDecoration: 'none',
-                boxShadow: '0 4px 20px rgba(99,102,241,0.4)',
+                background: 'var(--v3-accent)',
+                color: 'var(--v3-on-accent)', textDecoration: 'none',
+                boxShadow: '0 4px 20px rgba(var(--v3-accent-rgb),0.4)',
                 transition: 'transform 0.15s, box-shadow 0.15s',
               }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(99,102,241,0.5)'; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 20px rgba(99,102,241,0.4)'; }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 28px rgba(var(--v3-accent-rgb),0.5)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 4px 20px rgba(var(--v3-accent-rgb),0.4)'; }}
             >
               {hasSave ? '▶ Devam Et' : '▶ Oyna'}
             </Link>

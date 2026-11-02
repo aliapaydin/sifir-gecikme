@@ -16,7 +16,7 @@ function getBadge(href) { return badgeMap[href] || null; }
 const BADGE_COLOR = {
   'interaktif':     { bg: 'rgba(20,184,166,0.12)',  color: '#2dd4bf' },
   'rehber':         { bg: 'rgba(139,92,246,0.12)',  color: '#a78bfa' },
-  'araç':           { bg: 'rgba(99,102,241,0.12)',  color: '#818cf8' },
+  'araç':           { bg: 'rgba(var(--v3-accent-rgb),0.12)',  color: 'var(--v3-accent-text)' },
   'vaka çalışması': { bg: 'rgba(249,115,22,0.12)',  color: '#fb923c' },
   'kariyer':        { bg: 'rgba(16,185,129,0.12)',  color: '#34d399' },
 };
@@ -153,7 +153,7 @@ export default async function AnalizPage() {
         </div>
 
         <div className="analiz-stats">
-          <StatCard icon="👁️" label="Toplam Görüntülenme" value={summary.total_views} sub="Tüm zamanlar" color="#818cf8" />
+          <StatCard icon="👁️" label="Toplam Görüntülenme" value={summary.total_views} sub="Tüm zamanlar" color="var(--v3-accent-text)" />
           <StatCard icon="📈" label="Bu Haftaki Görüntülenme" value={summary.weekly_views} sub="Son 7 gün" color="#2dd4bf" />
           <StatCard icon="📚" label="Takip Edilen İçerik" value={summary.unique_content} sub={`/ ${yazilar.length} içerik`} color="#fb923c" />
           <StatCard icon="✅" label="Anladım İşaretleme" value={summary.total_anladi} sub="Toplam kullanıcı" color="#10b981" />
@@ -170,7 +170,7 @@ export default async function AnalizPage() {
           <div className="analiz-section">
             <h2 className="analiz-sec-title"><span>🏆</span> Tüm Zamanlar En Çok Okunan</h2>
             <p className="analiz-sec-sub">Toplam görüntülenme sayısına göre</p>
-            <RankList items={allTime} color="rgba(99,102,241,0.12)" emptyMsg="Henüz görüntülenme verisi yok." />
+            <RankList items={allTime} color="rgba(var(--v3-accent-rgb),0.12)" emptyMsg="Henüz görüntülenme verisi yok." />
           </div>
           <div className="analiz-section">
             <h2 className="analiz-sec-title"><span>✅</span> En Çok "Anladım" Denen</h2>

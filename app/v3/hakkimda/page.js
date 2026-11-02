@@ -118,8 +118,8 @@ export default function V3Hakkimda() {
         .hk-avatar {
           width: 120px; height: 120px; border-radius: 20px;
           overflow: hidden; flex-shrink: 0;
-          border: 2px solid rgba(99,102,241,0.4);
-          box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
+          border: 2px solid rgba(var(--v3-accent-rgb),0.4);
+          box-shadow: 0 0 0 4px rgba(var(--v3-accent-rgb),0.1);
         }
         .hk-avatar img { width: 100%; height: 100%; object-fit: cover; }
         .hk-hero-info { flex: 1; min-width: 220px; }
@@ -127,18 +127,18 @@ export default function V3Hakkimda() {
           display: inline-flex; align-items: center; gap: 6px;
           padding: 4px 12px; border-radius: 20px; font-size: 11px;
           font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
-          background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.25);
-          color: #818cf8; margin-bottom: 14px;
+          background: rgba(var(--v3-accent-rgb),0.12); border: 1px solid rgba(var(--v3-accent-rgb),0.25);
+          color: var(--v3-accent-text); margin-bottom: 14px;
         }
         .hk-name {
           font-size: clamp(32px, 5vw, 44px); font-weight: 800;
           line-height: 1.1; letter-spacing: -1px; margin: 0 0 6px;
-          background: linear-gradient(135deg, #f1f5f9 0%, #c7d2fe 60%, #a5f3fc 100%);
+          background: linear-gradient(135deg, #f1f5f9 0%, var(--v3-accent-text) 60%, #a5f3fc 100%);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent;
           background-clip: text;
         }
         .v3-light .hk-name {
-          background: linear-gradient(135deg, #0f172a 0%, #4f46e5 60%, #0d9488 100%);
+          background: var(--v3-gradient);
           -webkit-background-clip: text; background-clip: text;
         }
         .hk-title {
@@ -338,7 +338,7 @@ export default function V3Hakkimda() {
                 <div className="hk-stat-lbl">Yıl Deneyim</div>
               </div>
               <div className="hk-stat">
-                <div className="hk-stat-val" style={{ color: '#818cf8' }}>12</div>
+                <div className="hk-stat-val" style={{ color: 'var(--v3-accent-text)' }}>12</div>
                 <div className="hk-stat-lbl">Ülke Kapsamı</div>
               </div>
               <div className="hk-stat">

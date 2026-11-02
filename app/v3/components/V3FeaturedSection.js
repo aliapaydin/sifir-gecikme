@@ -9,7 +9,7 @@ import DataCardBg from './DataCardBg';
 const BADGE_COLORS = {
   'interaktif':     { bg: 'rgba(20,184,166,0.12)',  color: '#2dd4bf', border: 'rgba(20,184,166,0.2)' },
   'rehber':         { bg: 'rgba(139,92,246,0.12)',  color: '#a78bfa', border: 'rgba(139,92,246,0.2)' },
-  'araç':           { bg: 'rgba(99,102,241,0.12)',  color: '#818cf8', border: 'rgba(99,102,241,0.2)' },
+  'araç':           { bg: 'rgba(var(--v3-accent-rgb),0.12)',  color: 'var(--v3-accent-text)', border: 'rgba(var(--v3-accent-rgb),0.2)' },
   'vaka çalışması': { bg: 'rgba(249,115,22,0.12)',  color: '#fb923c', border: 'rgba(249,115,22,0.2)' },
   'kariyer':        { bg: 'rgba(16,185,129,0.12)',  color: '#34d399', border: 'rgba(16,185,129,0.2)' },
 };
@@ -64,10 +64,10 @@ export default function V3FeaturedSection() {
         .feat-shuffle-btn {
           display: flex; align-items: center; gap: 6px;
           padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 600;
-          background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.25);
-          color: #818cf8; cursor: pointer; transition: background 0.15s, border-color 0.15s;
+          background: rgba(var(--v3-accent-rgb),0.1); border: 1px solid rgba(var(--v3-accent-rgb),0.25);
+          color: var(--v3-accent-text); cursor: pointer; transition: background 0.15s, border-color 0.15s;
         }
-        .feat-shuffle-btn:hover { background: rgba(99,102,241,0.18); border-color: rgba(99,102,241,0.4); }
+        .feat-shuffle-btn:hover { background: rgba(var(--v3-accent-rgb),0.18); border-color: rgba(var(--v3-accent-rgb),0.4); }
         .feat-shuffle-icon { display: inline-block; transition: transform 0.4s; }
         .feat-shuffle-icon.spin { transform: rotate(180deg); }
         .v3-mark-badge {

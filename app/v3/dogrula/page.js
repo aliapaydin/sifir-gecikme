@@ -27,7 +27,7 @@ function DogrulaInner() {
         <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
           <Link href="/giris" style={{
             padding: '11px 22px', borderRadius: '10px',
-            background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', color: '#fff',
+            background: 'var(--v3-accent)', color: 'var(--v3-on-accent)',
             fontSize: '14px', fontWeight: 600, textDecoration: 'none',
           }}>
             Giriş Yap

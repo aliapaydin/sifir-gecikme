@@ -22,7 +22,7 @@ function parseMarkdown(text) {
       const escaped = code.trim().replace(/</g, '&lt;');
       return `<pre style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px 16px;margin:10px 0;overflow-x:auto;font-size:12px;line-height:1.6"><code>${escaped}</code></pre>`;
     })
-    .replace(/`([^`]+)`/g, '<code style="background:rgba(99,102,241,0.15);color:#a5b4fc;padding:2px 6px;border-radius:5px;font-size:0.88em">$1</code>')
+    .replace(/`([^`]+)`/g, '<code style="background:rgba(var(--v3-accent-rgb),0.15);color:var(--v3-accent-text);padding:2px 6px;border-radius:5px;font-size:0.88em">$1</code>')
     .replace(/\*\*(.+?)\*\*/g, '<strong style="color:inherit;font-weight:700">$1</strong>')
     .replace(/^### (.+)$/gm, '<div style="font-size:13px;font-weight:700;margin:10px 0 4px;color:var(--v3-text)">$1</div>')
     .replace(/^## (.+)$/gm, '<div style="font-size:14px;font-weight:700;margin:12px 0 6px;color:var(--v3-text)">$1</div>')
@@ -177,14 +177,14 @@ export default function V3EmbeddedTutor() {
           align-items: center;
           gap: 12px;
           flex-shrink: 0;
-          background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(139,92,246,0.06) 60%, rgba(20,184,166,0.04) 100%);
+          background: linear-gradient(135deg, rgba(var(--v3-accent-rgb),0.1) 0%, rgba(139,92,246,0.06) 60%, rgba(20,184,166,0.04) 100%);
         }
         .v3t-avatar {
           width: 40px; height: 40px; border-radius: 14px; flex-shrink: 0;
-          background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 60%, #14b8a6 100%);
+          background: var(--v3-gradient);
           display: flex; align-items: center; justify-content: center;
           font-size: 20px;
-          box-shadow: 0 4px 12px rgba(99,102,241,0.35);
+          box-shadow: 0 4px 12px rgba(var(--v3-accent-rgb),0.35);
         }
         .v3t-name { font-size: 14px; font-weight: 700; color: var(--v3-text); letter-spacing: -0.01em; }
         .v3t-status {
@@ -228,8 +228,8 @@ export default function V3EmbeddedTutor() {
           display: flex; align-items: center; justify-content: center; font-size: 14px;
         }
         .v3t-msg-avatar.ai {
-          background: linear-gradient(135deg, #6366f1, #8b5cf6);
-          box-shadow: 0 2px 8px rgba(99,102,241,0.3);
+          background: var(--v3-accent);
+          box-shadow: 0 2px 8px rgba(var(--v3-accent-rgb),0.3);
         }
         .v3t-msg-avatar.user-av {
           background: var(--v3-surface2);
@@ -240,10 +240,10 @@ export default function V3EmbeddedTutor() {
           padding: 11px 15px; border-radius: 16px;
         }
         .v3t-bubble.user {
-          background: linear-gradient(135deg, #6366f1, #8b5cf6);
-          color: #fff;
+          background: var(--v3-accent);
+          color: var(--v3-on-accent);
           border-radius: 16px 16px 4px 16px;
-          box-shadow: 0 4px 14px rgba(99,102,241,0.3);
+          box-shadow: 0 4px 14px rgba(var(--v3-accent-rgb),0.3);
         }
         .v3t-bubble.assistant {
           background: var(--v3-surface2);
@@ -263,11 +263,11 @@ export default function V3EmbeddedTutor() {
         }
         .v3t-sug {
           padding: 6px 13px; border-radius: 20px; font-size: 12px; font-weight: 500;
-          background: rgba(99,102,241,0.07); border: 1px solid rgba(99,102,241,0.18);
-          color: #818cf8; cursor: pointer; transition: background 0.15s, transform 0.1s;
+          background: rgba(var(--v3-accent-rgb),0.07); border: 1px solid rgba(var(--v3-accent-rgb),0.18);
+          color: var(--v3-accent-text); cursor: pointer; transition: background 0.15s, transform 0.1s;
           white-space: nowrap;
         }
-        .v3t-sug:hover { background: rgba(99,102,241,0.16); transform: translateY(-1px); }
+        .v3t-sug:hover { background: rgba(var(--v3-accent-rgb),0.16); transform: translateY(-1px); }
         .v3t-input-row {
           display: flex; gap: 8px; padding: 12px 14px 14px;
           border-top: 1px solid var(--v3-border); flex-shrink: 0;
@@ -282,17 +282,17 @@ export default function V3EmbeddedTutor() {
           transition: border-color 0.2s, box-shadow 0.2s;
         }
         .v3t-input:focus {
-          border-color: rgba(99,102,241,0.5);
-          box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+          border-color: rgba(var(--v3-accent-rgb),0.5);
+          box-shadow: 0 0 0 3px rgba(var(--v3-accent-rgb),0.1);
         }
         .v3t-input::placeholder { color: var(--v3-text-faint); }
         .v3t-send {
           width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0;
-          background: linear-gradient(135deg, #6366f1, #8b5cf6);
-          border: none; cursor: pointer; color: #fff; font-size: 15px;
+          background: var(--v3-accent);
+          border: none; cursor: pointer; color: var(--v3-on-accent); font-size: 15px;
           display: flex; align-items: center; justify-content: center;
           transition: opacity 0.15s, transform 0.1s; align-self: flex-end;
-          box-shadow: 0 4px 12px rgba(99,102,241,0.35);
+          box-shadow: 0 4px 12px rgba(var(--v3-accent-rgb),0.35);
         }
         .v3t-send:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
         .v3t-send:disabled { opacity: 0.35; cursor: not-allowed; box-shadow: none; }

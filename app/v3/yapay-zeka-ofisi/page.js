@@ -101,7 +101,7 @@ export default function YapayZekaOfisiPage() {
         }
         .yzo-hero-bg {
           position: absolute; inset: 0; z-index: 0;
-          background: radial-gradient(ellipse at 20% 50%, rgba(99,102,241,0.2) 0%, transparent 60%),
+          background: radial-gradient(ellipse at 20% 50%, rgba(var(--v3-accent-rgb),0.2) 0%, transparent 60%),
                       radial-gradient(ellipse at 80% 30%, rgba(20,184,166,0.12) 0%, transparent 55%);
           pointer-events: none;
         }
@@ -114,18 +114,18 @@ export default function YapayZekaOfisiPage() {
         .yzo-hero-badge {
           display: inline-flex; align-items: center; gap: 6px;
           padding: 4px 12px; border-radius: 999px;
-          background: rgba(99,102,241,0.12); border: 1px solid rgba(99,102,241,0.25);
-          font-size: 12px; font-weight: 700; color: #818cf8;
+          background: rgba(var(--v3-accent-rgb),0.12); border: 1px solid rgba(var(--v3-accent-rgb),0.25);
+          font-size: 12px; font-weight: 700; color: var(--v3-accent-text);
           letter-spacing: 0.04em; margin-bottom: 20px;
         }
         .yzo-hero-title {
           font-size: clamp(32px, 5vw, 56px); font-weight: 800;
           line-height: 1.1; letter-spacing: -1.5px; margin: 0 0 20px;
-          background: linear-gradient(135deg, #f1f5f9 0%, #c7d2fe 45%, #5eead4 100%);
+          background: linear-gradient(135deg, #f1f5f9 0%, var(--v3-accent-text) 45%, var(--v3-accent) 100%);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
         .v3-light .yzo-hero-title {
-          background: linear-gradient(135deg, #1e293b 0%, #4f46e5 45%, #0d9488 100%);
+          background: var(--v3-gradient);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
         }
         .yzo-hero-sub {
@@ -136,8 +136,8 @@ export default function YapayZekaOfisiPage() {
         .yzo-btn-primary {
           display: inline-flex; align-items: center; gap: 8px;
           padding: 13px 28px; border-radius: 10px; font-size: 15px; font-weight: 600;
-          background: linear-gradient(135deg, #6366f1, #8b5cf6);
-          color: #fff; text-decoration: none;
+          background: var(--v3-accent);
+          color: var(--v3-on-accent); text-decoration: none;
           transition: opacity 0.15s, transform 0.15s;
         }
         .yzo-btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
@@ -151,13 +151,13 @@ export default function YapayZekaOfisiPage() {
         .yzo-btn-secondary:hover { background: rgba(255,255,255,0.09); }
         .yzo-hero-visual {
           flex-shrink: 0; width: 340px;
-          background: rgba(13,20,33,0.72);
-          border: 1px solid rgba(99,102,241,0.2); border-radius: 20px;
+          background: rgba(var(--v3-surface-rgb),0.72);
+          border: 1px solid rgba(var(--v3-accent-rgb),0.2); border-radius: 20px;
           padding: 20px; backdrop-filter: blur(24px);
           box-shadow: 0 24px 64px rgba(0,0,0,0.45);
         }
         .v3-light .yzo-hero-visual {
-          background: rgba(255,255,255,0.85); border-color: rgba(99,102,241,0.15);
+          background: rgba(255,255,255,0.85); border-color: rgba(var(--v3-accent-rgb),0.15);
           box-shadow: 0 16px 48px rgba(0,0,0,0.1);
         }
         .yzo-visual-header {
@@ -174,11 +174,11 @@ export default function YapayZekaOfisiPage() {
           0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
         }
         .yzo-tg-msg {
-          background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.18);
+          background: rgba(var(--v3-accent-rgb),0.1); border: 1px solid rgba(var(--v3-accent-rgb),0.18);
           border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; font-size: 12px;
           color: var(--v3-text-muted); line-height: 1.5;
         }
-        .yzo-tg-sender { font-weight: 700; color: #818cf8; font-size: 11px; margin-bottom: 3px; }
+        .yzo-tg-sender { font-weight: 700; color: var(--v3-accent-text); font-size: 11px; margin-bottom: 3px; }
         .yzo-tg-time { font-size: 10px; color: var(--v3-text-faint); text-align: right; margin-top: 4px; }
 
         /* Sections */
@@ -234,7 +234,7 @@ export default function YapayZekaOfisiPage() {
         .yzo-arch-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
         .yzo-arch-tag {
           padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 600;
-          background: rgba(99,102,241,0.1); color: #818cf8;
+          background: rgba(var(--v3-accent-rgb),0.1); color: var(--v3-accent-text);
         }
 
         /* Hibrit model */
@@ -255,7 +255,7 @@ export default function YapayZekaOfisiPage() {
           background: var(--v3-surface); border: 1px solid var(--v3-border);
           border-radius: 12px; padding: 16px 18px;
         }
-        .yzo-tech-kat { font-size: 11px; font-weight: 700; color: #818cf8; letter-spacing: 0.06em; margin: 0 0 8px; }
+        .yzo-tech-kat { font-size: 11px; font-weight: 700; color: var(--v3-accent-text); letter-spacing: 0.06em; margin: 0 0 8px; }
         .yzo-tech-item {
           font-size: 13px; color: var(--v3-text-muted); padding: 3px 0;
           border-bottom: 1px solid var(--v3-border); line-height: 1.5;
@@ -270,7 +270,7 @@ export default function YapayZekaOfisiPage() {
         }
         .yzo-step:last-child { border-bottom: none; }
         .yzo-step-no {
-          font-size: 28px; font-weight: 900; color: rgba(99,102,241,0.2);
+          font-size: 28px; font-weight: 900; color: rgba(var(--v3-accent-rgb),0.2);
           font-family: monospace; flex-shrink: 0; line-height: 1; padding-top: 2px;
           min-width: 44px;
         }
@@ -285,7 +285,7 @@ export default function YapayZekaOfisiPage() {
         }
         .yzo-gun-row:last-child { border-bottom: none; }
         .yzo-gun-saat {
-          font-size: 12px; font-weight: 700; color: #818cf8; font-family: monospace;
+          font-size: 12px; font-weight: 700; color: var(--v3-accent-text); font-family: monospace;
         }
         .yzo-gun-olay { font-size: 14px; font-weight: 600; color: var(--v3-text); }
         .yzo-gun-detay { font-size: 13px; color: var(--v3-text-muted); }
@@ -302,9 +302,9 @@ export default function YapayZekaOfisiPage() {
 
         /* CTA bottom */
         .yzo-cta-box {
-          margin-top: 64px; border: 1px solid rgba(99,102,241,0.25);
+          margin-top: 64px; border: 1px solid rgba(var(--v3-accent-rgb),0.25);
           border-radius: 20px; padding: 40px;
-          background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(20,184,166,0.05));
+          background: linear-gradient(135deg, rgba(var(--v3-accent-rgb),0.08), rgba(20,184,166,0.05));
           text-align: center;
         }
         .yzo-cta-title { font-size: 24px; font-weight: 800; color: var(--v3-text); margin: 0 0 10px; }
@@ -496,8 +496,8 @@ export default function YapayZekaOfisiPage() {
             </p>
           </div>
           <div className="yzo-model-row">
-            <div className="yzo-model-card" style={{ border: '1px solid rgba(99,102,241,0.3)', background: 'rgba(99,102,241,0.05)' }}>
-              <div className="yzo-model-label" style={{ color: '#818cf8' }}>PC AÇIKSA</div>
+            <div className="yzo-model-card" style={{ border: '1px solid rgba(var(--v3-accent-rgb),0.3)', background: 'rgba(var(--v3-accent-rgb),0.05)' }}>
+              <div className="yzo-model-label" style={{ color: 'var(--v3-accent-text)' }}>PC AÇIKSA</div>
               <div className="yzo-model-name">Gemma 3 12B</div>
               <div className="yzo-model-detail">
                 Ollama ile GPU üzerinde. Türkçe doğruluk testinde Qwen2.5 14B ile karşılaştırılarak seçildi.

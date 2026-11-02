@@ -60,7 +60,7 @@ export default function KayitPage() {
           font-size: 28px;
           font-weight: 800;
           letter-spacing: -0.5px;
-          background: linear-gradient(135deg, #6366f1, #8b5cf6, #14b8a6);
+          background: var(--v3-gradient);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
@@ -99,7 +99,7 @@ export default function KayitPage() {
           width: 100%;
         }
         .v3-input:focus {
-          border-color: rgba(99,102,241,0.5);
+          border-color: rgba(var(--v3-accent-rgb),0.5);
         }
         .v3-input::placeholder {
           color: var(--v3-text-faint);
@@ -115,8 +115,8 @@ export default function KayitPage() {
         .v3-auth-submit {
           padding: 13px;
           border-radius: 10px;
-          background: linear-gradient(135deg, #6366f1, #8b5cf6);
-          color: #fff;
+          background: var(--v3-accent);
+          color: var(--v3-on-accent);
           font-size: 15px;
           font-weight: 600;
           border: none;
@@ -135,7 +135,7 @@ export default function KayitPage() {
           margin-top: 20px;
         }
         .v3-auth-footer a {
-          color: #818cf8;
+          color: var(--v3-accent-text);
           font-weight: 500;
         }
         .v3-auth-footer a:hover {

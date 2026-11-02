@@ -38,7 +38,7 @@ export default function V3Footer() {
         .v3-footer-brand {
           font-size: 15px;
           font-weight: 600;
-          background: linear-gradient(135deg, #6366f1, #8b5cf6, #14b8a6);
+          background: var(--v3-gradient);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
@@ -72,28 +72,28 @@ export default function V3Footer() {
         .v3-footer-developer {
           display: inline-flex; align-items: center; gap: 6px;
           padding: 8px 16px; border-radius: 9px; font-size: 13px; font-weight: 600;
-          background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.22);
-          color: #818cf8; text-decoration: none; transition: background 0.15s, border-color 0.15s;
+          background: rgba(var(--v3-accent-rgb),0.1); border: 1px solid rgba(var(--v3-accent-rgb),0.22);
+          color: var(--v3-accent-text); text-decoration: none; transition: background 0.15s, border-color 0.15s;
         }
-        .v3-footer-developer:hover { background: rgba(99,102,241,0.18); border-color: rgba(99,102,241,0.38); }
+        .v3-footer-developer:hover { background: rgba(var(--v3-accent-rgb),0.18); border-color: rgba(var(--v3-accent-rgb),0.38); }
         .v3-footer-version {
           display: inline-flex;
           align-items: center;
           gap: 5px;
           padding: 3px 9px;
           border-radius: 999px;
-          background: rgba(99,102,241,0.1);
-          border: 1px solid rgba(99,102,241,0.2);
+          background: rgba(var(--v3-accent-rgb),0.1);
+          border: 1px solid rgba(var(--v3-accent-rgb),0.2);
           font-size: 11px;
           font-weight: 700;
           font-family: monospace;
-          color: #818cf8;
+          color: var(--v3-accent-text);
           text-decoration: none;
           transition: background 0.15s, border-color 0.15s;
         }
         .v3-footer-version:hover {
-          background: rgba(99,102,241,0.18);
-          border-color: rgba(99,102,241,0.35);
+          background: rgba(var(--v3-accent-rgb),0.18);
+          border-color: rgba(var(--v3-accent-rgb),0.35);
         }
       `}</style>
       <footer className="v3-footer">
